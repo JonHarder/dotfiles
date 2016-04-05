@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cd /home/jharder/conkeror && firefox --app application.ini
