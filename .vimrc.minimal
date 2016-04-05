@@ -1,0 +1,14 @@
+set nonu
+set hidden
+
+let mapleader=" "
+set ts=4
+set sw=4
+set noexpandtab
+set background=dark
+
+nnoremap <leader>w :w<cr>
+nnoremap <leader>d :bd<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>n :bn<cr>
+nnoremap <leader>h :noh<cr>

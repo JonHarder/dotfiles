@@ -1,0 +1,28 @@
+Config {
+         font = "xft:Inconsolata:size=13:antialias=true"
+       , lowerOnStart = True
+       -- , hideOnStart = False
+       -- , overrideRedirect = True
+       , allDesktops = True
+       -- , position = Top
+       -- , border = BottomB
+       -- , pickBroadest = False
+       -- , persistent = True
+       -- , bgColor = "#002b36" -- solarized-dark
+       -- , bgColor = "#fdf6e3" -- solarized-light
+       , bgColor = "#333333" -- moe-light
+       , fgColor = "#fdfde7"
+       -- , fgColor = "#b58900"
+       , commands = [ Run StdinReader
+                    , Run Date "%a %b %d, %I:%M %p" "date" 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    -- , Run MPD ["-t",
+                    --            "<composer> <title> (<album>) <trac>/<plength> <statei> [<flags>]",
+                    --            "--", "-P", ">>", "-Z", "|", "-S", "><"] 10
+                    , Run Cpu ["-L","3","-H","50","--normal","#ffffff","--high","red"] 10
+                    , Run Com "/home/jharder/bin/vol.sh" [] "vol" 1
+                    , Run Com "/home/jharder/bin/pianoupdater.sh" [] "pianobar" 1]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %StdinReader% }{ %pianobar% | %vol% | %memory% | %date% "
+       }

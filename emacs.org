@@ -1,0 +1,1345 @@
+#+TITLE: Emacs Config
+#+AUTHOR: Jon Harder
+* increase space before gc kicks in
+#+BEGIN_SRC emacs-lisp
+  (setq gc-cons-threshold 100000000)
+#+END_SRC
+* Remove the extra junk
+#+begin_src emacs-lisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (setq inhibit-startup-message t)
+  (defun display-startup-echo-area-message ()
+    (message "Let the hacking begin!"))
+  (let ((fire (if (display-graphic-p)
+                  '("\u2668 " . "\u2668" )
+                '("^^" . "^^ "))))
+    (setq initial-scratch-message
+          (concat ";;;;;;;;;;;;;;;;;;;;;;;;;;" "\n"
+                  ";;                      ;;" "\n"
+                  ";; It's dangerous to go ;;" "\n"
+                  ";; alone! take this:    ;;" "\n"
+                  ";;                      ;;" "\n"
+                  ";;    " (car fire) "  (°-°)   " (cdr fire) "   ;;" "\n"
+                  ";;                      ;;" "\n"
+                  ";;;;;;;;;;;;  ;;;;;;;;;;;;" "\n"
+                  "\n")))
+#+end_src
+* Set up some files/directories
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp")
+#+end_src
+* packages
+** initialize
+#+begin_src emacs-lisp
+  (require 'package)
+
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("org" . "http://orgmode.org/elpa/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (unless (or (package-installed-p 'python) (version< emacs-version "24.3"))
+    (add-to-list 'package-archives
+                 '("marmalade" . "https://marmalade-repo.org/packages/")))
+
+  (package-initialize)
+#+end_src
+** package-list
+#+begin_src emacs-lisp
+  (defvar my-packages)
+  (setq my-packages '(
+                      ace-window
+                      ag
+                      auto-complete
+                      avy
+                      base16-theme
+                      birds-of-paradise-plus-theme
+                      elfeed
+                      engine-mode
+                      evil
+                      evil-leader
+                      evil-numbers
+                      evil-paredit
+                      evil-surround
+                      flycheck
+                      git-gutter
+                      guide-key
+                      haskell-mode
+                      hydra
+                      ido-ubiquitous
+                      ido-vertical-mode
+                      jabber
+                      magit
+                      moe-theme
+                      multi-term
+                      org
+                      org-bullets
+                      popup-imenu
+                      rainbow-delimiters
+                      rust-mode
+                      smex
+                      solarized-theme
+                      typit
+                      yasnippet))
+#+end_src
+** install every package I just listed if its not already
+#+begin_src emacs-lisp
+  (dolist (p my-packages)
+    (unless (package-installed-p p)
+      (message (concat "Installing " (symbol-name p)))
+      (package-install p)))
+#+end_src
+* autosave backup files
+#+BEGIN_SRC emacs-lisp
+  (defvar backup-dir (expand-file-name "~/.emacs.d/emacs_backup/"))
+  (defvar autosave-dir (expand-file-name "~/.emacs.d/autosave/"))
+  (setq backup-directory-alist (list (cons ".*" backup-dir))
+        auto-save-list-file-prefix autosave-dir
+        auto-save-file-name-transforms `((".*" ,autosave-dir t)))
+  (defvar tramp-backup-directory-alist backup-directory-alist)
+  (defvar tramp-auto-save-directory autosave-dir)
+#+END_SRC
+* Encryption
+** automatically encrypt/decrypt .gpg files
+#+BEGIN_SRC emacs-lisp
+  (epa-file-enable)
+#+END_SRC
+* Tramp config
+#+BEGIN_SRC emacs-lisp
+  (defvar tramp-default-method "ssh")
+#+END_SRC
+* RSS feeds (with elfeed)
+#+BEGIN_SRC emacs-lisp
+  (require 'elfeed)
+  (setq elfeed-feeds
+        '("http://www.shutupandsitdown.com/blog/feed.xml"
+          "https://youtube.com/feeds/videos.xml?user=rahdo"
+          "http://www.aaronsw.com/2002/feeds/pgessays.rss"
+          "http://99percentinvisible.org/feed"))
+#+END_SRC
+* Env var stuff
+#+BEGIN_SRC emacs-lisp
+  (defun add-to-env (val env)
+    (setenv env (concat val (getenv env))))
+  (add-to-env "/home/jharder/.cabal/bin:" "PATH")
+#+END_SRC
+* tail logfiles automatically
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode 1)
+#+END_SRC
+* Google hangouts via jabber
+#+begin_src emacs-lisp
+  (defun jabber-read-config ()
+    "Read the encrypted hangouts configuration and load into `jabber-account-list'."
+    (interactive)
+    (let* ((passfile "~/.emacs.d/jabber.gpg")
+            (buf (find-file-noselect passfile))
+            (jabber-info (with-current-buffer buf
+                           (goto-char (point-min))
+                           (read (current-buffer))))
+            (email (cdr (assoc 'email jabber-info)))
+            (password (cdr (assoc 'password jabber-info))))
+       (setq jabber-account-list `((,email
+                                    (:password . ,password)
+                                    (:network-server . "talk.google.com")
+                                    (:connection-type . starttls))))))
+  (eval-after-load 'jabber
+    '(jabber-read-config))
+
+#+end_src
+* User interface: mouse, ido, scrolling, paredit, etc
+** guide-key
+#+BEGIN_SRC emacs-lisp
+  (setq guide-key/guide-key-sequence t)
+  (setq guide-key/popup-window-position 'bottom)
+  (guide-key-mode 1)
+#+END_SRC
+** enable the mouse in a terminal emacs
+#+BEGIN_SRC emacs-lisp
+  (unless (display-graphic-p)
+    (require 'mouse)
+    (xterm-mouse-mode t)
+    (defun track-mouse (e))
+    (setq mouse-sel-mode t))
+#+END_SRC
+** use ace-window to navigate windows
+ace-window defaults to select from windows available
+in all frames (even across workspaces) wich is
+undesireable for me, luckily it comes with a variable
+to inhibit this behavior
+#+BEGIN_SRC emacs-lisp
+  (setq aw-scope 'frame
+        aw-background nil) ; set this to 'global to restore behavior
+#+END_SRC
+** C-h a is originally 'apropos-command, make it 'apropos
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-h a") 'apropos)
+#+END_SRC
+** winner mode to restore window setups
+#+BEGIN_SRC emacs-lisp
+  (when (fboundp 'winner-mode)
+    (winner-mode 1))
+#+END_SRC
+** Ido mode
+#+begin_src emacs-lisp
+  (ido-mode 1)
+  (ido-everywhere 1)
+  (ido-ubiquitous-mode 1)
+  (setq ido-enable-flex-matching t
+        ido-create-new-buffer 'always ; stop asking me if I want to make a new buffer
+        ido-use-virtual-buffers t)
+  (ido-vertical-mode)
+  (smex-initialize)
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "C-x b") 'ido-switch-buffer)
+#+end_src
+** paredit for lisps
+#+BEGIN_SRC emacs-lisp
+  ; (add-hook 'lisp-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+  (add-hook 'ielm-mode-hook 'paredit-mode)
+  ; (add-hook 'ielm-mode-hook 'evil-paredit-mode)
+#+END_SRC
+** navigate windows easier
+#+BEGIN_SRC emacs-lisp
+  ; (global-set-key (kbd "C-x o") 'other-window)
+  (global-set-key (kbd "C-x o") 'ace-window)
+  ; just use default numbers
+  ; TODO: find out how to label buffers like
+  ; spacemacs does
+  ; (setq aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s))
+  (setq aw-background t)
+#+END_SRC
+** make sure to take breaks
+#+BEGIN_SRC emacs-lisp
+  (type-break-mode)
+#+END_SRC
+** auto completing (TURNED OFF FOR NOW!!)
+turned off until I can figure out why it makes
+emacs hang with an array issue
+#+BEGIN_SRC emacs-lisp
+  ; (ac-config-default)
+  ; (global-auto-complete-mode)
+#+END_SRC
+** Save some keystrokes when confirming
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src  
+** Make scrolling not so jaring
+#+begin_src emacs-lisp
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
+        mouse-wheel-progressive-speed nil
+        scroll-step 1
+        scroll-conservatively 10000)
+#+end_src
+** Show me extra whitespace
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq show-trailing-whitespace t)))
+#+end_src
+** show git diffs in gutter
+#+begin_src emacs-lisp
+  (global-git-gutter-mode +1)
+#+end_src
+** upgrade buffer listing
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
+** how to open urls
+#+BEGIN_SRC emacs-lisp
+  (setq browse-url-browser-function
+        (if (display-graphic-p)
+            'browse-url-chromium
+            ;; 'browse-url-firefox
+            ;; 'browse-url-firefox
+          'eww-browse-url))
+#+END_SRC
+** yasnippet
+#+BEGIN_SRC emacs-lisp
+  (yas-global-mode)
+#+END_SRC
+* Mail (mu4e)
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+  (require 'mu4e)
+  (setq mu4e-maildir "~/Maildir")
+
+  (setq mu4e-drafts-folder "/[Gmail].Drafts"
+        mu4e-sent-folder   "/[Gmail].Sent Mail"
+        mu4e-trash-folder  "/[Gmail].Trash")
+
+  (setq mu4e-sent-messages-behavior 'delete)
+
+  (setq mu4e-maildir-shortcuts
+        '(("/INBOX" . ?i)
+          ("/[Gmail].Sent Mail" . ?s)
+          ("/[Gmail].Trash" . ?t)
+          ("/[Gmail].All Mail" . ?a)))
+
+  (setq mu4e-get-mail-command "offlineimap")
+
+  (setq user-mail-address "jharder@telsasoft.com"
+        user-full-name "Jonathan Harder")
+
+  (require 'smtpmail)
+
+  (setq message-signature (concat "Jon Harder\n"
+                                  "Software Developer\n"
+                                  "952-707-8581\n"
+                                  "Telsasoft\n"
+                                  "jharder@telsasoft.com"))
+
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
+        mu4e-confirm-quit nil
+        mu5e-update-interval 60)
+
+  (setq message-kill-buffer-on-exit t)
+
+  (global-set-key (kbd "C-x m") 'mu4e-compose-new)
+#+END_SRC
+* dired
+** override f to open all marked files, not just current line
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "dired"
+    '(progn
+       (define-key dired-mode-map "f" 'my-dired-find-file)
+       (defun my-dired-find-file (&optional arg)
+         (interactive "P")
+         (mapc 'find-file (dired-get-marked-files nil arg)))))
+#+END_SRC
+* UTF-8 everywhere
+#+BEGIN_SRC emacs-lisp
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (when (display-graphic-p)
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+#+END_SRC
+* Hydras
+** pianobar
+*** api
+**** core command to communicate with pianobar
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-command (command)
+    "writes the string COMMAND to the pianobar pipe to
+  control it remotely"
+    (if (stringp command)
+        (let ((default-directory "/home/jharder/"))
+          (shell-command
+           (concat "echo "
+                   (when (= (length command) 1) "-n ")
+                   "'"
+                   command
+                   "' > ~/.config/pianobar/ctl")))
+      (message "command must be a string")))
+#+END_SRC
+**** start
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-start ()
+    (interactive)
+    (let ((default-directory "/home/jharder/"))
+      (save-excursion (async-shell-command "pianobar" "*Pianobar*"))))
+#+END_SRC
+**** kill
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-kill ()
+    (interactive)
+    (let ((process-kill-buffer-query-function (lambda () '())))
+      (kill-buffer "*Pianobar*")))
+#+END_SRC
+**** hate song
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-ban ()
+    (interactive)
+    (pianobar-command "-")
+    (message "banning song"))
+#+END_SRC
+**** love song
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-love ()
+    (interactive)
+    (pianobar-command "+")
+    (message "loving song"))
+#+END_SRC
+**** play/pause
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-toggle ()
+    (interactive)
+    (pianobar-command " ")
+    (message "toggling playback"))
+#+END_SRC
+**** next song
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-next ()
+    (interactive)
+    (pianobar-command "n")
+    (message "next song"))
+#+END_SRC
+**** change station
+#+BEGIN_SRC emacs-lisp
+  (defun pianobar-station-select (station)
+    (interactive "sStation: ")
+    (pianobar-command (concat "s" station))
+    (message (concat "changing station to " station)))
+#+END_SRC
+*** hydra config
+#+begin_src emacs-lisp
+  (global-set-key
+   (kbd "C-c p")
+   (defhydra hydra-pianobar (:color blue :hint nil)
+     "
+  Pianobar^
+  -------------------------------------------------------
+  _s_tart _n_ext  _c_hange-station _p_lay/pause  _b_an  _l_ove _k_ill _q_uit"
+     ("s" pianobar-start)
+     ("n" pianobar-next)
+     ("p" pianobar-toggle)
+     ("l" pianobar-love)
+     ("c" pianobar-station-select)
+     ("b" pianobar-ban)
+     ("k" pianobar-kill)
+     ("q" nil)))
+#+end_src
+** org mode
+#+begin_src emacs-lisp
+  (global-set-key
+   (kbd "C-c o")
+   (defhydra hydra-org (:color red :hint nil)
+     "
+    Navigation^
+    ---------------------------------------
+    _j_ next heading
+    _k_ prev heading
+    _h_ next heading (same level)
+    _l_ prev heading (same level)
+    _u_p higher heading
+    _g_o to
+    "
+     ("j" outline-next-visible-heading)
+     ("k" outline-previous-visible-heading)
+     ("h" org-forward-heading-same-level)
+     ("l" org-backward-heading-same-level)
+     ("u" outline-up-heading)
+     ("g" org-goto :exit t)))
+#+end_src
+** winner
+#+begin_src emacs-lisp
+  (global-set-key
+   (kbd "C-c w")
+   (defhydra hydra-winner (:hint nil)
+     "
+          Split: _v_ert _s_:horiz
+         Delete: _c_lose _o_nly
+  Switch Window: _h_:left _j_:down _k_:up _l_:right
+          Width: _H_:decrease _L_:increase
+         Height: _J_:decrease _K_:increase
+        Buffers: _p_revious _n_ext _b_:select _f_ind-file _F_:projectile
+         Winner: _u_ndo _r_edo
+           Move: _a_:up _z_:down _i_menu"
+     ;; Resize: _H_:splitter left _J_:splitter down _K_:splitter up _L_:splitter right
+     ("z" scroll-up-line)
+     ("a" scroll-down-line)
+     ("i" imenu)
+
+     ("u" winner-undo)
+     ("r" winner-redo)
+
+     ("h" windmove-left)
+     ("j" windmove-down)
+     ("k" windmove-up)
+     ("l" windmove-right)
+
+     ("H" (evil-window-decrease-width 2))
+     ("L" (evil-window-increase-width 2))
+     ("J" (evil-window-increase-height 2))
+     ("K" (evil-window-decrease-height 2))
+
+     ("p" previous-buffer)
+     ("n" next-buffer)
+     ("b" ido-switch-buffer)
+     ("f" ido-find-file)
+     ("F" projectfile-find-file)
+
+     ("s" split-window-below)
+     ("v" split-window-right)
+
+     ("c" delete-window)
+     ("o" delete-other-windows)
+
+     ("q" nil)))
+#+end_src
+* Ediff
+** make the splits arange themselves horizontally
+#+BEGIN_SRC emacs-lisp
+  (setq ediff-split-window-function 'split-window-horizontally)
+#+END_SRC
+** make the control window appear as a split, not a frame
+#+BEGIN_SRC emacs-lisp
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+END_SRC
+* Search online with emacs
+#+begin_src emacs-lisp
+  (require 'engine-mode)
+  (engine-mode t)
+
+  ;; ((g . github)
+  ;;  (d . duckduckgo)
+  ;;  (s . stackoverflow)
+  ;;  (y . youtube)
+  ;;  (p . postgres)
+  ;;  (t . telsasoft))
+
+  (defengine github
+    "https://github.com/search?ref=simplesearch&q=%s"
+    :keybinding "g"
+    :docstring "github")
+
+  (defengine duckduckgo
+    "https://duckduckgo.com/html/?q=%s"
+    :keybinding "d"
+    :docstring "duck duck go")
+
+  (defengine stackoverflow
+    "stackoverflow.com/search?q=%s"
+    :keybinding "s"
+    :docstring "stack overflow")
+
+  (defengine youtube
+    "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+    :keybinding "y"
+    :docstring "Youtube")
+
+  (defengine postgres
+    "www.postgresql.org/search/?q=%s&submit=Search"
+    :keybinding "p"
+    :docstring "Postgres SQL")
+
+  (defengine telsasoft
+    "trac.telsasoft/telsasoft/wiki/%s"
+    :keybinding "t"
+    :docstring "Telsasoft Wiki")
+
+  ; (setq engine/browser-function 'eww-browse-url)
+  (setq engine/browser-function browse-url-browser-function)
+#+end_src
+* Emacs relay chat (ERC)
+** login info
+#+begin_src emacs-lisp
+  (setq erc-hide-list '("JOIN" "PART" "QUIT")
+        erc-server "irc.freenode.net"
+        erc-nick "mappend")
+#+end_src
+** ido select erc buffers
+#+BEGIN_SRC emacs-lisp
+  (defun rgr/ido-erc-buffer ()
+    (interactive)
+    (switch-to-buffer
+     (ido-completing-read
+      "Channel:"
+      (save-excursion
+        (delq
+         nil
+         (mapcar (lambda (buf)
+                   (when (buffer-live-p buf)
+                     (with-current-buffer buf
+                       (and (eq major-mode 'erc-mode)
+                            (buffer-name buf)))))
+                 (buffer-list)))))))
+  (global-set-key (kbd "C-c e") 'rgr/ido-erc-buffer)
+#+end_src
+* Org
+** general formatting
+#+BEGIN_SRC emacs-lisp
+  (setq org-startup-indented t
+        org-src-fontify-natively t
+        org-directory "~/org"
+        org-default-notes-file (concat org-directory "/notes.org")
+        org-agenda-include-diary t
+        org-ellipsis " ->")
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (define-key global-map "\C-cc" 'org-capture)
+#+end_src
+** stop asking if I want to execute code
+#+BEGIN_SRC emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
+#+END_SRC
+** bullets
+#+begin_src emacs-lisp
+  (require 'org)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+** special todo symbols
+#+BEGIN_SRC emacs-lisp
+  (setq org-todo-keywords '((sequence "☛ TODO(t)" "⚒ WORKING(w)"
+                                      "⚖ TESTING(s)" "|" "✓ DONE(d)")
+                            (sequence "⚑ ON-HOLD(o)" "|")
+                            (sequence "|" "✘ CANCELED(c)")))
+#+END_SRC
+** I use C-tab to switch windows but org clobbers that bind
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook (lambda ()
+                             (interactive)
+                             (global-set-key [C-tab] 'other-window)))
+#+END_SRC
+** make org use 12 hour mode instead of 24
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-timegrid-use-ampm 1)
+#+end_src
+** add today.org to agenda
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files '("~/today.org"))
+#+end_src
+** add a telsasoft link
+#+BEGIN_SRC emacs-lisp
+  (defun make-ts-link (ticket-number)
+    (interactive "nTicket: ")
+    (insert (concat "[[http://trac.telsasoft/telsasoft/ticket/"
+                     (number-to-string ticket-number))
+                     "][#"
+                     (number-to-string ticket-number)
+                     "]]"))
+#+END_SRC
+** some basic templates to use anywhere
+#+BEGIN_SRC emacs-lisp
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+           "* TODO %?\n   %i\n   %a")
+          ("j" "Journal" entry (file+datetree "~/org/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")))
+#+end_src
+** set allowed languages for org babel to exucte
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (emacs-lisp . t)
+     ; (haskell . t)
+     (ditaa . t)
+     (ruby . t)
+     (sh . t)))
+#+end_src
+** org present
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "org-present"
+    '(progn
+       (add-hook 'org-present-mode-hook
+                 (lambda ()
+                   (org-present-big)
+                   (org-display-inline-images)
+                   (org-present-hide-cursor)
+                   (org-present-read-only)))
+       (add-hook 'org-present-mode-quit-hook
+                 (lambda ()
+                   (org-present-small)
+                   (org-remove-inline-images)
+                   (org-present-show-cursor)
+                   (org-present-read-write)))))
+#+END_SRC
+* Prettify common programming operators
+#+begin_src emacs-lisp
+  ; this stuff doesnt work in (< emacs-major-version 25)
+  ; (when (and (>= emacs-major-version 25)
+  ;            (display-graphic-p))
+  ;     (defconst prettify-symbols-alist
+  ;       '(("<=" . ?≤)
+  ;         (">=" . ?≥)
+  ;         ("==" . ?≡)
+  ;         ("!=" . ?≠)
+  ;         ("<-" . ?←)
+  ;         ("->" . ?→)
+  ;         ; ("<=" . ?⇐)
+  ;         ("=>" . ?⇒)
+  ;         ("lambda" . ?λ)
+  ;         ))
+
+  ;   ;; Overwrite emacs-lisp alist.
+  ;   (add-hook 'emacs-lisp-mode-hook
+  ;             (lambda () (setq prettify-symbols-alist
+  ;                         '(("<=" . ?≤)
+  ;                           (">=" . ?≥)
+  ;                           ("<-" . ?←)
+  ;                           ("->" . ?→)
+  ;                           ("<=" . ?⇐)
+  ;                           ("=>" . ?⇒)
+  ;                           ("lambda" . ?λ)))))
+
+  ;   (add-hook 'prog-mode-hook
+  ;             (lambda () (setq prettify-symbols-alist
+  ;                         '(("<=" . ?≤)
+  ;                           (">=" . ?≥)
+  ;                           ("==" . ?≡)
+  ;                           ("!=" . ?≠)
+  ;                           ("<-" . ?←)
+  ;                           ("->" . ?→)
+  ;                           ("<=" . ?⇐)
+  ;                           ("=>" . ?⇒)
+  ;                           ("lambda" . ?λ)
+  ;                           ))))
+
+  ;   (global-prettify-symbols-mode 1))
+#+end_src
+* command line functions into M-x commands
+** pdfgrep
+*** function
+#+BEGIN_SRC emacs-lisp
+  (defun pdfgrep (regex file)
+    "Searches pdf `FILE' for `REGEX'"
+    (interactive (list (read-string (format "Regex [default: %s] " (thing-at-point 'word t)))
+                       (read-file-name "File: ")))
+    (let* ((flags '("-H" "-n"))
+           (command "pdfgrep")
+                                          ; (regex (if (null regex) (thing-at-point 'word t) regex))
+           (command-string (concat command
+                                   " "
+                                   (mapconcat 'identity flags " ") ; join all the flags together
+                                   " "
+                                   (shell-quote-argument regex)
+                                   " "
+                                   file)))
+      (compilation-start command-string)))
+#+END_SRC
+*** ☛ TODO make it more configureable
+*** ☛ TODO make it default regex to word under point
+*** ☛ TODO make result formatted better
+* Appearance
+** transparency
+#+BEGIN_SRC emacs-lisp
+  (defun transparency (value)
+    "Sets the transparency of the frame window. 0=transparent/100=opaque"
+    (interactive "nTransparency Value 0 - 100 opaque:")
+    (set-frame-parameter (selected-frame) 'alpha value))
+#+END_SRC
+** color hex codes
+#+BEGIN_SRC emacs-lisp
+  (defun syntax-color-hex ()
+    "Syntax color text of th eform #ff1100 in current buffer"
+    (interactive)
+    (font-lock-add-keywords
+     nil
+     '(("#[abdcef[:digit:]]\\{6\\}"
+        (0 (put-text-property
+            (match-beginning 0)
+            (match-end 0)
+            'face (list :background (match-string-no-properties 0)))))))
+    (font-lock-fontify-buffer))
+#+END_SRC
+** highlight current line
+#+BEGIN_SRC emacs-lisp
+  (when (display-graphic-p)
+    (add-hook 'prog-mode-hook (lambda () (global-hl-line-mode -1))))
+#+END_SRC
+** eldoc time
+#+BEGIN_SRC emacs-lisp
+  (setq eldoc-idle-delay 0.1)
+#+END_SRC
+** weather
+#+BEGIN_SRC emacs-lisp
+  (require 'json)
+
+  (defun weather-get-to-table ()
+    "Polls openweather api and return Lisp table of results."
+    (interactive)
+    (let* ((key "0c81f5abdbf35b6c4c574c66251109cd")
+           (command (concat "curl "
+                            "-s "
+                            "'api.openweathermap.org/data/2.5/weather?q=Burnsville,us"
+                            "&appid="
+                            key
+                            "&units=imperial'"))
+           (default-directory "/home/jharder/")
+           (json-object-type 'hash-table)
+           (json-str (shell-command-to-string command)))
+      (with-timeout (5 nil)
+        (json-read-from-string (shell-command-to-string command)))))
+
+  (defun weather-string ()
+    "Polls weather with `weather-to-table' and formats it into a string."
+    (interactive)
+    (let* ((weather (weather-get-to-table))
+           (main (gethash "main" weather))
+           (temp (round (gethash "temp" main)))
+           (conditions (gethash "weather" weather))
+           (condition (gethash "main" (aref conditions 0))))
+      (setq weather (concat (number-to-string temp) "°F: " condition))
+      weather))
+
+  (setq weather (weather-string))
+
+  (run-at-time "0 sec" 120 'weather-string)
+#+END_SRC
+** window divider
+the divider is represented by the faces `window-divider',
+`window-divider-first-pixel', and `window-divider-last-pixel'
+
+set the foreground of these faces to the same value and the
+divider will be a solid color
+** font
+#+BEGIN_SRC emacs-lisp
+  ; "Inconsolata for Powerline-13"
+  ; "Anonymous Pro for Powerline-13"
+  (let ((font "Inconsolata for Powerline-14"))
+    (when (display-graphic-p)
+      (set-face-attribute 'default nil :font font)))
+#+end_src
+** color theme
+*** get custom gruvbox
+#+BEGIN_SRC emacs-lisp
+  (require 'url)
+  (when (not (member "themes" (directory-files "~/.emacs.d/")))
+    (make-directory "~/.emacs.d/themes"))
+  (when (not (file-exists-p "~/.emacs.d/themes/gruvbox-dark-theme.el"))
+    (message "downloading missing gruvbox theme")
+    (let ((default-directory "~/.emacs.d/themes/"))
+      (url-copy-file "https://raw.githubusercontent.com/d125q/gruvbox-dark-emacs/master/gruvbox-dark-theme.el"
+                      "~/.emacs.d/themes/gruvbox-dark-theme.el")))
+#+END_SRC
+*** list themes and set active theme
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+  (setq available-themes '(base16 birds cyberpunk gruvbox moe-light moe-dark solarized))
+  (setq theme 'solarized) 
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (set-frame-parameter frame 'background-mode 'dark)
+              (set-terminal-parameter frame 'background-mode 'dark)))
+#+END_SRC
+*** make sure moe can load its themes
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'custom-theme-load-path
+               "~/.emacs.d/elpa/moe-theme-20160322.115/")
+#+END_SRC
+*** actually set the theme
+    #+BEGIN_SRC emacs-lisp
+      ; (require 'powerline)
+      ; (require 'airline-themes)
+
+      ; high contrast, bright colors
+      ;; (load-theme 'base16-isotope-dark t)
+      (load-theme (cond
+                   ((eq theme 'solarized) 'solarized)
+                   ((eq theme 'birds) 'birds-of-paradise-plus)
+                   ((eq theme 'cyberpunk) 'cyberpunk)
+                   ((eq theme 'base16) 'base16-isotope-dark)
+                   ((eq theme 'gruvbox) 'gruvbox-dark)
+                   ((eq theme 'moe-light) 'moe-light)
+                   ((eq theme 'moe-dark) 'moe-dark)
+                   (t 'base16-default-dark))
+                   t)
+      ;; eshell breaks every time I change themes for some reason
+      ;; add a hook to reapply my shell settings after setting a new theme
+      (add-hook 'set-theme-after-hook 'set-prompt)
+    #+END_SRC
+** mode line
+*** TODO: allow theming to set colors mode line
+*** set the mode line format
+#+BEGIN_SRC emacs-lisp
+  (defun file-percent ()
+    (round
+     (* 100 (/ (* (line-number-at-pos) 1.0)
+               (line-number-at-pos (point-max))))))
+  (setq-default
+   mode-line-format
+   '((:propertize "%4l:" face mode-line-face)
+     (:eval (propertize "%3c" 'face
+                        (if (>= (current-column) 80)
+                            'mode-line-80col-face
+                          'mode-line-face)))
+     "  "
+     (:eval (let* ((pct (number-to-string (file-percent)))
+                   (num-spaces (- 3 (length pct))))
+              (concat (make-string num-spaces 32)
+                      pct
+                      "%%")))
+                                          ; emacsclient [default -- keep?]
+     "  "
+     mode-line-client
+     "  "
+                                          ; read-only or modified status
+     (:eval
+      (cond (buffer-read-only
+             (propertize " RO  " 'face 'mode-line-face))
+            ((buffer-modified-p)
+             (propertize " MOD " 'face 'mode-line-face))
+            (t (propertize "     " 'face 'mode-line-face))))
+     "   "
+                                          ; evil state indicator
+                                          ; switches on `evil-state'
+     (:eval (propertize (upcase (symbol-name evil-state)) 'face 'mode-line-evil-face))
+     "  "
+                                          ; directory and buffer/file name
+                                          ; (:propertize "%b"
+                                          ;              face mode-line-filename-face)
+     (:propertize "%b"
+                  face mode-line-face)
+                                          ; narrow [default -- keep?]
+     (:propertize " %n " face mode-line-face)
+                                          ; mode indicators: vc, recursive edit, major mode, minor modes, process, global
+     (vc-mode vc-mode)
+     "  ["
+     (:propertize mode-name
+                  face mode-line-face)
+     "] "
+                                          ; (:eval (propertize (format-mode-line minor-mode-alist)
+                                          ;                    'face 'mode-line-minor-mode-face))
+     (:propertize mode-line-process
+                  face mode-line-face)
+     (global-mode-string global-mode-string)
+     "   "
+     (:propertize weather face mode-line-face)
+     ))
+#+end_src
+*** a helper fucntion to trucate paths
+#+BEGIN_SRC emacs-lisp
+  (defun shorten-directory (dir max-length)
+    "Show directory name `DIR' taking only the first `MAX-LENGTH' characters."
+    (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+          (output ""))
+      (when (and path (equal "" (car path)))
+        (setq path (cdr path)))
+      (while (and path (< (length output) (- max-length 4)))
+        (setq output (concat (car path) "/" output))
+        (setq path (cdr path)))
+      (when path
+        (setq output (concat ".../" output)))
+      output))
+#+END_SRC
+*** initialize the new faces for the mode line
+#+BEGIN_SRC emacs-lisp
+  ;; Extra mode line faces
+  (make-face 'mode-line-read-only-face)
+  (make-face 'mode-line-modified-face)
+  (make-face 'mode-line-box-face)
+
+  (make-face 'mode-line-evil-face)
+  (make-face 'mode-line-evil-normal-face)
+  (make-face 'mode-line-evil-insert-face)
+  (make-face 'mode-line-evil-visual-face)
+  (make-face 'mode-line-evil-motion-face)
+  (make-face 'mode-line-evil-replace-face)
+  (make-face 'mode-line-evil-emacs-face)
+
+  (make-face 'mode-line-folder-face)
+  (make-face 'mode-line-filename-face)
+  (make-face 'mode-line-position-face)
+  (make-face 'mode-line-mode-face)
+  (make-face 'mode-line-minor-mode-face)
+  (make-face 'mode-line-process-face)
+  (make-face 'mode-line-80col-face)
+#+END_SRC
+*** their attributes
+#+BEGIN_SRC emacs-lisp
+  (setq theme-colors-alist '((cyberpunk . ("#ffffff" . "#000000"))
+                             (bird . ("#e6e1c4" . "#452e2e"))
+                             (solarized . ("#002b36" . "#839496"))
+                             (base16 . ("#ffffff" . "#000000"))
+                             (moe-light . ("#5fafd7" . "#FFFFFF"))
+                             (moe-dark. ("#333333" . "#fdfde7"))
+                             (gruvbox . ("#c59900" . "#333333"))))
+  (setq fg-bg (cdr (assoc theme theme-colors-alist)))
+  (setq mode-line-fg (car fg-bg))
+  (setq mode-line-bg (cdr fg-bg))
+  (set-face-attribute 'mode-line nil
+                      :foreground mode-line-fg
+                      :background mode-line-bg
+                      :inverse-video nil
+                      :box `(:line-width 3 :color ,mode-line-fg :style nil)
+                      )
+  (set-face-attribute 'mode-line-inactive nil
+                      :foreground mode-line-bg
+                      :background mode-line-fg
+                      :box `(:line-width 3 :color ,mode-line-fg :style nil)
+                      )
+  (set-face-attribute 'mode-line-box-face nil
+                      :inherit 'mode-line-face)
+
+  (set-face-attribute 'mode-line-read-only-face nil
+                      :inherit 'mode-line-face
+                      :background mode-line-fg
+                      :foreground mode-line-bg
+                      :weight 'bold
+                      :box `(:line-width 2 :color ,mode-line-bg))
+  (set-face-attribute 'mode-line-modified-face nil
+                      :inherit 'mode-line-face
+                      :background mode-line-fg
+                      :foreground mode-line-bg
+                      :weight 'bold
+                      :box `(:line-width 2 :color ,mode-line-bg))
+
+  (set-face-attribute 'mode-line-evil-face nil
+                      :inherit 'mode-line-face
+                      :background mode-line-fg
+                      :foreground mode-line-bg
+                      :weight 'bold
+                      :box `(:line-width 3 :color ,mode-line-fg)
+                      )
+
+  (set-face-attribute 'mode-line-folder-face nil
+                      :inherit 'mode-line-face
+                      :foreground mode-line-fg)
+  (set-face-attribute 'mode-line-filename-face nil
+                      :inherit 'mode-line-face
+                      :foreground mode-line-fg
+                      :weight 'bold)
+  (set-face-attribute 'mode-line-position-face nil
+                      :inherit 'mode-line-face
+                      ; :family "Menlo"
+                      :height 135)
+  (set-face-attribute 'mode-line-mode-face nil
+                      :inherit 'mode-line-face
+                      :foreground mode-line-fg
+                      :weight 'ultra-bold)
+  (set-face-attribute 'mode-line-minor-mode-face nil
+                      :inherit 'mode-line-mode-face
+                      :weight 'light
+                      :height 120)
+  (set-face-attribute 'mode-line-process-face nil
+                      :inherit 'mode-line-face
+                      :underline t
+                      :foreground mode-line-fg)
+  (set-face-attribute 'mode-line-80col-face nil
+                      :inherit 'mode-line-face
+                      :foreground mode-line-bg :background mode-line-fg)
+#+END_SRC
+** rainbows!
+#+BEGIN_SRC emacs-lisp
+  (require 'rainbow-delimiters)
+
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+  ; (add-hook 'haskell-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'python-mode-hook 'rainbow-delimiters-mode)
+#+END_SRC
+** show matching parens
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode t)
+  (setq show-paren-style 'parenthesis)
+#+END_SRC
+** +remove+ white line between two fringes
+#+BEGIN_SRC emacs-lisp
+  ; (set-face-attribute 'vertical-border nil
+  ;                     :foreground (face-attribute 'fringe :background))
+#+END_SRC
+* Evil settings
+** evil stole M-., I want it back
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'evil-maps
+    (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions))
+#+END_SRC
+** make weird modes have at least a little evil in them
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'edebug-mode-hook 'evil-normalize-keymaps)
+#+END_SRC
+** remove silly evil bindings so core emacs can use them
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'evil-maps
+    (define-key evil-motion-state-map (kbd "SPC") nil)
+    (define-key evil-visual-state-map (kbd "SPC") nil)
+    (define-key evil-motion-state-map (kbd "RET") nil)
+    (define-key evil-visual-state-map (kbd "RET") nil)
+    (define-key evil-motion-state-map (kbd "TAB") nil)
+    (define-key evil-visual-state-map (kbd "TAB") nil))
+#+end_src
+** Y to yank till end of line instead of whole line
+#+BEGIN_SRC emacs-lisp
+  (setq evil-want-Y-yank-to-eol t)
+#+end_src
+** evil leader
+#+BEGIN_SRC emacs-lisp
+  (defun open-scratch ()
+    (interactive)
+    ; (split-window-right)
+    (switch-to-buffer "*scratch*")
+    (evil-insert 0))
+
+  (defun kill-current-buffer ()
+    (interactive)
+    (kill-buffer (current-buffer)))
+
+  (defun goto-emacs-config ()
+    (interactive)
+    (find-file "~/.emacs.d/emacs.org"))
+
+  (setq evil-shift-width 4)
+  (global-evil-surround-mode 1)
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "<SPC>" 'ace-window
+    "0" 'delete-window
+    "1" 'delete-other-windows
+    "2" 'split-window-below
+    "3" 'split-window-right
+    "s" 'open-scratch
+    "T" 'multi-term
+    "a" 'avy-goto-word-1
+    "b" 'ido-switch-buffer
+    "c" 'shell-command
+    "r" 'shell-command-on-region
+    "d" 'evil-delete-buffer
+    "D" 'dired
+    "e" 'goto-emacs-config
+    "i" 'popup-imenu
+    "f" 'ido-find-file
+    "k" 'kill-current-buffer
+    "l" 'elfeed ;'avy-goto-line
+    "m" 'magit-status
+    "n" 'next-theme
+    "o" 'ace-window
+    "p" 'list-packages
+    "q" 'evil-quit
+    "t" 'shell-pop
+    "w" 'save-buffer)
+#+end_src
+** finally, turn on evil mode
+#+BEGIN_SRC emacs-lisp
+  (evil-mode t)
+#+end_src
+** reclaim inc/dec numbers
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'evil-maps
+    (define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
+    (define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt))
+#+END_SRC
+** reclaim Control u for evil
+#+BEGIN_SRC emacs-lisp
+  (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+#+END_SRC
+** emacs bindings for certain modes
+#+BEGIN_SRC emacs-lisp
+  ; modes which emacs will use native keybinds instead of vim ones
+  (setq emacs-modes '(calendar-mode
+                      dired-mode
+                      elfeed-search-mode
+                      elfeed-show-mode))
+
+  (dolist (m emacs-modes)
+          (add-to-list 'evil-emacs-state-modes m))
+#+END_SRC
+* Programming specific stuff
+** General settings
+*** turn on syntax checking
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+#+END_SRC
+*** I like 4 spaces for tabs
+#+BEGIN_SRC emacs-lisp
+  (setq-default c-basic-indent 4)
+  (setq-default tab-width 4)
+#+END_SRC
+** Haskell
+#+BEGIN_SRC emacs-lisp
+  (setq haskell-process-use-ghci t
+        haskell-indent-spaces 4
+        encoding 'utf-4)
+
+  (defun my-haskell-mode-hook ()
+    (interactive-haskell-mode)
+    (turn-on-eldoc-mode)
+    (turn-on-haskell-doc)
+    (turn-on-haskell-indentation))
+
+  (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+#+END_SRC
+** Python
+*** Use the fantastic IPython as as interpreter
+#+BEGIN_SRC emacs-lisp
+  (require 'python)
+  (setq python-shell-interpreter "ipython")
+#+END_SRC
+*** An attempt to unify tab/space settings
+#+BEGIN_SRC emacs-lisp
+  (setq python-indent-guess-indent-offset t)
+#+END_SRC
+*** I deal with a lot of custom .rept files, these most closely resemble python
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.rept\\'" . python-mode))
+#+END_SRC
+*** tmpl files are mostly python as well
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.tmpl\\'" . python-mode))
+#+END_SRC
+*** highlight 80th column so I dont go over
+#+BEGIN_SRC emacs-lisp
+  ; (add-hook 'python-mode-hook (lambda () (column-marker-1 80)))
+#+END_SRC
+* random settings
+** dont ask to kill spawned processes 
+#+begin_src emacs-lisp
+  (defadvice save-buffers-kill-emacs
+      (around no-query-kill-emacs activate)
+    "Prevent \"Active processes exist\" query on exit"
+    (cl-flet ((process-list ())) ad-do-it))
+
+  (setq custom-safe-themes t)
+
+  (defadvice save-bufferes-kill-emacs (around no-query-kill-emacs activate)
+    (cl-flet ((process-list ())) ad-do-it))
+  ;; syntax checking
+
+  (put 'erase-buffer 'disabled nil)
+#+end_src
+* shell functions/settings
+** eshell stuff
+*** remove the banner message
+#+BEGIN_SRC emacs-lisp
+  (setq eshell-banner-message "")
+#+END_SRC
+*** make eshell play nice with curses programs
+#+BEGIN_SRC emacs-lisp
+  (defun my-eshell-vars ()
+    (interactive)
+    (setq eshell-destroy-buffer-when-process-dies t)
+    (add-to-list 'eshell-visual-commands "ssh")
+    (add-to-list 'eshell-visual-commands "htop")
+    (add-to-list 'eshell-visual-commands "tail")
+    (add-to-list 'eshell-visual-commands "mutt")
+    (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show")))
+
+  (add-hook 'eshell-mode-hook 'my-eshell-vars)
+#+END_SRC
+*** clear in a sane way
+#+BEGIN_SRC emacs-lisp
+  (defun eshell/clear ()
+    (save-excursion
+      (goto-char eshell-last-output-end)
+      (let ((lines (count-lines 1 (point)))
+            (inhibit-read-only t))
+        (beginning-of-line)
+        (let ((pos (point)))
+          (if (bobp)
+              (if (interactive-p)
+                  (error "Buffer too short to truncate"))
+            (delete-region (point-min) (point)))))))
+#+END_SRC
+*** set the prompt
+**** utility funcs
+#+begin_src emacs-lisp
+  (defun make-color (val color)
+    (propertize val 'face `(:foreground ,color)))
+
+  (defun git-branch ()
+    (interactive)
+    (let ((branch (eshell-command-result "git branch | grep '\*'")))
+      (if branch
+          (->> branch
+               (replace-regexp-in-string "\\* " "")
+               (replace-regexp-in-string "\n" ""))
+        "")))
+
+
+  (defun shorten-path (path max-len)
+    "return a modified version of `path', replacing some components
+  with single charactiers starting from the left to try and get the path down to `max-len'"
+    (let* ((components (split-string (abbreviate-file-name path) "/"))
+           (len (+ (1- (length components))
+                   (reduce '+ components :key 'length)))
+           (str ""))
+      (while (and (> len max-len)
+                  (cdr components))
+        (setq str (concat str (cond ((= 0 (length (car components))) "/")
+                                    ((= 1 (length (car components)))
+                                     (concat (car components) "/"))
+                                    (t
+                                     (if (string= "."
+                                                  (string (elt (car components) 0)))
+                                         (concat (substring (car components) 0 2)
+                                                 "/")
+                                       (string (elt (car components) 0) ?/)))))
+              len (- len (1- (length (car components))))
+              components (cdr components)))
+      (concat str (reduce (lambda (a b) (concat a "/" b)) components))))
+#+end_src
+**** the prompt function itself
+#+BEGIN_SRC emacs-lisp
+  (defun my-prompt ()
+    (let ((green   "#9acd32")
+          (light-green "#339933")
+          (blue    "#4169e1")
+          (white   "#d0d0d0")
+          (purple  "#cc3399")
+          (default "grey")
+          (orange  "#ff9900")
+          (black   "#555555")
+          (path (shorten-path (eshell/pwd) 20))
+          (branch (git-branch))
+          (hostname (replace-regexp-in-string
+                     "\n" ""
+                     (eshell-command-result "hostname"))))
+      (concat
+       (make-color (user-login-name) purple)
+       (make-color " in " white)
+       (make-color path green)
+       (unless (string-blank-p branch)
+         (make-color " on " white))
+       (unless (string-blank-p branch)
+         (make-color branch light-green))
+       (make-color " λ" orange)
+       (make-color " " default))))
+  
+  (defun set-prompt ()
+    (interactive)
+    (setq eshell-prompt-function 'my-prompt)
+    (setq eshell-prompt-regexp "^.* λ")
+    (setq eshell-highlight-prompt nil))
+    
+  (set-prompt)
+#+end_src
+*** usefull functions
+#+begin_src emacs-lisp
+  (defun eshell/c ()
+    (eshell/clear))
+
+  (defun eshell/e (file)
+    (interactive)
+    (find-file file))
+
+  (defun eshell/q ()
+    (interactive)
+    (eshell/exit))
+#+end_src
+** default term to zsh
+#+BEGIN_SRC emacs-lisp
+  (setq explicit-shell-file-name "/usr/bin/zsh")
+  (setq multi-term-program "/usr/bin/zsh")
+#+END_SRC
+** fix term functinality
+*** term colors
+#+BEGIN_SRC emacs-lisp
+  ; (setq term-default-bg-color mode-line-bg
+  ;       term-default-fg-color mode-line-fg)
+#+END_SRC
+*** close the buffer when the process finishes
+#+BEGIN_SRC emacs-lisp
+  ;; kill comint buffers after their associated process dies
+  (defun my-shell-kill-buffer-sentinel (process event)
+    (when (memq (process-status process) '(exit signal))
+      (kill-buffer-and-window)))
+
+  (defun my-kill-process-buffer-on-exit ()
+    (set-process-sentinel (get-buffer-process (current-buffer))
+                          #'my-shell-kill-buffer-sentinel))
+  ; (dolist (hook '(term-exec-hook comint-exec-hook))
+
+  (defvar auto-close-buffer-list '(term-exec-hook))
+
+  (dolist (hook auto-close-buffer-list)
+    (add-hook hook 'my-kill-process-buffer-on-exit))
+#+END_SRC
+*** add usefull vars to env for eshell
+#+BEGIN_SRC emacs-lisp
+  (setenv "PYTHONPATH" "/home/jharder/server/lib")
+  (setenv "TELSASOFT_TEST_HOME" "/home/jharder/server")
+#+END_SRC
+*** fix term from doing weird things to prompt
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'term-mode-hook 'term-line-mode)
+  ; (add-hook 'text-mode-hook 'turn-on-orgtbl)
+#+END_SRC
