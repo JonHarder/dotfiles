@@ -1,0 +1,13 @@
+* Dotfiles
+
+This repository holds all the dotfiles for applications I've configured.
+It is structured to play nicely with gnu stow.
+
+To make use of these dotfiles, clone the repo, cd into it, then
+execute stow for each application you're interested in.
+
+#+begin_src sh
+  git clone https://github.com/JonHarder/dotfiles.git
+  cd dotfiles
+  stow emacs alacritty git # and any other app you want...
+#+end_src
