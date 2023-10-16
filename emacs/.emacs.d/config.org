@@ -1,7 +1,6 @@
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
 #+STARTUP: show2levels
-
 * Performance monitoring
   It's helpful to track how long Emacs takes to load up. This normally
   isn't the most critical metric to track as I usually run emacs with
@@ -642,7 +641,7 @@
         (kbd "C-<return>") #'embark-act)
     #+end_src
    
-
+    
 * Dictionary
    Emacs has built in dictionary support (because of course it does). By dafault, it
    expects you to be running a dictionary server ~dictd~ locally. If it can't be found,

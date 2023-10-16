@@ -1,14 +1,6 @@
 [user]
 	name = Jon
 	email = jharder@kipsu.com
-[sendemail]
-    smtpuser = jharder@kipsu.com
-	smtpPass = yiabsipwwectmgmv
-    smtpserver = smtp.gmail.com
-    smtpencryption = tls
-    smtpserverport = 587
-	annotate = yes
-	verify = off
 [github]
 	user = JonHarder
 [core]
