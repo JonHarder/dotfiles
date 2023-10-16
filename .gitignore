@@ -3,3 +3,14 @@
 /vifm/.config/vifm/scripts
 /vifm/.config/vifm/vifm-help.txt
 /vifm/.config/vifm/vifminfo.json
+/emacs/.emacs.d/config.el
+/emacs/.emacs.d/diary
+/emacs/.emacs.d/straight
+/emacs/.emacs.d/eshell/history
+/emacs/.emacs.d/eshell/lastdir
+/emacs/.emacs.d/history
+/emacs/.emacs.d/url
+/emacs/.emacs.d/auto-save-list
+/emacs/.emacs.d/nov-places
+/emacs/.emacs.d/projects
+/emacs/.emacs.d/transient/history.el

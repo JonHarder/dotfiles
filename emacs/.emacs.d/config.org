@@ -1,0 +1,1093 @@
+#+TITLE: Literate Emacs Config
+#+AUTHOR: Jon Harder
+#+STARTUP: show2levels
+
+* Performance monitoring
+  It's helpful to track how long Emacs takes to load up. This normally
+  isn't the most critical metric to track as I usually run emacs with
+  ~emacs --daemon~, and open new emacs windows with ~emacsclient~, but
+  helpful nonetheless.
+
+  #+begin_src emacs-lisp
+    (add-hook 'emacs-startup-hook
+	      (lambda ()
+		(message "*** Emacs loaded in %s with %d garbage collections."
+			 (format "%.2f seconds"
+				 (float-time
+				  (time-subtract after-init-time before-init-time)))
+			 gcs-done)))
+  #+end_src
+
+* Set up straight.el (package management)
+
+#+begin_src emacs-lisp
+(setq straight-repository-branch "develop")
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-verision 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+* Appearance
+** Color theme
+   The modus theme set is the most complete and polished emacs color theme I've
+   encountered. It's also WCAG 2 compliant meaning it will always have high color
+   contrast between UI elements, making it one of the easiest themes on the eyes
+   in any lighting situation.
+
+*** Settings
+
+**** Modus themes settings
+    #+begin_src emacs-lisp
+      (require-theme 'modus-themes)
+      (setq modus-themes-completions
+	    '((matches . (extrabold underline))
+	      (selection . (semibold italic))))
+      (setq modus-themes-prompts '(bold))
+      (setq modus-themes-bold-constructs t)
+      (setq modus-themes-common-palette-overrides
+	    modus-themes-preset-overrides-intense)
+      (setq modus-themes-variable-pitch-ui nil)
+      (setq modus-themes-italic-constructs t)
+      (setq modus-themes-org-blocks 'gray-background)
+      (setq modus-themes-headings
+	    '((1 . (variable-pitch 1.5))
+	      (2 . (1.3))
+	      (agenda-date . (1.3))
+	      (agenda-structure . (variable-pitch light 1.8))
+	      (t . (1.1))))
+    #+end_src
+
+**** Ef-themes settings
+    #+begin_src emacs-lisp
+      (setq ef-themes-headings
+	    '((1 . (variable-pitch 1.5))
+	      (2 . (1.3))
+	      (agenda-date . (1.3))
+	      (agenda-structure . (variable pitch light 1.8))
+	      (t . (1.1))))
+
+    #+end_src
+
+*** Load theme
+    #+begin_src emacs-lisp
+      (straight-use-package 'ef-themes)
+      (load-theme 'ef-night t)
+   #+end_src
+
+** Tweak display of UI elements
+*** Menu bar mode
+
+   The menu bar is the list of contextual dropdown options in the top of the
+   application (or in the universal top bar on macs).
+
+   I'm all for getting rid of UI clutter, especially if it's unused, but there
+   are a lot of features in emacs... Having contextual help aids discoverability,
+   and so it stays on.
+   
+   #+begin_src emacs-lisp
+     (menu-bar-mode 1)
+   #+end_src
+
+*** Scroll bar mode
+   #+begin_src emacs-lisp
+     (scroll-bar-mode -1)
+   #+end_src
+*** Tool bar mode
+   #+begin_src emacs-lisp
+     (tool-bar-mode -1)
+   #+end_src
+
+** Bells are evil
+   #+begin_src emacs-lisp
+     (setq ring-bell-function 'ignore)
+   #+end_src
+** Time display
+
+*** Format
+    I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
+
+    #+begin_src emacs-lisp
+      (setq display-time-24hr-format t)
+    #+end_src
+
+*** Add the time to the mode line
+
+   #+begin_src emacs-lisp
+     (display-time)
+   #+end_src
+
+** Font
+
+   I use FiraCode patched with the Nerd icons
+
+   #+begin_src emacs-lisp
+     (let ((font "FiraCode Nerd Font")
+	   (size 160))
+       (set-face-attribute 'default nil :font font :height size)
+       (set-frame-font font nil t)
+       (add-to-list 'default-frame-alist
+		    `(font . ,font)))
+   #+end_src
+
+** Tabs
+   Tabs are a useful workspace organization concept. You can have discrete window/buffer arrangements per tab,
+   allowing you to switch between them at will. They are pretty flexible so you could use them for keeping
+   track of different projects. Or you could have different window configuations for the same set of buffers
+   on different tabs to help with different types of work within the same project.
+
+   #+begin_src emacs-lisp
+     (setq tab-bar-show 1)
+   #+end_src
+* Evil (vim)
+
+  Evil mode is the backbone of this configuration. Coming from years
+  of vim use, modal editing is burned into my brain stem.
+
+  Fortunately, emacs has some of the best vim emulation of any editor
+  or environment around in the way of ~evil-mode~.
+
+** Install the package and enable it
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'evil)
+    (setq evil-vsplit-window-right t)
+    (setq evil-split-window-below t)
+    (setq evil-undo-system 'undo-redo)
+    (evil-mode 1)
+  #+end_src
+
+
+** Starting state for major modes
+
+   Sometimes I want to have some evil state other than =normal= for a particular
+   major mode, or the mode might not start in =normal= mode for some reason.
+   Regardless, configure thes modes with the desired initial state.
+
+   #+begin_src emacs-lisp
+     (defvar my-normal-modes '(Info-mode ibuffer-mode calendar-mode)
+       "Modes for which evil should begin in normal mode.")
+
+     (dolist (mode my-normal-modes)
+	 (evil-set-initial-state mode 'normal))
+   #+end_src
+
+** Leader key
+
+  The leader key is a super handy global prefix for keybindings.
+  It's used in this configuration as the entrypoint for most bindings.
+
+  After entering the leader key =SPC=, bindings are further subdivided
+  by the logical operations or object those bindings act on.
+
+  | _binding_ | _action_                           |
+  |---------+----------------------------------|
+  | SPC a   | application launcher             |
+  | SPC b   | buffer actions                   |
+  | SPC c   | config actions                   |
+  | SPC d   | dired actions                    |
+  | SPC e   | evaluation actions               |
+  | SPC f   | file based actions               |
+  | SPC g   | magit                            |
+  | SPC h   | help actions                     |
+  | SPC m   | [reserved] mode specific actions |
+  | SPC o   | org actions                      |
+  | SPC t   | tab actions                      |
+  | SPC w   | window based actions             |
+
+  #+begin_src emacs-lisp
+    (evil-set-leader 'normal (kbd "<SPC>"))
+  #+end_src
+
+* Backups
+
+  Emacs helpfully creates local backups of any files you're editing so that
+  if something happens to your session before saving the file, you'll have
+  a backup of the local changes.
+
+  It *un*-helpfully defaults to placing them in the same directory as the file
+  you are editing. This clutters things up immensely, particularily when you
+  are working in a version-controlled project and have to tell your VC tool
+  to ignore them.
+
+  Much better to just place them in a dedicated directory and forget about them.
+  Emacs will still save the day if something happens, but you don't have to
+  worry about it.
+
+  #+begin_src emacs-lisp
+    (setq backup-directory-alist '(("." . "~/.backups")))
+  #+end_src
+
+* Bindings
+
+** Global bindings
+
+   First, install a nicer help viewer.
+   
+   #+begin_src emacs-lisp
+     (straight-use-package 'helpful)
+   #+end_src
+
+   Visual/emacs state commands
+
+   #+begin_src emacs-lisp
+    (evil-define-key '(insert emacs visual) 'global
+      (kbd "s-x") #'execute-extended-command)
+   #+end_src
+   
+   Normal state commands
+   
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal 'global
+       (kbd "<SPC> <SPC>") #'ace-jump-word-mode)
+
+     (evil-define-key '(normal motion) 'global
+       (kbd "<leader> ;") #'eval-expression
+       (kbd "<leader> q") #'save-buffers-kill-terminal
+       (kbd "<leader> x") 'execute-extended-command
+       (kbd "g r") #'revert-buffer
+       ;; App launcher
+       (kbd "<leader> a c") #'calendar
+       (kbd "<leader> a a") #'org-agenda
+
+       ;; buffers
+       (kbd "<leader> b b") #'consult-buffer
+       (kbd "<leader> b n") #'next-buffer
+       (kbd "<leader> b p") #'previous-buffer
+       (kbd "<leader> b s") #'save-buffer
+       (kbd "<leader> b i") #'ibuffer
+       (kbd "<leader> b d") #'evil-delete-buffer
+       (kbd "<leader> b k") #'kill-current-buffer
+       ;; evaluation
+       (kbd "<leader> e e") #'eval-last-sexp
+       (kbd "<leader> e d") #'eval-deful
+       ;; files
+       (kbd "<leader> f f") #'find-file
+       (kbd "<leader> f c") #'find-config
+       ;; magit
+       (kbd "<leader> g") #'magit
+       ;; project
+       (kbd "<leader> p f") #'project-find-file
+       (kbd "<leader> p e") #'project-eshell
+       ;; imenu
+       (kbd "<leader> i") #'consult-imenu
+       ;; org
+       (kbd "<leader> o c") #'org-capture
+       ;; tab commands
+       (kbd "<leader> t t") #'tab-switch
+       (kbd "<leader> t n") #'tab-new
+       (kbd "<leader> t c") #'tab-close
+       (kbd "<leader> t j") #'tab-next
+       (kbd "<leader> t k") #'tab-previous
+       (kbd "<leader> t f") #'find-file-other-tab
+       (kbd "<leader> t b") #'switch-to-buffer-other-tab
+       (kbd "<leader> t r") #'tab-rename
+       (kbd "<leader> t d") #'dired-other-tab
+       ;; help(ful) commands
+       (kbd "<leader> h i") #'info-emacs-manual
+       (kbd "<leader> h v") #'helpful-variable
+       (kbd "<leader> h f") #'helpful-function
+       (kbd "<leader> h k") #'helpful-key
+       (kbd "<leader> h m") #'describe-mode
+       (kbd "<leader> h r") #'info-display-manual
+       ;; windows
+       (kbd "<leader> .") #'evil-window-split
+       (kbd "<leader> /") #'evil-window-vsplit
+       (kbd "<leader> w w") #'ace-window
+       (kbd "<leader> w H") #'evil-window-move-far-left
+       (kbd "<leader> w L") #'evil-window-move-far-right
+       (kbd "<leader> w K") #'evil-window-move-very-top
+       (kbd "<leader> w J") #'evil-window-move-very-bottom
+       (kbd "<leader> w c") #'evil-window-delete
+       (kbd "<leader> w v") #'evil-window-vsplit
+       (kbd "<leader> w s") #'evil-window-split
+       (kbd "<leader> w o") #'delete-other-windows
+       ;; ace jump
+       (kbd "<leader> <leader>") #'ace-jump-word-mode
+       ;; dired
+       (kbd "<leader> d d") #'dired-jump
+       (kbd "<leader> d j") #'dired
+       ;; shells
+       (kbd "<leader> s e") #'eshell
+       (kbd "<leader> s t") #'vterm)
+   #+end_src
+
+
+** Mode specific bindings
+
+*** S-expression navigation
+
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal 'global
+       "s" nil)
+     (evil-define-key 'normal 'global
+       (kbd "s l") #'forward-sexp
+       (kbd "s h") #'backward-sexp
+       (kbd "s j") #'down-list
+       (kbd "s k") #'backward-up-list
+       (kbd "s d") #'kill-sexp
+       (kbd "s $") #'forward-sentence
+       (kbd "s 0") #'backward-sentence)
+   #+end_src
+
+*** Meta-mode prefix
+
+   I use ~<leader> m~ as a prefix for any keybindings specific to the active major mode.
+   These are bound per major mode so that they are context sensitive. This allows me
+   to keep the global keybindings relatively uncluttered since I don't need a separate
+   prefix for org actions in org buffers, Terraform actions in Terraform buffers, etc.
+
+**** Org
+    
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal org-mode-map
+	(kbd "<leader> m p") #'org-publish-project
+	(kbd "<leader> m a") #'org-archive-subtree
+	(kbd "<leader> m r") #'org-refile
+	(kbd "<leader> m l") #'org-insert-link
+	(kbd "<leader> m f") #'org-footnote-action
+	(kbd "<leader> m t") #'org-toggle-inline-images)
+    #+end_src
+
+*** Calendar
+
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal calendar-mode-map
+       (kbd "l") 'calendar-forward-day
+       (kbd "h") 'calendar-backward-day
+       (kbd "k") 'calendar-backward-week
+       (kbd "j") 'calendar-forward-week
+       (kbd "q") 'calendar-exit
+       (kbd "0") 'calendar-beginning-of-week
+       (kbd "$") 'calendar-end-of-week
+       (kbd ".") 'calendar-goto-today
+       (kbd "d d") 'diary-view-entries
+       (kbd "d i") 'diary-insert-entry)
+   #+end_src
+
+*** Help(ful)
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) helpful-mode-map
+	(kbd "q") #'quit-window)
+
+      (evil-define-key '(normal motion) help-mode-map
+	(kbd "q") #'quit-window)
+    #+end_src
+
+*** Ibuffer
+
+     ibuffer is an interactive buffer viewer which allows for searching, filtering
+     and acting on all of the open buffers in your session.
+
+     #+begin_src emacs-lisp
+       (evil-define-key '(normal motion) ibuffer-mode-map
+	 (kbd "<leader> x") 'execute-extended-command
+	 ;; navigation
+	 (kbd "{") 'ibuffer-backwards-next-marked
+	 (kbd "}") 'ibuffer-forward-next-marked
+
+	 ;; mark commands
+	 (kbd "J") 'ibuffer-jump-to-buffer
+	 (kbd "m") 'ibuffer-mark-forward
+	 (kbd "~") 'ibuffer-toggle-marks
+	 (kbd "u") 'ibuffer-unmark-forward
+	 (kbd "DEL") 'ibuffer-unmark-backward
+	 (kbd "* *") 'ibuffer-mark-special-buffers
+	 (kbd "U") 'ibuffer-unmark-all-marks
+	 (kbd "* m") 'ibuffer-mark-by-mode
+	 (kbd "* M") 'ibuffer-mark-modified-buffers
+	 (kbd "* r") 'ibuffer-mark-read-only-buffers
+	 (kbd "* /") 'ibuffer-mark-dired-buffers
+	 (kbd "* h") 'ibuffer-mark-help-buffers
+	 (kbd "d") 'ibuffer-mark-for-delete
+
+	 ;; actions
+	 (kbd "x") 'ibuffer-do-kill-on-deletion-marks
+	 (kbd "gr") 'ibuffer-update
+
+	 ;; immediate actions
+	 (kbd "A") 'ibuffer-do-view
+	 (kbd "D") 'ibuffer-do-delete
+	 (kbd "K") 'ibuffer-do-kill-lines)
+     #+end_src
+
+*** Info
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) Info-mode-map
+	(kbd "<tab>") 'Info-next-reference
+	(kbd "S-<tab>") 'Info-prev-reference
+	(kbd "RET") 'Info-follow-nearest-node
+	(kbd "d") 'Info-directory
+	(kbd "u") 'Info-up
+	(kbd "s") 'Info-search
+	(kbd "i") 'Info-index
+	(kbd "a") 'info-apropos
+	(kbd "q") 'quit-window
+
+        (kbd "y y") 'Info-copy-current-node-name
+
+	[mouse-1] 'Info-mouse-follow-nearest-node
+	[follow-link] 'mouse-face
+	;; goto
+	(kbd "g m") 'Info-menu
+	(kbd "g t") 'Info-top-node
+	(kbd "g T") 'Info-toc
+	(kbd "g j") 'Info-next
+	(kbd "g k") 'Info-prev)
+    #+end_src
+
+*** Org
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal org-mode-map
+        (kbd "<tab>") 'org-cycle
+        (kbd "s-j") 'org-metadown
+        (kbd "s-k") 'org-metaup
+        (kbd "> >") 'org-shiftmetaright
+        (kbd "< <") 'org-shiftmetaleft)
+    #+end_src
+
+*** Magit
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) magit-status-mode-map
+	(kbd "q") 'magit-mode-bury-buffer
+	(kbd "c") 'magit-commit
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "TAB") 'magit-section-toggle
+	(kbd "RET") 'magit-visit-thing
+	(kbd "i") 'magit-gitignore
+	(kbd "l") 'magit-log
+	(kbd "P") 'magit-push
+	;; delete
+	(kbd "d d") 'magit-discard)
+
+      (evil-define-key '(normal visual) magit-status-mode-map
+	(kbd "s") 'magit-stage
+	(kbd "u") 'magit-unstage)
+
+      (evil-set-initial-state 'magit-log-mode 'normal)
+      (evil-define-key '(normal motion) magit-log-mode-map
+	(kbd "q") 'magit-log-bury-buffer
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "RET") 'magit-show-commit)
+
+      (evil-set-initial-state 'magit-revision-mode 'normal)
+      (evil-define-key '(normal motion) magit-revision-mode-map
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "TAB") 'magit-section-toggle
+	(kbd "RET") 'magit-visit-thing
+	(kbd "q") 'magit-mode-bury-buffer)
+
+    #+end_src
+
+*** Dired
+
+    #+begin_src emacs-lisp
+      (define-key dired-mode-map (kbd "SPC") nil)
+      (evil-define-key '(normal motion) dired-mode-map
+	(kbd "j") 'dired-next-line
+	(kbd "k") 'dired-previous-line
+	(kbd "h") 'dired-up-directory
+	(kbd "l") 'dired-find-file
+	(kbd "s") 'eshell
+	(kbd "g g") 'dired-first-file
+	(kbd "G") 'dired-last-file
+	(kbd "<left>") 'dired-up-directory
+	(kbd "<right>") 'dired-find-file
+	(kbd "<up>") 'dired-previous-line
+	(kbd "<down>") 'dired-next-line)
+    #+end_src
+* Calendar
+** Base settings
+
+
+** Diary
+
+   The diary is (for me) mostly a way to jot down an appointment or reminder.
+
+   #+begin_src emacs-lisp
+     (appt-activate 1)
+
+     (evil-define-key 'normal diary-fancy-display-mode-map
+       (kbd "q") 'quit-window)
+   #+end_src
+  
+* Completion
+
+** General minibuffer settings
+
+   When interacting with the [[elisp:(info "(emacs) Minibuffer")][minibuffer]], you may want to execute a command
+   that itself occupies the minibuffer. Enabling recursive-minibuffers allows
+   for you to nest arbitrarily deep minibuffer commands.
+
+   #+begin_src emacs-lisp
+     (setq enable-recursive-minibuffers t)
+   #+end_src
+
+   When you've used a command once, you will probably use it again in the near
+   future. savehist is a simple package that remembers and promotes recent
+   commands to the top of the prompted list of completions.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'savehist)
+     (savehist-mode)
+   #+end_src
+
+** Vertico
+
+   Vertico is a minibuffer completion enhancement library which wraps emacs'
+   built in [[elisp:(info "(emacs) Completion")][completion]] functionality. It is a member of a new era of packages
+   which seek to enhance existing methods in emacs, rather than replace them
+   entirely (looking at you helm).
+
+   Vertico specifically seeks to enhance `completing-read', a generic method
+   that prompts users to select from one of a provided set of alternatives.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'vertico)
+     (vertico-mode 1)
+     (define-key vertico-map (kbd "<escape>") #'keyboard-escape-quit)
+   #+end_src
+
+   Vertico also has a small stable of add-ons which change the default
+   UI or behavior of vertico. Here vertico-directory is enabled, which
+   introduces commands to delete directories fragments of the prompted
+   file-path.
+
+   #+begin_src emacs-lisp
+     (require 'vertico-directory)
+     (define-key vertico-map (kbd "DEL") #'vertico-directory-delete-char)
+     (define-key vertico-map (kbd "RET") #'vertico-directory-enter)
+   #+end_src
+
+** Corfu
+
+  Corfu offers completion in buffer, replacing company mode which sidesteps
+  Emacs' built in completion mechanisms.
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'corfu)
+    (setq corfu-auto t
+	  corfu-separator ?\s
+	  tab-always-indent 'complete)
+    (global-corfu-mode 1)
+  #+end_src
+
+** Marginalia
+
+   Marginalia is a small package that adds contextual information "in the margins"
+   of the completion. It is a perfect compliment to the work of vertico (or
+   other completion frameworks, it doesn't care)
+
+   This means file prompts will contain file permissions, last modified time,
+   file size. Commands will display their doc string, etc.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'marginalia)
+     (marginalia-mode 1)
+   #+end_src
+
+** Orderless
+
+   The orderless package allows for fuzzy searching of terms sepparated by spaces
+   (by default) and finds results regardless of search term order, thus, orderless.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'orderless)
+     (setq completion-styles '(orderless basic)
+	   completion-category-defaults nil
+	   completion-category-overrides '((file (styles partial-completion))))
+   #+end_src
+   
+** Consult
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'consult)
+  #+end_src
+
+** Embark
+
+    It's kinda like right click, for your keyboard.
+    Activating embark gives you a context-aware menu
+    of actions to perform on the target under point.
+
+    #+begin_src emacs-lisp
+      (straight-use-package 'embark)
+      (setq prefix-help-command #'embark-prefix-help-command)
+      (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+      (evil-define-key '(normal motion visual insert emacs) 'global
+	(kbd "s-<return>") #'embark-dwim
+	(kbd "C-<return>") #'embark-act)
+      (define-key minibuffer-local-map
+        (kbd "C-<return>") #'embark-act)
+    #+end_src
+   
+
+* Dictionary
+   Emacs has built in dictionary support (because of course it does). By dafault, it
+   expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
+   it falls back to [[dict.org]]. I'm fine with going over the wire for my definitions,
+   so let's just set it as default.
+
+   #+begin_src emacs-lisp
+     (setq dictionary-server "dict.org")
+   #+end_src
+* Dired
+
+  The Dir(ectory) Ed(itor). [[elisp:(info "(emacs) Dired")][Dired]] is a text based file manager, baked into
+  emacs. It uses the modest [[man:ls][ls]] command to generate the directory listing,
+  and adds a ton of functionality on top, allowing for inteligent commands
+  to operate on the seleted file(s). This only scratches the surface of
+  what it can do, so seriously, read the info doc.
+
+** Settings
+
+   #+begin_src emacs-lisp
+     (setq dired-kill-when-opening-new-dired-buffer t) 
+     (require 'dired)
+     (setq dired-listing-switches "-hal")
+     ;; this pre-fills the destination prompt of copy and rename
+     ;; commands with the directory of the other dired buffer
+     ;; if one is open. Very handy
+     (setq dired-dwim-target t)
+
+     ;; don't show all the file details by default
+     ;; They're still accessible with '('
+     (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+   #+end_src
+
+** Helper functions
+  
+   #+begin_src emacs-lisp
+     (defun dired-first-file ()
+       "Jump the point to the first dired entry that isn't . or .."
+       (interactive)
+       (beginning-of-buffer)
+       (dired-next-line 3))
+
+     (defun dired-last-file ()
+       "Jump the point to the last dired entry."
+       (interactive)
+       (end-of-buffer)
+       (dired-next-line -1))
+
+   #+end_src
+
+** dired-preview
+
+   sometimes it's handy to preview the file under point as you're navigating
+   a directory. dired-preview allows for exactly this behavior.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'dired-preview)
+     (evil-define-key 'normal dired-mode-map
+       (kbd "P") #'dired-preview-global-mode)
+   #+end_src
+
+** Icons
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'all-the-icons-dired)
+    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  #+end_src
+
+  
+* Git
+
+** Magit
+
+  Magit is great.
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'magit)
+    (evil-set-initial-state 'magit-status-mode 'normal)
+  #+end_src
+* GPG (egp)
+
+  GPG allows you to easily encrypt/decrypt files with either symmetric
+  (shared key) or asymetric (private key) encryption.
+
+  Emacs hooks into this seemlessly by automatically decrypting encrypted
+  files automatically when opening them using any loaded encyption keys
+  you have on the system.
+
+** Disable waiting for status
+
+  There is an outstanding bug in epg where waiting for the enryption status
+  will hang, which blocks the whole editor. We can disable this for now.
+
+  #+begin_src emacs-lisp
+    (fset 'epg-wait-for-status 'ignore)
+  #+end_src
+
+** PIN entry
+
+  PIN entry is used to authorize a gpg key for use. By default emacs will
+  reach out to an external proccess to prompt for the PIN. But this is
+  emacs, let's make emacs do it.
+
+  #+begin_src emacs-lisp
+    (setq epg-pinentry-mode 'loopback)
+  #+end_src
+
+* Programming
+** Electric pair mode
+   This is a fairly simple mode that automatically inserts the matching symbol. =)= after typing =(=
+   for instance.
+
+   #+begin_src emacs-lisp
+     (electric-pair-mode 1)
+   #+end_src
+
+** Indentation
+   #+begin_src emacs-lisp
+     (straight-use-package 'aggressive-indent)
+     (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+   #+end_src
+
+
+** PHP
+
+   Configure eglot to use inteliphense
+
+   *This doesn't work currently. not sure what's wrong with intelephense*
+   #+begin_src emacs-lisp
+     ;; (with-eval-after-load 'eglot
+     ;;   (add-to-list 'eglot-server-programs
+     ;;	    '(php-mode . ("intelephense" "--stdio"))))
+   #+end_src
+
+* Org
+
+  What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
+  is a best in class note taking format (think of markdown plus all the half-supported,
+  poorly documented extras, but all baked in and then some) It can make headings, lists,
+  emphasize text, store links to other headings in the same or different files and so
+  much more.
+
+  In addition to note taking, it handles thinks like task tracking, scheduling, effortless
+  ascii table editing, embedded runnable code snippets (think Jupyter notebooks).
+
+  In fact, this emacs configuration is written in org mode, and the embedded emacs lisp
+  is extracted and ran to formulate the actual config.
+
+** modules
+   As if org wasn't useful enough as it was, it also ships with a bunch of
+   additional modules that add additional features. Check it out by looking
+   at the customize-option for [[elisp:(customize-option 'org-modules)][org-modules]]. One useful one added here is
+   the ~man~ module, which provides support for linking to man pages (opened
+   in emacs' built in man page viewer, obviously)
+
+   #+begin_src emacs-lisp
+     (add-to-list 'org-modules 'ol-man)
+   #+end_src
+   
+
+** Settings
+
+    Org tempo does a lot, I should really look into more of what it has to offer.
+    At the very least, I use it for really handy expansion for scr blocks.
+    I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
+
+   #+begin_src emacs-lisp
+     (require 'org-tempo)
+   #+end_src
+
+   These are a handful of settings that set up default destinations for actions that
+   act globally, such as [[*Org capture][org-capture]].
+
+   #+begin_src emacs-lisp
+     (setq org-directory "~/Dropbox")
+     (defvar org-work-dir (concat org-directory "/Work/"))
+     (setq org-default-notes-file (concat org-work-dir "index.org"))
+     (add-to-list 'org-agenda-files org-default-notes-file)
+     (add-to-list 'org-agenda-files (concat org-work-dir "/tech_articles.org"))
+   #+end_src
+
+** Org agenda
+
+    Org agenda is cool. It tries to create a day/week/month planner out of any tasks
+    or scheduled events it can find in `org-agenda-files'.
+
+    I want it to pull in appointments or reminders from the diary as well since
+    those sorts of events don't really make sense to track in org.
+
+    #+begin_src emacs-lisp
+      (setq org-agenda-include-diary t)
+      (setq org-agenda-restore-windows-after-quit t)
+    #+end_src
+
+** Org capture
+
+   Org capture aids you in jotting down a quick note when you think of somethimg
+   you want to remember but don't want to lose momentum in whatever task you
+   were in the middle of.
+
+   Say you were writing a new feature in an application and you realize there's
+   a possibility to refactor an adjacent part of the code. Run org capture
+   ~M-x org-capture~, and a temporary buffer opens up where you can take your
+   note. It will automatically embed any contextual information about where
+   you took the note from, such as which file you were editing, the time,
+   etc. Once you finish the note, close the buffer with ~C-c C-c~ and the note
+   is gone, the window closes and you're back to doing what you were doing
+   before.
+
+   Behind the scenes ~org-capture~ stored your note in the file of your choosing
+   for you to review on your own time when convenient.
+
+   You can customize what types of notes ~org-capture~ can take, so that you can
+   capture any any data you want, place it into any file you want. Just customize
+   the variable ~org-capture-templates~.
+
+   #+begin_src emacs-lisp
+     (setq org-capture-templates
+	   '(("t" "Todo" entry (file+headline "~/Dropbox/Work/index.org" "Tasks")
+	      "* %?\n %i\n %a")))
+   #+end_src
+  
+** Org publish
+
+   Org allows you to export any org file to a variety of formats:
+     - markdown
+     - iCalendar (for scheduled/deadline events)
+     - ODT (or word if configured) documents
+     - plain text (using unicode or ascii elemets)
+     - html
+
+   Beyond this however, you can configure org to publish a whole collection
+   of org files into a viewable site. It will configure links, css, and more
+   for you. You just need to configure the projects variable
+
+   #+begin_src emacs-lisp
+     (require 'ox-publish)
+
+     (setq org-publish-use-timestamps-flag nil)
+
+     ;; Don't show validation link
+     (setq org-html-validation-link nil)
+     ;; Use our own scripts
+     (setq org-html-head-include-scripts nil)
+     ;; Use our own styles
+     (setq org-html-head-include-default-style nil)
+
+     ;; this allows us to get syntax highlighting in source blocks exported to html
+     (straight-use-package 'htmlize)
+
+     (setq org-publish-project-alist
+	   (list (list "blog"
+		       :components (list "blog-org" "blog-static"))
+		 (list "blog-org"
+		       :base-directory "~/blog/org"
+		       :publishing-directory "~/blog/public"
+		       :auto-sitemap nil
+		       :recursive t
+		       :with-broken-links t
+		       :section-numbers nil
+		       :exclude "README"
+		       :export-exclude-tags (list "draft")
+		       :with-author "Jon Harder"
+		       :with-toc nil
+		       :html-htmlize-output-type 'inline-css
+		       :html-doctype "html5"
+		       :html-html5-fancy t
+		       :html-preamble nil
+		       :html-postamble nil)
+		 (list "blog-static"
+		       :base-directory "~/blog/org/"
+		       :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
+		       :publishing-directory "~/blog/public/"
+		       :recursive t
+		       :publishing-function #'org-publish-attachment)))
+   #+end_src
+
+** Visual enhancements
+
+*** Emphasis markers
+
+    Hide the markers which annotate different emphasis indicators in text.
+
+    #+begin_src emacs-lisp
+      (setq org-hide-emphasis-markers t)
+    #+end_src
+
+*** bullets
+
+    It's nice to have some visual distinction between headers of different levels apart
+    from the default increasing number of astericks.
+
+    The org-bullets package replaces the astericks with different bullet glyphs and indents
+    them according to level.
+
+    #+begin_src emacs-lisp
+      (straight-use-package 'org-bullets)
+      (add-hook 'org-mode-hook
+    	      (lambda ()
+    		(org-bullets-mode 1)))
+    #+end_src
+
+*** better lists
+
+    It's nice to have unicode bullet glyphs in place of the org `-' and `*'.
+
+    #+begin_src emacs-lisp
+      (font-lock-add-keywords 'org-mode
+			      '(("^ +\\([-*]\\) "
+                                 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+    #+end_src
+
+** Babel
+
+   Org babel is a code embedding feature. It comes included in the default
+   install of Org (which itself comes with emacs core).
+
+   Every emacs-lisp block in this file is written in a source block that
+   babel will evaluate to form the actual, runnable config.
+
+   This is how [[file:init.el][init.el]] can be just one sexp; telling babel to untangle
+   this file in order to extract all the elisp.
+
+   It's far more powerfull than that though, as it allows for [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]]
+   in the style of Jupyter notebooks. You can execute a bash script, record the
+   results, then feed that data into a python script and export that into an org
+   table. This is a huge boon to reproducible research, and documenting processes.
+
+   In order to execute code snippets in an org buffer, that language must be supported
+   and enabled. By default, org only authorizes emacs-lisp, but this can be easily
+   changed using ~org-bable-do-load-languages~. Your language of choice might not be
+   supported out of the box, even if you add it using ~org-babel-do-load-languages~;
+   if this is the case, you'll need to load a third-party package to support it.
+   These are typically called =ob-$LANG=. For example, to support executing haskell,
+   you must install the package =ob-haskell=.
+
+*** Enabling more languages
+
+     #+begin_src emacs-lisp
+       (org-babel-do-load-languages
+	'org-babel-load-languages
+	'((emacs-lisp . t)
+	  (python . t)
+	  (calc . t)
+	  (shell . t)))
+     #+end_src
+
+     #+RESULTS:
+
+** toc-org
+
+   Toc org is a package that dynamically generates and maintains a table
+   of contents within org documents.
+
+   All you need to do is annotate any heading with ~:TOC:~ and the plugin
+   will highjack that heading for use on save.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'toc-org)
+     (add-hook 'org-mode-hook 'toc-org-mode)
+   #+end_src
+
+
+* Shells
+** Eshell
+** Vterm
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'vterm)
+     (setq vterm-shell "/opt/homebrew/bin/nu")
+   #+end_src
+
+* Navigation
+
+** Windows
+
+*** ace-window
+
+    Ace window is a handy way to supercharge `other-window' by giving
+    each option a lettered target. Simply pressing that letter jumps
+    straight to the targeted window, without having to cycle through
+    any intermediate windows in the cycle.
+
+    #+begin_src emacs-lisp
+      (straight-use-package 'ace-window)
+    #+end_src
+
+** Ace jump
+
+  Ace jump is a fantastic package that allows you to jump to any point on the screen with 3
+  key presses or less. It's like using your mouse to go wherever you need, but without
+  moving your hands off the keyboard.
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'ace-jump-mode)
+  #+end_src
+
+
+
+* Email
+  At this point you shouldn't be surprised to find that emacs has decent support for sending
+  and receiving emails. It even has a mail retrieval utility built in, rmail.
+
+  This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial layer that
+  separates emacs from the motherboard).
+
+  *NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
+  remote inboxes. It runs for a time, then errors out with a socket error complaining about
+  an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
+  from =master=.
+
+  #+begin_src sh
+    brew install --HEAD isync
+  #+end_src
+
+  It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
+
+  for mu and mu4e to work, mu must be initialized with your maildir
+
+  #+begin_src sh
+    mu init --maildir=~/mail --my-address=jharder@kipsu.com
+  #+end_src
+
+  and then indexed:
+
+  #+begin_src sh
+    mu index
+  #+end_src
+
+  The mu package comes with the emacs package mu4e. Let's add it to
+  the load path.
+
+  #+begin_src emacs-lisp
+    (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.10.7/share/emacs/site-lisp/mu/mu4e")
+    (require 'mu4e)
+
+    (setq mu4e-attachments-dir "~/Downloads"
+	  mu4e-maildir "~/Mail"
+	  mu4e-get-mail-command "mbsync -a"
+	  mu4e-refile-folder "/Archive"
+	  mu4e-sent-folder "/Sent"
+	  mu4e-drafts-folder "/Drafts"
+	  mu4e-trash-folder "/Trash")
+
+    (setq smtpmail-default-smtp-server "smtp.gmail.com"
+	  smtpmail-smtp-server "smtp.gmail.com"
+	  user-mail-address "jharder@kipsu.com")
+  #+end_src
