@@ -482,6 +482,7 @@
 	(kbd "i") 'magit-gitignore
 	(kbd "l") 'magit-log
 	(kbd "P") 'magit-push
+        (kbd "p") 'magit-pull
 	;; delete
 	(kbd "d d") 'magit-discard)
 
