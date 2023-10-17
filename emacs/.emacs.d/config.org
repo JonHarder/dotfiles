@@ -275,8 +275,17 @@
        ;; magit
        (kbd "<leader> g") #'magit
        ;; project
-       (kbd "<leader> p f") #'project-find-file
+       (kbd "<leader> p !") #'project-shell-command
+       (kbd "<leader> p &") #'project-async-shell-command
+       (kbd "<leader> p D") #'project-dired
+       (kbd "<leader> p b") #'project-switch-to-buffer
+       (kbd "<leader> p d") #'project-find-dir
        (kbd "<leader> p e") #'project-eshell
+       (kbd "<leader> p f") #'project-find-file
+       (kbd "<leader> p m") #'magit-project-status
+       (kbd "<leader> p k") #'project-kill-buffers
+       (kbd "<leader> p p") #'project-switch-project
+       (kbd "<leader> p /") #'project-find-regexp
        ;; imenu
        (kbd "<leader> i") #'consult-imenu
        ;; org
@@ -354,7 +363,9 @@
 	(kbd "<leader> m r") #'org-refile
 	(kbd "<leader> m l") #'org-insert-link
 	(kbd "<leader> m f") #'org-footnote-action
-	(kbd "<leader> m t") #'org-toggle-inline-images)
+	(kbd "<leader> m t") #'org-toggle-inline-images
+	(kbd "<leader> m s") #'org-schedule
+	(kbd "<leader> m d") #'org-deadline)
     #+end_src
 
 *** Calendar
