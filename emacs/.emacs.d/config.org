@@ -471,18 +471,19 @@
 
     #+begin_src emacs-lisp
       (evil-define-key '(normal motion) magit-status-mode-map
-	(kbd "q") 'magit-mode-bury-buffer
-	(kbd "c") 'magit-commit
-	(kbd "j") 'magit-next-line
-	(kbd "k") 'magit-previous-line
-	(kbd "}") 'magit-section-forward
-	(kbd "{") 'magit-section-backward
-	(kbd "TAB") 'magit-section-toggle
-	(kbd "RET") 'magit-visit-thing
-	(kbd "i") 'magit-gitignore
-	(kbd "l") 'magit-log
-	(kbd "P") 'magit-push
-        (kbd "p") 'magit-pull
+        (kbd "b") #'magit-branch
+	(kbd "q") #'magit-mode-bury-buffer
+	(kbd "c") #'magit-commit
+	(kbd "j") #'magit-next-line
+	(kbd "k") #'magit-previous-line
+	(kbd "}") #'magit-section-forward
+	(kbd "{") #'magit-section-backward
+	(kbd "TAB") #'magit-section-toggle
+	(kbd "RET") #'magit-visit-thing
+	(kbd "i") #'magit-gitignore
+	(kbd "l") #'magit-log
+	(kbd "P") #'magit-push
+	(kbd "p") #'magit-pull
 	;; delete
 	(kbd "d d") 'magit-discard)
 
@@ -758,6 +759,11 @@
 
   #+begin_src emacs-lisp
     (setq epg-pinentry-mode 'loopback)
+  #+end_src
+
+* Http server (simple-httpd)
+  #+begin_src emacs-lisp
+    (straight-use-package 'simple-httpd)
   #+end_src
 
 * Programming
