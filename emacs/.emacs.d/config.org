@@ -542,7 +542,6 @@
      (evil-define-key 'normal diary-fancy-display-mode-map
        (kbd "q") 'quit-window)
    #+end_src
-  
 * Completion
 
 ** General minibuffer settings
@@ -872,8 +871,10 @@
 
    #+begin_src emacs-lisp
      (setq org-capture-templates
-	   '(("t" "Todo" entry (file+headline "~/Dropbox/Work/index.org" "Tasks")
-	      "* %?\n %i\n %a")))
+	   '(("t" "Todo" entry (file+headline "" "Tasks")
+	      "* %?\n %i\n %a")
+	     ("r" "Read Article" item (file+headline "" "Reading")
+	      "%t %c%?")))
    #+end_src
   
 ** Org publish
