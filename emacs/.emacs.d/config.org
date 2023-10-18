@@ -266,6 +266,9 @@
        (kbd "<leader> b i") #'ibuffer
        (kbd "<leader> b d") #'evil-delete-buffer
        (kbd "<leader> b k") #'kill-current-buffer
+       ;; config related commands
+       (kbd "<leader> c .") #'find-config
+       ;; (kbd "<leader> c r") #'
        ;; evaluation
        (kbd "<leader> e e") #'eval-last-sexp
        (kbd "<leader> e d") #'eval-deful
@@ -1026,6 +1029,31 @@
 
 * Shells
 ** Eshell
+    I want more intelligent completion in eshell.
+
+    This provides smart docker completion, not only for available
+    subcommands, but also for realtime completion of available
+    images in particular for commands like `run'. 
+    #+begin_src emacs-lisp
+      (defconst pcmpl-docker-commands
+	'("run" "exec" "ps" "build" "pull" "images" "login" "logout"
+	  "search" "version" "info"
+	  "compose"))
+
+      (defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+
+      (defun pcmpl-docker-images ()
+	(let ((results (shell-command-to-string docker-images-command)))
+	  (string-split results "\n")))
+
+      (defun pcomplete/docker ()
+	"Completion for `docker'."
+	(pcomplete-here* pcmpl-docker-commands)
+	(cond
+	 ((pcomplete-match (regexp-opt '("run")) 1)
+	  (pcomplete-here* (pcmpl-docker-images)))))
+
+    #+end_src
 ** Vterm
 
    #+begin_src emacs-lisp
