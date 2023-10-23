@@ -1,3 +1,4 @@
+" -*- vimrc -*-
 " vim: filetype=vifm :
 " Sample configuration file for vifm on OSX (last updated: 2 April, 2023)
 " You can edit this file by hand.
@@ -28,7 +29,7 @@
 "   "    echo 'Note: using `'.$EDITOR.'` as an editor'
 "   "    let &vicmd = $EDITOR
 "   endif
-set vicmd=hx
+set vicmd=lvim
 set findprg=/usr/bin/find
 
 " This makes vifm perform file operations on its own instead of relying on
