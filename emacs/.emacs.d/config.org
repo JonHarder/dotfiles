@@ -80,7 +80,7 @@
 *** Load theme
     #+begin_src emacs-lisp
       (straight-use-package 'ef-themes)
-      (load-theme 'ef-night t)
+      (load-theme 'ef-winter t)
    #+end_src
 
 ** Tweak display of UI elements
@@ -268,7 +268,8 @@
        (kbd "<leader> b k") #'kill-current-buffer
        ;; config related commands
        (kbd "<leader> c .") #'find-config
-       ;; (kbd "<leader> c r") #'
+       (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
+       (kbd "<leader> c t") #'consult-theme
        ;; evaluation
        (kbd "<leader> e e") #'eval-last-sexp
        (kbd "<leader> e d") #'eval-deful
@@ -329,7 +330,10 @@
        (kbd "<leader> d j") #'dired
        ;; shells
        (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'vterm)
+       (kbd "<leader> s t") #'vterm
+       ;; toggles
+       (kbd "<leader> T t") #'modus-themes-toggle
+       (kbd "<leader> T n") #'display-line-numbers-mode)
    #+end_src
 
 
@@ -525,6 +529,7 @@
 	(kbd "h") 'dired-up-directory
 	(kbd "l") 'dired-find-file
 	(kbd "s") 'eshell
+	(kbd "z a") 'dired-dotfiles-toggle
 	(kbd "g g") 'dired-first-file
 	(kbd "G") 'dired-last-file
 	(kbd "<left>") 'dired-up-directory
@@ -690,6 +695,23 @@
      (add-hook 'dired-mode-hook 'dired-hide-details-mode)
    #+end_src
 
+   I want to be able to toggle the display of dotfiles in dired. This function allows me to
+   do exactly that.
+
+   #+begin_src emacs-lisp
+     (defun dired-dotfiles-toggle ()
+       (interactive)
+       (when (equal major-mode 'dired-mode)
+	 (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
+	     (progn
+	       (set (make-local-variable 'dired-dotfiles-show-p) nil)
+	       (message "h")
+	       (dired-mark-files-regexp "^\\\.")
+	       (dired-do-kill-lines))
+	   (progn (revert-buffer)
+		  (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+   #+end_src
+
 ** Helper functions
   
    #+begin_src emacs-lisp
@@ -770,6 +792,42 @@
   #+end_src
 
 * Programming
+** Rainbow delimiters
+   
+   Highlight netsted delimeters with unique colors so you can tell
+   at a glance how deep you are.
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'rainbow-delimiters)
+     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+   #+end_src
+
+** Eglot
+
+   Language server client implimentation. Comes baked into emacs starting
+   at version 29.
+
+   #+begin_src emacs-lisp
+     (add-hook 'eglot-managed-mode-hook
+	       (lambda ()
+		 (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
+		 (setq eldoc-documentation-functions
+		       '(flymake-eldoc-function
+			 eglot-signature-eldoc-function
+			 eglot-hover-eldoc-function))))
+
+   #+end_src
+** Dockerfile support
+   #+begin_src emacs-lisp
+     (straight-use-package 'dockerfile)
+   #+end_src
+** Highlight TODO statements
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'hl-todo)
+     (global-hl-todo-mode 1)
+   #+end_src
+
 ** Electric pair mode
    This is a fairly simple mode that automatically inserts the matching symbol. =)= after typing =(=
    for instance.
@@ -784,7 +842,6 @@
      (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
    #+end_src
 
-
 ** PHP
 
    Configure eglot to use inteliphense
@@ -796,6 +853,14 @@
      ;;	    '(php-mode . ("intelephense" "--stdio"))))
    #+end_src
 
+** Vimrc
+
+  This adds syntax highlighting for the random times I'll need to edit
+  a vimrc-esque file from emacs.
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'vimrc-mode)
+  #+end_src
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
@@ -1028,12 +1093,41 @@
 
 
 * Shells
+** Basic config
+
+   This sets which shell to use when executing commands from dired or compile and friends
+   This is different from the shell to use in interactive sessions.
+
+   Because I use [[https://www.nushell.sh][nushell]] for my shell, regular commands like [[man:find][find]] often choke when tools
+   like dired assume the posix implementation.
+
+   #+begin_src emacs-lisp
+     (setq explicit-shell-file-name "/bin/zsh"
+           shell-file-name "/bin/zsh")
+   #+end_src
+
 ** Eshell
+
+*** Settings
+
+    #+begin_src emacs-lisp
+      (straight-use-package 'eshell-syntax-highlighting)
+      (eshell-syntax-highlighting-global-mode +1)
+      (require 'eshell)
+      (require 'em-smart)
+      (setq eshell-where-to-jump 'begin)
+      (setq eshell-review-quick-commands nil)
+      (setq eshell-smart-space-goes-to-end t)
+    #+end_src
+
+*** Completion
+
     I want more intelligent completion in eshell.
 
     This provides smart docker completion, not only for available
     subcommands, but also for realtime completion of available
     images in particular for commands like `run'. 
+
     #+begin_src emacs-lisp
       (defconst pcmpl-docker-commands
 	'("run" "exec" "ps" "build" "pull" "images" "login" "logout"
@@ -1074,6 +1168,28 @@
 
     #+begin_src emacs-lisp
       (straight-use-package 'ace-window)
+    #+end_src
+
+*** Window management
+
+    Window management in emacs is very powerful, but oft misunderstood.
+    Here are some rules to inform emacs of where I want particular windows
+    to go.
+
+    #+begin_src emacs-lisp
+      (setq switch-to-buffer-obey-display-actions t)
+
+      (add-to-list 'display-buffer-alist
+		   '("\\*eshell\\*"
+		     (display-buffer-in-side-window)
+		     (side . bottom)
+		     (slot . 0)
+		     (window-height . 15)))
+
+      (add-to-list 'display-buffer-alist
+		   '("Calendar"
+		     (display-buffer-below-selected)
+		     (window-height . 15)))
     #+end_src
 
 ** Ace jump
@@ -1136,4 +1252,24 @@
     (setq smtpmail-default-smtp-server "smtp.gmail.com"
 	  smtpmail-smtp-server "smtp.gmail.com"
 	  user-mail-address "jharder@kipsu.com")
+  #+end_src
+
+
+* Miscellanious functions
+
+  This is a collection of random functions I've written to help me run one-off tasks.
+  
+  #+begin_src emacs-lisp
+    (defun unzip-move (file dest &optional extension)
+      "Unzip the archive FILE and move extracted file to the directory DEST.
+
+    If EXTENSION is non-null, look for extracted file with that extension,
+    otherwise, assume csv."
+      (interactive "fFile: \nDDestination: ")
+      (let* ((unzipped (file-name-sans-extension file))
+	     (extension (or extension ".csv"))
+	     (shortened (format "%s.%s" (car (split-string file "\\.")) extension)))
+	(shell-command (format "unzip %s" file))
+	(rename-file unzipped (concat dest "/" shortened))
+	(delete-file file)))
   #+end_src

@@ -4,78 +4,16 @@
   user-emacs-directory))
 
 ;;; temp function for hilton work
-(defun hilton-extract (file dest)
-  (interactive "fFile: \nDDestination: ")
-  (let ((unzipped (file-name-sans-extension file))
-	(shortened (format "%s.csv"
-			   (car (split-string file "\\.")))))
-    (shell-command (format "unzip %s"
-			   file))
-    (rename-file unzipped (concat
-			   dest "/" shortened))
-    (delete-file file)))
 
 (defun find-config ()
   "Open the user's config file."
   (interactive)
   (find-file (concat user-emacs-directory "config.org")))
 
-;;;; Shells
-(setq explicit-shell-file-name "/bin/zsh"
-      shell-file-name "/bin/zsh")
-
-;; Window Management
-(setq switch-to-buffer-obey-display-actions t)
-
-(add-to-list 'display-buffer-alist
-	     '("\\*eshell\\*"
-	       (display-buffer-in-side-window)
-	       (side . bottom)
-	       (slot . 0)
-	       (window-height . 15)))
-
-(add-to-list 'display-buffer-alist
-	     '("Calendar"
-	       (display-buffer-below-selected)
-	       (window-height . 15)))
-
-;; Toggles
-(evil-define-key 'normal 'global
-  (kbd "<leader> T t") #'modus-themes-toggle
-  (kbd "<leader> T n") #'display-line-numbers-mode)
-
-;; Eshell
-(straight-use-package 'eshell-syntax-highlighting)
-(eshell-syntax-highlighting-global-mode +1)
-(require 'eshell)
-(require 'em-smart)
-(setq eshell-where-to-jump 'begin)
-(setq eshell-review-quick-commands nil)
-(setq eshell-smart-space-goes-to-end t)
-
-
 ;; Http
 (straight-use-package 'restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
-
-;; Programming modes
-;;; General settings applicable to all programming modes.
-(straight-use-package 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
-;;; LSP setup
-;; Emacs 29 packages `eglot', so no need to install it.
-(add-hook 'eglot-managed-mode-hook
-	  (lambda ()
-	    (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
-	    (setq eldoc-documentation-functions
-		  '(flymake-eldoc-function
-		    eglot-signature-eldoc-function
-		    eglot-hover-eldoc-function))))
-		  
-
-;;; Lisps
 
 ;;; Yaml
 (straight-use-package 'yaml-mode)
