@@ -5,46 +5,15 @@
 
 ;;; temp function for hilton work
 
-(defun find-config ()
-  "Open the user's config file."
-  (interactive)
-  (find-file (concat user-emacs-directory "config.org")))
-
 ;; Http
 (straight-use-package 'restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 
-;;; Yaml
-(straight-use-package 'yaml-mode)
-
-;;; Docker
-(straight-use-package 'dockerfile-mode)
-
-;;; Terraform
-(straight-use-package 'terraform-mode)
-
-;;; Rust
-(straight-use-package 'rust-mode)
-
-;;; PHP
-(straight-use-package 'php-mode)
-
 ;; Reading
 ;;; Epub support
 (straight-use-package 'nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-
-;; Icons
-(straight-use-package 'all-the-icons)
-;;; If icons aren't showing up, you may need to install the font.
-;;; If so, uncomment and execute the following line.
-;; (all-the-icons-install-fonts t)
-
-(straight-use-package 'all-the-icons-completion)
-(all-the-icons-completion-mode)
-(if (require 'marginalia nil nil)
-    (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 ;; miscellanious functions
 (defun masteringemacs ()
@@ -158,3 +127,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'narrow-to-region 'disabled nil)

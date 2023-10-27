@@ -173,11 +173,29 @@
    Regardless, configure thes modes with the desired initial state.
 
    #+begin_src emacs-lisp
-     (defvar my-normal-modes '(Info-mode ibuffer-mode calendar-mode)
+     (defvar my-normal-modes '(Info-mode ibuffer-mode calendar-mode grep-mode)
        "Modes for which evil should begin in normal mode.")
 
+     (defvar my-insert-modes '(vterm-mode)
+       "Modes for which evil should begin in insert mode.")
+
      (dolist (mode my-normal-modes)
-	 (evil-set-initial-state mode 'normal))
+       (evil-set-initial-state mode 'normal))
+     (dolist (mode my-insert-modes)
+       (evil-set-initial-state mode 'insert))
+   #+end_src
+
+** Cursor shape/color
+
+   It's helpful to set the cursor to different colors and shapes to help remind
+   me what evil state I'm currently in.
+
+   /NOTE:/ is there a way to set these colors to something theme compatible?
+
+   #+begin_src emacs-lisp
+     (setq evil-normal-state-cursor '(box "light blue")
+	   evil-insert-state-cursor '(bar "medium sea green")
+	   evil-visual-state-cursor '(hollow "orange"))
    #+end_src
 
 ** Leader key
@@ -330,7 +348,7 @@
        (kbd "<leader> d j") #'dired
        ;; shells
        (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'vterm
+       (kbd "<leader> s t") #'multi-vterm
        ;; toggles
        (kbd "<leader> T t") #'modus-themes-toggle
        (kbd "<leader> T n") #'display-line-numbers-mode)
@@ -390,6 +408,15 @@
        (kbd "d d") 'diary-view-entries
        (kbd "d i") 'diary-insert-entry)
    #+end_src
+
+*** Grep (results)
+
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal grep-mode-map
+	(kbd "j") #'next-error-no-select
+	(kbd "k") #'previous-error-no-select
+	(kbd "q") #'quit-window)
+    #+end_src
 
 *** Help(ful)
 
@@ -478,7 +505,7 @@
 
     #+begin_src emacs-lisp
       (evil-define-key '(normal motion) magit-status-mode-map
-        (kbd "b") #'magit-branch
+	(kbd "b") #'magit-branch
 	(kbd "q") #'magit-mode-bury-buffer
 	(kbd "c") #'magit-commit
 	(kbd "j") #'magit-next-line
@@ -489,6 +516,7 @@
 	(kbd "RET") #'magit-visit-thing
 	(kbd "i") #'magit-gitignore
 	(kbd "l") #'magit-log
+        (kbd "m") #'magit-merge
 	(kbd "P") #'magit-push
 	(kbd "p") #'magit-pull
 	;; delete
@@ -661,7 +689,19 @@
         (kbd "C-<return>") #'embark-act)
     #+end_src
    
-    
+* Icons
+  #+begin_src emacs-lisp
+    ;; Icons
+    (straight-use-package 'all-the-icons)
+    ;;; If icons aren't showing up, you may need to install the font.
+    ;;; If so, uncomment and execute the following line.
+    ;; (all-the-icons-install-fonts t)
+  
+    (straight-use-package 'all-the-icons-completion)
+    (all-the-icons-completion-mode)
+    (if (require 'marginalia nil nil)
+        (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+  #+end_src 
 * Dictionary
    Emacs has built in dictionary support (because of course it does). By dafault, it
    expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
@@ -819,7 +859,7 @@
    #+end_src
 ** Dockerfile support
    #+begin_src emacs-lisp
-     (straight-use-package 'dockerfile)
+     (straight-use-package 'dockerfile-mode)
    #+end_src
 ** Highlight TODO statements
 
@@ -851,6 +891,18 @@
      ;; (with-eval-after-load 'eglot
      ;;   (add-to-list 'eglot-server-programs
      ;;	    '(php-mode . ("intelephense" "--stdio"))))
+     (straight-use-package 'php-mode)
+   #+end_src
+
+** Terraform
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'terraform-mode)
+   #+end_src
+
+** Rust
+   #+begin_src emacs-lisp
+     (straight-use-package 'rust-mode)
    #+end_src
 
 ** Vimrc
@@ -861,6 +913,11 @@
   #+begin_src emacs-lisp
     (straight-use-package 'vimrc-mode)
   #+end_src
+
+** Yaml 
+   #+begin_src emacs-lisp
+     (straight-use-package 'yaml-mode)
+   #+end_src
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
@@ -883,6 +940,7 @@
    in emacs' built in man page viewer, obviously)
 
    #+begin_src emacs-lisp
+     (require 'ol-man)
      (add-to-list 'org-modules 'ol-man)
    #+end_src
    
@@ -1152,6 +1210,7 @@
 
    #+begin_src emacs-lisp
      (straight-use-package 'vterm)
+     (straight-use-package 'multi-vterm)
      (setq vterm-shell "/opt/homebrew/bin/nu")
    #+end_src
 
@@ -1272,4 +1331,10 @@
 	(shell-command (format "unzip %s" file))
 	(rename-file unzipped (concat dest "/" shortened))
 	(delete-file file)))
+
+    (defun find-config ()
+      "Open the user's config file."
+      (interactive)
+      (find-file (concat user-emacs-directory "config.org")))
+
   #+end_src
