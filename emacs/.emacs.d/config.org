@@ -244,327 +244,6 @@
     (setq backup-directory-alist '(("." . "~/.backups")))
   #+end_src
 
-* Bindings
-
-** Global bindings
-
-   First, install a nicer help viewer.
-   
-   #+begin_src emacs-lisp
-     (straight-use-package 'helpful)
-   #+end_src
-
-   Visual/emacs state commands
-
-   #+begin_src emacs-lisp
-    (evil-define-key '(insert emacs visual) 'global
-      (kbd "s-x") #'execute-extended-command)
-   #+end_src
-   
-   Normal state commands
-   
-   #+begin_src emacs-lisp
-     (evil-define-key 'normal 'global
-       (kbd "<SPC> <SPC>") #'ace-jump-word-mode)
-
-     (evil-define-key '(normal motion) 'global
-       (kbd "<leader> ;") #'eval-expression
-       (kbd "<leader> q") #'save-buffers-kill-terminal
-       (kbd "<leader> x") 'execute-extended-command
-       (kbd "g r") #'revert-buffer
-       ;; App launcher
-       (kbd "<leader> a c") #'calendar
-       (kbd "<leader> a a") #'org-agenda
-
-       ;; buffers
-       (kbd "<leader> b b") #'consult-buffer
-       (kbd "<leader> b n") #'next-buffer
-       (kbd "<leader> b p") #'previous-buffer
-       (kbd "<leader> b s") #'save-buffer
-       (kbd "<leader> b i") #'ibuffer
-       (kbd "<leader> b d") #'evil-delete-buffer
-       (kbd "<leader> b k") #'kill-current-buffer
-       ;; config related commands
-       (kbd "<leader> c .") #'find-config
-       (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
-       (kbd "<leader> c t") #'consult-theme
-       ;; evaluation
-       (kbd "<leader> e e") #'eval-last-sexp
-       (kbd "<leader> e d") #'eval-deful
-       ;; files
-       (kbd "<leader> f f") #'find-file
-       (kbd "<leader> f c") #'find-config
-       ;; magit
-       (kbd "<leader> g") #'magit
-       ;; project
-       (kbd "<leader> p !") #'project-shell-command
-       (kbd "<leader> p &") #'project-async-shell-command
-       (kbd "<leader> p D") #'project-dired
-       (kbd "<leader> p b") #'project-switch-to-buffer
-       (kbd "<leader> p d") #'project-find-dir
-       (kbd "<leader> p e") #'project-eshell
-       (kbd "<leader> p f") #'project-find-file
-       (kbd "<leader> p m") #'magit-project-status
-       (kbd "<leader> p k") #'project-kill-buffers
-       (kbd "<leader> p p") #'project-switch-project
-       (kbd "<leader> p /") #'project-find-regexp
-       ;; imenu
-       (kbd "<leader> i") #'consult-imenu
-       ;; org
-       (kbd "<leader> o c") #'org-capture
-       ;; tab commands
-       (kbd "<leader> t t") #'tab-switch
-       (kbd "<leader> t n") #'tab-new
-       (kbd "<leader> t c") #'tab-close
-       (kbd "<leader> t j") #'tab-next
-       (kbd "<leader> t k") #'tab-previous
-       (kbd "<leader> t f") #'find-file-other-tab
-       (kbd "<leader> t b") #'switch-to-buffer-other-tab
-       (kbd "<leader> t r") #'tab-rename
-       (kbd "<leader> t d") #'dired-other-tab
-       ;; help(ful) commands
-       (kbd "<leader> h i") #'info-emacs-manual
-       (kbd "<leader> h v") #'helpful-variable
-       (kbd "<leader> h f") #'helpful-function
-       (kbd "<leader> h k") #'helpful-key
-       (kbd "<leader> h m") #'describe-mode
-       (kbd "<leader> h r") #'info-display-manual
-       ;; windows
-       (kbd "<leader> .") #'evil-window-split
-       (kbd "<leader> /") #'evil-window-vsplit
-       (kbd "<leader> w w") #'ace-window
-       (kbd "<leader> w H") #'evil-window-move-far-left
-       (kbd "<leader> w L") #'evil-window-move-far-right
-       (kbd "<leader> w K") #'evil-window-move-very-top
-       (kbd "<leader> w J") #'evil-window-move-very-bottom
-       (kbd "<leader> w c") #'evil-window-delete
-       (kbd "<leader> w v") #'evil-window-vsplit
-       (kbd "<leader> w s") #'evil-window-split
-       (kbd "<leader> w o") #'delete-other-windows
-       ;; ace jump
-       (kbd "<leader> <leader>") #'ace-jump-word-mode
-       ;; dired
-       (kbd "<leader> d d") #'dired-jump
-       (kbd "<leader> d j") #'dired
-       ;; shells
-       (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'multi-vterm
-       ;; toggles
-       (kbd "<leader> T t") #'modus-themes-toggle
-       (kbd "<leader> T n") #'display-line-numbers-mode)
-   #+end_src
-
-
-** Mode specific bindings
-
-*** S-expression navigation
-
-   #+begin_src emacs-lisp
-     (evil-define-key 'normal 'global
-       "s" nil)
-     (evil-define-key 'normal 'global
-       (kbd "s l") #'forward-sexp
-       (kbd "s h") #'backward-sexp
-       (kbd "s j") #'down-list
-       (kbd "s k") #'backward-up-list
-       (kbd "s d") #'kill-sexp
-       (kbd "s $") #'forward-sentence
-       (kbd "s 0") #'backward-sentence)
-   #+end_src
-
-*** Meta-mode prefix
-
-   I use ~<leader> m~ as a prefix for any keybindings specific to the active major mode.
-   These are bound per major mode so that they are context sensitive. This allows me
-   to keep the global keybindings relatively uncluttered since I don't need a separate
-   prefix for org actions in org buffers, Terraform actions in Terraform buffers, etc.
-
-**** Org
-    
-    #+begin_src emacs-lisp
-      (evil-define-key 'normal org-mode-map
-	(kbd "<leader> m p") #'org-publish-project
-	(kbd "<leader> m a") #'org-archive-subtree
-	(kbd "<leader> m r") #'org-refile
-	(kbd "<leader> m l") #'org-insert-link
-	(kbd "<leader> m f") #'org-footnote-action
-	(kbd "<leader> m t") #'org-toggle-inline-images
-	(kbd "<leader> m s") #'org-schedule
-	(kbd "<leader> m d") #'org-deadline)
-    #+end_src
-
-*** Calendar
-
-   #+begin_src emacs-lisp
-     (evil-define-key 'normal calendar-mode-map
-       (kbd "l") 'calendar-forward-day
-       (kbd "h") 'calendar-backward-day
-       (kbd "k") 'calendar-backward-week
-       (kbd "j") 'calendar-forward-week
-       (kbd "q") 'calendar-exit
-       (kbd "0") 'calendar-beginning-of-week
-       (kbd "$") 'calendar-end-of-week
-       (kbd ".") 'calendar-goto-today
-       (kbd "d d") 'diary-view-entries
-       (kbd "d i") 'diary-insert-entry)
-   #+end_src
-
-*** Grep (results)
-
-    #+begin_src emacs-lisp
-      (evil-define-key 'normal grep-mode-map
-	(kbd "j") #'next-error-no-select
-	(kbd "k") #'previous-error-no-select
-	(kbd "q") #'quit-window)
-    #+end_src
-
-*** Help(ful)
-
-    #+begin_src emacs-lisp
-      (evil-define-key '(normal motion) helpful-mode-map
-	(kbd "q") #'quit-window)
-
-      (evil-define-key '(normal motion) help-mode-map
-	(kbd "q") #'quit-window)
-    #+end_src
-
-*** Ibuffer
-
-     ibuffer is an interactive buffer viewer which allows for searching, filtering
-     and acting on all of the open buffers in your session.
-
-     #+begin_src emacs-lisp
-       (evil-define-key '(normal motion) ibuffer-mode-map
-	 (kbd "<leader> x") 'execute-extended-command
-	 ;; navigation
-	 (kbd "{") 'ibuffer-backwards-next-marked
-	 (kbd "}") 'ibuffer-forward-next-marked
-
-	 ;; mark commands
-	 (kbd "J") 'ibuffer-jump-to-buffer
-	 (kbd "m") 'ibuffer-mark-forward
-	 (kbd "~") 'ibuffer-toggle-marks
-	 (kbd "u") 'ibuffer-unmark-forward
-	 (kbd "DEL") 'ibuffer-unmark-backward
-	 (kbd "* *") 'ibuffer-mark-special-buffers
-	 (kbd "U") 'ibuffer-unmark-all-marks
-	 (kbd "* m") 'ibuffer-mark-by-mode
-	 (kbd "* M") 'ibuffer-mark-modified-buffers
-	 (kbd "* r") 'ibuffer-mark-read-only-buffers
-	 (kbd "* /") 'ibuffer-mark-dired-buffers
-	 (kbd "* h") 'ibuffer-mark-help-buffers
-	 (kbd "d") 'ibuffer-mark-for-delete
-
-	 ;; actions
-	 (kbd "x") 'ibuffer-do-kill-on-deletion-marks
-	 (kbd "gr") 'ibuffer-update
-
-	 ;; immediate actions
-	 (kbd "A") 'ibuffer-do-view
-	 (kbd "D") 'ibuffer-do-delete
-	 (kbd "K") 'ibuffer-do-kill-lines)
-     #+end_src
-
-*** Info
-
-    #+begin_src emacs-lisp
-      (evil-define-key '(normal motion) Info-mode-map
-	(kbd "<tab>") 'Info-next-reference
-	(kbd "S-<tab>") 'Info-prev-reference
-	(kbd "RET") 'Info-follow-nearest-node
-	(kbd "d") 'Info-directory
-	(kbd "u") 'Info-up
-	(kbd "s") 'Info-search
-	(kbd "i") 'Info-index
-	(kbd "a") 'info-apropos
-	(kbd "q") 'quit-window
-
-        (kbd "y y") 'Info-copy-current-node-name
-
-	[mouse-1] 'Info-mouse-follow-nearest-node
-	[follow-link] 'mouse-face
-	;; goto
-	(kbd "g m") 'Info-menu
-	(kbd "g t") 'Info-top-node
-	(kbd "g T") 'Info-toc
-	(kbd "g j") 'Info-next
-	(kbd "g k") 'Info-prev)
-    #+end_src
-
-*** Org
-    #+begin_src emacs-lisp
-      (evil-define-key 'normal org-mode-map
-        (kbd "<tab>") 'org-cycle
-        (kbd "s-j") 'org-metadown
-        (kbd "s-k") 'org-metaup
-        (kbd "> >") 'org-shiftmetaright
-        (kbd "< <") 'org-shiftmetaleft)
-    #+end_src
-
-*** Magit
-
-    #+begin_src emacs-lisp
-      (evil-define-key '(normal motion) magit-status-mode-map
-	(kbd "b") #'magit-branch
-	(kbd "q") #'magit-mode-bury-buffer
-	(kbd "c") #'magit-commit
-	(kbd "j") #'magit-next-line
-	(kbd "k") #'magit-previous-line
-	(kbd "}") #'magit-section-forward
-	(kbd "{") #'magit-section-backward
-	(kbd "TAB") #'magit-section-toggle
-	(kbd "RET") #'magit-visit-thing
-	(kbd "i") #'magit-gitignore
-	(kbd "l") #'magit-log
-        (kbd "m") #'magit-merge
-	(kbd "P") #'magit-push
-	(kbd "p") #'magit-pull
-	;; delete
-	(kbd "d d") 'magit-discard)
-
-      (evil-define-key '(normal visual) magit-status-mode-map
-	(kbd "s") 'magit-stage
-	(kbd "u") 'magit-unstage)
-
-      (evil-set-initial-state 'magit-log-mode 'normal)
-      (evil-define-key '(normal motion) magit-log-mode-map
-	(kbd "q") 'magit-log-bury-buffer
-	(kbd "j") 'magit-next-line
-	(kbd "k") 'magit-previous-line
-	(kbd "}") 'magit-section-forward
-	(kbd "{") 'magit-section-backward
-	(kbd "RET") 'magit-show-commit)
-
-      (evil-set-initial-state 'magit-revision-mode 'normal)
-      (evil-define-key '(normal motion) magit-revision-mode-map
-	(kbd "j") 'magit-next-line
-	(kbd "k") 'magit-previous-line
-	(kbd "}") 'magit-section-forward
-	(kbd "{") 'magit-section-backward
-	(kbd "TAB") 'magit-section-toggle
-	(kbd "RET") 'magit-visit-thing
-	(kbd "q") 'magit-mode-bury-buffer)
-
-    #+end_src
-
-*** Dired
-
-    #+begin_src emacs-lisp
-      (define-key dired-mode-map (kbd "SPC") nil)
-      (evil-define-key '(normal motion) dired-mode-map
-	(kbd "j") 'dired-next-line
-	(kbd "k") 'dired-previous-line
-	(kbd "h") 'dired-up-directory
-	(kbd "l") 'dired-find-file
-	(kbd "s") 'eshell
-	(kbd "z a") 'dired-dotfiles-toggle
-	(kbd "g g") 'dired-first-file
-	(kbd "G") 'dired-last-file
-	(kbd "<left>") 'dired-up-directory
-	(kbd "<right>") 'dired-find-file
-	(kbd "<up>") 'dired-previous-line
-	(kbd "<down>") 'dired-next-line)
-    #+end_src
 * Calendar
 ** Base settings
 
@@ -847,6 +526,18 @@
    Language server client implimentation. Comes baked into emacs starting
    at version 29.
 
+   There seems to be a bug with the latest version of `menu-bar' (maybe?
+   or perhaps in `project'?)
+
+   Eglot attempts to insert itself info the menu bar, but the project
+   entry in the menu bar is not defined. Setting this variable to ~nil~
+   resolves the immediate issue causing ~eglot~ to crash. It is unknown
+   what downstream ramifications this actually causes.
+
+   #+begin_src emacs-lisp
+     (defvar menu-bar-project-menu '())
+   #+end_src
+
    #+begin_src emacs-lisp
      (add-hook 'eglot-managed-mode-hook
 	       (lambda ()
@@ -940,8 +631,9 @@
    in emacs' built in man page viewer, obviously)
 
    #+begin_src emacs-lisp
-     (require 'ol-man)
-     (add-to-list 'org-modules 'ol-man)
+     (with-eval-after-load 'org
+       (require 'ol-man)
+       (add-to-list 'org-modules 'ol-man t))
    #+end_src
    
 
@@ -952,7 +644,8 @@
     I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
 
    #+begin_src emacs-lisp
-     (require 'org-tempo)
+     (with-eval-after-load 'org
+       (require 'org-tempo))
    #+end_src
 
    These are a handful of settings that set up default destinations for actions that
@@ -1275,23 +968,17 @@
   an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
   from =master=.
 
-  #+begin_src sh
-    brew install --HEAD isync
-  #+end_src
+  ~brew install --HEAD isync~
 
   It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
 
   for mu and mu4e to work, mu must be initialized with your maildir
 
-  #+begin_src sh
-    mu init --maildir=~/mail --my-address=jharder@kipsu.com
-  #+end_src
+  ~mu init --maildir=~/mail --my-address=jharder@kipsu.com~
 
   and then indexed:
 
-  #+begin_src sh
-    mu index
-  #+end_src
+  ~mu index~
 
   The mu package comes with the emacs package mu4e. Let's add it to
   the load path.
@@ -1338,3 +1025,335 @@
       (find-file (concat user-emacs-directory "config.org")))
 
   #+end_src
+
+  #+begin_src emacs-lisp
+    (message "got here")
+  #+end_src
+* Bindings
+
+** Global bindings
+
+   First, install a nicer help viewer.
+   
+   #+begin_src emacs-lisp
+     (straight-use-package 'helpful)
+   #+end_src
+
+   Visual/emacs state commands
+
+   #+begin_src emacs-lisp
+    (evil-define-key '(insert emacs visual) 'global
+      (kbd "s-x") #'execute-extended-command)
+   #+end_src
+
+   #+begin_src emacs-lisp
+     (message "after first define key")
+   #+end_src
+   
+   Normal state commands
+   
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal 'global
+       (kbd "<SPC> <SPC>") #'ace-jump-word-mode)
+
+     (evil-define-key 'normal 'global
+       (kbd "<leader> ;") #'eval-expression
+       (kbd "<leader> q") #'save-buffers-kill-terminal
+       (kbd "<leader> x") #'execute-extended-command
+       (kbd "g r") #'revert-buffer
+       ;; App launcher
+       (kbd "<leader> a c") #'calendar
+       (kbd "<leader> a a") #'org-agenda
+
+       ;; buffers
+       (kbd "<leader> b b") #'consult-buffer
+       (kbd "<leader> b n") #'next-buffer
+       (kbd "<leader> b p") #'previous-buffer
+       (kbd "<leader> b s") #'save-buffer
+       (kbd "<leader> b i") #'ibuffer
+       (kbd "<leader> b d") #'evil-delete-buffer
+       (kbd "<leader> b k") #'kill-current-buffer
+       ;; config related commands
+       (kbd "<leader> c .") #'find-config
+       (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
+       (kbd "<leader> c t") #'consult-theme
+       ;; evaluation
+       (kbd "<leader> e e") #'eval-last-sexp
+       (kbd "<leader> e d") #'eval-deful
+       ;; files
+       (kbd "<leader> f f") #'find-file
+       (kbd "<leader> f c") #'find-config
+       ;; magit
+       (kbd "<leader> g") #'magit
+       ;; project
+       (kbd "<leader> p !") #'project-shell-command
+       (kbd "<leader> p &") #'project-async-shell-command
+       (kbd "<leader> p D") #'project-dired
+       (kbd "<leader> p b") #'project-switch-to-buffer
+       (kbd "<leader> p d") #'project-find-dir
+       (kbd "<leader> p e") #'project-eshell
+       (kbd "<leader> p f") #'project-find-file
+       (kbd "<leader> p m") #'magit-project-status
+       (kbd "<leader> p k") #'project-kill-buffers
+       (kbd "<leader> p p") #'project-switch-project
+       (kbd "<leader> p /") #'project-find-regexp
+       ;; imenu
+       (kbd "<leader> i") #'consult-imenu
+       ;; org
+       (kbd "<leader> o c") #'org-capture
+       ;; tab commands
+       (kbd "<leader> t t") #'tab-switch
+       (kbd "<leader> t n") #'tab-new
+       (kbd "<leader> t c") #'tab-close
+       (kbd "<leader> t j") #'tab-next
+       (kbd "<leader> t k") #'tab-previous
+       (kbd "<leader> t f") #'find-file-other-tab
+       (kbd "<leader> t b") #'switch-to-buffer-other-tab
+       (kbd "<leader> t r") #'tab-rename
+       (kbd "<leader> t d") #'dired-other-tab
+       ;; help(ful) commands
+       (kbd "<leader> h i") #'info-emacs-manual
+       (kbd "<leader> h v") #'helpful-variable
+       (kbd "<leader> h f") #'helpful-function
+       (kbd "<leader> h k") #'helpful-key
+       (kbd "<leader> h m") #'describe-mode
+       (kbd "<leader> h r") #'info-display-manual
+       ;; windows
+       (kbd "<leader> .") #'evil-window-split
+       (kbd "<leader> /") #'evil-window-vsplit
+       (kbd "<leader> w w") #'ace-window
+       (kbd "<leader> w H") #'evil-window-move-far-left
+       (kbd "<leader> w L") #'evil-window-move-far-right
+       (kbd "<leader> w K") #'evil-window-move-very-top
+       (kbd "<leader> w J") #'evil-window-move-very-bottom
+       (kbd "<leader> w c") #'evil-window-delete
+       (kbd "<leader> w v") #'evil-window-vsplit
+       (kbd "<leader> w s") #'evil-window-split
+       (kbd "<leader> w o") #'delete-other-windows
+       ;; ace jump
+       (kbd "<leader> <leader>") #'ace-jump-word-mode
+       ;; dired
+       (kbd "<leader> d d") #'dired-jump
+       (kbd "<leader> d j") #'dired
+       ;; shells
+       (kbd "<leader> s e") #'eshell
+       (kbd "<leader> s t") #'multi-vterm
+       ;; toggles
+       (kbd "<leader> T t") #'modus-themes-toggle
+       (kbd "<leader> T n") #'display-line-numbers-mode)
+   #+end_src
+
+
+** Mode specific bindings
+
+*** S-expression navigation
+
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal 'global
+       "s" nil)
+     (evil-define-key 'normal 'global
+       (kbd "s l") #'forward-sexp
+       (kbd "s h") #'backward-sexp
+       (kbd "s j") #'down-list
+       (kbd "s k") #'backward-up-list
+       (kbd "s d") #'kill-sexp
+       (kbd "s $") #'forward-sentence
+       (kbd "s 0") #'backward-sentence)
+   #+end_src
+
+*** Meta-mode prefix
+
+   I use ~<leader> m~ as a prefix for any keybindings specific to the active major mode.
+   These are bound per major mode so that they are context sensitive. This allows me
+   to keep the global keybindings relatively uncluttered since I don't need a separate
+   prefix for org actions in org buffers, Terraform actions in Terraform buffers, etc.
+
+**** Org
+    
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal org-mode-map
+	(kbd "<leader> m p") #'org-publish-project
+	(kbd "<leader> m a") #'org-archive-subtree
+	(kbd "<leader> m r") #'org-refile
+	(kbd "<leader> m l") #'org-insert-link
+	(kbd "<leader> m f") #'org-footnote-action
+	(kbd "<leader> m t") #'org-toggle-inline-images
+	(kbd "<leader> m s") #'org-schedule
+	(kbd "<leader> m d") #'org-deadline)
+    #+end_src
+
+*** Calendar
+
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal calendar-mode-map
+       (kbd "l") 'calendar-forward-day
+       (kbd "h") 'calendar-backward-day
+       (kbd "k") 'calendar-backward-week
+       (kbd "j") 'calendar-forward-week
+       (kbd "q") 'calendar-exit
+       (kbd "0") 'calendar-beginning-of-week
+       (kbd "$") 'calendar-end-of-week
+       (kbd ".") 'calendar-goto-today
+       (kbd "d d") 'diary-view-entries
+       (kbd "d i") 'diary-insert-entry)
+   #+end_src
+
+*** Grep (results)
+
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal grep-mode-map
+	(kbd "j") #'next-error-no-select
+	(kbd "k") #'previous-error-no-select
+	(kbd "q") #'quit-window)
+    #+end_src
+
+*** Help(ful)
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) helpful-mode-map
+	(kbd "q") #'quit-window)
+
+      (evil-define-key '(normal motion) help-mode-map
+	(kbd "q") #'quit-window)
+    #+end_src
+
+*** Ibuffer
+
+     ibuffer is an interactive buffer viewer which allows for searching, filtering
+     and acting on all of the open buffers in your session.
+
+     #+begin_src emacs-lisp
+       (evil-define-key '(normal motion) ibuffer-mode-map
+	 (kbd "<leader> x") 'execute-extended-command
+	 ;; navigation
+	 (kbd "{") 'ibuffer-backwards-next-marked
+	 (kbd "}") 'ibuffer-forward-next-marked
+
+	 ;; mark commands
+	 (kbd "J") 'ibuffer-jump-to-buffer
+	 (kbd "m") 'ibuffer-mark-forward
+	 (kbd "~") 'ibuffer-toggle-marks
+	 (kbd "u") 'ibuffer-unmark-forward
+	 (kbd "DEL") 'ibuffer-unmark-backward
+	 (kbd "* *") 'ibuffer-mark-special-buffers
+	 (kbd "U") 'ibuffer-unmark-all-marks
+	 (kbd "* m") 'ibuffer-mark-by-mode
+	 (kbd "* M") 'ibuffer-mark-modified-buffers
+	 (kbd "* r") 'ibuffer-mark-read-only-buffers
+	 (kbd "* /") 'ibuffer-mark-dired-buffers
+	 (kbd "* h") 'ibuffer-mark-help-buffers
+	 (kbd "d") 'ibuffer-mark-for-delete
+
+	 ;; actions
+	 (kbd "x") 'ibuffer-do-kill-on-deletion-marks
+	 (kbd "gr") 'ibuffer-update
+
+	 ;; immediate actions
+	 (kbd "A") 'ibuffer-do-view
+	 (kbd "D") 'ibuffer-do-delete
+	 (kbd "K") 'ibuffer-do-kill-lines)
+     #+end_src
+
+*** Info
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) Info-mode-map
+	(kbd "<tab>") 'Info-next-reference
+	(kbd "S-<tab>") 'Info-prev-reference
+	(kbd "RET") 'Info-follow-nearest-node
+	(kbd "d") 'Info-directory
+	(kbd "u") 'Info-up
+	(kbd "s") 'Info-search
+	(kbd "i") 'Info-index
+	(kbd "a") 'info-apropos
+	(kbd "q") 'quit-window
+
+        (kbd "y y") 'Info-copy-current-node-name
+
+	[mouse-1] 'Info-mouse-follow-nearest-node
+	[follow-link] 'mouse-face
+	;; goto
+	(kbd "g m") 'Info-menu
+	(kbd "g t") 'Info-top-node
+	(kbd "g T") 'Info-toc
+	(kbd "g j") 'Info-next
+	(kbd "g k") 'Info-prev)
+    #+end_src
+
+*** Org
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal org-mode-map
+        (kbd "<tab>") 'org-cycle
+        (kbd "s-j") 'org-metadown
+        (kbd "s-k") 'org-metaup
+        (kbd "> >") 'org-shiftmetaright
+        (kbd "< <") 'org-shiftmetaleft)
+    #+end_src
+
+*** Magit
+
+    #+begin_src emacs-lisp
+      (evil-define-key '(normal motion) magit-status-mode-map
+	(kbd "b") #'magit-branch
+	(kbd "q") #'magit-mode-bury-buffer
+	(kbd "c") #'magit-commit
+	(kbd "j") #'magit-next-line
+	(kbd "k") #'magit-previous-line
+	(kbd "}") #'magit-section-forward
+	(kbd "{") #'magit-section-backward
+	(kbd "TAB") #'magit-section-toggle
+	(kbd "RET") #'magit-visit-thing
+	(kbd "i") #'magit-gitignore
+	(kbd "l") #'magit-log
+        (kbd "m") #'magit-merge
+	(kbd "P") #'magit-push
+	(kbd "p") #'magit-pull
+	;; delete
+	(kbd "d d") 'magit-discard)
+
+      (evil-define-key '(normal visual) magit-status-mode-map
+	(kbd "s") 'magit-stage
+	(kbd "u") 'magit-unstage)
+
+      (evil-set-initial-state 'magit-log-mode 'normal)
+      (evil-define-key '(normal motion) magit-log-mode-map
+	(kbd "q") 'magit-log-bury-buffer
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "RET") 'magit-show-commit)
+
+      (evil-set-initial-state 'magit-revision-mode 'normal)
+      (evil-define-key '(normal motion) magit-revision-mode-map
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "TAB") 'magit-section-toggle
+	(kbd "RET") 'magit-visit-thing
+	(kbd "q") 'magit-mode-bury-buffer)
+
+    #+end_src
+
+*** Dired
+
+    #+begin_src emacs-lisp
+      (define-key dired-mode-map (kbd "SPC") nil)
+      (evil-define-key '(normal motion) dired-mode-map
+	(kbd "j") 'dired-next-line
+	(kbd "k") 'dired-previous-line
+	(kbd "h") 'dired-up-directory
+	(kbd "l") 'dired-find-file
+	(kbd "s") 'eshell
+	(kbd "z a") 'dired-dotfiles-toggle
+	(kbd "g g") 'dired-first-file
+	(kbd "G") 'dired-last-file
+	(kbd "<left>") 'dired-up-directory
+	(kbd "<right>") 'dired-find-file
+	(kbd "<up>") 'dired-previous-line
+	(kbd "<down>") 'dired-next-line)
+    #+end_src
+
+* Test
+(message "Finished evaluating org config")
