@@ -80,7 +80,10 @@
 *** Load theme
     #+begin_src emacs-lisp
       (straight-use-package 'ef-themes)
+      ;; dark theme
       (load-theme 'ef-winter t)
+      ;; light theme
+      ;;; (load-theme 'ef-spring t)
    #+end_src
 
 ** Tweak display of UI elements

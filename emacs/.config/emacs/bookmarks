@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("kipsu-core"
+(("blog posts"
+ (filename . "~/blog/org/terminal_tooling/posts/")
+ (front-context-string . "2023_10_27_grep.")
+ (rear-context-string . "1K Oct 24 11:51 ")
+ (position . 438)
+ (last-modified 25915 49959 157464 0))
+("kipsu-core"
  (filename . "~/Kipsu/kipsu/")
  (front-context-string . ".circleci\n  -rw-")
  (rear-context-string . "6B May 15 10:23 ")
@@ -16,14 +22,14 @@
  (last-modified 25893 27389 395845 0))
 ("org-refile-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** Figure out ho")
- (rear-context-string . "her dired dir]]\n")
- (position . 2148)
- (last-modified 25896 9005 259892 0))
+ (front-context-string . "** add rss reade")
+ (rear-context-string . "lack, No case.\n\n")
+ (position . 1560)
+ (last-modified 25916 776 186026 0))
 ("org-capture-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** Figure out ho")
- (rear-context-string . "RY: Tasks\n:END:\n")
- (position . 98)
- (last-modified 25896 8997 204937 0))
+ (front-context-string . "** every day exc")
+ (rear-context-string . "ability to blog\n")
+ (position . 416)
+ (last-modified 25914 55613 166657 0))
 )
