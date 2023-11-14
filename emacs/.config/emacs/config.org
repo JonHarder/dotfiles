@@ -79,11 +79,7 @@
 
 *** Load theme
     #+begin_src emacs-lisp
-      (straight-use-package 'ef-themes)
-      ;; dark theme
-      (load-theme 'ef-winter t)
-      ;; light theme
-      ;;; (load-theme 'ef-spring t)
+      (load-theme 'modus-vivendi-tinted t)
    #+end_src
 
 ** Tweak display of UI elements
@@ -176,7 +172,16 @@
    Regardless, configure thes modes with the desired initial state.
 
    #+begin_src emacs-lisp
-     (defvar my-normal-modes '(Info-mode ibuffer-mode calendar-mode grep-mode)
+     (defvar my-normal-modes
+       '(Info-mode
+	 Man-mode
+	 magit-log-mode
+	 occur-mode
+	 magit-revision-mode
+	 ibuffer-mode
+	 calendar-mode
+	 org-agenda-mode
+	 grep-mode)
        "Modes for which evil should begin in normal mode.")
 
      (defvar my-insert-modes '(vterm-mode)
@@ -184,6 +189,7 @@
 
      (dolist (mode my-normal-modes)
        (evil-set-initial-state mode 'normal))
+
      (dolist (mode my-insert-modes)
        (evil-set-initial-state mode 'insert))
    #+end_src
@@ -226,6 +232,12 @@
 
   #+begin_src emacs-lisp
     (evil-set-leader 'normal (kbd "<SPC>"))
+  #+end_src
+
+** Evil surround
+  #+begin_src emacs-lisp
+    (straight-use-package 'evil-surround)
+    (global-evil-surround-mode 1)
   #+end_src
 
 * Backups
@@ -570,6 +582,11 @@
      (electric-pair-mode 1)
    #+end_src
 
+** Markdown
+   #+begin_src emacs-lisp
+     (straight-use-package 'markdown-mode)
+   #+end_src
+
 ** Indentation
    #+begin_src emacs-lisp
      (straight-use-package 'aggressive-indent)
@@ -587,6 +604,12 @@
      ;;	    '(php-mode . ("intelephense" "--stdio"))))
      (straight-use-package 'php-mode)
    #+end_src
+
+** Python
+*** Pipfile support
+    #+begin_src emacs-lisp
+      (add-to-list 'auto-mode-alist '("Pipfile" . conf-toml-mode))
+    #+end_src
 
 ** Terraform
 
@@ -659,7 +682,7 @@
      (defvar org-work-dir (concat org-directory "/Work/"))
      (setq org-default-notes-file (concat org-work-dir "index.org"))
      (add-to-list 'org-agenda-files org-default-notes-file)
-     (add-to-list 'org-agenda-files (concat org-work-dir "/tech_articles.org"))
+     (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
    #+end_src
 
 ** Org agenda
@@ -699,7 +722,7 @@
 
    #+begin_src emacs-lisp
      (setq org-capture-templates
-	   '(("t" "Todo" entry (file+headline "" "Tasks")
+	   '(("t" "Todo" entry (file+headline "" "Inbox")
 	      "* %?\n %i\n %a")
 	     ("r" "Read Article" item (file+headline "" "Reading")
 	      "%t %c%?")))
@@ -1084,8 +1107,11 @@
        (kbd "<leader> e e") #'eval-last-sexp
        (kbd "<leader> e d") #'eval-deful
        ;; files
-       (kbd "<leader> f f") #'find-file
+       (kbd "<leader> f b") #'bookmark-jump
+       (kbd "<leader> f i") (lambda () (interactive) (find-file "~/Dropbox/Work/index.org"))
+       (kbd "<leader> f B") #'bookmark-set
        (kbd "<leader> f c") #'find-config
+       (kbd "<leader> f f") #'find-file
        ;; magit
        (kbd "<leader> g") #'magit
        ;; project
@@ -1104,6 +1130,8 @@
        (kbd "<leader> i") #'consult-imenu
        ;; org
        (kbd "<leader> o c") #'org-capture
+       ;; occur
+       (kbd "<leader> o o") #'occur
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new
@@ -1181,8 +1209,19 @@
 	(kbd "<leader> m l") #'org-insert-link
 	(kbd "<leader> m f") #'org-footnote-action
 	(kbd "<leader> m t") #'org-toggle-inline-images
+	(kbd "<leader> m n") #'org-narrow-to-subtree
 	(kbd "<leader> m s") #'org-schedule
 	(kbd "<leader> m d") #'org-deadline)
+    #+end_src
+
+
+*** Org agenda
+    #+begin_src emacs-lisp
+      (evil-define-key 'normal org-agenda-mode-map
+	(kbd "j") #'org-agenda-next-line
+	(kbd "k") #'org-agenda-previous-line
+	(kbd "RET") #'org-agenda-switch-to
+	(kbd "q") #'org-agenda-quit)
     #+end_src
 
 *** Calendar
@@ -1191,6 +1230,8 @@
      (evil-define-key 'normal calendar-mode-map
        (kbd "l") 'calendar-forward-day
        (kbd "h") 'calendar-backward-day
+       (kbd "w") #'calendar-forward-week
+       (kbd "b") #'calendar-backward-week
        (kbd "k") 'calendar-backward-week
        (kbd "j") 'calendar-forward-week
        (kbd "q") 'calendar-exit
@@ -1293,6 +1334,15 @@
         (kbd "< <") 'org-shiftmetaleft)
     #+end_src
 
+*** Occur
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal occur-mode-map
+       (kbd "j") #'next-error-no-select
+       (kbd "k") #'previous-error-no-select
+       (kbd "RET") #'occur-mode-goto-occurrence
+       (kbd "q") #'quit-window)
+   #+end_src
+
 *** Magit
 
     #+begin_src emacs-lisp
@@ -1308,17 +1358,19 @@
 	(kbd "RET") #'magit-visit-thing
 	(kbd "i") #'magit-gitignore
 	(kbd "l") #'magit-log
-        (kbd "m") #'magit-merge
+	(kbd "m") #'magit-merge
 	(kbd "P") #'magit-push
 	(kbd "p") #'magit-pull
+	(kbd "r") #'magit-remote
+        (kbd "R") #'magit-reset
 	;; delete
-	(kbd "d d") 'magit-discard)
+	(kbd "d d") 'magit-discard
+	(kbd "z") #'magit-stash)
 
       (evil-define-key '(normal visual) magit-status-mode-map
 	(kbd "s") 'magit-stage
 	(kbd "u") 'magit-unstage)
 
-      (evil-set-initial-state 'magit-log-mode 'normal)
       (evil-define-key '(normal motion) magit-log-mode-map
 	(kbd "q") 'magit-log-bury-buffer
 	(kbd "j") 'magit-next-line
@@ -1327,7 +1379,6 @@
 	(kbd "{") 'magit-section-backward
 	(kbd "RET") 'magit-show-commit)
 
-      (evil-set-initial-state 'magit-revision-mode 'normal)
       (evil-define-key '(normal motion) magit-revision-mode-map
 	(kbd "j") 'magit-next-line
 	(kbd "k") 'magit-previous-line
@@ -1357,6 +1408,15 @@
 	(kbd "<up>") 'dired-previous-line
 	(kbd "<down>") 'dired-next-line)
     #+end_src
+
+*** Xref
+   #+begin_src emacs-lisp
+     (evil-define-key 'normal xref--xref-buffer-mode-map
+       (kbd "j") #'xref-next-line
+       (kbd "k") #'xref-prev-line
+       (kbd "RET") #'xref-goto-xref
+       (kbd "q") #'quit-window)
+   #+end_src
 
 * Test
 (message "Finished evaluating org config")
