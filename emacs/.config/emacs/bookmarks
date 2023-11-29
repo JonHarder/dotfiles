@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("blog posts"
+(("org-capture-last-stored-marker"
+ (filename . "~/Dropbox/Work/index.org")
+ (front-context-string . "** read up on me")
+ (rear-context-string . "create-template\n")
+ (position . 4920)
+ (last-modified 25931 38965 474238 0))
+("blog posts"
  (filename . "~/blog/org/terminal_tooling/posts/")
  (front-context-string . "2023_10_27_grep.")
  (rear-context-string . "1K Oct 24 11:51 ")
@@ -22,14 +28,14 @@
  (last-modified 25893 27389 395845 0))
 ("org-refile-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** add rss reade")
- (rear-context-string . "lack, No case.\n\n")
- (position . 1560)
- (last-modified 25916 776 186026 0))
+ (front-context-string . "** Open enrollme")
+ (rear-context-string . "o talk to kipsu\n")
+ (position . 1961)
+ (last-modified 25938 23926 198371 0))
 ("org-capture-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** every day exc")
- (rear-context-string . "ability to blog\n")
- (position . 416)
- (last-modified 25914 55613 166657 0))
+ (front-context-string . "** Reach out to ")
+ (rear-context-string . "essKeyId' -r)]]\n")
+ (position . 329)
+ (last-modified 25942 17518 825481 0))
 )
