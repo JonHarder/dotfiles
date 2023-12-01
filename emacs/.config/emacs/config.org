@@ -78,7 +78,8 @@
 
 *** Load theme
     #+begin_src emacs-lisp
-      (load-theme 'modus-vivendi-tinted t)
+      (straight-use-package 'ef-themes)
+      (load-theme 'ef-dark t)
    #+end_src
 
 ** Tweak display of UI elements
@@ -238,6 +239,17 @@
     (straight-use-package 'evil-surround)
     (global-evil-surround-mode 1)
   #+end_src
+** Evil numbers
+
+   For some reason, vim's increment and decrement number functionality
+   is not replicated by evil. This package just re-introduces that
+   behavior
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'evil-numbers)
+     (define-key evil-normal-state-map (kbd "C-a") #'evil-numbers/inc-at-pt)
+     (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
+   #+end_src
 
 * Backups
 
@@ -409,6 +421,7 @@
 
     (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
+    (setq denote-directory (expand-file-name "~/Documents/notes"))
     (setq denote-dired-directories
 	  (list (expand-file-name denote-directory)))
     (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
@@ -578,7 +591,6 @@
 		       '(flymake-eldoc-function
 			 eglot-signature-eldoc-function
 			 eglot-hover-eldoc-function))))
-
    #+end_src
 ** Dockerfile support
    #+begin_src emacs-lisp
@@ -602,6 +614,11 @@
 ** Markdown
    #+begin_src emacs-lisp
      (straight-use-package 'markdown-mode)
+   #+end_src
+
+** Json
+   #+begin_src emacs-lisp
+     (straight-use-package 'json-mode)
    #+end_src
 
 ** Indentation
@@ -705,6 +722,15 @@
      (setq org-directory "~/Dropbox")
      (defvar org-work-dir (concat org-directory "/Work/"))
      (setq org-default-notes-file (concat org-work-dir "index.org"))
+   #+end_src
+
+   When inserting images in org files, often they will be way to large to fit into
+   the general flow of the document. Through the use of ~#+attr_html: :width NNpx~,
+   you cen set how large the image should be displayed as. To enable this, we will
+   need to turn off the following setting.
+
+   #+begin_src emacs-lisp
+     (setq org-image-actual-width nil)
    #+end_src
 
 ** Org agenda
@@ -1156,6 +1182,9 @@
        (kbd "<leader> o c") #'org-capture
        ;; occur
        (kbd "<leader> o o") #'occur
+       ;; denote (note taking)
+       (kbd "<leader> n n") #'denote
+       (kbd "<leader> n f") #'denote-open-or-create
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new

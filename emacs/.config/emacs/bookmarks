@@ -4,10 +4,10 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored-marker"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** read up on me")
- (rear-context-string . "create-template\n")
- (position . 4920)
- (last-modified 25931 38965 474238 0))
+ (front-context-string . "** TODO Performa")
+ (rear-context-string . "2023-11-29 Wed>\n")
+ (position . 995)
+ (last-modified 25959 25597 288069 0))
 ("blog posts"
  (filename . "~/blog/org/terminal_tooling/posts/")
  (front-context-string . "2023_10_27_grep.")
@@ -28,14 +28,14 @@
  (last-modified 25893 27389 395845 0))
 ("org-refile-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** Open enrollme")
- (rear-context-string . "o talk to kipsu\n")
- (position . 1961)
- (last-modified 25938 23926 198371 0))
+ (front-context-string . "** TODO Performa")
+ (rear-context-string . "2023-11-29 Wed>\n")
+ (position . 995)
+ (last-modified 25959 25597 284705 0))
 ("org-capture-last-stored"
  (filename . "~/Dropbox/Work/index.org")
- (front-context-string . "** Reach out to ")
- (rear-context-string . "essKeyId' -r)]]\n")
- (position . 329)
- (last-modified 25942 17518 825481 0))
+ (front-context-string . "** TODO Performa")
+ (rear-context-string . "RY: Inbox\n:END:\n")
+ (position . 114)
+ (last-modified 25959 25595 847848 0))
 )
