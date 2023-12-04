@@ -146,6 +146,10 @@
    #+begin_src emacs-lisp
      (setq tab-bar-show 1)
    #+end_src
+** Spacious Padding
+   #+begin_src emacs-lisp
+     (straight-use-package 'spacious-padding)
+   #+end_src
 * Evil (vim)
 
   Evil mode is the backbone of this configuration. Coming from years
@@ -418,14 +422,18 @@
 
   #+begin_src emacs-lisp
     (straight-use-package 'denote)
+    (require 'denote-journal-extras)
 
+    (denote-rename-buffer-mode 1)
     (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
     (setq denote-directory (expand-file-name "~/Documents/notes"))
     (setq denote-dired-directories
-	  (list (expand-file-name denote-directory)))
+	  (list (expand-file-name denote-directory)
+		      denote-journal-extras-directory))
     (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
   #+end_src
+
 * Dictionary
    Emacs has built in dictionary support (because of course it does). By dafault, it
    expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
@@ -500,6 +508,7 @@
 
    #+begin_src emacs-lisp
      (straight-use-package 'dired-preview)
+     (setq dired-preview-delay 0.2)
      (evil-define-key 'normal dired-mode-map
        (kbd "P") #'dired-preview-global-mode)
    #+end_src
@@ -592,6 +601,15 @@
 			 eglot-signature-eldoc-function
 			 eglot-hover-eldoc-function))))
    #+end_src
+
+   And for support for languages that aren't pre-configured out of
+   the box by eglot:
+
+   #+begin_src emacs-lisp
+     (with-eval-after-load 'eglot
+       (add-to-list 'eglot-server-programs
+		    `(terraform-mode . ("terraform-ls" "serve"))))
+   #+end_src
 ** Dockerfile support
    #+begin_src emacs-lisp
      (straight-use-package 'dockerfile-mode)
@@ -625,6 +643,11 @@
    #+begin_src emacs-lisp
      (straight-use-package 'aggressive-indent)
      (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+   #+end_src
+
+** Terraform
+   #+begin_src emacs-lisp
+     (straight-use-package 'terraform-mode)
    #+end_src
 
 ** PHP
@@ -1185,6 +1208,7 @@
        ;; denote (note taking)
        (kbd "<leader> n n") #'denote
        (kbd "<leader> n f") #'denote-open-or-create
+       (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new
@@ -1195,6 +1219,7 @@
        (kbd "<leader> t b") #'switch-to-buffer-other-tab
        (kbd "<leader> t r") #'tab-rename
        (kbd "<leader> t d") #'dired-other-tab
+       (kbd "<leader> t s") #'spacious-padding-mode
        ;; help(ful) commands
        (kbd "<leader> h i") #'info-emacs-manual
        (kbd "<leader> h v") #'helpful-variable
