@@ -150,6 +150,18 @@
    #+begin_src emacs-lisp
      (straight-use-package 'spacious-padding)
    #+end_src
+* Base settings
+  Here's just a holding ground for general emacs settings that
+  don't seem to fit in any more specific location.
+
+  When emacs makes customizations on my behalf, it throws the
+  resultant elist code into my init file. It's great that it
+  produces visible, editable, version controllable config, but
+  I don't like it in my init file. Let's move it somewhere else.
+
+  #+begin_src emacs-lisp
+    (setq custom-file (concat user-emacs-directory "custom.el"))
+  #+end_src
 * Evil (vim)
 
   Evil mode is the backbone of this configuration. Coming from years
