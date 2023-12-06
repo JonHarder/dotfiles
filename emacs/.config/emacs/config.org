@@ -79,7 +79,7 @@
 *** Load theme
     #+begin_src emacs-lisp
       (straight-use-package 'ef-themes)
-      (load-theme 'ef-dark t)
+      (load-theme 'ef-winter t)
    #+end_src
 
 ** Tweak display of UI elements
@@ -394,13 +394,14 @@
 
     #+begin_src emacs-lisp
       (straight-use-package 'embark)
+      (straight-use-package 'embark-consult)
       (setq prefix-help-command #'embark-prefix-help-command)
       (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
       (evil-define-key '(normal motion visual insert emacs) 'global
 	(kbd "s-<return>") #'embark-dwim
 	(kbd "C-<return>") #'embark-act)
       (define-key minibuffer-local-map
-        (kbd "C-<return>") #'embark-act)
+	(kbd "C-<return>") #'embark-act)
     #+end_src
    
 * Icons
@@ -430,8 +431,9 @@
     (setq denote-directory (expand-file-name "~/Documents/notes"))
     (setq denote-dired-directories
 	  (list (expand-file-name denote-directory)
-		      denote-journal-extras-directory))
+		denote-journal-extras-directory))
     (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+    (setq denote-prompts '(title subdirectory keywords signature))
   #+end_src
 
 * Dictionary
@@ -699,6 +701,12 @@
    #+begin_src emacs-lisp
      (straight-use-package 'yaml-mode)
    #+end_src
+** Nushell
+   This adds support for nushell files
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'nushell-mode)
+   #+end_src
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
@@ -957,7 +965,6 @@
    #+end_src
 
 ** Eshell
-
 *** Settings
 
     #+begin_src emacs-lisp
@@ -997,6 +1004,21 @@
 	 ((pcomplete-match (regexp-opt '("run")) 1)
 	  (pcomplete-here* (pcmpl-docker-images)))))
 
+    #+end_src
+*** Prompt
+    Because eshell is just elisp, the prompt can be set using elisp as well.
+    This unlocks the full power of emacs as an environment and can be harnesed
+    to make eshell as fancy as you can dream up (and program)
+
+    #+begin_src emacs-lisp
+      (setq eshell-prompt-function
+	    (lambda ()
+	      (let ((home-path (getenv "HOME")))
+		(concat
+		 (string-replace home-path "~" (eshell/pwd))
+		 " $ "))))
+
+      (setq eshell-prompt-regexp ".*$ ")
     #+end_src
 ** Vterm
 
@@ -1152,8 +1174,8 @@
    Normal state commands
    
    #+begin_src emacs-lisp
-     (evil-define-key 'normal 'global
-       (kbd "<SPC> <SPC>") #'ace-jump-word-mode)
+     ;; (evil-define-key 'normal 'global
+     ;;  (kbd "<SPC> <SPC>") #'ace-jump-word-mode)
 
      (evil-define-key 'normal 'global
        (kbd "<leader> ;") #'eval-expression
@@ -1163,7 +1185,6 @@
        ;; App launcher
        (kbd "<leader> a c") #'calendar
        (kbd "<leader> a a") #'org-agenda
-
        ;; buffers
        (kbd "<leader> b b") #'consult-buffer
        (kbd "<leader> b n") #'next-buffer
@@ -1176,6 +1197,9 @@
        (kbd "<leader> c .") #'find-config
        (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
        (kbd "<leader> c t") #'consult-theme
+       ;; dired
+       (kbd "<leader> d d") #'dired-jump
+       (kbd "<leader> d j") #'dired
        ;; evaluation
        (kbd "<leader> e e") #'eval-last-sexp
        (kbd "<leader> e d") #'eval-deful
@@ -1187,6 +1211,26 @@
        (kbd "<leader> f f") #'find-file
        ;; magit
        (kbd "<leader> g") #'magit
+       ;; help(ful) commands
+       (kbd "<leader> h i") #'info-emacs-manual
+       (kbd "<leader> h v") #'helpful-variable
+       (kbd "<leader> h f") #'helpful-function
+       (kbd "<leader> h k") #'helpful-key
+       (kbd "<leader> h m") #'describe-mode
+       (kbd "<leader> h r") #'info-display-manual
+       ;; imenu
+       (kbd "<leader> i") #'consult-outline
+       ;; jumping (ace)
+       (kbd "<leader> j") #'ace-jump-word-mode
+       ;; denote (note taking)
+       (kbd "<leader> n n") #'denote
+       (kbd "<leader> n f") #'denote-open-or-create
+       (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+       (kbd "<leader> n r") #'denote-rename-file
+       ;; org
+       (kbd "<leader> o c") #'org-capture
+       ;; occur
+       (kbd "<leader> o o") #'occur
        ;; project
        (kbd "<leader> p !") #'project-shell-command
        (kbd "<leader> p &") #'project-async-shell-command
@@ -1199,16 +1243,9 @@
        (kbd "<leader> p k") #'project-kill-buffers
        (kbd "<leader> p p") #'project-switch-project
        (kbd "<leader> p /") #'project-find-regexp
-       ;; imenu
-       (kbd "<leader> i") #'consult-imenu
-       ;; org
-       (kbd "<leader> o c") #'org-capture
-       ;; occur
-       (kbd "<leader> o o") #'occur
-       ;; denote (note taking)
-       (kbd "<leader> n n") #'denote
-       (kbd "<leader> n f") #'denote-open-or-create
-       (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+       ;; shells
+       (kbd "<leader> s e") #'eshell
+       (kbd "<leader> s t") #'multi-vterm
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new
@@ -1220,13 +1257,6 @@
        (kbd "<leader> t r") #'tab-rename
        (kbd "<leader> t d") #'dired-other-tab
        (kbd "<leader> t s") #'spacious-padding-mode
-       ;; help(ful) commands
-       (kbd "<leader> h i") #'info-emacs-manual
-       (kbd "<leader> h v") #'helpful-variable
-       (kbd "<leader> h f") #'helpful-function
-       (kbd "<leader> h k") #'helpful-key
-       (kbd "<leader> h m") #'describe-mode
-       (kbd "<leader> h r") #'info-display-manual
        ;; windows
        (kbd "<leader> .") #'evil-window-split
        (kbd "<leader> /") #'evil-window-vsplit
@@ -1239,14 +1269,6 @@
        (kbd "<leader> w v") #'evil-window-vsplit
        (kbd "<leader> w s") #'evil-window-split
        (kbd "<leader> w o") #'delete-other-windows
-       ;; ace jump
-       (kbd "<leader> <leader>") #'ace-jump-word-mode
-       ;; dired
-       (kbd "<leader> d d") #'dired-jump
-       (kbd "<leader> d j") #'dired
-       ;; shells
-       (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'multi-vterm
        ;; toggles
        (kbd "<leader> T t") #'modus-themes-toggle
        (kbd "<leader> T n") #'display-line-numbers-mode)
@@ -1300,7 +1322,13 @@
 	(kbd "j") #'org-agenda-next-line
 	(kbd "k") #'org-agenda-previous-line
 	(kbd "RET") #'org-agenda-switch-to
-	(kbd "q") #'org-agenda-quit)
+	(kbd "q") #'org-agenda-quit
+	(kbd ".") #'org-agenda-goto-today
+	(kbd "l") #'org-agenda-later
+	(kbd "h") #'org-agenda-earlier
+	(kbd "g w") #'org-agenda-week-view
+	(kbd "g d") #'org-agenda-day-view
+	(kbd "t") #'org-agenda-todo)
     #+end_src
 
 *** Calendar
