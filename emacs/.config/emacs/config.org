@@ -180,7 +180,6 @@
     (evil-mode 1)
   #+end_src
 
-
 ** Starting state for major modes
 
    Sometimes I want to have some evil state other than =normal= for a particular
@@ -203,11 +202,18 @@
      (defvar my-insert-modes '(vterm-mode)
        "Modes for which evil should begin in insert mode.")
 
+     (defvar my-emacs-modes '(eshell-mode)
+       "Modes to start in native emacs mode.")
+
      (dolist (mode my-normal-modes)
        (evil-set-initial-state mode 'normal))
 
      (dolist (mode my-insert-modes)
        (evil-set-initial-state mode 'insert))
+
+
+     (dolist (mode my-emacs-modes)
+       (evil-set-initial-state mode 'emacs))
    #+end_src
 
 ** Cursor shape/color
@@ -435,18 +441,36 @@
 
   #+begin_src emacs-lisp
     (straight-use-package 'denote)
-    (require 'denote-journal-extras)
 
     (denote-rename-buffer-mode 1)
     (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
     (setq denote-directory (expand-file-name "~/Documents/notes"))
     (setq denote-dired-directories
-	  (list (expand-file-name denote-directory)
-		denote-journal-extras-directory))
-    (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+	  (list (expand-file-name denote-directory)))
     (setq denote-prompts '(title subdirectory keywords signature))
   #+end_src
+
+** Journaling
+   #+begin_src emacs-lisp
+     (require 'denote-journal-extras)
+     (add-to-list 'denote-dired-directories denote-journal-extras-directory)
+   #+end_src
+
+** Silos
+   Silos are a way to fully sepparate notes from each other. In order
+   to fully support them, we'll need to tell denote where each silo
+   lives.
+
+   #+begin_src emacs-lisp
+     (require 'denote-silo-extras)
+     (add-to-list 'denote-silo-extras-directories (expand-file-name "~/Dropbox/Bible"))
+   #+end_src
+
+** Hooks
+   #+begin_src emacs-lisp
+    (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+   #+end_src
 
 * Dictionary
    Emacs has built in dictionary support (because of course it does). By dafault, it
@@ -1158,10 +1182,6 @@
       (find-file (concat user-emacs-directory "config.org")))
 
   #+end_src
-
-  #+begin_src emacs-lisp
-    (message "got here")
-  #+end_src
 * Bindings
 
 ** Global bindings
@@ -1224,7 +1244,9 @@
        ;; magit
        (kbd "<leader> g") #'magit
        ;; help(ful) commands
-       (kbd "<leader> h i") #'info-emacs-manual
+       (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
+			      (info (format "(%s)Top" node)))
+       (kbd "<leader> h M") #'info-emacs-manual
        (kbd "<leader> h v") #'helpful-variable
        (kbd "<leader> h f") #'helpful-function
        (kbd "<leader> h k") #'helpful-key
