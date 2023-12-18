@@ -199,10 +199,13 @@
 	 grep-mode)
        "Modes for which evil should begin in normal mode.")
 
-     (defvar my-insert-modes '(vterm-mode)
+     (defvar my-insert-modes
+       '(vterm-mode
+	 eshell-mode
+	 eat-mode)
        "Modes for which evil should begin in insert mode.")
 
-     (defvar my-emacs-modes '(eshell-mode)
+     (defvar my-emacs-modes '()
        "Modes to start in native emacs mode.")
 
      (dolist (mode my-normal-modes)
@@ -445,7 +448,7 @@
     (denote-rename-buffer-mode 1)
     (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-    (setq denote-directory (expand-file-name "~/Documents/notes"))
+    (setq denote-directory (expand-file-name "~/Dropbox/notes"))
     (setq denote-dired-directories
 	  (list (expand-file-name denote-directory)))
     (setq denote-prompts '(title subdirectory keywords signature))
@@ -464,7 +467,12 @@
 
    #+begin_src emacs-lisp
      (require 'denote-silo-extras)
-     (add-to-list 'denote-silo-extras-directories (expand-file-name "~/Dropbox/Bible"))
+     (let ((my-silo-dirs (list
+			  (expand-file-name
+			   "~/Dropbox/Personal"))))
+       (dolist (dir my-silo-dirs)
+	 (add-to-list 'denote-silo-extras-directories dir)
+	 (add-to-list 'denote-dired-directories dir)))
    #+end_src
 
 ** Hooks
@@ -556,6 +564,7 @@
   #+begin_src emacs-lisp
     (straight-use-package 'all-the-icons-dired)
     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+    (setq all-the-icons-dired-monochrome nil)
   #+end_src
 
   
@@ -769,7 +778,6 @@
        (require 'ol-man)
        (add-to-list 'org-modules 'ol-man t))
    #+end_src
-   
 
 ** Settings
 
@@ -930,10 +938,11 @@
 
     It's nice to have unicode bullet glyphs in place of the org `-' and `*'.
 
+    I don't know if I like this...
     #+begin_src emacs-lisp
-      (font-lock-add-keywords 'org-mode
-			      '(("^ +\\([-*]\\) "
-                                 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+      ;; (font-lock-add-keywords 'org-mode
+      ;; 			      '(("^ +\\([-*]\\) "
+      ;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
     #+end_src
 
 ** Babel
@@ -1011,6 +1020,7 @@
       (setq eshell-where-to-jump 'begin)
       (setq eshell-review-quick-commands nil)
       (setq eshell-smart-space-goes-to-end t)
+      (setq eshell-visual-commands nil)
     #+end_src
 
 *** Completion
@@ -1041,6 +1051,18 @@
 	  (pcomplete-here* (pcmpl-docker-images)))))
 
     #+end_src
+*** Custom functions
+    #+begin_src emacs-lisp
+      (defun eshell/f (&optional file)
+	(interactive)
+	(if file
+	    (find-file file)
+	  (call-interactively #'find-file)))
+
+      (defun eshell/d (&optional dir)
+	(interactive)
+        (if dir (dired dir) (dired ".")))
+    #+end_src
 *** Prompt
     Because eshell is just elisp, the prompt can be set using elisp as well.
     This unlocks the full power of emacs as an environment and can be harnesed
@@ -1056,6 +1078,23 @@
 
       (setq eshell-prompt-regexp ".*$ ")
     #+end_src
+** Eat
+  [[https://codeberg.org/akib/emacs-eat][Eat]] is a new kind of shell for emacs, handling fully interactive, fullscreen terminal apps
+  cleanly. I think it can replace vterm, and has the benefit of not needing system
+  dependencies nor a compilation step.
+
+  #+begin_src emacs-lisp
+    (straight-use-package
+     '(eat :type git
+	   :host codeberg
+	   :repo "akib/emacs-eat"
+	   :files ("*.el" ("term" "term/*.el") "*.texi"
+		   "*.ti" ("terminfo/e" "terminfo/e/*")
+		   ("terminfo/65" "terminfo/65/*")
+		   ("integration" "integration/*")
+		   (:exclude ".dir-locals.el" "*-tests.el"))))
+    (eat-eshell-mode 1)
+  #+end_src
 ** Vterm
 
    #+begin_src emacs-lisp
@@ -1090,7 +1129,7 @@
 
       (add-to-list 'display-buffer-alist
 		   '("\\*eshell\\*"
-		     (display-buffer-in-side-window)
+		     (display-buffer-at-bottom)
 		     (side . bottom)
 		     (slot . 0)
 		     (window-height . 15)))
@@ -1117,8 +1156,8 @@
   At this point you shouldn't be surprised to find that emacs has decent support for sending
   and receiving emails. It even has a mail retrieval utility built in, rmail.
 
-  This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial layer that
-  separates emacs from the motherboard).
+  This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial
+  layer that separates emacs from the motherboard).
 
   *NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
   remote inboxes. It runs for a time, then errors out with a socket error complaining about
@@ -1129,6 +1168,23 @@
 
   It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
 
+  *NEW* transitioning to notmuch
+
+  #+begin_src emacs-lisp
+    (straight-use-package 'notmuch)
+  #+end_src
+
+  from there just configure it
+
+  src_sh[]{notmuch setup}
+
+  and let notmuch index your mail
+
+  src_sh[]{notmuch new}
+
+  *OLD*, I'd like to transition from mu(4e) to notmuch, so the following
+  is old
+  
   for mu and mu4e to work, mu must be initialized with your maildir
 
   ~mu init --maildir=~/mail --my-address=jharder@kipsu.com~
@@ -1259,8 +1315,10 @@
        ;; denote (note taking)
        (kbd "<leader> n n") #'denote
        (kbd "<leader> n f") #'denote-open-or-create
-       (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+       (kbd "<leader> n j") #'denote-journal-extras-new-entry
+       (kbd "<leader> n J") #'denote-journal-extras-new-or-existing-entry
        (kbd "<leader> n r") #'denote-rename-file
+       (kbd "<leader> n l") #'denote-link
        ;; org
        (kbd "<leader> o c") #'org-capture
        ;; occur
@@ -1279,7 +1337,7 @@
        (kbd "<leader> p /") #'project-find-regexp
        ;; shells
        (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'multi-vterm
+       (kbd "<leader> s t") #'eat  ;; #'multi-vterm
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new
@@ -1290,7 +1348,6 @@
        (kbd "<leader> t b") #'switch-to-buffer-other-tab
        (kbd "<leader> t r") #'tab-rename
        (kbd "<leader> t d") #'dired-other-tab
-       (kbd "<leader> t s") #'spacious-padding-mode
        ;; windows
        (kbd "<leader> .") #'evil-window-split
        (kbd "<leader> /") #'evil-window-vsplit
@@ -1305,7 +1362,9 @@
        (kbd "<leader> w o") #'delete-other-windows
        ;; toggles
        (kbd "<leader> T t") #'modus-themes-toggle
-       (kbd "<leader> T n") #'display-line-numbers-mode)
+       (kbd "<leader> T n") #'display-line-numbers-mode
+       (kbd "<leader> T s") #'spacious-padding-mode
+       (kbd "<leader> T w") #'whitespace-mode)
    #+end_src
 
 
@@ -1337,8 +1396,9 @@
     
     #+begin_src emacs-lisp
       (evil-define-key 'normal org-mode-map
-	(kbd "<leader> m p") #'org-publish-project
 	(kbd "<leader> m a") #'org-archive-subtree
+        (kbd "<leader> m e") #'org-export-dispatch
+	(kbd "<leader> m p") #'org-publish-project
 	(kbd "<leader> m r") #'org-refile
 	(kbd "<leader> m l") #'org-insert-link
 	(kbd "<leader> m f") #'org-footnote-action
@@ -1503,7 +1563,8 @@
 	(kbd "P") #'magit-push
 	(kbd "p") #'magit-pull
 	(kbd "r") #'magit-remote
-        (kbd "R") #'magit-reset
+	(kbd "R") #'magit-reset
+        (kbd "$") #'magit-process-buffer
 	;; delete
 	(kbd "d d") 'magit-discard
 	(kbd "z") #'magit-stash)
@@ -1541,18 +1602,21 @@
     #+begin_src emacs-lisp
       (define-key dired-mode-map (kbd "SPC") nil)
       (evil-define-key '(normal motion) dired-mode-map
-	(kbd "j") 'dired-next-line
-	(kbd "k") 'dired-previous-line
-	(kbd "h") 'dired-up-directory
-	(kbd "l") 'dired-find-file
-	(kbd "s") 'eshell
-	(kbd "z a") 'dired-dotfiles-toggle
-	(kbd "g g") 'dired-first-file
-	(kbd "G") 'dired-last-file
-	(kbd "<left>") 'dired-up-directory
-	(kbd "<right>") 'dired-find-file
-	(kbd "<up>") 'dired-previous-line
-	(kbd "<down>") 'dired-next-line)
+	(kbd "j") #'dired-next-line
+	(kbd "k") #'dired-previous-line
+	(kbd "h") #'dired-up-directory
+	(kbd "l") #'dired-find-file
+	(kbd "n") #'evil-search-next
+        (kbd "N") #'evil-search-previous
+	(kbd "s") #'eshell
+	(kbd "z a") #'dired-dotfiles-toggle
+	(kbd ".") #'dired-dotfiles-toggle
+	(kbd "g g") #'dired-first-file
+	(kbd "G") #'dired-last-file
+	(kbd "<left>") #'dired-up-directory
+	(kbd "<right>") #'dired-find-file
+	(kbd "<up>") #'dired-previous-line
+	(kbd "<down>") #'dired-next-line)
     #+end_src
 
 *** Xref

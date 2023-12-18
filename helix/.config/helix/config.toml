@@ -1,7 +1,8 @@
 # theme = "onelight"
 # theme = "catppuccin_mocha"
-theme = "catppuccin_macchiato"
-# theme = "kanagawa"
+# theme = "catppuccin_macchiato"
+theme = "kanagawa"
+# theme = "ayu_evolve"
 
 [editor]
 line-number = "relative"

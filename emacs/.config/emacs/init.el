@@ -23,3 +23,4 @@
   (require 'nov)
   (find-file "~/Dropbox/Emacs/mastering-emacs-v4.epub"))
 
+(put 'dired-find-alternate-file 'disabled nil)
