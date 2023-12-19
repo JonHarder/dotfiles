@@ -457,6 +457,7 @@
 ** Journaling
    #+begin_src emacs-lisp
      (require 'denote-journal-extras)
+     (setq denote-journal-extras-directory (concat denote-directory "/journal"))
      (add-to-list 'denote-dired-directories denote-journal-extras-directory)
    #+end_src
 
@@ -612,6 +613,18 @@
   #+end_src
 
 * Programming
+** Epub support
+   #+begin_src emacs-lisp
+     (straight-use-package 'nov)
+     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+   #+end_src
+** Rest mode
+   Run http commands using simple http spec
+
+   #+begin_src emacs-lisp
+     (straight-use-package 'restclient)
+     (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+   #+end_src
 ** Rainbow delimiters
    
    Highlight netsted delimeters with unique colors so you can tell
@@ -1238,6 +1251,17 @@
       (find-file (concat user-emacs-directory "config.org")))
 
   #+end_src
+
+  This is a small convenience method to load the mastering emacs epub:
+
+  #+begin_src emacs-lisp
+    (defun masteringemacs ()
+      "Open the masteringemacs epub manual."
+      (interactive)
+      ;; ensure the nov package is installed
+      (require 'nov)
+      (find-file "~/Dropbox/Emacs/mastering-emacs-v4.epub"))
+  #+end_src
 * Bindings
 
 ** Global bindings
@@ -1313,12 +1337,13 @@
        ;; jumping (ace)
        (kbd "<leader> j") #'ace-jump-word-mode
        ;; denote (note taking)
-       (kbd "<leader> n n") #'denote
+       (kbd "<leader> n b") #'denote-backlinks
        (kbd "<leader> n f") #'denote-open-or-create
        (kbd "<leader> n j") #'denote-journal-extras-new-entry
-       (kbd "<leader> n J") #'denote-journal-extras-new-or-existing-entry
-       (kbd "<leader> n r") #'denote-rename-file
        (kbd "<leader> n l") #'denote-link
+       (kbd "<leader> n n") #'denote
+       (kbd "<leader> n r") #'denote-rename-file
+       (kbd "<leader> n J") #'denote-journal-extras-new-or-existing-entry
        ;; org
        (kbd "<leader> o c") #'org-capture
        ;; occur
@@ -1548,6 +1573,7 @@
 
     #+begin_src emacs-lisp
       (evil-define-key '(normal motion) magit-status-mode-map
+        (kbd "?") #'magit-dispatch
 	(kbd "b") #'magit-branch
 	(kbd "q") #'magit-mode-bury-buffer
 	(kbd "c") #'magit-commit
@@ -1564,7 +1590,7 @@
 	(kbd "p") #'magit-pull
 	(kbd "r") #'magit-remote
 	(kbd "R") #'magit-reset
-        (kbd "$") #'magit-process-buffer
+	(kbd "$") #'magit-process-buffer
 	;; delete
 	(kbd "d d") 'magit-discard
 	(kbd "z") #'magit-stash)
