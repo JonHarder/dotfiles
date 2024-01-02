@@ -1,0 +1,128 @@
+(require 'org)
+
+(with-eval-after-load 'org
+  (require 'ol-man)
+  (add-to-list 'org-modules 'ol-man t))
+
+(evil-define-key 'normal org-mode-map
+  (kbd "<tab>") 'org-cycle
+  (kbd "s-j") 'org-metadown
+  (kbd "s-k") 'org-metaup
+  (kbd "> >") 'org-shiftmetaright
+  (kbd "< <") 'org-shiftmetaleft)
+
+(evil-define-key 'normal org-mode-map
+  (kbd "<leader> m a") #'org-archive-subtree
+  (kbd "<leader> m e") #'org-export-dispatch
+  (kbd "<leader> m p") #'org-publish-project
+  (kbd "<leader> m r") #'org-refile
+  (kbd "<leader> m l") #'org-insert-link
+  (kbd "<leader> m f") #'org-footnote-action
+  (kbd "<leader> m t") #'org-toggle-inline-images
+  (kbd "<leader> m n") #'org-narrow-to-subtree
+  (kbd "<leader> m d") #'org-babel-demarcate-block
+  (kbd "<leader> m s s") #'org-schedule
+  (kbd "<leader> m s d") #'org-deadline
+  (kbd "<leader> m ,") #'org-priority)
+
+(evil-define-key 'normal org-agenda-mode-map
+  (kbd "j") #'org-agenda-next-line
+  (kbd "k") #'org-agenda-previous-line
+  (kbd "RET") #'org-agenda-switch-to
+  (kbd "q") #'org-agenda-quit
+  (kbd ".") #'org-agenda-goto-today
+  (kbd "l") #'org-agenda-later
+  (kbd "h") #'org-agenda-earlier
+  (kbd "g w") #'org-agenda-week-view
+  (kbd "g d") #'org-agenda-day-view
+  (kbd "t") #'org-agenda-todo)
+
+(with-eval-after-load 'org
+  (require 'org-tempo))
+
+(setq org-directory "~/Dropbox")
+(defvar org-work-dir (concat org-directory "/Work/"))
+(setq org-default-notes-file (concat org-work-dir "index.org"))
+
+(setq org-image-actual-width nil)
+
+(setq org-agenda-include-diary t)
+(setq org-agenda-restore-windows-after-quit t)
+(add-to-list 'org-agenda-files org-default-notes-file)
+(add-to-list 'org-agenda-files "~/blog/tech_articles.org")
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "" "Inbox")
+	 "* %?\n %i\n %a")
+	("r" "Read Article" item (file+headline "" "Reading")
+	 "%t %c%?")))
+
+(setq org-structure-template-alist
+      '(("s" . "src")
+	("e" . "src emacs-lisp")
+        ("b" . "src bash")
+	("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
+
+(require 'ox-publish)
+
+(setq org-publish-use-timestamps-flag nil)
+
+;; Don't show validation link
+(setq org-html-validation-link nil)
+;; Use our own scripts
+(setq org-html-head-include-scripts nil)
+;; Use our own styles
+(setq org-html-head-include-default-style nil)
+
+;; this allows us to get syntax highlighting in source blocks exported to html
+(straight-use-package 'htmlize)
+
+(setq org-publish-project-alist
+      (list (list "blog"
+		  :components (list "blog-org" "blog-static"))
+	    (list "blog-org"
+		  :base-directory "~/blog/org"
+		  :publishing-directory "~/blog/public"
+		  :auto-sitemap nil
+		  :recursive t
+		  :with-broken-links t
+                  :with-creator t
+		  :section-numbers nil
+		  :exclude "README"
+		  :export-exclude-tags (list "draft")
+		  :with-author "Jon Harder"
+		  :with-toc nil
+		  :html-htmlize-output-type 'inline-css
+		  :html-doctype "html5"
+		  :html-html5-fancy t
+		  :html-preamble nil
+		  :html-postamble nil)
+	    (list "blog-static"
+		  :base-directory "~/blog/org/"
+		  :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
+		  :publishing-directory "~/blog/public/"
+		  :recursive t
+		  :publishing-function #'org-publish-attachment)))
+
+(setq org-hide-emphasis-markers nil)
+
+(straight-use-package 'org-bullets)
+(add-hook 'org-mode-hook
+    	(lambda ()
+    	  (org-bullets-mode 1)))
+
+;; (font-lock-add-keywords 'org-mode
+;; 			      '(("^ +\\([-*]\\) "
+;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (calc . t)
+   (shell . t)))
+
+(straight-use-package 'toc-org)
+(add-hook 'org-mode-hook 'toc-org-mode)
+
+(provide 'my-org)
