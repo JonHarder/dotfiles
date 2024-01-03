@@ -18,7 +18,7 @@
 
    #+begin_src emacs-lisp :tangle early-init.el
      (setq gc-cons-threshold most-positive-fixnum
-	    gc-cons-percentage 0.5)
+	   gc-cons-percentage 0.5)
    #+end_src
 
 ** Performance monitoring
@@ -76,6 +76,7 @@
       (require 'my-denote)
       (require 'my-dired)
       (require 'my-docker-mode)
+      (require 'my-ediff)
       (require 'my-email)
       (require 'my-epub)
       (require 'my-gpg)
@@ -106,7 +107,7 @@
 * Appearance
 ** Color theme
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (defvar jh-theme 'ef-winter
+  (defvar jh-theme 'doom-horizon
     "A symbol defining which color theme to load.")
 #+end_src
 
@@ -116,7 +117,6 @@
    in any lighting situation.
 
 *** Settings
-
 **** Modus themes settings
      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (progn ;; Modus configuration
@@ -150,6 +150,11 @@
 	      (t . (1.1))))
     #+end_src
 
+**** Doom themes settings
+     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+       (straight-use-package 'doom-themes)
+       (setq doom-rouge-brighter-comments t)
+     #+end_src
 *** Load theme
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (load-theme jh-theme t)
@@ -210,7 +215,7 @@
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
      (let ((font "FiraCode Nerd Font")
-	   (size 140))
+	   (size 165))
        (set-face-attribute 'default nil :font font :height size)
        (set-frame-font font nil t)
        (add-to-list 'default-frame-alist
@@ -588,6 +593,30 @@
     (provide 'my-icons)
   #+end_src 
 
+* Ediff
+** Window management
+   Ediff puts its control panal in a separate frame, which makes tiling window managers
+   quite unhappy. Let's configure it to use the /plain/ setup which just makes a small
+   window at the bottom of the current frame.
+   
+  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+    (require 'ediff)
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    (setq ediff-split-window-function 'split-window-horizontally)
+  #+end_src
+
+** Bindings
+  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+    (evil-define-key 'normal ediff-mode-map
+      (kbd "j") #'ediff-next-difference
+      (kbd "k") #'ediff-previous-difference)
+  #+end_src
+
+** Provide =my-ediff=
+  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+    (provide 'my-ediff)
+  #+end_src
+  
 * Denote
 ** Basic settings
 

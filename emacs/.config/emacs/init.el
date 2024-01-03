@@ -25,6 +25,7 @@
 (require 'my-denote)
 (require 'my-dired)
 (require 'my-docker-mode)
+(require 'my-ediff)
 (require 'my-email)
 (require 'my-epub)
 (require 'my-gpg)

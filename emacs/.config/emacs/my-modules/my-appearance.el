@@ -1,4 +1,4 @@
-(defvar jh-theme 'ef-winter
+(defvar jh-theme 'doom-horizon
   "A symbol defining which color theme to load.")
 
 (progn ;; Modus configuration
@@ -28,6 +28,9 @@
 	(agenda-structure . (variable pitch light 1.8))
 	(t . (1.1))))
 
+(straight-use-package 'doom-themes)
+(setq doom-rouge-brighter-comments t)
+
 (load-theme jh-theme t)
 
 (menu-bar-mode 1)
@@ -48,7 +51,7 @@
 (display-time)
 
 (let ((font "FiraCode Nerd Font")
-      (size 140))
+      (size 165))
   (set-face-attribute 'default nil :font font :height size)
   (set-frame-font font nil t)
   (add-to-list 'default-frame-alist
