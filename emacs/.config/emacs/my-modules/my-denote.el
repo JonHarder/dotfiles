@@ -6,10 +6,11 @@
 (setq denote-directory (expand-file-name "~/Dropbox/notes"))
 (setq denote-dired-directories
       (list (expand-file-name denote-directory)))
-(setq denote-prompts '(title subdirectory keywords signature))
+(setq denote-prompts '(title subdirectory keywords))
 
 (evil-define-key 'normal 'global
   (kbd "<leader> n b") #'denote-backlinks
+  (kbd "<leader> n s") #'denote-signature
   (kbd "<leader> n f") #'denote-open-or-create
   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link

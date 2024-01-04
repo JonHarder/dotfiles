@@ -50,6 +50,8 @@
 (setq org-agenda-restore-windows-after-quit t)
 (add-to-list 'org-agenda-files org-default-notes-file)
 (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
+(add-to-list 'org-agenda-files "~/Dropbox/notes/")
+(add-to-list 'org-agenda-files "~/Dropbox/notes/journal/")
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "" "Inbox")
