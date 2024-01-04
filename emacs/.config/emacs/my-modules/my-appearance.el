@@ -49,7 +49,8 @@
 
 (setq display-time-24hr-format t)
 
-(display-time)
+(display-time-mode -1)
+; (display-time)
 
 (let ((size 165))
   (set-face-attribute 'default nil :font my-font :height size)

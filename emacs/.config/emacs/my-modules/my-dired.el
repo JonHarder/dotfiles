@@ -22,6 +22,19 @@
       (progn (revert-buffer)
 	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
+(defun dired-mark-files-extension (extension)
+  "Mark all files with the given file EXTENSION.
+
+EXTENSION should not contain the . prefix.
+When called interactively, derive the extension from the current file
+under the point in the dired buffer."
+  (interactive
+   (list (if current-prefix-arg
+	     (read-string "Extension: ")
+	   (file-name-extension (dired-get-filename))))
+   'dired-mode)
+  (dired-mark-files-regexp (concat "." extension "$")))
+
 (define-key dired-mode-map (kbd "SPC") nil)
 (evil-define-key '(normal motion) dired-mode-map
   (kbd "j") #'dired-next-line

@@ -52,6 +52,7 @@
 (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
 (add-to-list 'org-agenda-files "~/Dropbox/notes/")
 (add-to-list 'org-agenda-files "~/Dropbox/notes/journal/")
+(add-to-list 'org-agenda-files "~/schedule.org")
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "" "Inbox")
