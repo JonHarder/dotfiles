@@ -13,9 +13,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(load-file "local-config.el")
+
 (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
 
 (require 'my-appearance)
+(require 'my-modeline)
 (require 'my-core)
 (require 'my-evil-config)
 (require 'my-bindings)

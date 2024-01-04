@@ -59,6 +59,16 @@
      (load bootstrap-file nil 'nomessage))
    #+end_src
 ** Local lisp loading
+*** Load local-config
+    There are some configuration settings that are local to the particular
+    machine I'm running emacs on. These settings are stored in the file,
+    =local-config.el=.
+
+    This gets loaded first so that any later configuration can utilize it.
+
+    #+begin_src emacs-lisp :tangle "init.el"
+      (load-file "local-config.el")
+    #+end_src
 *** Adding my-modules to the load path
     #+begin_src emacs-lisp :tangle "init.el"
     (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
@@ -67,6 +77,7 @@
 *** Require all my modules
     #+begin_src emacs-lisp :tangle "init.el"
       (require 'my-appearance)
+      (require 'my-modeline)
       (require 'my-core)
       (require 'my-evil-config)
       (require 'my-bindings)
@@ -106,15 +117,14 @@
 
 * Appearance
 ** Color theme
-#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (defvar jh-theme 'doom-horizon
-    "A symbol defining which color theme to load.")
-#+end_src
-
    The modus theme set is the most complete and polished emacs color theme I've
    encountered. It's also WCAG 2 compliant meaning it will always have high color
    contrast between UI elements, making it one of the easiest themes on the eyes
    in any lighting situation.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+     (straight-use-package my-theme-package)
+   #+end_src
 
 *** Settings
 **** Modus themes settings
@@ -138,7 +148,6 @@
 		(agenda-structure . (variable-pitch light 1.8))
 		(t . (1.1)))))
     #+end_src
-
 **** Ef-themes settings
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (straight-use-package 'ef-themes)
@@ -153,11 +162,13 @@
 **** Doom themes settings
      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
        (straight-use-package 'doom-themes)
-       (setq doom-rouge-brighter-comments t)
+       (setq doom-rouge-brighter-comments t
+	     doom-themes-enable-bold t
+	     doom-themes-enable-italic t)
      #+end_src
 *** Load theme
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-      (load-theme jh-theme t)
+      (load-theme my-theme t)
    #+end_src
 
 ** Tweak display of UI elements
@@ -214,12 +225,11 @@
    I use FiraCode patched with the Nerd icons
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (let ((font "FiraCode Nerd Font")
-	   (size 165))
-       (set-face-attribute 'default nil :font font :height size)
-       (set-frame-font font nil t)
+     (let ((size 165))
+       (set-face-attribute 'default nil :font my-font :height size)
+       (set-frame-font my-font nil t)
        (add-to-list 'default-frame-alist
-		    `(font . ,font)))
+		    `(font . ,my-font)))
    #+end_src
 
 ** Tabs
@@ -240,6 +250,113 @@
   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
     (provide 'my-appearance)
   #+end_src
+* mode line
+** Faces for the modeline
+   #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+     ;; TODO: update faces to make this prettier
+     ;; how do you work off of the color palette of the current theme?
+     (defface my-modeline-mode-face
+       '((t :background "grey50" :foreground "white" :inherit bold))
+       "Face for the major mode when displayed in the modeline.")
+     (defface my-modeline-buffer-face
+       '((t :background "#3355bb" :foreground "white" :inherit bold))
+       "Face for displaying the buffer name on the modeline.")
+     (defface my-modeline-evil-insert-state
+       '((t :background "green"))
+       "Face to indicate the current evil state is insert.")
+     (defface my-modeline-evil-normal-state
+       '((t :background "blue"))
+       "Face to indicate the current evil state is normal.")
+     (defface my-modeline-evil-visual-state
+       '((t :background "yellow"))
+       "Face to indicate the current evil state is visual.")
+     (defface my-modeline-evil-replace-state
+       '((t :background "red"))
+       "Face to indicate the current evil state is replace.")
+     (defface my-modeline-evil-emacs-state
+       '((t :background "purple"))
+       "Face to indicate the current evil state is Emacs.")
+   #+end_src
+
+** Helper functions to return strings for display in the modeline 
+    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+      (defun my-modeline--major-mode-name ()
+	"Return the capitalized `major-mode' name."
+	(capitalize (symbol-name major-mode)))
+
+      (defun my-modeline--buffer-name ()
+	"Return the buffer's name."
+	(format " %s "(buffer-name)))
+
+      (defun my-modeline--evil-state-face ()
+	"Return a symbol associated with a face to propertize the current evil state."
+	(cond
+	 ((eq evil-state 'insert)
+	  'my-modeline-evil-insert-state)
+	 ((eq evil-state 'normal)
+	  'my-modeline-evil-normal-state)
+	 ((eq evil-state 'visual)
+	  'my-modeline-evil-visual-state)
+	 ((eq evil-state 'replace)
+	  'my-modeline-evil-replace-state)
+	 ((eq evil-state 'emacs)
+	  'my-modeline-evil-emacs-state)
+	 (t 'default)))
+    #+end_src
+
+** Local variables which make up the segments of my modeline
+    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+      (defvar-local my-modeline-evil-state
+	  '(:eval
+	    (propertize (symbol-name evil-state) 'face (my-modeline--evil-state-face))))
+
+      (defvar-local my-modeline-major-mode
+	  '(:eval
+	    (list
+	     (propertize "λ" 'face 'shadow)
+	     " "
+	     (propertize (my-modeline--major-mode-name)
+			 'face 'my-modeline-mode-face))))
+
+      (defvar-local my-modeline-buffer
+	  '(:eval
+	    (format "%s" (propertize
+			  (my-modeline--buffer-name)
+			  'face 'my-modeline-buffer-face))))
+
+      ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
+      (dolist (component '(my-modeline-major-mode
+			   my-modeline-buffer
+			   my-modeline-evil-state))
+	(put component 'risky-local-variable t))
+    #+end_src
+
+** The mode line format
+     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+       ;;; My mode line
+       ; (setq-default mode-line-format
+       ; 		   '("%e"
+       ; 		     my-modeline-evil-state
+       ; 		     my-modeline-buffer
+       ; 		     " "
+       ; 		     my-modeline-major-mode))
+
+       ;;; The default mode line
+       (setq-default mode-line-format
+       		   '("%e" mode-line-front-space
+       		     (:propertize
+       		      ("" mode-line-mule-info mode-line-client mode-line-modified
+       		       mode-line-remote)
+       		      display (min-width (5.0)))
+       		     mode-line-frame-identification mode-line-buffer-identification "   "
+       		     mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
+       		     mode-line-misc-info mode-line-end-spaces))
+     #+end_src
+** Provide =my-modeline=
+    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+      (provide 'my-modeline)
+    #+end_src
+
 * Base settings
 ** Customization file
 
@@ -1378,6 +1495,11 @@
    #+end_src
 
 ** Eshell
+*** Environment variables
+    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+      (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+    #+end_src
+    
 *** Settings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes

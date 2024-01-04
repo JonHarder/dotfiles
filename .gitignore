@@ -17,3 +17,4 @@
 /emacs/.config/emacs/network-security.data
 /emacs/.config/emacs/tramp
 /emacs/.config/emacs/bookmarks
+/emacs/.config/emacs/local-config.el

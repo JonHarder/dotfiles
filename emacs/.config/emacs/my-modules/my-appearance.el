@@ -1,5 +1,4 @@
-(defvar jh-theme 'doom-horizon
-  "A symbol defining which color theme to load.")
+(straight-use-package my-theme-package)
 
 (progn ;; Modus configuration
   (require-theme 'modus-themes)
@@ -29,9 +28,11 @@
 	(t . (1.1))))
 
 (straight-use-package 'doom-themes)
-(setq doom-rouge-brighter-comments t)
+(setq doom-rouge-brighter-comments t
+      doom-themes-enable-bold t
+      doom-themes-enable-italic t)
 
-(load-theme jh-theme t)
+(load-theme my-theme t)
 
 (menu-bar-mode 1)
 
@@ -50,12 +51,11 @@
 
 (display-time)
 
-(let ((font "FiraCode Nerd Font")
-      (size 165))
-  (set-face-attribute 'default nil :font font :height size)
-  (set-frame-font font nil t)
+(let ((size 165))
+  (set-face-attribute 'default nil :font my-font :height size)
+  (set-frame-font my-font nil t)
   (add-to-list 'default-frame-alist
-	       `(font . ,font)))
+	       `(font . ,my-font)))
 
 (setq tab-bar-show 1)
 
