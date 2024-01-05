@@ -61,21 +61,16 @@
 
 (defun my-modeline--major-mode-name ()
   "Return the capitalized `major-mode' name."
-  (capitalize (symbol-name major-mode)))
+  (capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
 (defun my-modeline--evil-state-face ()
   "Return a symbol associated with a face to propertize the current evil state."
   (pcase evil-state
-    ('insert
-     'my-modeline-indicator-magenta)
-    ('normal
-     'my-modeline-indicator-green)
-    ('visual
-     'my-modeline-indicator-yellow)
-    ('replace
-     'my-modeline-indicator-red)
-    ('emacs
-     'my-modeline-evil-emacs-state)))
+    ('insert 'my-modeline-indicator-magenta)
+    ('normal 'my-modeline-indicator-green)
+    ('visual 'my-modeline-indicator-yellow)
+    ('replace 'my-modeline-indicator-red)
+    ('emacs 'my-modeline-evil-emacs-state)))
 
 (defun my-modeline--buffer-name ()
   "Return the buffer's name."
@@ -93,6 +88,15 @@
      ((mode-line-window-selected-p)
       'mode-line-buffer-id))))
 
+(defun my-modeline--major-mode-indicator ()
+  (let ((indicator (cond
+		    ((derived-mode-p 'text-mode) "§")
+		    ((derived-mode-p 'prog-mode) "λ")
+		    ((or (derived-mode-p 'comint-mode)
+			 (derived-mode-p 'eshell-mode))
+		     ">_"))))
+    (propertize indicator 'face 'shadow)))
+
 (defvar-local my-modeline-evil-state
     '(:eval
       (propertize (upcase (symbol-name evil-state)) 'face (my-modeline--evil-state-face))))
@@ -100,7 +104,7 @@
 (defvar-local my-modeline-major-mode
     '(:eval
       (list
-       (propertize "λ" 'face 'shadow)
+       (my-modeline--major-mode-indicator)
        " "
        (propertize (my-modeline--major-mode-name)
 		   'face 'normal))))
@@ -124,17 +128,18 @@
 		my-modeline-evil-state
 		my-modeline-buffer-name
 		" "
-		my-modeline-major-mode))
-
+		my-modeline-major-mode
+		"  "
+		global-mode-string))
 ;;; The default mode line
-(setq-default mode-line-format
-	      '("%e" mode-line-front-space
-		(:propertize
-		 ("" mode-line-mule-info mode-line-client mode-line-modified
-		  mode-line-remote)
-		 display (min-width (5.0)))
-		mode-line-frame-identification mode-line-buffer-identification "   "
-		mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
-		mode-line-misc-info mode-line-end-spaces))
+;; (setq-default mode-line-format
+;; 		     '("%e" mode-line-front-space
+;; 		       (:propertize
+;; 			("" mode-line-mule-info mode-line-client mode-line-modified
+;; 			 mode-line-remote)
+;; 			display (min-width (5.0)))
+;; 		       mode-line-frame-identification mode-line-buffer-identification "   "
+;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
+;; 		       mode-line-misc-info mode-line-end-spaces))
 
 (provide 'my-modeline)

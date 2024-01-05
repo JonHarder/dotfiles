@@ -67,7 +67,7 @@
     This gets loaded first so that any later configuration can utilize it.
 
     #+begin_src emacs-lisp :tangle "init.el"
-      (load-file "local-config.el")
+      (load-file (expand-file-name "local-config.el" user-emacs-directory))
     #+end_src
 *** Adding my-modules to the load path
     #+begin_src emacs-lisp :tangle "init.el"
@@ -206,7 +206,6 @@
      (setq ring-bell-function 'ignore)
    #+end_src
 ** Time display
-
 *** Format
     I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
 
@@ -217,8 +216,7 @@
 *** Add the time to the mode line
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (display-time-mode -1)
-     ; (display-time)
+     (display-time)
    #+end_src
 
 ** Font
@@ -320,21 +318,16 @@
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
       (defun my-modeline--major-mode-name ()
 	"Return the capitalized `major-mode' name."
-	(capitalize (symbol-name major-mode)))
+	(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
       (defun my-modeline--evil-state-face ()
 	"Return a symbol associated with a face to propertize the current evil state."
 	(pcase evil-state
-	  ('insert
-	   'my-modeline-indicator-magenta)
-	  ('normal
-	   'my-modeline-indicator-green)
-	  ('visual
-	   'my-modeline-indicator-yellow)
-	  ('replace
-	   'my-modeline-indicator-red)
-	  ('emacs
-	   'my-modeline-evil-emacs-state)))
+	  ('insert 'my-modeline-indicator-magenta)
+	  ('normal 'my-modeline-indicator-green)
+	  ('visual 'my-modeline-indicator-yellow)
+	  ('replace 'my-modeline-indicator-red)
+	  ('emacs 'my-modeline-evil-emacs-state)))
 
       (defun my-modeline--buffer-name ()
 	"Return the buffer's name."
@@ -351,6 +344,15 @@
 	    'italic)
 	   ((mode-line-window-selected-p)
 	    'mode-line-buffer-id))))
+
+      (defun my-modeline--major-mode-indicator ()
+	(let ((indicator (cond
+			  ((derived-mode-p 'text-mode) "§")
+			  ((derived-mode-p 'prog-mode) "λ")
+			  ((or (derived-mode-p 'comint-mode)
+			       (derived-mode-p 'eshell-mode))
+			   ">_"))))
+	  (propertize indicator 'face 'shadow)))
     #+end_src
 
 ** Local variables which make up the segments of my modeline
@@ -362,7 +364,7 @@
       (defvar-local my-modeline-major-mode
 	  '(:eval
 	    (list
-	     (propertize "λ" 'face 'shadow)
+             (my-modeline--major-mode-indicator)
 	     " "
 	     (propertize (my-modeline--major-mode-name)
 			 'face 'normal))))
@@ -389,18 +391,19 @@
 		       my-modeline-evil-state
 		       my-modeline-buffer-name
 		       " "
-		       my-modeline-major-mode))
-
+		       my-modeline-major-mode
+		       "  "
+		       global-mode-string))
        ;;; The default mode line
-       (setq-default mode-line-format
-		     '("%e" mode-line-front-space
-		       (:propertize
-			("" mode-line-mule-info mode-line-client mode-line-modified
-			 mode-line-remote)
-			display (min-width (5.0)))
-		       mode-line-frame-identification mode-line-buffer-identification "   "
-		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
-		       mode-line-misc-info mode-line-end-spaces))
+       ;; (setq-default mode-line-format
+       ;; 		     '("%e" mode-line-front-space
+       ;; 		       (:propertize
+       ;; 			("" mode-line-mule-info mode-line-client mode-line-modified
+       ;; 			 mode-line-remote)
+       ;; 			display (min-width (5.0)))
+       ;; 		       mode-line-frame-identification mode-line-buffer-identification "   "
+       ;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
+       ;; 		       mode-line-misc-info mode-line-end-spaces))
      #+end_src
 ** Provide =my-modeline=
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
@@ -811,6 +814,15 @@
        (kbd "<leader> n n") #'denote
        (kbd "<leader> n r") #'denote-rename-file
        (kbd "<leader> n J") #'denote-journal-extras-new-entry)
+   #+end_src
+
+   And for the specialized ~backlinks-mode~ to display all links to the current
+   denote buffer.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+     (evil-define-key 'normal denote-backlinks-mode-map
+       (kbd "j") #'denote-backlinks-next
+       (kbd "k") #'denote-backlinks-prev)
    #+end_src
 
 ** Journaling

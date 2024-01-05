@@ -18,6 +18,10 @@
   (kbd "<leader> n r") #'denote-rename-file
   (kbd "<leader> n J") #'denote-journal-extras-new-entry)
 
+(evil-define-key 'normal denote-backlinks-mode-map
+  (kbd "j") #'denote-backlinks-next
+  (kbd "k") #'denote-backlinks-prev)
+
 (require 'denote-journal-extras)
 (setq denote-journal-extras-directory (concat denote-directory "/journal"))
 (add-to-list 'denote-dired-directories denote-journal-extras-directory)

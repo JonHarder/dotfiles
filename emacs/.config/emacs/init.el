@@ -13,7 +13,7 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(load-file "local-config.el")
+(load-file (expand-file-name "local-config.el" user-emacs-directory))
 
 (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
 
