@@ -63,14 +63,14 @@
   "Return the capitalized `major-mode' name."
   (capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
-(defun my-modeline--evil-state-face ()
+(defun my-modeline--evil-state-name-and-face ()
   "Return a symbol associated with a face to propertize the current evil state."
   (pcase evil-state
-    ('insert 'my-modeline-indicator-magenta)
-    ('normal 'my-modeline-indicator-green)
-    ('visual 'my-modeline-indicator-yellow)
-    ('replace 'my-modeline-indicator-red)
-    ('emacs 'my-modeline-evil-emacs-state)))
+    ('insert '("INSERT " my-modeline-indicator-magenta))
+    ('normal '("NORMAL " my-modeline-indicator-green))
+    ('visual '("VISUAL " my-modeline-indicator-yellow))
+    ('replace '("REPLACE" my-modeline-indicator-red))
+    ('emacs '("EMACS  " my-modeline-evil-emacs-state))))
 
 (defun my-modeline--buffer-name ()
   "Return the buffer's name."
@@ -97,28 +97,52 @@
 		     ">_"))))
     (propertize indicator 'face 'shadow)))
 
+(defun my-modeline--git-branch ()
+  "Return propertized git branch."
+  (propertize (car (vc-git-branches)) 'face 'bold))
+
+(defvar-local my-modeline-git-branch
+    '(:eval
+      (if-let (((mode-line-window-selected-p))
+	       (branch (my-modeline--git-branch)))
+	  (list
+	   " "
+	   (propertize (char-to-string #xE0A0) 'face 'shadow)
+	   " "
+	   branch
+	   " "))))
+
 (defvar-local my-modeline-evil-state
     '(:eval
-      (propertize (upcase (symbol-name evil-state)) 'face (my-modeline--evil-state-face))))
+      (let ((name-face (my-modeline--evil-state-name-and-face)))
+	(propertize (upcase (car name-face)) 'face (cadr name-face)))))
 
 (defvar-local my-modeline-major-mode
     '(:eval
-      (list
-       (my-modeline--major-mode-indicator)
-       " "
-       (propertize (my-modeline--major-mode-name)
-		   'face 'normal))))
+      (when (mode-line-window-selected-p)
+	(list
+	 (my-modeline--major-mode-indicator)
+	 " "
+	 (propertize (my-modeline--major-mode-name)
+		     'face 'normal)))))
 
 (defvar-local my-modeline-buffer-name
     '(:eval
-      (format "%s" (propertize
-		    (my-modeline--buffer-name)
-		    'face (my-modeline--buffer-name-face)))))
+      (format " %s " (propertize
+		      (my-modeline--buffer-name)
+		      'face (my-modeline--buffer-name-face)))))
+
+(defvar-local my-modeline-global-segment
+    '(:eval
+      (when (mode-line-window-selected-p)
+	global-mode-string)))
 
 ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
-(dolist (component '(my-modeline-major-mode
+(dolist (component '(my-modeline-git-branch
+		     my-modeline-major-mode
 		     my-modeline-buffer-name
-		     my-modeline-evil-state))
+		     my-modeline-evil-state
+		     my-modeline-global-segment))
   (put component 'risky-local-variable t))
 
 ;;; My mode line
@@ -127,10 +151,12 @@
 	      '("%e"
 		my-modeline-evil-state
 		my-modeline-buffer-name
-		" "
 		my-modeline-major-mode
-		"  "
-		global-mode-string))
+                " "
+		my-modeline-git-branch
+		" "
+		my-modeline-global-segment))
+
 ;;; The default mode line
 ;; (setq-default mode-line-format
 ;; 		     '("%e" mode-line-front-space

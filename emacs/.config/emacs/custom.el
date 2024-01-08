@@ -91,30 +91,24 @@
       (null-device . "/dev/null"))
      (eshell-connection-default-profile
       (eshell-path-env-list))))
- '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox" :key "i")
-     (:name "unread" :query "tag:unread" :key "u")
-     (:name "flagged" :query "tag:flagged" :key "f")
-     (:name "sent" :query "tag:sent" :key "t")
-     (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a")
-     (:name "work unread today" :query "date:today to:jharder@kipsu.com tag:inbox tag:unread"))))
+ '(custom-safe-themes
+   '("d11e54ae9e37d61deb2c92c74bc52a27462f62d2ff68c5d01119b0cc30377042" default)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(fringe ((t :background "#172030")))
- '(header-line ((t :box (:line-width 4 :color "#0E131D" :style nil))))
- '(header-line-highlight ((t :box (:color "#FAFFF6"))))
- '(line-number ((t :background "#172030")))
- '(mode-line ((t :box (:line-width 6 :color "#0E131D" :style nil))))
- '(mode-line-active ((t :box (:line-width 6 :color "#0E131D" :style nil))))
- '(mode-line-highlight ((t :box (:color "#FAFFF6"))))
- '(mode-line-inactive ((t :box (:line-width 6 :color "#141c2b" :style nil))))
- '(tab-bar-tab ((t :box (:line-width 4 :color "#172030" :style nil))))
- '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#101828" :style nil))))
- '(window-divider ((t :background "#172030" :foreground "#172030")))
- '(window-divider-first-pixel ((t :background "#172030" :foreground "#172030")))
- '(window-divider-last-pixel ((t :background "#172030" :foreground "#172030"))))
+ '(fringe ((t :background "#000000")))
+ '(header-line ((t :box (:line-width 4 :color "#1e1e1e" :style nil))))
+ '(header-line-highlight ((t :box (:color "#ffffff"))))
+ '(line-number ((t :background "#000000")))
+ '(mode-line ((t :box (:line-width 6 :color "#242679" :style nil))))
+ '(mode-line-active ((t :box (:line-width 6 :color "#242679" :style nil))))
+ '(mode-line-highlight ((t :box (:color "#ffffff"))))
+ '(mode-line-inactive ((t :box (:line-width 6 :color "#2d2d2d" :style nil))))
+ '(tab-bar-tab ((t :box (:line-width 4 :color "#000000" :style nil))))
+ '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#545454" :style nil))))
+ '(window-divider ((t :background "#000000" :foreground "#000000")))
+ '(window-divider-first-pixel ((t :background "#000000" :foreground "#000000")))
+ '(window-divider-last-pixel ((t :background "#000000" :foreground "#000000"))))
 (put 'narrow-to-region 'disabled nil)

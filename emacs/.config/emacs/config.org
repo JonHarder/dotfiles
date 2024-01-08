@@ -1,7 +1,6 @@
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
 #+STARTUP: show2levels
-
 * Early init optimizations
 ** Disable built-in package.el
   #+begin_src emacs-lisp :tangle "early-init.el"
@@ -151,12 +150,18 @@
 **** Ef-themes settings
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (straight-use-package 'ef-themes)
-      (setq ef-themes-headings
-	    '((1 . (variable-pitch 1.5))
-	      (2 . (1.3))
+      (setq ef-themes-headings ; read the manual's entry or the doc string
+	    '((0 variable-pitch bold 1.9)
+	      (1 variable-pitch bold 1.8)
+	      (2 variable-pitch regular 1.7)
+	      (3 variable-pitch regular 1.6)
+	      (4 variable-pitch light 1.5)
+	      (5 variable-pitch light 1.4) ; absence of weight means `bold'
+	      (6 variable-pitch light 1.3)
+	      (7 variable-pitch light 1.2)
+	      (t variable-pitch light 1.1)
 	      (agenda-date . (1.3))
-	      (agenda-structure . (variable pitch light 1.8))
-	      (t . (1.1))))
+	      (agenda-structure . (variable pitch light 1.8))))
     #+end_src
 
 **** Doom themes settings
@@ -320,14 +325,14 @@
 	"Return the capitalized `major-mode' name."
 	(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
-      (defun my-modeline--evil-state-face ()
+      (defun my-modeline--evil-state-name-and-face ()
 	"Return a symbol associated with a face to propertize the current evil state."
 	(pcase evil-state
-	  ('insert 'my-modeline-indicator-magenta)
-	  ('normal 'my-modeline-indicator-green)
-	  ('visual 'my-modeline-indicator-yellow)
-	  ('replace 'my-modeline-indicator-red)
-	  ('emacs 'my-modeline-evil-emacs-state)))
+	  ('insert '("INSERT " my-modeline-indicator-magenta))
+	  ('normal '("NORMAL " my-modeline-indicator-green))
+	  ('visual '("VISUAL " my-modeline-indicator-yellow))
+	  ('replace '("REPLACE" my-modeline-indicator-red))
+	  ('emacs '("EMACS  " my-modeline-evil-emacs-state))))
 
       (defun my-modeline--buffer-name ()
 	"Return the buffer's name."
@@ -353,32 +358,56 @@
 			       (derived-mode-p 'eshell-mode))
 			   ">_"))))
 	  (propertize indicator 'face 'shadow)))
+
+      (defun my-modeline--git-branch ()
+	"Return propertized git branch."
+	(propertize (car (vc-git-branches)) 'face 'bold))
     #+end_src
 
 ** Local variables which make up the segments of my modeline
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+      (defvar-local my-modeline-git-branch
+	  '(:eval
+	    (if-let (((mode-line-window-selected-p))
+		     (branch (my-modeline--git-branch)))
+		(list
+		 " "
+		 (propertize (char-to-string #xE0A0) 'face 'shadow)
+		 " "
+		 branch
+		 " "))))
+
       (defvar-local my-modeline-evil-state
 	  '(:eval
-	    (propertize (upcase (symbol-name evil-state)) 'face (my-modeline--evil-state-face))))
+	    (let ((name-face (my-modeline--evil-state-name-and-face)))
+	      (propertize (upcase (car name-face)) 'face (cadr name-face)))))
 
       (defvar-local my-modeline-major-mode
 	  '(:eval
-	    (list
-             (my-modeline--major-mode-indicator)
-	     " "
-	     (propertize (my-modeline--major-mode-name)
-			 'face 'normal))))
+	    (when (mode-line-window-selected-p)
+	      (list
+	       (my-modeline--major-mode-indicator)
+	       " "
+	       (propertize (my-modeline--major-mode-name)
+			   'face 'normal)))))
 
       (defvar-local my-modeline-buffer-name
 	  '(:eval
-	    (format "%s" (propertize
-			  (my-modeline--buffer-name)
-			  'face (my-modeline--buffer-name-face)))))
+	    (format " %s " (propertize
+			    (my-modeline--buffer-name)
+			    'face (my-modeline--buffer-name-face)))))
+
+      (defvar-local my-modeline-global-segment
+	  '(:eval
+	    (when (mode-line-window-selected-p)
+	      global-mode-string)))
 
       ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
-      (dolist (component '(my-modeline-major-mode
+      (dolist (component '(my-modeline-git-branch
+			   my-modeline-major-mode
 			   my-modeline-buffer-name
-			   my-modeline-evil-state))
+			   my-modeline-evil-state
+			   my-modeline-global-segment))
 	(put component 'risky-local-variable t))
     #+end_src
 
@@ -390,10 +419,12 @@
 		     '("%e"
 		       my-modeline-evil-state
 		       my-modeline-buffer-name
-		       " "
 		       my-modeline-major-mode
-		       "  "
-		       global-mode-string))
+                       " "
+		       my-modeline-git-branch
+		       " "
+		       my-modeline-global-segment))
+
        ;;; The default mode line
        ;; (setq-default mode-line-format
        ;; 		     '("%e" mode-line-front-space

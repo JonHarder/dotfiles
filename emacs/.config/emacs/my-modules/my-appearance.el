@@ -20,12 +20,18 @@
 	  (t . (1.1)))))
 
 (straight-use-package 'ef-themes)
-(setq ef-themes-headings
-      '((1 . (variable-pitch 1.5))
-	(2 . (1.3))
+(setq ef-themes-headings ; read the manual's entry or the doc string
+      '((0 variable-pitch bold 1.9)
+	(1 variable-pitch bold 1.8)
+	(2 variable-pitch regular 1.7)
+	(3 variable-pitch regular 1.6)
+	(4 variable-pitch light 1.5)
+	(5 variable-pitch light 1.4) ; absence of weight means `bold'
+	(6 variable-pitch light 1.3)
+	(7 variable-pitch light 1.2)
+	(t variable-pitch light 1.1)
 	(agenda-date . (1.3))
-	(agenda-structure . (variable pitch light 1.8))
-	(t . (1.1))))
+	(agenda-structure . (variable pitch light 1.8))))
 
 (straight-use-package 'doom-themes)
 (setq doom-rouge-brighter-comments t
