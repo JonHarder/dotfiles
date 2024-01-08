@@ -11,6 +11,7 @@
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 (defun dired-dotfiles-toggle ()
+  "Toggle the visibility of files starting with '.'."
   (interactive)
   (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
@@ -61,7 +62,7 @@ under the point in the dired buffer."
   "Jump the point to the first dired entry that isn't . or .."
   (interactive)
   (beginning-of-buffer)
-  (dired-next-line 3))
+  (dired-next-line 1))
 
 (defun dired-last-file ()
   "Jump the point to the last dired entry."

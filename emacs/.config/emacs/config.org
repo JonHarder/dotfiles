@@ -126,6 +126,10 @@
    #+end_src
 
 *** Settings
+**** Basic theme configuration
+      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :tangle-mode yes
+	(set-face-attribute 'bold nil :weight 'ultra-bold)
+      #+end_src
 **** Modus themes settings
      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (progn ;; Modus configuration
@@ -300,6 +304,12 @@
 	 (t :foreground "red"))
        "Face for modeline indicators")
 
+     (defface my-modeline-indicator-red-bg
+       '((default :inherit bold)
+	 (((class color) (min-colors 88))
+	  :foreground "white" :background "red"))
+       "Face for modeline indicators")
+
      (defface my-modeline-indicator-magenta
        '((default :inherit bold)
 	 (((class color) (min-colors 88) (background light))
@@ -366,6 +376,12 @@
 
 ** Local variables which make up the segments of my modeline
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+      (defvar-local my-modeline-remote
+	  '(:eval
+	    (when (file-remote-p default-directory)
+	      (propertize " @ " 'face 'my-modeline-indicator-red-bg))))
+
+
       (defvar-local my-modeline-git-branch
 	  '(:eval
 	    (if-let (((mode-line-window-selected-p))
@@ -393,21 +409,23 @@
 
       (defvar-local my-modeline-buffer-name
 	  '(:eval
-	    (format " %s " (propertize
+	    (format "%s " (propertize
 			    (my-modeline--buffer-name)
 			    'face (my-modeline--buffer-name-face)))))
 
-      (defvar-local my-modeline-global-segment
+      (defvar-local my-modeline-date
 	  '(:eval
 	    (when (mode-line-window-selected-p)
-	      global-mode-string)))
+	      (let ((date-time (format-time-string "%H:%m %b %d, %Y")))
+		(propertize date-time 'face 'underline)))))
 
       ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
       (dolist (component '(my-modeline-git-branch
 			   my-modeline-major-mode
 			   my-modeline-buffer-name
+			   my-modeline-remote
 			   my-modeline-evil-state
-			   my-modeline-global-segment))
+			   my-modeline-date))
 	(put component 'risky-local-variable t))
     #+end_src
 
@@ -418,12 +436,13 @@
        (setq-default mode-line-format
 		     '("%e"
 		       my-modeline-evil-state
+		       my-modeline-remote
 		       my-modeline-buffer-name
 		       my-modeline-major-mode
-                       " "
+		       " "
 		       my-modeline-git-branch
 		       " "
-		       my-modeline-global-segment))
+		       my-modeline-date))
 
        ;;; The default mode line
        ;; (setq-default mode-line-format
@@ -674,6 +693,14 @@
      (savehist-mode)
    #+end_src
 
+   Do not allow the cursor in the minibuffer
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+     (setq minibuffer-prompt-properties
+	   '(read-only t cursor-intangible t face minibuffer-prompt))
+     (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+   #+end_src
+   
 ** Vertico
 
    Vertico is a minibuffer completion enhancement library which wraps emacs'
@@ -699,6 +726,14 @@
      (require 'vertico-directory)
      (define-key vertico-map (kbd "DEL") #'vertico-directory-delete-char)
      (define-key vertico-map (kbd "RET") #'vertico-directory-enter)
+   #+end_src
+
+   Wipe the shadowed input in minibuffer when the current input superscedes
+   it, e.g. =~/some/path/~/base= should erase =~/some/path= since =~/base= shadows
+   it.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+     (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
    #+end_src
 
 ** Corfu
@@ -957,7 +992,6 @@
 	(kbd "g d") #'dired-kill-subdir
         (kbd "g j") #'dired-next-subdir
         (kbd "g k") #'dired-prev-subdir
-	(kbd "z a") #'dired-dotfiles-toggle
 	(kbd ".") #'dired-dotfiles-toggle
 	(kbd "g g") #'dired-first-file
 	(kbd "G") #'dired-last-file
@@ -973,7 +1007,7 @@
        "Jump the point to the first dired entry that isn't . or .."
        (interactive)
        (beginning-of-buffer)
-       (dired-next-line 3))
+       (dired-next-line 1))
 
      (defun dired-last-file ()
        "Jump the point to the last dired entry."
@@ -2095,7 +2129,7 @@
        (kbd "<leader> h m") #'describe-mode
        (kbd "<leader> h r") #'info-display-manual
        ;; imenu
-       (kbd "<leader> i") #'consult-outline
+       (kbd "<leader> i") #'consult-imenu
        ;; jumping (ace)
        (kbd "<leader> j") #'ace-jump-word-mode
        ;; org
