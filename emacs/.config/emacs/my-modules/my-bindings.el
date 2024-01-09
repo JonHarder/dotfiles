@@ -45,7 +45,7 @@
   (kbd "<leader> h m") #'describe-mode
   (kbd "<leader> h r") #'info-display-manual
   ;; imenu
-  (kbd "<leader> i") #'consult-outline
+  (kbd "<leader> i") #'consult-imenu
   ;; jumping (ace)
   (kbd "<leader> j") #'ace-jump-word-mode
   ;; org

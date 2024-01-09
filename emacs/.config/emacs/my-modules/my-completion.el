@@ -3,6 +3,10 @@
 (straight-use-package 'savehist)
 (savehist-mode)
 
+(setq minibuffer-prompt-properties
+      '(read-only t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
 (straight-use-package 'vertico)
 (vertico-mode 1)
 (define-key vertico-map (kbd "<escape>") #'keyboard-escape-quit)
@@ -10,6 +14,8 @@
 (require 'vertico-directory)
 (define-key vertico-map (kbd "DEL") #'vertico-directory-delete-char)
 (define-key vertico-map (kbd "RET") #'vertico-directory-enter)
+
+(add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 
 (straight-use-package 'corfu)
 (setq corfu-auto t

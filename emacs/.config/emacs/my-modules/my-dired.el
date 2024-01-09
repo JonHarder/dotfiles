@@ -11,7 +11,6 @@
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 (defun dired-dotfiles-toggle ()
-  "Toggle the visibility of files starting with '.'."
   (interactive)
   (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
@@ -43,13 +42,14 @@ under the point in the dired buffer."
   (kbd "h") #'dired-up-directory
   (kbd "l") #'dired-find-file
   (kbd "n") #'evil-search-next
+  (kbd "e") #'dired-mark-files-extension
+  (kbd "r") #'revert-buffer
   (kbd "N") #'evil-search-previous
   (kbd "s") #'eshell
   (kbd "g o") #'dired-insert-subdir
   (kbd "g d") #'dired-kill-subdir
   (kbd "g j") #'dired-next-subdir
   (kbd "g k") #'dired-prev-subdir
-  (kbd "z a") #'dired-dotfiles-toggle
   (kbd ".") #'dired-dotfiles-toggle
   (kbd "g g") #'dired-first-file
   (kbd "G") #'dired-last-file

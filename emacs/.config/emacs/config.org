@@ -95,7 +95,7 @@
       (require 'my-ibuffer)
       (require 'my-icons)
       (require 'my-lisp-mode)
-      (require 'my-magit)
+      (require 'my-git)
       (require 'my-markup)
       (require 'my-navigation)
       (require 'my-nushell-mode)
@@ -127,7 +127,7 @@
 
 *** Settings
 **** Basic theme configuration
-      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :tangle-mode yes
+      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
 	(set-face-attribute 'bold nil :weight 'ultra-bold)
       #+end_src
 **** Modus themes settings
@@ -338,11 +338,11 @@
       (defun my-modeline--evil-state-name-and-face ()
 	"Return a symbol associated with a face to propertize the current evil state."
 	(pcase evil-state
-	  ('insert '("INSERT " my-modeline-indicator-magenta))
-	  ('normal '("NORMAL " my-modeline-indicator-green))
-	  ('visual '("VISUAL " my-modeline-indicator-yellow))
-	  ('replace '("REPLACE" my-modeline-indicator-red))
-	  ('emacs '("EMACS  " my-modeline-evil-emacs-state))))
+	  ('insert '("<I>" my-modeline-indicator-magenta))
+	  ('normal '("<N>" my-modeline-indicator-green))
+	  ('visual '("<V>" my-modeline-indicator-yellow))
+	  ('replace '("<R>" my-modeline-indicator-red))
+	  ('emacs '("<E>" my-modeline-evil-emacs-state))))
 
       (defun my-modeline--buffer-name ()
 	"Return the buffer's name."
@@ -395,8 +395,10 @@
 
       (defvar-local my-modeline-evil-state
 	  '(:eval
-	    (let ((name-face (my-modeline--evil-state-name-and-face)))
-	      (propertize (upcase (car name-face)) 'face (cadr name-face)))))
+	    (let* ((name-face (my-modeline--evil-state-name-and-face))
+		   (name (car name-face))
+		   (face (cadr name-face)))
+	      (propertize (upcase name) 'face face))))
 
       (defvar-local my-modeline-major-mode
 	  '(:eval
@@ -410,13 +412,13 @@
       (defvar-local my-modeline-buffer-name
 	  '(:eval
 	    (format "%s " (propertize
-			    (my-modeline--buffer-name)
-			    'face (my-modeline--buffer-name-face)))))
+			   (my-modeline--buffer-name)
+			   'face (my-modeline--buffer-name-face)))))
 
       (defvar-local my-modeline-date
 	  '(:eval
 	    (when (mode-line-window-selected-p)
-	      (let ((date-time (format-time-string "%H:%m %b %d, %Y")))
+	      (let ((date-time (format-time-string "%H:%M %b %d, %Y")))
 		(propertize date-time 'face 'underline)))))
 
       ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
@@ -986,12 +988,14 @@
 	(kbd "h") #'dired-up-directory
 	(kbd "l") #'dired-find-file
 	(kbd "n") #'evil-search-next
+	(kbd "e") #'dired-mark-files-extension
+        (kbd "r") #'revert-buffer
 	(kbd "N") #'evil-search-previous
 	(kbd "s") #'eshell
 	(kbd "g o") #'dired-insert-subdir
 	(kbd "g d") #'dired-kill-subdir
-        (kbd "g j") #'dired-next-subdir
-        (kbd "g k") #'dired-prev-subdir
+	(kbd "g j") #'dired-next-subdir
+	(kbd "g k") #'dired-prev-subdir
 	(kbd ".") #'dired-dotfiles-toggle
 	(kbd "g g") #'dired-first-file
 	(kbd "G") #'dired-last-file
@@ -1905,19 +1909,19 @@
 
 * Magit (git)
   Magit is amazing
+  
+*** Install the package
 
-** Install the package
-
-  #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp yes
+  #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
     (straight-use-package 'magit)
     (evil-set-initial-state 'magit-status-mode 'normal)
   #+end_src
 
-** Set up bindings for the various magit modes
-*** Status mode
+*** Set up bindings for the various magit modes
+**** Status mode
     Normal mode bindings
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp yes
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-status-mode-map
         (kbd "?") #'magit-dispatch
 	(kbd "b") #'magit-branch
@@ -1944,16 +1948,16 @@
 
     Visual mode bindings
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp yes
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal visual) magit-status-mode-map
     	(kbd "s") 'magit-stage
     	(kbd "u") 'magit-unstage)
     #+end_src
 
-*** Log mode
+**** Log mode
     Normal mode bindings
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp yes
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-log-mode-map
     	(kbd "q") 'magit-log-bury-buffer
     	(kbd "j") 'magit-next-line
@@ -1963,10 +1967,10 @@
     	(kbd "RET") 'magit-show-commit)
     #+end_src
 
-*** Revision mode
+**** Revision mode
     The revision mode im magit is TODO (what actual part of magit does this even relate to?)
     
-    #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp yes
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-revision-mode-map
 	(kbd "j") 'magit-next-line
 	(kbd "k") 'magit-previous-line
@@ -1977,9 +1981,14 @@
 	(kbd "q") 'magit-mode-bury-buffer)
     #+end_src
 
-** Provide my-magit
-   #+begin_src emacs-lisp :tangle "my-modules/my-magit.el" :mkdirp
-     (provide 'my-magit)
+** Git gutters
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+      (straight-use-package 'git-gutter)
+      (global-git-gutter-mode)
+    #+end_src
+** Provide =my-git=
+   #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+     (provide 'my-git)
    #+end_src
 
 * Help utilities

@@ -41,6 +41,12 @@
     (t :foreground "red"))
   "Face for modeline indicators")
 
+(defface my-modeline-indicator-red-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88))
+     :foreground "white" :background "red"))
+  "Face for modeline indicators")
+
 (defface my-modeline-indicator-magenta
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
@@ -66,11 +72,11 @@
 (defun my-modeline--evil-state-name-and-face ()
   "Return a symbol associated with a face to propertize the current evil state."
   (pcase evil-state
-    ('insert '("INSERT " my-modeline-indicator-magenta))
-    ('normal '("NORMAL " my-modeline-indicator-green))
-    ('visual '("VISUAL " my-modeline-indicator-yellow))
-    ('replace '("REPLACE" my-modeline-indicator-red))
-    ('emacs '("EMACS  " my-modeline-evil-emacs-state))))
+    ('insert '("<I>" my-modeline-indicator-magenta))
+    ('normal '("<N>" my-modeline-indicator-green))
+    ('visual '("<V>" my-modeline-indicator-yellow))
+    ('replace '("<R>" my-modeline-indicator-red))
+    ('emacs '("<E>" my-modeline-evil-emacs-state))))
 
 (defun my-modeline--buffer-name ()
   "Return the buffer's name."
@@ -101,6 +107,12 @@
   "Return propertized git branch."
   (propertize (car (vc-git-branches)) 'face 'bold))
 
+(defvar-local my-modeline-remote
+    '(:eval
+      (when (file-remote-p default-directory)
+	(propertize " @ " 'face 'my-modeline-indicator-red-bg))))
+
+
 (defvar-local my-modeline-git-branch
     '(:eval
       (if-let (((mode-line-window-selected-p))
@@ -114,8 +126,10 @@
 
 (defvar-local my-modeline-evil-state
     '(:eval
-      (let ((name-face (my-modeline--evil-state-name-and-face)))
-	(propertize (upcase (car name-face)) 'face (cadr name-face)))))
+      (let* ((name-face (my-modeline--evil-state-name-and-face))
+	     (name (car name-face))
+	     (face (cadr name-face)))
+	(propertize (upcase name) 'face face))))
 
 (defvar-local my-modeline-major-mode
     '(:eval
@@ -128,21 +142,23 @@
 
 (defvar-local my-modeline-buffer-name
     '(:eval
-      (format " %s " (propertize
-		      (my-modeline--buffer-name)
-		      'face (my-modeline--buffer-name-face)))))
+      (format "%s " (propertize
+		     (my-modeline--buffer-name)
+		     'face (my-modeline--buffer-name-face)))))
 
-(defvar-local my-modeline-global-segment
+(defvar-local my-modeline-date
     '(:eval
       (when (mode-line-window-selected-p)
-	global-mode-string)))
+	(let ((date-time (format-time-string "%H:%M %b %d, %Y")))
+	  (propertize date-time 'face 'underline)))))
 
 ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
 (dolist (component '(my-modeline-git-branch
 		     my-modeline-major-mode
 		     my-modeline-buffer-name
+		     my-modeline-remote
 		     my-modeline-evil-state
-		     my-modeline-global-segment))
+		     my-modeline-date))
   (put component 'risky-local-variable t))
 
 ;;; My mode line
@@ -150,12 +166,13 @@
 (setq-default mode-line-format
 	      '("%e"
 		my-modeline-evil-state
+		my-modeline-remote
 		my-modeline-buffer-name
 		my-modeline-major-mode
-                " "
+		" "
 		my-modeline-git-branch
 		" "
-		my-modeline-global-segment))
+		my-modeline-date))
 
 ;;; The default mode line
 ;; (setq-default mode-line-format

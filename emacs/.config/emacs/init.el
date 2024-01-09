@@ -37,7 +37,7 @@
 (require 'my-ibuffer)
 (require 'my-icons)
 (require 'my-lisp-mode)
-(require 'my-magit)
+(require 'my-git)
 (require 'my-markup)
 (require 'my-navigation)
 (require 'my-nushell-mode)

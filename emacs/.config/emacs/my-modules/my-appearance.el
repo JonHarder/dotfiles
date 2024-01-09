@@ -1,5 +1,7 @@
 (straight-use-package my-theme-package)
 
+(set-face-attribute 'bold nil :weight 'ultra-bold)
+
 (progn ;; Modus configuration
   (require-theme 'modus-themes)
   (setq modus-themes-completions

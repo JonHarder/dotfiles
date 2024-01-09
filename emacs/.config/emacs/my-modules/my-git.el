@@ -45,4 +45,7 @@
   (kbd "RET") 'magit-visit-thing
   (kbd "q") 'magit-mode-bury-buffer)
 
-(provide 'my-magit)
+(straight-use-package 'git-gutter)
+(global-git-gutter-mode)
+
+(provide 'my-git)
