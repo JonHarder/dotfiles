@@ -1827,49 +1827,55 @@
   It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
 
 ** Notmuch
-  *NEW* transitioning to notmuch
+*** Meta: setup
+     from there just configure it
 
+     src_sh[]{notmuch setup}
+
+     and let notmuch index your mail
+
+     src_sh[]{notmuch new}
+*** Require the project
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
     (straight-use-package 'notmuch)
   #+end_src
 
-  from there just configure it
+*** Configuring notmuch
+    The following configures the "hello" (start) page of notmuch. This page is
+    the default view when running the command ~notmuch~.
 
-  src_sh[]{notmuch setup}
+    This configures the sections on the hello page of notmuch. I don't like the
+    header because it doesn't provide any useful information for me.
 
-  and let notmuch index your mail
+    I also remove the "recent searches" because these can be easily retrieved
+    in buffer history when executing a search with =s=.
 
-  src_sh[]{notmuch new}
+    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+      (setq notmuch-hello-sections
+	    '(notmuch-hello-insert-saved-searches
+	      notmuch-hello-insert-search
+	      notmuch-hello-insert-alltags
+	      notmuch-hello-insert-footer))
+    #+end_src
 
-  *OLD*, I'd like to transition from mu(4e) to notmuch, so the following
-  is old
-  
-  for mu and mu4e to work, mu must be initialized with your maildir
+   Saved searches
 
-  ~mu init --maildir=~/mail --my-address=jharder@kipsu.com~
+   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+     (setq notmuch-saved-searches
+	   '((:name "inbox" :query "tag:inbox" :key "i")
+	     (:name "unread" :query "tag:unread" :key "u")
+	     (:name "flagged" :query "tag:flagged" :key "f")
+	     (:name "drafts" :query "tag:draft" :key "d")
+	     (:name "today's mail" :query "date:today" :key "t")))
+   #+end_src
 
-  and then indexed:
-
-  ~mu index~
-
-  The mu package comes with the emacs package mu4e. Let's add it to
-  the load path.
-
-** Mu(4e) setup - OLD
+*** Mail server/client setup
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-    (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.10.7/share/emacs/site-lisp/mu/mu4e")
-    (require 'mu4e)
-
-    (setq mu4e-attachments-dir "~/Downloads"
-	  mu4e-maildir "~/Mail"
-	  mu4e-get-mail-command "mbsync -a"
-	  mu4e-refile-folder "/Archive"
-	  mu4e-sent-folder "/Sent"
-	  mu4e-drafts-folder "/Drafts"
-	  mu4e-trash-folder "/Trash")
-
+    (setq send-mail-function 'smtpmail-send-it)
     (setq smtpmail-default-smtp-server "smtp.gmail.com"
 	  smtpmail-smtp-server "smtp.gmail.com"
+	  smtpmail-stream-type 'tls
+	  smtpmail-smtp-service 465
 	  user-mail-address "jharder@kipsu.com")
   #+end_src
 

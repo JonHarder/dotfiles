@@ -1,18 +1,23 @@
 (straight-use-package 'notmuch)
 
-(add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.10.7/share/emacs/site-lisp/mu/mu4e")
-(require 'mu4e)
+(setq notmuch-hello-sections
+      '(notmuch-hello-insert-saved-searches
+	notmuch-hello-insert-search
+	notmuch-hello-insert-alltags
+	notmuch-hello-insert-footer))
 
-(setq mu4e-attachments-dir "~/Downloads"
-      mu4e-maildir "~/Mail"
-      mu4e-get-mail-command "mbsync -a"
-      mu4e-refile-folder "/Archive"
-      mu4e-sent-folder "/Sent"
-      mu4e-drafts-folder "/Drafts"
-      mu4e-trash-folder "/Trash")
+(setq notmuch-saved-searches
+      '((:name "inbox" :query "tag:inbox" :key "i")
+	(:name "unread" :query "tag:unread" :key "u")
+	(:name "flagged" :query "tag:flagged" :key "f")
+	(:name "drafts" :query "tag:draft" :key "d")
+	(:name "today's mail" :query "date:today" :key "t")))
 
+(setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-default-smtp-server "smtp.gmail.com"
       smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-stream-type 'tls
+      smtpmail-smtp-service 465
       user-mail-address "jharder@kipsu.com")
 
 (provide 'my-email)
