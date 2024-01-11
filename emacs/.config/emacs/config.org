@@ -233,7 +233,7 @@
    I use FiraCode patched with the Nerd icons
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (let ((size 165))
+     (let ((size 175))
        (set-face-attribute 'default nil :font my-font :height size)
        (set-frame-font my-font nil t)
        (add-to-list 'default-frame-alist
@@ -544,6 +544,8 @@
 	 magit-log-mode
 	 occur-mode
 	 magit-revision-mode
+	 notmuch-hello-mode
+         notmuch-search-mode
 	 ibuffer-mode
 	 calendar-mode
 	 org-agenda-mode
@@ -1810,6 +1812,16 @@
   #+end_src
 
 * Email
+** Mail server/client setup
+  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+    (setq send-mail-function 'smtpmail-send-it)
+    (setq smtpmail-default-smtp-server "smtp.gmail.com"
+	  smtpmail-smtp-server "smtp.gmail.com"
+	  smtpmail-stream-type 'tls
+	  smtpmail-smtp-service 465
+	  user-mail-address "jharder@kipsu.com")
+  #+end_src
+
 ** mbsync setup
   At this point you shouldn't be surprised to find that emacs has decent support for sending
   and receiving emails. It even has a mail retrieval utility built in, rmail.
@@ -1866,19 +1878,59 @@
 	     (:name "unread" :query "tag:unread" :key "u")
 	     (:name "flagged" :query "tag:flagged" :key "f")
 	     (:name "drafts" :query "tag:draft" :key "d")
-	     (:name "today's mail" :query "date:today" :key "t")))
+	     (:name "today's mail" :query "date:today tag:inbox" :key "t")))
    #+end_src
+*** Bindings
+     Evilified bindings to notmuch
 
-*** Mail server/client setup
-  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-    (setq send-mail-function 'smtpmail-send-it)
-    (setq smtpmail-default-smtp-server "smtp.gmail.com"
-	  smtpmail-smtp-server "smtp.gmail.com"
-	  smtpmail-stream-type 'tls
-	  smtpmail-smtp-service 465
-	  user-mail-address "jharder@kipsu.com")
-  #+end_src
+**** hello mode
+     #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+       (evil-define-key 'normal notmuch-hello-mode-map
+	 (kbd "TAB") #'widget-forward
+         (kbd "RET") #'widget-button-press
+	 (kbd "i") #'notmuch-search
+	 (kbd "s") #'notmuch-search
+	 (kbd "g") #'notmuch-jump-search
+	 (kbd "q") #'notmuch-bury-or-kill-this-buffer)
+       #+end_src
+       
+**** Search mode
+       #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+	 (evil-define-key 'normal notmuch-search-mode-map
+	   (kbd "j") #'notmuch-search-next-thread
+	   (kbd "k") #'notmuch-search-previous-thread
+	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
+	   (kbd "RET") #'notmuch-search-show-thread
+	   (kbd "-") #'notmuch-search-remove-tag
+	   (kbd "+") #'notmuch-search-add-tag
+	   (kbd "*") #'notmuch-search-tag-all)
+       #+end_src
 
+       meta ~m~ prefix bindings
+
+       #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+	 (defun notmuch-search-delete-threads (&optional beg end)
+	   (interactive (notmuch-interactive-region))
+	   (notmuch-search-tag '("+deleted" "-inbox") beg end))
+
+	 (defun notmuch-search-add-todo-tag (&optional beg end)
+	   (interactive (notmuch-interactive-region))
+	   (notmuch-search-tag '("+todo") beg end))
+
+	 (evil-define-key 'normal notmuch-search-mode-map
+	   (kbd "d") #'notmuch-search-delete-threads
+	   (kbd "a") #'notmuch-search-archive-thread
+	   (kbd "t") #'notmuch-search-add-todo-tag
+	   (kbd "r") #'notmuch-refresh-this-buffer)
+       #+end_src
+       
+**** TODO Show mode
+       #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+	 (evil-define-key 'normal notmuch-show-mode-map)
+       #+end_src
+
+
+    
 ** Provide =my-email=
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
     (provide 'my-email)
@@ -2108,6 +2160,7 @@
        ;; App launcher
        (kbd "<leader> a c") #'calendar
        (kbd "<leader> a a") #'org-agenda
+       (kbd "<leader> a n") #'notmuch
        ;; buffers
        (kbd "<leader> b b") #'consult-buffer
        (kbd "<leader> b n") #'next-buffer
@@ -2225,6 +2278,18 @@
      (provide 'my-bindings)
    #+end_src
    
+* Epa mode
+  Epa mode handles (en|de)cryption of gpg files (among others??). When saving a file
+  with the extension ~.gpg~, emacs will prompt you for which key to use for encrypting
+  it with.
+
+** Bindings
+   #+begin_src emacs-lisp :tangle "my-modules/my-epa.el" :mkdirp yes
+     (evil-define-key 'normal epa-key-list-mode-map
+       (kbd "TAB") #'forward-button
+       (kbd "m") #'epa-mark-key
+       (kbd "u") #'epa-unmark-key)
+   #+end_src
 * Xref
 ** Bindings
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes

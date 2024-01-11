@@ -9,6 +9,7 @@
   ;; App launcher
   (kbd "<leader> a c") #'calendar
   (kbd "<leader> a a") #'org-agenda
+  (kbd "<leader> a n") #'notmuch
   ;; buffers
   (kbd "<leader> b b") #'consult-buffer
   (kbd "<leader> b n") #'next-buffer

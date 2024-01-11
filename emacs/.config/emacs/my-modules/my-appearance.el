@@ -59,7 +59,7 @@
 
 (display-time)
 
-(let ((size 165))
+(let ((size 175))
   (set-face-attribute 'default nil :font my-font :height size)
   (set-frame-font my-font nil t)
   (add-to-list 'default-frame-alist

@@ -10,6 +10,8 @@
     magit-log-mode
     occur-mode
     magit-revision-mode
+    notmuch-hello-mode
+    notmuch-search-mode
     ibuffer-mode
     calendar-mode
     org-agenda-mode
