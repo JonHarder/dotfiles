@@ -12,11 +12,15 @@
     magit-revision-mode
     notmuch-hello-mode
     notmuch-search-mode
+    notmuch-show-mode
     ibuffer-mode
     calendar-mode
     org-agenda-mode
     grep-mode)
   "Modes for which evil should begin in normal mode.")
+
+(dolist (mode my-normal-modes)
+  (evil-set-initial-state mode 'normal))
 
 (defvar my-insert-modes
   '(vterm-mode
@@ -24,15 +28,11 @@
     eat-mode)
   "Modes for which evil should begin in insert mode.")
 
-(defvar my-emacs-modes '()
-  "Modes to start in native emacs mode.")
-
-(dolist (mode my-normal-modes)
-  (evil-set-initial-state mode 'normal))
-
 (dolist (mode my-insert-modes)
   (evil-set-initial-state mode 'insert))
 
+(defvar my-emacs-modes '()
+  "Modes to start in native emacs mode.")
 
 (dolist (mode my-emacs-modes)
   (evil-set-initial-state mode 'emacs))

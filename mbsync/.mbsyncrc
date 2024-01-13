@@ -19,7 +19,7 @@ Far :work-remote:
 Near :work-local:
 Create Both
 Expunge Both
-Patterns * !"alerts" !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin"
+Patterns * !"alerts" !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin" !"[Gmail]/Trash"
 SyncState *
 
 # PERSONAL ACCOUNT

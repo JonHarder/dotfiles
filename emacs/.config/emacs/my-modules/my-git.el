@@ -6,6 +6,7 @@
   (kbd "b") #'magit-branch
   (kbd "q") #'magit-mode-bury-buffer
   (kbd "c") #'magit-commit
+  (kbd "e") #'magit-ediff-dwim
   (kbd "j") #'magit-next-line
   (kbd "k") #'magit-previous-line
   (kbd "}") #'magit-section-forward
