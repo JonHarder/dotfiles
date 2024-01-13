@@ -3,7 +3,8 @@
 (denote-rename-buffer-mode 1)
 (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-(setq denote-directory (expand-file-name "~/Dropbox/notes"))
+(setq denote-directory my-notes-directory)
+
 (setq denote-dired-directories
       (list (expand-file-name denote-directory)))
 (setq denote-prompts '(title subdirectory keywords))
