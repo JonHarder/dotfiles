@@ -9,15 +9,25 @@
       (list (expand-file-name denote-directory)))
 (setq denote-prompts '(title subdirectory keywords))
 
+(defun denote-search-content ()
+  (interactive)
+  (consult-ripgrep denote-directory))
+
+(defun denote-dired ()
+  (interactive)
+  (dired denote-directory))
+
 (evil-define-key 'normal 'global
+  (kbd "<leader> n /") #'denote-search-content
+  (kbd "<leader> n J") #'denote-journal-extras-new-entry
   (kbd "<leader> n b") #'denote-backlinks
-  (kbd "<leader> n s") #'denote-signature
+  (kbd "<leader> n d") #'denote-dired
   (kbd "<leader> n f") #'denote-open-or-create
   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link
   (kbd "<leader> n n") #'denote
   (kbd "<leader> n r") #'denote-rename-file
-  (kbd "<leader> n J") #'denote-journal-extras-new-entry)
+  (kbd "<leader> n s") #'denote-signature)
 
 (evil-define-key 'normal denote-backlinks-mode-map
   (kbd "j") #'denote-backlinks-next

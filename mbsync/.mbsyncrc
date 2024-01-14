@@ -1,7 +1,7 @@
 # WORK ACCOUNT
 IMAPAccount work
 Host imap.gmail.com
-SSLType IMAPS
+TLSType IMAPS
 AuthMechs LOGIN
 User jharder@kipsu.com
 PassCmd "gpg -d ~/gmail_app_pass.gpg"
