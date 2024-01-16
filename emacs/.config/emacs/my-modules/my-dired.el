@@ -1,6 +1,6 @@
 (setq dired-kill-when-opening-new-dired-buffer t) 
 (require 'dired)
-(setq dired-listing-switches "-hAFl")
+(setq dired-listing-switches "-hAl")
 ;; this pre-fills the destination prompt of copy and rename
 ;; commands with the directory of the other dired buffer
 ;; if one is open. Very handy
