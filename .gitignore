@@ -18,3 +18,5 @@
 /emacs/.config/emacs/tramp
 /emacs/.config/emacs/bookmarks
 /emacs/.config/emacs/local-config.el
+/emacs/.config/emacs/request/
+/emacs/.config/emacs/smudge/

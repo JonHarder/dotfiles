@@ -73,7 +73,7 @@
     (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
     #+end_src
 
-*** Require all my modules
+** Require all my modules
     #+begin_src emacs-lisp :tangle "init.el"
       (require 'my-appearance)
       (require 'my-modeline)
@@ -104,6 +104,7 @@
       (require 'my-prog-mode)
       (require 'my-python-mode)
       (require 'my-rest-mode)
+      (require 'my-spotify)
 
       (require 'my-rust-mode)
       (require 'my-search)
@@ -864,6 +865,17 @@
     (provide 'my-ediff)
   #+end_src
   
+* Spotify
+#+begin_src emacs-lisp :tangle "my-modules/my-spotify.el" :mkdirp yes
+  (straight-use-package 'smudge)
+
+  (defun load-spotify-credentials ()
+    (interactive)
+    (load "~/spotify.el.gpg"))
+
+  (evil-define-key 'normal smudge-track-search-mode-map
+    (kbd "RET") #'smudge-track-select)
+#+end_src
 * Denote
 ** Basic settings
   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
@@ -890,7 +902,6 @@
       (dired denote-directory))
   #+end_src
    
-
 ** Bindings
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
@@ -1903,6 +1914,12 @@
 	     (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	     (:name "Todo" :query "tag:todo" :key "t")))
    #+end_src
+
+   Show most recent first
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+     (setq notmuch-search-oldest-first nil)
+   #+end_src
 *** Bindings
      Evilified bindings to notmuch
 
@@ -1912,6 +1929,7 @@
        (evil-define-key 'normal notmuch-hello-mode-map
 	 (kbd "TAB") #'widget-forward
 	 (kbd "RET") #'widget-button-press
+	 (kbd "m") #'notmuch-mua-mail
 	 (kbd "/") #'notmuch-search
 	 (kbd "g") #'notmuch-jump-search
 	 (kbd "q") #'notmuch-bury-or-kill-this-buffer)
@@ -1943,11 +1961,9 @@
 	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
 	   (kbd "t") #'notmuch-search-add-todo-tag
 	   (kbd "RET") #'notmuch-search-show-thread
-	   (kbd "-") #'notmuch-search-remove-tag
-	   (kbd "+") #'notmuch-search-add-tag
 	   (kbd "*") #'notmuch-search-tag-all)
 
-	 (evil-define-key 'visual notmuch-search-mode-map
+	 (evil-define-key '(visual normal) notmuch-search-mode-map
 	   (kbd "-") #'notmuch-search-remove-tag
 	   (kbd "+") #'notmuch-search-add-tag
 	   (kbd "t") #'notmuch-search-add-todo-tag)
@@ -1959,6 +1975,10 @@
 	   (interactive)
 	   (notmuch-show-tag '("+deleted" "-inbox")))
 
+	 (defun notmuch-show-tag-todo ()
+	   (interactive)
+	   (notmuch-show-tag '("+todo")))
+
 	 (evil-define-key 'normal notmuch-show-mode-map
 	   (kbd "a") #'notmuch-show-archive-thread
 	   (kbd "d") #'notmuch-show-delete-thread
@@ -1969,7 +1989,8 @@
 	   (kbd "TAB") #'notmuch-show-next-button
 	   (kbd "RET") #'notmuch-show-toggle-message
 	   (kbd "+") #'notmuch-show-add-tag
-	   (kbd "-") #'notmuch-show-remove-tag)
+	   (kbd "-") #'notmuch-show-remove-tag
+	   (kbd "t") #'notmuch-show-tag-todo)
        #+end_src
 
 
@@ -2205,6 +2226,9 @@
        (kbd "<leader> a c") #'calendar
        (kbd "<leader> a a") #'org-agenda
        (kbd "<leader> a n") #'notmuch
+       (kbd "<leader> a =") #'calc
+       ;;; spotify
+       (kbd "<leader> a s") #'smudge-command-map
        ;; buffers
        (kbd "<leader> b b") #'consult-buffer
        (kbd "<leader> b n") #'next-buffer

@@ -22,9 +22,12 @@
 	(:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	(:name "Todo" :query "tag:todo" :key "t")))
 
+(setq notmuch-search-oldest-first nil)
+
 (evil-define-key 'normal notmuch-hello-mode-map
   (kbd "TAB") #'widget-forward
   (kbd "RET") #'widget-button-press
+  (kbd "m") #'notmuch-mua-mail
   (kbd "/") #'notmuch-search
   (kbd "g") #'notmuch-jump-search
   (kbd "q") #'notmuch-bury-or-kill-this-buffer)
@@ -53,11 +56,9 @@
   (kbd "q") #'notmuch-bury-or-kill-this-buffer
   (kbd "t") #'notmuch-search-add-todo-tag
   (kbd "RET") #'notmuch-search-show-thread
-  (kbd "-") #'notmuch-search-remove-tag
-  (kbd "+") #'notmuch-search-add-tag
   (kbd "*") #'notmuch-search-tag-all)
 
-(evil-define-key 'visual notmuch-search-mode-map
+(evil-define-key '(visual normal) notmuch-search-mode-map
   (kbd "-") #'notmuch-search-remove-tag
   (kbd "+") #'notmuch-search-add-tag
   (kbd "t") #'notmuch-search-add-todo-tag)
@@ -65,6 +66,10 @@
 (defun notmuch-show-delete-thread ()
   (interactive)
   (notmuch-show-tag '("+deleted" "-inbox")))
+
+(defun notmuch-show-tag-todo ()
+  (interactive)
+  (notmuch-show-tag '("+todo")))
 
 (evil-define-key 'normal notmuch-show-mode-map
   (kbd "a") #'notmuch-show-archive-thread
@@ -76,6 +81,7 @@
   (kbd "TAB") #'notmuch-show-next-button
   (kbd "RET") #'notmuch-show-toggle-message
   (kbd "+") #'notmuch-show-add-tag
-  (kbd "-") #'notmuch-show-remove-tag)
+  (kbd "-") #'notmuch-show-remove-tag
+  (kbd "t") #'notmuch-show-tag-todo)
 
 (provide 'my-email)

@@ -10,6 +10,9 @@
   (kbd "<leader> a c") #'calendar
   (kbd "<leader> a a") #'org-agenda
   (kbd "<leader> a n") #'notmuch
+  (kbd "<leader> a =") #'calc
+  ;;; spotify
+  (kbd "<leader> a s") #'smudge-command-map
   ;; buffers
   (kbd "<leader> b b") #'consult-buffer
   (kbd "<leader> b n") #'next-buffer

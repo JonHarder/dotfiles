@@ -46,6 +46,7 @@
 (require 'my-prog-mode)
 (require 'my-python-mode)
 (require 'my-rest-mode)
+(require 'my-spotify)
 
 (require 'my-rust-mode)
 (require 'my-search)
