@@ -79,3 +79,4 @@ let-env GITHUB_KEY = '/Users/jharder/.ssh/docker_github'
 let-env OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES'
 let-env TERM = "xterm-256color"
 let-env VIFM = '/Users/jharder/.config/vifm'
+let-env MAIL_ACCOUNT = 'work'

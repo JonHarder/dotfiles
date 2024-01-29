@@ -15,14 +15,6 @@ alias dk = docker compose exec kippy
 alias lzd = lazydocker
 alias v = vifm
 
-def fetchmail [] {
-  while true {
-    mbsync -a | ignore
-    notmuch new
-    sleep 1min
-  }
-}
-
 def "fbr" [] {
     let branches = (git --no-pager branch -vv)
     let branch = (echo $branches | fzf +m)
