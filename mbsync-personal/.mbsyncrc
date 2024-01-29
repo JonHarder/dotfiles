@@ -1,0 +1,24 @@
+# PERSONAL ACCOUNT
+
+IMAPAccount personal
+Host imap.gmail.com
+SSLType IMAPS
+AuthMechs LOGIN
+User jonharder6@gmail.com
+PassCmd "gpg -d ~/jonharder6_app_pass.gpg"
+
+IMAPStore personal-remote
+Account personal
+
+MaildirStore personal-local
+Path ~/Mail/jonharder6/
+Inbox ~/Mail/jonharder6/INBOX
+Subfolders Verbatim
+
+Channel personal
+Far :personal-remote:
+Near :personal-local:
+Create Both
+Expunge Both
+Patterns * !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin"
+SyncState *

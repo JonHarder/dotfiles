@@ -1,0 +1,23 @@
+# WORK ACCOUNT
+IMAPAccount work
+Host imap.gmail.com
+TLSType IMAPS
+AuthMechs LOGIN
+User jharder@kipsu.com
+PassCmd "gpg -d ~/gmail_app_pass.gpg"
+
+IMAPStore work-remote
+Account work
+
+MaildirStore work-local
+Path ~/Mail/gmail/
+Inbox ~/Mail/gmail/INBOX
+Subfolders Verbatim
+
+Channel work
+Far :work-remote:
+Near :work-local:
+Create Both
+Expunge Both
+Patterns * !"alerts" !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin" !"[Gmail]/Trash"
+SyncState *
