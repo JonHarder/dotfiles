@@ -6,3 +6,5 @@
 
 (evil-define-key 'normal smudge-track-search-mode-map
   (kbd "RET") #'smudge-track-select)
+
+(provide 'my-spotify)
