@@ -1,6 +1,12 @@
 (straight-use-package my-theme-package)
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
+(custom-set-faces
+ '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
+ '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
+ '(org-level-3 ((t (:height 1.4 :inherit outline-3))))
+ '(org-level-4 ((t (:height 1.3 :inherit outline-4))))
+ '(org-level-5 ((t (:height 1.2 :inherit outline-5)))))
 
 (progn ;; Modus configuration
   (require-theme 'modus-themes)

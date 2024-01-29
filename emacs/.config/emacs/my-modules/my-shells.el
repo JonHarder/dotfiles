@@ -1,6 +1,8 @@
 (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
       shell-file-name "/bin/zsh")
 
+(setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+
 (straight-use-package 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode +1)
 (require 'eshell)

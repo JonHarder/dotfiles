@@ -1938,6 +1938,7 @@
 	 (kbd "TAB") #'widget-forward
 	 (kbd "RET") #'widget-button-press
 	 (kbd "m") #'notmuch-mua-mail
+         (kbd "p") #'notmuch-poll-and-refresh-this-buffer
 	 (kbd "/") #'notmuch-search
 	 (kbd "g") #'notmuch-jump-search
 	 (kbd "q") #'notmuch-bury-or-kill-this-buffer)
@@ -1966,6 +1967,7 @@
 	   (kbd "j") #'notmuch-search-next-thread
 	   (kbd "k") #'notmuch-search-previous-thread
 	   (kbd "g r") #'notmuch-refresh-this-buffer
+	   (kbd "p") #'notmuch-poll-and-refresh-this-buffer
 	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
 	   (kbd "t") #'notmuch-search-add-todo-tag
 	   (kbd "RET") #'notmuch-search-show-thread
@@ -1991,6 +1993,7 @@
 	   (kbd "a") #'notmuch-show-archive-thread
 	   (kbd "d") #'notmuch-show-delete-thread
 	   (kbd "t") #'notmuch-add-todo-tag
+	   (kbd "r") #'notmuch-show-reply-sender
 	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
 	   (kbd "g j") #'notmuch-show-next-open-message
 	   (kbd "g k") #'notmuch-show-previous-open-message
@@ -2358,6 +2361,11 @@
   Epa mode handles (en|de)cryption of gpg files (among others??). When saving a file
   with the extension ~.gpg~, emacs will prompt you for which key to use for encrypting
   it with.
+
+** Settings
+  #+begin_src emacs-lisp :tangle "my-modules/my-epa.el" :mkdirp yes
+    (setq epg-pinentry-mode 'loopback)
+  #+end_src
 
 ** Bindings
    #+begin_src emacs-lisp :tangle "my-modules/my-epa.el" :mkdirp yes

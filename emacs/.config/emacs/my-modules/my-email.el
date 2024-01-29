@@ -28,6 +28,7 @@
   (kbd "TAB") #'widget-forward
   (kbd "RET") #'widget-button-press
   (kbd "m") #'notmuch-mua-mail
+  (kbd "p") #'notmuch-poll-and-refresh-this-buffer
   (kbd "/") #'notmuch-search
   (kbd "g") #'notmuch-jump-search
   (kbd "q") #'notmuch-bury-or-kill-this-buffer)
@@ -53,6 +54,7 @@
   (kbd "j") #'notmuch-search-next-thread
   (kbd "k") #'notmuch-search-previous-thread
   (kbd "g r") #'notmuch-refresh-this-buffer
+  (kbd "p") #'notmuch-poll-and-refresh-this-buffer
   (kbd "q") #'notmuch-bury-or-kill-this-buffer
   (kbd "t") #'notmuch-search-add-todo-tag
   (kbd "RET") #'notmuch-search-show-thread
@@ -75,6 +77,7 @@
   (kbd "a") #'notmuch-show-archive-thread
   (kbd "d") #'notmuch-show-delete-thread
   (kbd "t") #'notmuch-add-todo-tag
+  (kbd "r") #'notmuch-show-reply-sender
   (kbd "q") #'notmuch-bury-or-kill-this-buffer
   (kbd "g j") #'notmuch-show-next-open-message
   (kbd "g k") #'notmuch-show-previous-open-message
