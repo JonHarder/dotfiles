@@ -1118,6 +1118,14 @@
     (setq epg-pinentry-mode 'loopback)
   #+end_src
 
+** Bindings
+   #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+     (evil-define-key 'normal epa-key-list-mode-map
+       (kbd "TAB") #'forward-button
+       (kbd "m") #'epa-mark-key
+       (kbd "u") #'epa-unmark-key)
+   #+end_src
+
 ** Provide the module
   
   #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
@@ -2358,23 +2366,6 @@
      (provide 'my-bindings)
    #+end_src
    
-* Epa mode
-  Epa mode handles (en|de)cryption of gpg files (among others??). When saving a file
-  with the extension ~.gpg~, emacs will prompt you for which key to use for encrypting
-  it with.
-
-** Settings
-  #+begin_src emacs-lisp :tangle "my-modules/my-epa.el" :mkdirp yes
-    (setq epg-pinentry-mode 'loopback)
-  #+end_src
-
-** Bindings
-   #+begin_src emacs-lisp :tangle "my-modules/my-epa.el" :mkdirp yes
-     (evil-define-key 'normal epa-key-list-mode-map
-       (kbd "TAB") #'forward-button
-       (kbd "m") #'epa-mark-key
-       (kbd "u") #'epa-unmark-key)
-   #+end_src
 * Xref
 ** Bindings
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
