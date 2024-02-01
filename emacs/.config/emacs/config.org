@@ -379,7 +379,8 @@
 
       (defun my-modeline--git-branch ()
 	"Return propertized git branch."
-	(propertize (car (vc-git-branches)) 'face 'bold))
+	(when-let ((branch (car (vc-git-branches))))
+	  (propertize branch 'face 'bold)))
     #+end_src
 
 ** Local variables which make up the segments of my modeline
@@ -1902,6 +1903,16 @@
   #+end_src
 
 *** Configuring notmuch
+**** Composing emails
+    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+      (defun my-notmuch-message-mode-hook ()
+	(auto-fill-mode -1)
+	(visual-line-mode 1))
+
+      (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
+    #+end_src
+
+**** Hello sections
     The following configures the "hello" (start) page of notmuch. This page is
     the default view when running the command ~notmuch~.
 
@@ -1919,7 +1930,7 @@
 	      notmuch-hello-insert-footer))
     #+end_src
 
-   Saved searches
+**** Saved searches
 
    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
      (setq notmuch-saved-searches
@@ -1932,7 +1943,7 @@
 	     (:name "Todo" :query "tag:todo" :key "t")))
    #+end_src
 
-   Show most recent first
+**** Sorting
 
    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
      (setq notmuch-search-oldest-first nil)

@@ -105,7 +105,8 @@
 
 (defun my-modeline--git-branch ()
   "Return propertized git branch."
-  (propertize (car (vc-git-branches)) 'face 'bold))
+  (when-let ((branch (car (vc-git-branches))))
+    (propertize branch 'face 'bold)))
 
 (defvar-local my-modeline-remote
     '(:eval

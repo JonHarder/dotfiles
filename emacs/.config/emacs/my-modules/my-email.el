@@ -7,6 +7,12 @@
 
 (straight-use-package 'notmuch)
 
+(defun my-notmuch-message-mode-hook ()
+  (auto-fill-mode -1)
+  (visual-line-mode 1))
+
+(add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
+
 (setq notmuch-hello-sections
       '(notmuch-hello-insert-saved-searches
 	notmuch-hello-insert-search
