@@ -139,7 +139,7 @@
 	 (my-modeline--major-mode-indicator)
 	 " "
 	 (propertize (my-modeline--major-mode-name)
-		     'face 'normal)))))
+		     'face 'default)))))
 
 (defvar-local my-modeline-buffer-name
     '(:eval
@@ -153,12 +153,24 @@
 	(let ((date-time (format-time-string "%H:%M %b %d, %Y")))
 	  (propertize date-time 'face 'underline)))))
 
+(defvar-local my-modeline-pos-in-buffer
+    '(:eval
+      (when (mode-line-window-selected-p)
+	(let ((pos (line-number-at-pos)))
+	  (list
+	   " "
+	   (propertize "Line: " 'face 'bold)
+	   (format "%s" pos)
+	   " "
+	   )))))
+
 ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
 (dolist (component '(my-modeline-git-branch
 		     my-modeline-major-mode
 		     my-modeline-buffer-name
 		     my-modeline-remote
 		     my-modeline-evil-state
+		     my-modeline-pos-in-buffer
 		     my-modeline-date))
   (put component 'risky-local-variable t))
 
@@ -173,6 +185,8 @@
 		" "
 		my-modeline-git-branch
 		" "
+                my-modeline-pos-in-buffer
+		"  "
 		my-modeline-date))
 
 ;;; The default mode line
