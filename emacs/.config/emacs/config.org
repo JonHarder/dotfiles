@@ -435,8 +435,7 @@
 	    (when (mode-line-window-selected-p)
 	      (let ((pos (line-number-at-pos)))
 		(list
-		 " "
-		 (propertize "Line: " 'face 'bold)
+		 (propertize "L" 'face 'bold)
 		 (format "%s" pos)
 		 " "
 		 )))))
@@ -2038,6 +2037,13 @@
        #+end_src
 
 
+**** Message mode
+      This is the mode which handles actually composing messages.
+
+      #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+	(evil-define-key 'normal notmuch-message-mode-map
+	  (kbd "<leader> m a") #'mail-add-attachment)
+      #+end_src
     
 ** Provide =my-email=
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes

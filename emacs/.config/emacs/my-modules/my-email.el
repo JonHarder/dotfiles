@@ -93,4 +93,7 @@
   (kbd "-") #'notmuch-show-remove-tag
   (kbd "t") #'notmuch-show-tag-todo)
 
+(evil-define-key 'normal notmuch-message-mode-map
+  (kbd "<leader> m a") #'mail-add-attachment)
+
 (provide 'my-email)

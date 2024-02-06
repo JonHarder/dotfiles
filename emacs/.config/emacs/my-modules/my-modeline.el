@@ -158,8 +158,7 @@
       (when (mode-line-window-selected-p)
 	(let ((pos (line-number-at-pos)))
 	  (list
-	   " "
-	   (propertize "Line: " 'face 'bold)
+	   (propertize "L" 'face 'bold)
 	   (format "%s" pos)
 	   " "
 	   )))))
@@ -186,7 +185,6 @@
 		my-modeline-git-branch
 		" "
                 my-modeline-pos-in-buffer
-		"  "
 		my-modeline-date))
 
 ;;; The default mode line
