@@ -21,6 +21,7 @@
   (kbd "<leader> b i") #'ibuffer
   (kbd "<leader> b d") #'evil-delete-buffer
   (kbd "<leader> b k") #'kill-current-buffer
+  (kbd "<leader> b r") #'rename-buffer
   ;; config related commands
   (kbd "<leader> c .") #'find-config
   (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
