@@ -245,7 +245,7 @@ let base16_theme = {
     nothing: $base08
     binary: $base08
     cellpath: $base08
-    hints: dark_gray
+    hints: $base03
 
     # shape_garbage: { fg: $base07 bg: $base08 attr: b} # base16 white on red
     # but i like the regular white on red for parse errors
@@ -433,7 +433,7 @@ let-env config = {
   edit_mode: vi # emacs, vi
   shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
   show_banner: false # true or false to enable or disable the banner
-  render_right_prompt_on_last_line: false # true or false to enable or disable right prompt to be rendered on last line of the prompt.
+  render_right_prompt_on_last_line: true # true or false to enable or disable right prompt to be rendered on last line of the prompt.
 
   hooks: {
     pre_prompt: [{||
