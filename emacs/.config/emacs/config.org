@@ -105,6 +105,7 @@
       (require 'my-python-mode)
       (require 'my-rest-mode)
       (require 'my-spotify)
+      (require 'my-text)
 
       (require 'my-rust-mode)
       (require 'my-search)
@@ -1980,14 +1981,16 @@
        #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
 	 (defun notmuch-search-delete-threads (&optional beg end)
 	   (interactive (notmuch-interactive-region))
-	   (notmuch-search-tag '("+deleted" "-inbox") beg end))
+	   (notmuch-search-tag '("+deleted" "-inbox") beg end)
+	   (notmuch-search-next-thread))
 
 	 ;; TODO: this function could be made more generic by checking
 	 ;; to see which notmuch mode we are in and calling the relevant
 	 ;; `notmuch-*-tag' function. e.g. `notmuch-search-tag', `notmuch-show-tag', etc.
 	 (defun notmuch-search-add-todo-tag (&optional beg end)
 	   (interactive (notmuch-interactive-region))
-	   (notmuch-search-tag '("+todo") beg end))
+	   (notmuch-search-tag '("+todo") beg end)
+	   (notmuch-search-next-thread))
 
 	 (evil-define-key 'normal notmuch-search-mode-map
 	   (kbd "d") #'notmuch-search-delete-threads
@@ -2049,7 +2052,43 @@
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
     (provide 'my-email)
   #+end_src
+* Text
+** Mixed pitch mode
+    Variable pitch (or proportional) fonts are those fonts which have
+    different widths on a per-character basis. These are typically
+    better for prose.
 
+    Fixed pitch fonts are those which have the same width for each
+    character. This means code formatting is preserved relative to
+    each line, and does not vary on which letters are typed. This
+    tends to be preferred for code.
+
+    Using variable pitch fonts in text-inheriting modes is nice, but
+    results in things like org source blocks using the same variable
+    pitch as your prose.
+
+    Fortunately, the ~mixed-pitch~ package is aware of the different
+    font requirements of such modes and will use both variable and
+    fixed pitch fonts in the same buffer according to use.
+
+    #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+      (straight-use-package 'mixed-pitch)
+    #+end_src
+
+** Text-mode hook
+  #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+    (defun my-text-mode-hook ()
+      (auto-fill-mode 1)
+      (flyspell-mode 1)
+      (mixed-pitch-mode 1))
+
+    (add-hook 'text-mode-hook #'my-text-mode-hook)
+  #+end_src
+
+** Provide =my-text=
+  #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+    (provide 'my-text)
+  #+end_src
 * Miscellanious functions
   This is a collection of random functions I've written to help me run one-off tasks.
   

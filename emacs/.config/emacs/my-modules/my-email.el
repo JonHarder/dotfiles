@@ -41,14 +41,16 @@
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))
-  (notmuch-search-tag '("+deleted" "-inbox") beg end))
+  (notmuch-search-tag '("+deleted" "-inbox") beg end)
+  (notmuch-search-next-thread))
 
 ;; TODO: this function could be made more generic by checking
 ;; to see which notmuch mode we are in and calling the relevant
 ;; `notmuch-*-tag' function. e.g. `notmuch-search-tag', `notmuch-show-tag', etc.
 (defun notmuch-search-add-todo-tag (&optional beg end)
   (interactive (notmuch-interactive-region))
-  (notmuch-search-tag '("+todo") beg end))
+  (notmuch-search-tag '("+todo") beg end)
+  (notmuch-search-next-thread))
 
 (evil-define-key 'normal notmuch-search-mode-map
   (kbd "d") #'notmuch-search-delete-threads
