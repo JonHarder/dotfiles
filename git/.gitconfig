@@ -8,12 +8,13 @@
 
 [core]
   pager = delta
+  editor = e
 
 [interactive]
   diffFilter = delta --color-only
 
 [delta]
-  feature = Catppuccin-mocha
+  # feature = Catppuccin-mocha
   navigate = true
   side-by-side = true
 
