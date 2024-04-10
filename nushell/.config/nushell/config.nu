@@ -2,14 +2,14 @@
 
 alias c = clear
 alias q = exit
-alias ap = pipenv run ansible-playbook
+# alias ap = pipenv run ansible-playbook
 alias brew = /opt/homebrew/bin/brew
 
 # Terraform aliases
 alias tfp = terraform plan
 alias tfi = terraform init
 alias tfa = terraform apply
-alias tf  = tarraform
+alias tf = tarraform
 alias dk = docker compose exec kippy
 
 alias lzd = lazydocker
@@ -57,19 +57,6 @@ alias cf = cd (^find . -type d -print | fzf)
 # }
 
 alias gitui = gitui -t ~/.config/gitui/catppuccin_mocha.ron
-
-def dict [word] {
-  (
-      echo $word |
-      aspell -a |
-      lines |
-      skip 1 |
-      take 1 |
-      split words |
-      skip 1 |
-      take 8
-  )
-}
 
 def bib [ref] {
   let select = '--select {"' + $ref + '"}'
@@ -383,16 +370,13 @@ let light_theme = {
 
 
 # The default config record. This is where much of your global configuration is setup.
-let-env config = {
+$env.config = {
   ls: {
     use_ls_colors: true
     clickable_links: true
   }
   rm: {
     always_trash: false
-  }
-  cd: {
-    abbreviations: false
   }
   completions: {
     quick: true
@@ -437,14 +421,14 @@ let-env config = {
 
   hooks: {
     pre_prompt: [{||
-      $nothing  # replace with source code to run before the prompt is shown
+      null  # replace with source code to run before the prompt is shown
     }]
     pre_execution: [{||
-      $nothing  # replace with source code to run before the repl input is run
+      null  # replace with source code to run before the repl input is run
     }]
     env_change: {
       PWD: [{|before, after|
-        $nothing  # replace with source code to run if the PWD environment is different since the last repl input
+        null  # replace with source code to run if the PWD environment is different since the last repl input
       }]
     }
   }
