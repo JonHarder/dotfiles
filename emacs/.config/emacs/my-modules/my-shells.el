@@ -49,16 +49,17 @@
 
 (setq eshell-prompt-regexp ".*$ ")
 
-(straight-use-package
- '(eat :type git
-       :host codeberg
-       :repo "akib/emacs-eat"
-       :files ("*.el" ("term" "term/*.el") "*.texi"
-	       "*.ti" ("terminfo/e" "terminfo/e/*")
-	       ("terminfo/65" "terminfo/65/*")
-	       ("integration" "integration/*")
-	       (:exclude ".dir-locals.el" "*-tests.el"))))
-(eat-eshell-mode 1)
+(when nil
+  (straight-use-package
+   '(eat :type git
+	 :host codeberg
+	 :repo "akib/emacs-eat"
+	 :files ("*.el" ("term" "term/*.el") "*.texi"
+		 "*.ti" ("terminfo/e" "terminfo/e/*")
+		 ("terminfo/65" "terminfo/65/*")
+		 ("integration" "integration/*")
+		 (:exclude ".dir-locals.el" "*-tests.el"))))
+  (eat-eshell-mode 1))
 
 (straight-use-package 'vterm)
 (straight-use-package 'multi-vterm)

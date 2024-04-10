@@ -36,7 +36,7 @@
   (kbd "m") #'notmuch-mua-mail
   (kbd "p") #'notmuch-poll-and-refresh-this-buffer
   (kbd "/") #'notmuch-search
-  (kbd "g") #'notmuch-jump-search
+  (kbd ".") #'notmuch-jump-search
   (kbd "q") #'notmuch-bury-or-kill-this-buffer)
 
 (defun notmuch-search-delete-threads (&optional beg end)

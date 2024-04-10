@@ -83,6 +83,7 @@
 
       (require 'my-calendar)
       (require 'my-completion)
+      (require 'my-tree-sitter)
       (require 'my-denote)
       (require 'my-dired)
       (require 'my-docker-mode)
@@ -131,13 +132,14 @@
 **** Basic theme configuration
       #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
 	(set-face-attribute 'bold nil :weight 'ultra-bold)
-	(custom-set-faces
-	 '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
-	 '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
-	 '(org-level-3 ((t (:height 1.4 :inherit outline-3))))
-	 '(org-level-4 ((t (:height 1.3 :inherit outline-4))))
-	 '(org-level-5 ((t (:height 1.2 :inherit outline-5))))
-	 '(org-document-title ((t (:height 1.8)))))
+	(when t
+	  (custom-set-faces
+	   '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
+	   '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
+	   '(org-level-3 ((t (:height 1.4 :inherit outline-3))))
+	   '(org-level-4 ((t (:height 1.3 :inherit outline-4))))
+	   '(org-level-5 ((t (:height 1.2 :inherit outline-5))))
+	   '(org-document-title ((t (:height 1.8))))))
       #+end_src
 **** Modus themes settings
      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
@@ -163,18 +165,18 @@
 **** Ef-themes settings
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
       (straight-use-package 'ef-themes)
-      (setq ef-themes-headings ; read the manual's entry or the doc string
-	    '((0 variable-pitch bold 1.9)
-	      (1 variable-pitch bold 1.8)
-	      (2 variable-pitch regular 1.7)
-	      (3 variable-pitch regular 1.6)
-	      (4 variable-pitch light 1.5)
-	      (5 variable-pitch light 1.4) ; absence of weight means `bold'
-	      (6 variable-pitch light 1.3)
-	      (7 variable-pitch light 1.2)
-	      (t variable-pitch light 1.1)
-	      (agenda-date . (1.3))
-	      (agenda-structure . (variable pitch light 1.8))))
+      ;; (setq ef-themes-headings ; read the manual's entry or the doc string
+      ;;       '((0 variable-pitch bold 1.9)
+      ;; 	(1 variable-pitch bold 1.8)
+      ;; 	(2 variable-pitch regular 1.7)
+      ;; 	(3 variable-pitch regular 1.6)
+      ;; 	(4 variable-pitch light 1.5)
+      ;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
+      ;; 	(6 variable-pitch light 1.3)
+      ;; 	(7 variable-pitch light 1.2)
+      ;; 	(t variable-pitch light 1.1)
+      ;; 	(agenda-date . (1.3))
+      ;; 	(agenda-structure . (variable pitch light 1.8))))
     #+end_src
 
 **** Doom themes settings
@@ -363,11 +365,11 @@
 	   ((and (mode-line-window-selected-p)
 		 file
 		 (buffer-modified-p))
-	    '(italic mode-line-buffer-id))
+	    '(italic underline mode-line-buffer-id))
 	   ((and file (buffer-modified-p))
 	    'italic)
 	   ((mode-line-window-selected-p)
-	    'mode-line-buffer-id))))
+	    '(underline mode-line-buffer-id)))))
 
       (defun my-modeline--major-mode-indicator ()
 	(let ((indicator (cond
@@ -417,13 +419,15 @@
 	       (my-modeline--major-mode-indicator)
 	       " "
 	       (propertize (my-modeline--major-mode-name)
-			   'face 'default)))))
+			   'face 'my-modeline-buffer-face)))))
 
       (defvar-local my-modeline-buffer-name
 	  '(:eval
-	    (format "%s " (propertize
+	    (list
+	     (format "%s" (propertize
 			   (my-modeline--buffer-name)
-			   'face (my-modeline--buffer-name-face)))))
+			   'face (my-modeline--buffer-name-face)))
+	     " ")))
 
       (defvar-local my-modeline-date
 	  '(:eval
@@ -659,6 +663,11 @@
      (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
    #+end_src
 
+** Evil comments
+  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+    (straight-use-package 'evil-commentary)
+    (evil-commentary-mode)
+  #+end_src
 ** Provide the module
   
    #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
@@ -966,7 +975,9 @@
      (require 'denote-silo-extras)
      (let ((my-silo-dirs (list
 			  (expand-file-name
-			   "~/Dropbox/Personal"))))
+			   "~/Dropbox/Personal")
+			  (expand-file-name
+			   "~/Dropbox/RBC/Internship"))))
        (dolist (dir my-silo-dirs)
 	 (add-to-list 'denote-silo-extras-directories dir)
 	 (add-to-list 'denote-dired-directories dir)))
@@ -1244,6 +1255,39 @@
      (provide 'my-prog-mode)
    #+end_src
     
+** Tree Sitter
+*** Overview
+    Tree sitter allows for parsing structured text formats into an
+    abstract syntax tree. From there, it provides language agnostic
+    methods to find and modify the AST. Having the parse tree allows
+    for far more consistent and robust syntax highlighting, but beyond
+    that, it will allow for structured text editing which operates at
+    the level of syntactical objects rather than characters.
+
+*** Install the package
+    #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
+      (straight-use-package 'tree-sitter)
+      (straight-use-package 'tree-sitter-langs)
+    #+end_src
+
+*** Install languages
+    #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
+      (setq treesit-language-source-alist
+	    '((rust "https://github.com/tree-sitter/tree-sitter-rust")))
+
+      (setq treesit-load-name-override-list '((rust "libtree-sitter-rust" "tree_sitter_rust")))
+    #+end_src
+
+*** Enable global tree sitter mode
+    #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
+      (global-tree-sitter-mode)
+      (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+    #+end_src
+
+*** Provide the module
+    #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
+      (provide 'my-tree-sitter)
+    #+end_src
 ** Rest mode
    Run http commands using simple http spec
 
@@ -1469,6 +1513,7 @@
       (add-to-list 'org-agenda-files "~/Dropbox/notes/")
       (add-to-list 'org-agenda-files "~/Dropbox/notes/journal/")
       (add-to-list 'org-agenda-files "~/schedule.org")
+      (add-to-list 'org-agenda-files "~/Dropbox/RBC/Internship/")
     #+end_src
 
 ** Org capture
@@ -1800,16 +1845,17 @@
   dependencies nor a compilation step.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-    (straight-use-package
-     '(eat :type git
-	   :host codeberg
-	   :repo "akib/emacs-eat"
-	   :files ("*.el" ("term" "term/*.el") "*.texi"
-		   "*.ti" ("terminfo/e" "terminfo/e/*")
-		   ("terminfo/65" "terminfo/65/*")
-		   ("integration" "integration/*")
-		   (:exclude ".dir-locals.el" "*-tests.el"))))
-    (eat-eshell-mode 1)
+    (when nil
+      (straight-use-package
+       '(eat :type git
+	     :host codeberg
+	     :repo "akib/emacs-eat"
+	     :files ("*.el" ("term" "term/*.el") "*.texi"
+		     "*.ti" ("terminfo/e" "terminfo/e/*")
+		     ("terminfo/65" "terminfo/65/*")
+		     ("integration" "integration/*")
+		     (:exclude ".dir-locals.el" "*-tests.el"))))
+      (eat-eshell-mode 1))
   #+end_src
 ** Vterm
 
@@ -1973,7 +2019,7 @@
 	 (kbd "m") #'notmuch-mua-mail
          (kbd "p") #'notmuch-poll-and-refresh-this-buffer
 	 (kbd "/") #'notmuch-search
-	 (kbd "g") #'notmuch-jump-search
+	 (kbd ".") #'notmuch-jump-search
 	 (kbd "q") #'notmuch-bury-or-kill-this-buffer)
        #+end_src
        
@@ -2075,12 +2121,20 @@
       (straight-use-package 'mixed-pitch)
     #+end_src
 
+** Fill column
+   Auto-fill mode uses a fixed column number to inform when emacs will
+   insert a newline.
+
+   Lets set it to something reasonable.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+     (set-fill-column 80)
+   #+end_src
 ** Text-mode hook
   #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
     (defun my-text-mode-hook ()
       (auto-fill-mode 1)
-      (flyspell-mode 1)
-      (mixed-pitch-mode 1))
+      (flyspell-mode 1))
 
     (add-hook 'text-mode-hook #'my-text-mode-hook)
   #+end_src
@@ -2150,7 +2204,9 @@
 	(kbd "m") #'magit-merge
 	(kbd "P") #'magit-push
 	(kbd "p") #'magit-pull
-	(kbd "r") #'magit-remote
+	(kbd "M") #'magit-remote
+	(kbd "r") #'magit-rebase
+        (kbd "t") #'magit-tag
 	(kbd "R") #'magit-reset
 	(kbd "$") #'magit-process-buffer
 	;; delete
@@ -2376,7 +2432,8 @@
        (kbd "<leader> p /") #'project-find-regexp
        ;; shells
        (kbd "<leader> s e") #'eshell
-       (kbd "<leader> s t") #'eat  ;; #'multi-vterm
+       ;;; (kbd "<leader> s t") #'eat
+       (kbd "<leader> s t") #'multi-vterm
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new

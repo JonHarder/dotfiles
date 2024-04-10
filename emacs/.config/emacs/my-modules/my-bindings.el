@@ -71,7 +71,8 @@
   (kbd "<leader> p /") #'project-find-regexp
   ;; shells
   (kbd "<leader> s e") #'eshell
-  (kbd "<leader> s t") #'eat  ;; #'multi-vterm
+  ;;; (kbd "<leader> s t") #'eat
+  (kbd "<leader> s t") #'multi-vterm
   ;; tab commands
   (kbd "<leader> t t") #'tab-switch
   (kbd "<leader> t n") #'tab-new

@@ -40,7 +40,9 @@
 (require 'denote-silo-extras)
 (let ((my-silo-dirs (list
 		     (expand-file-name
-		      "~/Dropbox/Personal"))))
+		      "~/Dropbox/Personal")
+		     (expand-file-name
+		      "~/Dropbox/RBC/Internship"))))
   (dolist (dir my-silo-dirs)
     (add-to-list 'denote-silo-extras-directories dir)
     (add-to-list 'denote-dired-directories dir)))

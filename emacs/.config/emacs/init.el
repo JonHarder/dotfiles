@@ -25,6 +25,7 @@
 
 (require 'my-calendar)
 (require 'my-completion)
+(require 'my-tree-sitter)
 (require 'my-denote)
 (require 'my-dired)
 (require 'my-docker-mode)

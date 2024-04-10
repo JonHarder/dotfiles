@@ -18,7 +18,9 @@
   (kbd "m") #'magit-merge
   (kbd "P") #'magit-push
   (kbd "p") #'magit-pull
-  (kbd "r") #'magit-remote
+  (kbd "M") #'magit-remote
+  (kbd "r") #'magit-rebase
+  (kbd "t") #'magit-tag
   (kbd "R") #'magit-reset
   (kbd "$") #'magit-process-buffer
   ;; delete

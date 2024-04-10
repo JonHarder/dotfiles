@@ -88,11 +88,11 @@
      ((and (mode-line-window-selected-p)
 	   file
 	   (buffer-modified-p))
-      '(italic mode-line-buffer-id))
+      '(italic underline mode-line-buffer-id))
      ((and file (buffer-modified-p))
       'italic)
      ((mode-line-window-selected-p)
-      'mode-line-buffer-id))))
+      '(underline mode-line-buffer-id)))))
 
 (defun my-modeline--major-mode-indicator ()
   (let ((indicator (cond
@@ -139,13 +139,15 @@
 	 (my-modeline--major-mode-indicator)
 	 " "
 	 (propertize (my-modeline--major-mode-name)
-		     'face 'default)))))
+		     'face 'my-modeline-buffer-face)))))
 
 (defvar-local my-modeline-buffer-name
     '(:eval
-      (format "%s " (propertize
+      (list
+       (format "%s" (propertize
 		     (my-modeline--buffer-name)
-		     'face (my-modeline--buffer-name-face)))))
+		     'face (my-modeline--buffer-name-face)))
+       " ")))
 
 (defvar-local my-modeline-date
     '(:eval

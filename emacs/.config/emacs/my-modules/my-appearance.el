@@ -1,13 +1,14 @@
 (straight-use-package my-theme-package)
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
-(custom-set-faces
- '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
- '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
- '(org-level-3 ((t (:height 1.4 :inherit outline-3))))
- '(org-level-4 ((t (:height 1.3 :inherit outline-4))))
- '(org-level-5 ((t (:height 1.2 :inherit outline-5))))
- '(org-document-title ((t (:height 1.8)))))
+(when t
+  (custom-set-faces
+   '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
+   '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
+   '(org-level-3 ((t (:height 1.4 :inherit outline-3))))
+   '(org-level-4 ((t (:height 1.3 :inherit outline-4))))
+   '(org-level-5 ((t (:height 1.2 :inherit outline-5))))
+   '(org-document-title ((t (:height 1.8))))))
 
 (progn ;; Modus configuration
   (require-theme 'modus-themes)
@@ -29,18 +30,18 @@
 	  (t . (1.1)))))
 
 (straight-use-package 'ef-themes)
-(setq ef-themes-headings ; read the manual's entry or the doc string
-      '((0 variable-pitch bold 1.9)
-	(1 variable-pitch bold 1.8)
-	(2 variable-pitch regular 1.7)
-	(3 variable-pitch regular 1.6)
-	(4 variable-pitch light 1.5)
-	(5 variable-pitch light 1.4) ; absence of weight means `bold'
-	(6 variable-pitch light 1.3)
-	(7 variable-pitch light 1.2)
-	(t variable-pitch light 1.1)
-	(agenda-date . (1.3))
-	(agenda-structure . (variable pitch light 1.8))))
+;; (setq ef-themes-headings ; read the manual's entry or the doc string
+;;       '((0 variable-pitch bold 1.9)
+;; 	(1 variable-pitch bold 1.8)
+;; 	(2 variable-pitch regular 1.7)
+;; 	(3 variable-pitch regular 1.6)
+;; 	(4 variable-pitch light 1.5)
+;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
+;; 	(6 variable-pitch light 1.3)
+;; 	(7 variable-pitch light 1.2)
+;; 	(t variable-pitch light 1.1)
+;; 	(agenda-date . (1.3))
+;; 	(agenda-structure . (variable pitch light 1.8))))
 
 (straight-use-package 'doom-themes)
 (setq doom-rouge-brighter-comments t
