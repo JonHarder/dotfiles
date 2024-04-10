@@ -85,8 +85,6 @@ shift + alt - l : yabai -m window --focus east
 shift + alt - c : ~/bin/yabai/cycle.sh
 
 # Window Movement
-# --swap moves the selected window in the given direction,
-# and moves the displaced window to its place
 shift + ctrl + alt - h : yabai -m window --swap west
 shift + ctrl + alt - l : yabai -m window --swap east
 shift + ctrl + alt - j : yabai -m window --swap south
