@@ -20,3 +20,5 @@
 /emacs/.config/emacs/local-config.el
 /emacs/.config/emacs/request/
 /emacs/.config/emacs/smudge/
+/emacs/.config/emacs/tree-sitter/
+/emacs/.config/emacs/elpa/
