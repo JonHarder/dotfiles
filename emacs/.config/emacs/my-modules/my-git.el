@@ -33,6 +33,7 @@
 
 (evil-define-key '(normal motion) magit-log-mode-map
   (kbd "q") 'magit-log-bury-buffer
+  (kbd "r") 'magit-rebase
   (kbd "j") 'magit-next-line
   (kbd "k") 'magit-previous-line
   (kbd "}") 'magit-section-forward

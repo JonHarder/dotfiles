@@ -2227,12 +2227,13 @@
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-log-mode-map
-    	(kbd "q") 'magit-log-bury-buffer
-    	(kbd "j") 'magit-next-line
-    	(kbd "k") 'magit-previous-line
-    	(kbd "}") 'magit-section-forward
-    	(kbd "{") 'magit-section-backward
-    	(kbd "RET") 'magit-show-commit)
+	(kbd "q") 'magit-log-bury-buffer
+        (kbd "r") 'magit-rebase
+	(kbd "j") 'magit-next-line
+	(kbd "k") 'magit-previous-line
+	(kbd "}") 'magit-section-forward
+	(kbd "{") 'magit-section-backward
+	(kbd "RET") 'magit-show-commit)
     #+end_src
 
 **** Revision mode
