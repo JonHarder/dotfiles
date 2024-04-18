@@ -571,9 +571,10 @@
 	 magit-log-mode
 	 occur-mode
 	 magit-revision-mode
+	 git-rebase-mode
 	 notmuch-hello-mode
 	 notmuch-search-mode
-         notmuch-show-mode
+	 notmuch-show-mode
 	 ibuffer-mode
 	 calendar-mode
 	 org-agenda-mode
@@ -2234,6 +2235,16 @@
 	(kbd "}") 'magit-section-forward
 	(kbd "{") 'magit-section-backward
 	(kbd "RET") 'magit-show-commit)
+    #+end_src
+
+**** Rebase mode
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+      (evil-define-key '(normal) git-rebase-mode-map
+	(kbd "p") #'git-rebase-pick
+	(kbd "b") #'git-rebase-break
+	(kbd "dd") #'git-rebase-kill-line
+	(kbd "s") #'git-rebase-squash
+	(kbd "f") #'git-rebase-fixup)
     #+end_src
 
 **** Revision mode

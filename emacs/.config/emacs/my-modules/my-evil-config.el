@@ -10,6 +10,7 @@
     magit-log-mode
     occur-mode
     magit-revision-mode
+    git-rebase-mode
     notmuch-hello-mode
     notmuch-search-mode
     notmuch-show-mode

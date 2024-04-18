@@ -40,6 +40,13 @@
   (kbd "{") 'magit-section-backward
   (kbd "RET") 'magit-show-commit)
 
+(evil-define-key '(normal) git-rebase-mode-map
+  (kbd "p") #'git-rebase-pick
+  (kbd "b") #'git-rebase-break
+  (kbd "dd") #'git-rebase-kill-line
+  (kbd "s") #'git-rebase-squash
+  (kbd "f") #'git-rebase-fixup)
+
 (evil-define-key '(normal motion) magit-revision-mode-map
   (kbd "j") 'magit-next-line
   (kbd "k") 'magit-previous-line
