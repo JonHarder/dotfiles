@@ -10,7 +10,11 @@ alias tfp = terraform plan
 alias tfi = terraform init
 alias tfa = terraform apply
 alias tf = tarraform
+
+# docker compose shorthand
 alias dk = docker compose exec kippy
+alias dcb = docker compose build
+alias dcr = docker compose run
 
 alias lzd = lazydocker
 alias v = vifm
