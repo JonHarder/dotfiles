@@ -53,6 +53,7 @@
 (require 'my-rust-mode)
 (require 'my-search)
 (require 'my-shells)
+(require 'my-typst)
 (require 'my-terraform-mode)
 (require 'my-util)
 (require 'my-vim-mode)
