@@ -45,7 +45,9 @@
   (kbd "b") #'git-rebase-break
   (kbd "dd") #'git-rebase-kill-line
   (kbd "s") #'git-rebase-squash
-  (kbd "f") #'git-rebase-fixup)
+  (kbd "f") #'git-rebase-fixup
+  (kbd "J") #'git-rebase-move-line-down
+  (kbd "K") #'git-rebase-move-line-up)
 
 (evil-define-key '(normal motion) magit-revision-mode-map
   (kbd "j") 'magit-next-line
