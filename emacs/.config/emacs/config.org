@@ -669,6 +669,7 @@
   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
     (straight-use-package 'evil-commentary)
     (evil-commentary-mode)
+    (evil-define-key '(insert normal visual) evil-commentary-mode-map (kbd "s-;") #'evil-commentary-line)
   #+end_src
 ** Provide the module
   

@@ -53,5 +53,6 @@
 
 (straight-use-package 'evil-commentary)
 (evil-commentary-mode)
+(evil-define-key '(insert normal visual) evil-commentary-mode-map (kbd "s-;") #'evil-commentary-line)
 
 (provide 'my-evil-config)
