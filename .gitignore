@@ -22,3 +22,4 @@
 /emacs/.config/emacs/smudge/
 /emacs/.config/emacs/tree-sitter/
 /emacs/.config/emacs/elpa/
+/emacs/.config/emacs/forge-database.sqlite

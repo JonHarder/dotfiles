@@ -11,6 +11,8 @@ alias tfi = terraform init
 alias tfa = terraform apply
 alias tf = tarraform
 
+alias tg = terragrunt
+
 # docker compose shorthand
 alias dk = docker compose exec kippy
 alias dcb = docker compose build
