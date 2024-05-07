@@ -38,13 +38,16 @@
   (kbd "k") 'magit-previous-line
   (kbd "}") 'magit-section-forward
   (kbd "{") 'magit-section-backward
-  (kbd "RET") 'magit-show-commit)
+  (kbd "RET") 'magit-show-commit
+  (kbd "f") #'magit-fetch)
 
 (evil-define-key '(normal) git-rebase-mode-map
   (kbd "p") #'git-rebase-pick
   (kbd "b") #'git-rebase-break
+  (kbd "e") #'git-rebase-edit
   (kbd "dd") #'git-rebase-kill-line
   (kbd "s") #'git-rebase-squash
+  (kbd "r") #'git-rebase-reword
   (kbd "f") #'git-rebase-fixup
   (kbd "J") #'git-rebase-move-line-down
   (kbd "K") #'git-rebase-move-line-up)
@@ -57,6 +60,8 @@
   (kbd "TAB") 'magit-section-toggle
   (kbd "RET") 'magit-visit-thing
   (kbd "q") 'magit-mode-bury-buffer)
+
+(straight-use-package 'forge)
 
 (straight-use-package 'git-gutter)
 (global-git-gutter-mode)

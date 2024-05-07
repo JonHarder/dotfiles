@@ -5,3 +5,5 @@
    :repo "meow_king/typst-ts-mode"
    :custom
    (typst-ts-mode-watch-options "--open")))
+
+(provide 'my-typst)

@@ -40,6 +40,11 @@
   (interactive)
   (if dir (dired dir) (dired ".")))
 
+
+(defun eshell/o (file)
+  (interactive)
+  (find-file-other-window file))
+
 (setq eshell-prompt-function
       (lambda ()
 	(let ((home-path (getenv "HOME")))

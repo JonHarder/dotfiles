@@ -1501,6 +1501,12 @@
      (setq org-image-actual-width nil)
    #+end_src
 
+   messing with org src block indentation
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+     (setq org-src-preserve-indentation nil)
+   #+end_src
+
 ** Org agenda
 
     Org agenda is cool. It tries to create a day/week/month planner out of any tasks
@@ -1818,15 +1824,20 @@
     #+end_src
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (defun eshell/f (&optional file)
-	(interactive)
-	(if file
-	    (find-file file)
-	  (call-interactively #'find-file)))
+(defun eshell/f (&optional file)
+  (interactive)
+  (if file
+      (find-file file)
+    (call-interactively #'find-file)))
 
-      (defun eshell/d (&optional dir)
-	(interactive)
-        (if dir (dired dir) (dired ".")))
+(defun eshell/d (&optional dir)
+  (interactive)
+  (if dir (dired dir) (dired ".")))
+
+
+(defun eshell/o (file)
+  (interactive)
+  (find-file-other-window file))
     #+end_src
 *** Prompt
     Because eshell is just elisp, the prompt can be set using elisp as well.
@@ -1877,6 +1888,7 @@
 * Typst
     Typst is great. It's a modern and easy to use reimagining of LaTeX.
 
+** Install package
     #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
       (straight-use-package
        '(typst-ts-mode
@@ -1886,6 +1898,12 @@
 	 :custom
 	 (typst-ts-mode-watch-options "--open")))
     #+end_src
+
+** Provide feature =my-typst=
+    #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
+      (provide 'my-typst)
+    #+end_src
+ 
 * Navigation
 ** Windows
 
@@ -2244,13 +2262,14 @@
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-log-mode-map
-	(kbd "q") 'magit-log-bury-buffer
+        (kbd "q") 'magit-log-bury-buffer
         (kbd "r") 'magit-rebase
-	(kbd "j") 'magit-next-line
-	(kbd "k") 'magit-previous-line
-	(kbd "}") 'magit-section-forward
-	(kbd "{") 'magit-section-backward
-	(kbd "RET") 'magit-show-commit)
+        (kbd "j") 'magit-next-line
+        (kbd "k") 'magit-previous-line
+        (kbd "}") 'magit-section-forward
+        (kbd "{") 'magit-section-backward
+        (kbd "RET") 'magit-show-commit
+        (kbd "f") #'magit-fetch)
     #+end_src
 
 **** Rebase mode
@@ -2258,8 +2277,10 @@
       (evil-define-key '(normal) git-rebase-mode-map
 	(kbd "p") #'git-rebase-pick
 	(kbd "b") #'git-rebase-break
+        (kbd "e") #'git-rebase-edit
 	(kbd "dd") #'git-rebase-kill-line
 	(kbd "s") #'git-rebase-squash
+        (kbd "r") #'git-rebase-reword
 	(kbd "f") #'git-rebase-fixup
 	(kbd "J") #'git-rebase-move-line-down
 	(kbd "K") #'git-rebase-move-line-up)
@@ -2279,6 +2300,15 @@
 	(kbd "q") 'magit-mode-bury-buffer)
     #+end_src
 
+** Forge
+    Forges are a term representing a centralized version control
+    location, like github. Magit bundles support for viewing content
+    from forges (like pull requests), when required.
+
+    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+      (straight-use-package 'forge)
+    #+end_src
+    
 ** Git gutters
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (straight-use-package 'git-gutter)

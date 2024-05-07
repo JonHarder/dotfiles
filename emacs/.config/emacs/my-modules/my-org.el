@@ -46,6 +46,8 @@
 
 (setq org-image-actual-width nil)
 
+(setq org-src-preserve-indentation nil)
+
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (add-to-list 'org-agenda-files org-default-notes-file)
