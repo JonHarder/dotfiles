@@ -26,7 +26,8 @@
 	(:name "flagged" :query "tag:flagged" :key "f")
 	(:name "drafts" :query "tag:draft" :key "d")
 	(:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
-	(:name "Todo" :query "tag:todo" :key "t")))
+	(:name "Todo" :query "tag:todo" :key "t")
+	(:name "This Week" :query "date:mon..today tag:inbox" :key "w")))
 
 (setq notmuch-search-oldest-first nil)
 
