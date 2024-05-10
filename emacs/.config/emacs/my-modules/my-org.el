@@ -18,7 +18,8 @@
   (kbd "<leader> m r") #'org-refile
   (kbd "<leader> m l") #'org-insert-link
   (kbd "<leader> m f") #'org-footnote-action
-  (kbd "<leader> m t") #'org-toggle-inline-images
+  (kbd "<leader> m i") #'org-toggle-inline-images
+  (kbd "<leader> m t") #'org-babel-tangle
   (kbd "<leader> m n") #'org-narrow-to-subtree
   (kbd "<leader> m d") #'org-babel-demarcate-block
   (kbd "<leader> m s s") #'org-schedule
