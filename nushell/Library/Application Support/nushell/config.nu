@@ -21,6 +21,17 @@ alias dcr = docker compose run
 alias lzd = lazydocker
 alias v = vifm
 
+def "pr" [num?: int] {
+    if ($num == null) {
+        gh pr status
+    } else {
+        gh pr view -c $num
+        input -n 1
+        gh pr diff $num
+        gh pr review $num
+    }
+}
+
 def "fbr" [] {
     let branches = (git --no-pager branch -vv)
     let branch = (echo $branches | fzf +m)
