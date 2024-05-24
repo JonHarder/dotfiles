@@ -2231,6 +2231,7 @@
 	(kbd "q") #'magit-mode-bury-buffer
 	(kbd "c") #'magit-commit
 	(kbd "e") #'magit-ediff-dwim
+        (kbd "f") #'magit-fetch
 	(kbd "j") #'magit-next-line
 	(kbd "k") #'magit-previous-line
 	(kbd "}") #'magit-section-forward
@@ -2244,7 +2245,7 @@
 	(kbd "p") #'magit-pull
 	(kbd "M") #'magit-remote
 	(kbd "r") #'magit-rebase
-        (kbd "t") #'magit-tag
+	(kbd "t") #'magit-tag
 	(kbd "R") #'magit-reset
 	(kbd "$") #'magit-process-buffer
 	;; delete
