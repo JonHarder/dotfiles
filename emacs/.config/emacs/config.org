@@ -107,6 +107,7 @@
       (require 'my-rest-mode)
       (require 'my-spotify)
       (require 'my-text)
+      (require 'my-just)
 
       (require 'my-rust-mode)
       (require 'my-search)
@@ -2411,6 +2412,19 @@
   #+begin_src emacs-lisp :tangle "my-modules/my-ibuffer.el" :mkdirp yes
     (provide 'my-ibuffer)
   #+end_src
+
+* Just mode
+    Just is a command line tool that seeks to simplify [[man:make]]
+** Use package
+
+    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp
+      (straight-use-package 'just-mode)
+    #+end_src
+
+** Provide package
+    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp
+      (provide 'my-just)
+    #+end_src
 
 * Bindings
 ** Global bindings

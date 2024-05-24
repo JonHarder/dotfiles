@@ -28,3 +28,7 @@
 
 [advice]
   skippedCherryPicks = false
+[branch]
+	sort = -committerdate
+[alias]
+	bb = !~/bin/better-git-branch.sh

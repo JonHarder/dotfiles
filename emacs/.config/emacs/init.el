@@ -49,6 +49,7 @@
 (require 'my-rest-mode)
 (require 'my-spotify)
 (require 'my-text)
+(require 'my-just)
 
 (require 'my-rust-mode)
 (require 'my-search)
