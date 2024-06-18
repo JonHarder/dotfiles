@@ -5,11 +5,17 @@ alias q = exit
 # alias ap = pipenv run ansible-playbook
 alias brew = /opt/homebrew/bin/brew
 
+alias justl = just -l
+
 # Terraform aliases
 alias tfp = terraform plan
 alias tfi = terraform init
 alias tfa = terraform apply
 alias tf = tarraform
+# and even shorter
+alias plan = terraform plan
+alias init = terraform init
+alias apply = terraform apply
 
 alias tg = terragrunt
 
