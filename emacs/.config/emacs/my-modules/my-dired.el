@@ -39,6 +39,8 @@ under the point in the dired buffer."
 (evil-define-key '(normal motion) dired-mode-map
   (kbd "j") #'dired-next-line
   (kbd "k") #'dired-previous-line
+  (kbd "J") nil
+  (kbd "K") #'dired-do-kill-lines
   (kbd "h") #'dired-up-directory
   (kbd "l") #'dired-find-file
   (kbd "n") #'evil-search-next
@@ -56,7 +58,11 @@ under the point in the dired buffer."
   (kbd "<left>") #'dired-up-directory
   (kbd "<right>") #'dired-find-file
   (kbd "<up>") #'dired-previous-line
-  (kbd "<down>") #'dired-next-line)
+  (kbd "<down>") #'dired-next-line
+  ;; "find" prefix functions
+  (kbd "<leader> m f f") #'dired-mark-files-regexp
+  (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
+  (kbd "<leader> m f d") #'dired-mark-directories)
 
 (defun dired-first-file ()
   "Jump the point to the first dired entry that isn't . or .."

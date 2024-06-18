@@ -47,6 +47,7 @@
 (require 'my-prog-mode)
 (require 'my-python-mode)
 (require 'my-rest-mode)
+(require 'my-gleam-mode)
 (require 'my-spotify)
 (require 'my-text)
 (require 'my-just)

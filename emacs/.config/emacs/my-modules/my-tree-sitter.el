@@ -1,4 +1,5 @@
 (straight-use-package 'tree-sitter)
+(straight-use-package 'tree-sitter-indent)
 (straight-use-package 'tree-sitter-langs)
 
 (setq treesit-language-source-alist

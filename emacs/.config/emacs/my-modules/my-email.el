@@ -7,6 +7,8 @@
 
 (straight-use-package 'notmuch)
 
+;; (straight-use-package 'ol-notmuch)
+
 (defun my-notmuch-message-mode-hook ()
   (auto-fill-mode -1)
   (visual-line-mode 1))
@@ -27,7 +29,8 @@
 	(:name "drafts" :query "tag:draft" :key "d")
 	(:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	(:name "Todo" :query "tag:todo" :key "t")
-	(:name "This Week" :query "date:mon..today tag:inbox" :key "w")))
+	(:name "This Week" :query "date:mon..today tag:inbox" :key "w")
+	(:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")))
 
 (setq notmuch-search-oldest-first nil)
 

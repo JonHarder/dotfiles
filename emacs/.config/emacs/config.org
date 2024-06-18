@@ -1278,6 +1278,7 @@
 *** Install the package
     #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
       (straight-use-package 'tree-sitter)
+      (straight-use-package 'tree-sitter-indent)
       (straight-use-package 'tree-sitter-langs)
     #+end_src
 
@@ -1495,7 +1496,10 @@
 	(kbd "h") #'org-agenda-earlier
 	(kbd "g w") #'org-agenda-week-view
 	(kbd "g d") #'org-agenda-day-view
-	(kbd "t") #'org-agenda-todo)
+	(kbd "t") #'org-agenda-todo
+	(kbd "r") #'org-agenda-redo
+	(kbd "s") #'org-agenda-schedule
+	(kbd "d") #'org-agenda-deadline)
     #+end_src
 
 ** Settings
@@ -1532,6 +1536,14 @@
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-src-preserve-indentation nil)
    #+end_src
+
+   Priority
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+     (setq org-priority-highest ?A
+	   org-priority-lowest ?D)
+   #+end_src
+
 
 ** Org agenda
 
@@ -1818,6 +1830,27 @@
       (setq eshell-review-quick-commands nil)
       (setq eshell-smart-space-goes-to-end t)
       (setq eshell-visual-commands nil)
+
+      (setq eshell-visual-commands
+	    '("vi"
+	      "vim"
+	      "hx"
+	      "screen"
+	      "nvim"
+	      ;; "gh"
+	      "tmux"
+	      "top"
+	      "htop"
+	      "less"
+	      "more"
+	      "lynx"
+	      "links"
+	      "ncftp"
+	      "mutt"
+	      "pine"
+	      "tin"
+	      "trn"
+	      "elm"))
     #+end_src
 
 *** Completion
@@ -1850,20 +1883,31 @@
     #+end_src
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-(defun eshell/f (&optional file)
-  (interactive)
-  (if file
-      (find-file file)
-    (call-interactively #'find-file)))
+      (defun eshell/f (&optional file)
+	(interactive)
+	(if file
+	    (find-file file)
+	  (call-interactively #'find-file)))
 
-(defun eshell/d (&optional dir)
-  (interactive)
-  (if dir (dired dir) (dired ".")))
+      (defun eshell/d (&optional dir)
+	(interactive)
+	(if dir (dired dir) (dired ".")))
 
 
-(defun eshell/o (file)
-  (interactive)
-  (find-file-other-window file))
+      (defun eshell/o (file)
+	(interactive)
+	(find-file-other-window file))
+
+      (defun eshell/pr (&optional num)
+	(interactive "n")
+	(if num
+	    (shell-command "gh pr status")
+	  (progn
+	    (shell-command-to-string (concat "gh pr view " num))
+	    (read-key)
+	    (shell-command-to-string (concat "gh pr diff " num))
+	    (read-key)
+	    (shell-command-to-string (concat "gh pr review " num)))))
     #+end_src
 *** Prompt
     Because eshell is just elisp, the prompt can be set using elisp as well.
@@ -2022,6 +2066,11 @@
     (straight-use-package 'notmuch)
   #+end_src
 
+*** Enable org links generated from notmuch
+  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+    ;; (straight-use-package 'ol-notmuch)
+  #+end_src
+
 *** Configuring notmuch
 **** Composing emails
     #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
@@ -2061,7 +2110,8 @@
 	     (:name "drafts" :query "tag:draft" :key "d")
 	     (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	     (:name "Todo" :query "tag:todo" :key "t")
-	     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")))
+	     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
+	     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")))
    #+end_src
 
 **** Sorting
@@ -2467,6 +2517,9 @@
        (kbd "<leader> ;") #'eval-expression
        (kbd "<leader> q") #'save-buffers-kill-terminal
        (kbd "<leader> x") #'execute-extended-command
+       (kbd "<leader> TAB") (lambda ()
+			      (interactive)
+			      (switch-to-buffer nil))
        (kbd "g r") #'revert-buffer
        ;; App launcher
        (kbd "<leader> a c") #'calendar
@@ -2524,6 +2577,7 @@
        (kbd "<leader> p &") #'project-async-shell-command
        (kbd "<leader> p D") #'project-dired
        (kbd "<leader> p b") #'project-switch-to-buffer
+       (kbd "<leader> p c") #'compile
        (kbd "<leader> p d") #'project-find-dir
        (kbd "<leader> p e") #'project-eshell
        (kbd "<leader> p f") #'project-find-file

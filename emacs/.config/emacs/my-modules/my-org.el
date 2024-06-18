@@ -36,7 +36,10 @@
   (kbd "h") #'org-agenda-earlier
   (kbd "g w") #'org-agenda-week-view
   (kbd "g d") #'org-agenda-day-view
-  (kbd "t") #'org-agenda-todo)
+  (kbd "t") #'org-agenda-todo
+  (kbd "r") #'org-agenda-redo
+  (kbd "s") #'org-agenda-schedule
+  (kbd "d") #'org-agenda-deadline)
 
 (with-eval-after-load 'org
   (require 'org-tempo))
@@ -48,6 +51,9 @@
 (setq org-image-actual-width nil)
 
 (setq org-src-preserve-indentation nil)
+
+(setq org-priority-highest ?A
+      org-priority-lowest ?D)
 
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)

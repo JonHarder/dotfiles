@@ -12,6 +12,27 @@
 (setq eshell-smart-space-goes-to-end t)
 (setq eshell-visual-commands nil)
 
+(setq eshell-visual-commands
+      '("vi"
+	"vim"
+	"hx"
+	"screen"
+	"nvim"
+	;; "gh"
+	"tmux"
+	"top"
+	"htop"
+	"less"
+	"more"
+	"lynx"
+	"links"
+	"ncftp"
+	"mutt"
+	"pine"
+	"tin"
+	"trn"
+	"elm"))
+
 (defconst pcmpl-docker-commands
   '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
     "search" "version" "info"
@@ -44,6 +65,17 @@
 (defun eshell/o (file)
   (interactive)
   (find-file-other-window file))
+
+(defun eshell/pr (&optional num)
+  (interactive "n")
+  (if num
+      (shell-command "gh pr status")
+    (progn
+      (shell-command-to-string (concat "gh pr view " num))
+      (read-key)
+      (shell-command-to-string (concat "gh pr diff " num))
+      (read-key)
+      (shell-command-to-string (concat "gh pr review " num)))))
 
 (setq eshell-prompt-function
       (lambda ()

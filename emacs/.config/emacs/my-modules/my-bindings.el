@@ -5,6 +5,9 @@
   (kbd "<leader> ;") #'eval-expression
   (kbd "<leader> q") #'save-buffers-kill-terminal
   (kbd "<leader> x") #'execute-extended-command
+  (kbd "<leader> TAB") (lambda ()
+			 (interactive)
+			 (switch-to-buffer nil))
   (kbd "g r") #'revert-buffer
   ;; App launcher
   (kbd "<leader> a c") #'calendar
@@ -62,6 +65,7 @@
   (kbd "<leader> p &") #'project-async-shell-command
   (kbd "<leader> p D") #'project-dired
   (kbd "<leader> p b") #'project-switch-to-buffer
+  (kbd "<leader> p c") #'compile
   (kbd "<leader> p d") #'project-find-dir
   (kbd "<leader> p e") #'project-eshell
   (kbd "<leader> p f") #'project-find-file
