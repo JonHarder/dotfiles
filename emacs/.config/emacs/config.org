@@ -90,6 +90,7 @@
       (require 'my-ediff)
       (require 'my-email)
       (require 'my-epub)
+      (require 'my-feed)
       (require 'my-gpg)
       (require 'my-help)
       (require 'my-http)
@@ -1225,6 +1226,32 @@
      (provide 'my-epub)
    #+end_src
 
+* Feed reader
+    We use the wonderful `elfeed` package to track and read feeds.
+
+    #+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
+      (straight-use-package 'elfeed)
+      (setq elfeed-feeds
+	    '("https://protesilaos.com/codelog.xml"
+	      "http://rss.desiringgod.org/"
+	      "https://www.thegospelcoalition.org/feed/"
+	      "https://www.firstthings.com/rss/web-exclusives"))
+
+      (evil-define-key 'normal elfeed-search-mode-map
+	(kbd "q") #'quit-window
+	(kbd "j") #'next-line
+	(kbd "k") #'previous-line
+	(kbd "u") #'elfeed-update
+	(kbd "+") #'elfeed-search-tag-all
+	(kbd "-") #'elfeed-search-untag-all
+	(kbd "RET") #'elfeed-search-show-entry)
+
+      (evil-define-key 'normal elfeed-show-mode-map
+	(kbd "q") #'elfeed-kill-buffer)
+
+      (provide 'my-feed)
+    #+end_src
+    
 * Programming
 ** Prog mode
     Emacs has a general ~prog~ mode, serving as the base major mode for

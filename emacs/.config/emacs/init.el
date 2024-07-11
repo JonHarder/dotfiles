@@ -32,6 +32,7 @@
 (require 'my-ediff)
 (require 'my-email)
 (require 'my-epub)
+(require 'my-feed)
 (require 'my-gpg)
 (require 'my-help)
 (require 'my-http)
