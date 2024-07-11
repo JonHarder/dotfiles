@@ -32,6 +32,7 @@
   (kbd "RET") #'org-agenda-switch-to
   (kbd "q") #'org-agenda-quit
   (kbd ".") #'org-agenda-goto-today
+  (kbd ",") #'org-agenda-priority
   (kbd "l") #'org-agenda-later
   (kbd "h") #'org-agenda-earlier
   (kbd "g w") #'org-agenda-week-view
