@@ -7,12 +7,46 @@
 (defface my-modeline-buffer-face
   '((t :inherit bold))
   "Face for displaying the buffer name on the modeline.")
+
 (defface my-modeline-evil-replace-state
   '((t :background "red"))
   "Face to indicate the current evil state is replace.")
 (defface my-modeline-evil-emacs-state
   '((t :background "purple"))
   "Face to indicate the current evil state is Emacs.")
+
+(defface my-modeline-evil-insert-state
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#6a1aaf" :foreground "black")
+    (((class color) (min-colors 88) (background dark))
+     :background "#e0a0ff" :foreground "black")
+    (t :background "magenta" :foreground "black"))
+  "Face for insert mode indicator.")
+
+(defface my-modeline-evil-normal-state
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#005f00" :foreground "black")
+    (((class color) (min-colors 88) (background dark))
+     :background "#73fa7f" :foreground "black")
+    (t :background "green" :foreground "black"))
+  "Face for normal mode indicator.")
+
+(defface my-modeline-evil-visual-state
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :background "#6f4000" :foreground "black")
+    (((class color) (min-colors 88) (background dark))
+     :background "#f0c526" :foreground "black")
+    (t :background "yellow" :foreground "black"))
+  "Face for normal mode indicator.")
+
+(defface my-modeline-indicator-red-bg
+  '((default :inherit bold)
+    (((class color) (min-colors 88))
+     :foreground "white" :background "red"))
+  "Face for modeline indicators")
 
 (defface my-modeline-indicator-blue
   '((default :inherit bold)
@@ -41,11 +75,6 @@
     (t :foreground "red"))
   "Face for modeline indicators")
 
-(defface my-modeline-indicator-red-bg
-  '((default :inherit bold)
-    (((class color) (min-colors 88))
-     :foreground "white" :background "red"))
-  "Face for modeline indicators")
 
 (defface my-modeline-indicator-magenta
   '((default :inherit bold)
@@ -72,15 +101,15 @@
 (defun my-modeline--evil-state-name-and-face ()
   "Return a symbol associated with a face to propertize the current evil state."
   (pcase evil-state
-    ('insert '("<I>" my-modeline-indicator-magenta))
-    ('normal '("<N>" my-modeline-indicator-green))
-    ('visual '("<V>" my-modeline-indicator-yellow))
-    ('replace '("<R>" my-modeline-indicator-red))
-    ('emacs '("<E>" my-modeline-evil-emacs-state))))
+    ('insert '("INSERT" my-modeline-evil-insert-state))
+    ('normal '("NORMAL" my-modeline-evil-normal-state))
+    ('visual '("VISUAL" my-modeline-evil-visual-state))
+    ('replace '("REPLAC" my-modeline-indicator-red))
+    ('emacs '("EMACS" my-modeline-evil-emacs-state))))
 
 (defun my-modeline--buffer-name ()
   "Return the buffer's name."
-  (format " %s "(buffer-name)))
+  (format "%s "(buffer-name)))
 
 (defun my-modeline--buffer-name-face ()
   (let ((file (buffer-name)))
@@ -144,6 +173,7 @@
 (defvar-local my-modeline-buffer-name
     '(:eval
       (list
+       " "
        (format "%s" (propertize
 		     (my-modeline--buffer-name)
 		     'face (my-modeline--buffer-name-face)))
