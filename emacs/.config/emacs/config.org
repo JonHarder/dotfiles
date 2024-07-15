@@ -1575,9 +1575,9 @@
    act globally, such as [[*Org capture][org-capture]].
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-directory "~/Dropbox")
+     (setq org-directory "~/Dropbox/notes/")
      (defvar org-work-dir (concat org-directory "/Work/"))
-     (setq org-default-notes-file (concat org-work-dir "index.org"))
+     (setq org-default-notes-file (concat org-directory "index.org"))
    #+end_src
 
    When inserting images in org files, often they will be way to large to fit into
@@ -1605,6 +1605,7 @@
 
 ** Org agenda
 
+*** basic settings
     Org agenda is cool. It tries to create a day/week/month planner out of any tasks
     or scheduled events it can find in `org-agenda-files'.
 
@@ -1616,11 +1617,22 @@
       (setq org-agenda-restore-windows-after-quit t)
       (add-to-list 'org-agenda-files org-default-notes-file)
       (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/notes/")
-      (add-to-list 'org-agenda-files "~/Dropbox/notes/journal/")
       (add-to-list 'org-agenda-files "~/schedule.org")
       (add-to-list 'org-agenda-files "~/Dropbox/RBC/Internship/")
     #+end_src
+
+*** super agenda
+    NOTE: this package recipe appears to be broken
+    currently. Something about the version of org is wrong.
+    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+      ;; (straight-use-package 'org-super-agenda)
+      ;; (setq org-super-agenda-groups
+      ;; '(
+      ;; 	(:name "Today"
+      ;; 	       :time-grid t
+      ;; 	       :todo '("TODO" "WORKING"))))
+    #+end_src
+    
 
 ** Org capture
 
@@ -1895,6 +1907,7 @@
 	      "hx"
 	      "screen"
 	      "nvim"
+              "bacon"
 	      ;; "gh"
 	      "tmux"
 	      "top"

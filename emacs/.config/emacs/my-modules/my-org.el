@@ -45,9 +45,9 @@
 (with-eval-after-load 'org
   (require 'org-tempo))
 
-(setq org-directory "~/Dropbox")
+(setq org-directory "~/Dropbox/notes/")
 (defvar org-work-dir (concat org-directory "/Work/"))
-(setq org-default-notes-file (concat org-work-dir "index.org"))
+(setq org-default-notes-file (concat org-directory "index.org"))
 
 (setq org-image-actual-width nil)
 
@@ -60,10 +60,15 @@
 (setq org-agenda-restore-windows-after-quit t)
 (add-to-list 'org-agenda-files org-default-notes-file)
 (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
-(add-to-list 'org-agenda-files "~/Dropbox/notes/")
-(add-to-list 'org-agenda-files "~/Dropbox/notes/journal/")
 (add-to-list 'org-agenda-files "~/schedule.org")
 (add-to-list 'org-agenda-files "~/Dropbox/RBC/Internship/")
+
+;; (straight-use-package 'org-super-agenda)
+;; (setq org-super-agenda-groups
+;; '(
+;; 	(:name "Today"
+;; 	       :time-grid t
+;; 	       :todo '("TODO" "WORKING"))))
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "" "Inbox")

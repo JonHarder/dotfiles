@@ -18,6 +18,7 @@
 	"hx"
 	"screen"
 	"nvim"
+        "bacon"
 	;; "gh"
 	"tmux"
 	"top"
@@ -79,9 +80,15 @@
 
 (setq eshell-prompt-function
       (lambda ()
-	(let ((home-path (getenv "HOME")))
+	(let* ((home-path (getenv "HOME"))
+	       (dir (string-replace home-path "~" (eshell/pwd)))
+	       (branch (magit-get-current-branch)))
 	  (concat
-	   (string-replace home-path "~" (eshell/pwd))
+	   (propertize dir 'face `(:foreground "#61bfff"))
+	   (if branch
+	       (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
+		       (propertize branch 'face `(:foreground "green")))
+	     "")
 	   " $ "))))
 
 (setq eshell-prompt-regexp ".*$ ")
