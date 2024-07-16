@@ -32,7 +32,3 @@
 	sort = -committerdate
 [alias]
 	bb = !~/bin/better-git-branch.sh
-[credential]
-	helper = /usr/local/share/gcm-core/git-credential-manager
-[credential "https://dev.azure.com"]
-	useHttpPath = true
