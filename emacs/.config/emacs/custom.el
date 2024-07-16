@@ -91,6 +91,11 @@
       (null-device . "/dev/null"))
      (eshell-connection-default-profile
       (eshell-path-env-list))))
+ '(org-agenda-files
+   '("/Users/jharder/Dropbox/RBC/Internship/events.org"
+     "/Users/jharder/Dropbox/RBC/Internship/main.org"
+     "/Users/jharder/schedule.org"
+     "/Users/jharder/blog/tech_articles.org"))
  '(safe-local-variable-values
    '((org-todo-keywords "TODO" "WORKING" "REVIEW" "|" "DONE" "CANCELED"))))
 (custom-set-faces
@@ -98,23 +103,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(fringe ((t :background "#130911")))
- '(header-line ((t :box (:line-width 4 :color "#221920" :style nil))))
- '(header-line-highlight ((t :box (:color "#d0d0d0"))))
- '(line-number ((t :background "#130911")))
- '(mode-line ((t :box (:line-width 6 :color "#583435" :style nil))))
- '(mode-line-active ((t :box (:line-width 6 :color "#583435" :style nil))))
- '(mode-line-highlight ((t :box (:color "#d0d0d0"))))
- '(mode-line-inactive ((t :box (:line-width 6 :color "#372d32" :style nil))))
+ '(fringe ((t :background "#292D3E")))
+ '(header-line ((t :box (:line-width 4 :color "#232635" :style nil))))
+ '(header-line-highlight ((t :box (:color "#EEFFFF"))))
+ '(line-number ((t :background "#292D3E")))
+ '(mode-line ((t :box (:line-width 6 :color "#232635" :style nil))))
+ '(mode-line-active ((t :box (:line-width 6 :color "#232635" :style nil))))
+ '(mode-line-highlight ((t :box (:color "#EEFFFF"))))
+ '(mode-line-inactive ((t :box (:line-width 6 :color "#282c3d" :style nil))))
  '(org-document-title ((t (:height 2.0 :underline t))))
  '(org-level-1 ((t (:height 1.6 :inherit outline-1))))
  '(org-level-2 ((t (:height 1.5 :inherit outline-2))))
  '(org-level-3 ((t (:height 1.2 :inherit outline-3))))
  '(org-level-4 ((t (:height 1.1 :inherit outline-4))))
  '(org-level-5 ((t (:height 1.0 :inherit outline-5))))
- '(tab-bar-tab ((t :box (:line-width 4 :color "#130911" :style nil))))
- '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#4b3f47" :style nil))))
- '(window-divider ((t :background "#130911" :foreground "#130911")))
- '(window-divider-first-pixel ((t :background "#130911" :foreground "#130911")))
- '(window-divider-last-pixel ((t :background "#130911" :foreground "#130911"))))
+ '(tab-bar-tab ((t :box (:line-width 4 :color "#292D3E" :style nil))))
+ '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#242837" :style nil))))
+ '(window-divider ((t :background "#292D3E" :foreground "#292D3E")))
+ '(window-divider-first-pixel ((t :background "#292D3E" :foreground "#292D3E")))
+ '(window-divider-last-pixel ((t :background "#292D3E" :foreground "#292D3E"))))
 (put 'narrow-to-region 'disabled nil)

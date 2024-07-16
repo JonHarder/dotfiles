@@ -37,7 +37,7 @@
   (kbd "<leader> e d") #'eval-deful
   ;; files
   (kbd "<leader> f b") #'bookmark-jump
-  (kbd "<leader> f i") (lambda () (interactive) (find-file "~/Dropbox/Work/index.org"))
+  (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
   (kbd "<leader> f B") #'bookmark-set
   (kbd "<leader> f c") #'find-config
   (kbd "<leader> f f") #'find-file

@@ -6,10 +6,10 @@
 (straight-use-package 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode +1)
 (require 'eshell)
-(require 'em-smart)
+;; (require 'em-smart)
 (setq eshell-where-to-jump 'begin)
 (setq eshell-review-quick-commands nil)
-(setq eshell-smart-space-goes-to-end t)
+(setq eshell-smart-space-goes-to-end nil)
 (setq eshell-visual-commands nil)
 
 (setq eshell-visual-commands
