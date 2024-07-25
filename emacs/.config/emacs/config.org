@@ -2123,6 +2123,11 @@
   This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial
   layer that separates emacs from the motherboard).
 
+  /Google specific configuration/:
+  You will need an application password (create one [[https://myaccount.google.com/apppasswords][here]])
+  Save this value into a secure place, ideally encrypted. Emacs
+  supports gpg encryption out of the box, so this is a good option.
+
   *NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
   remote inboxes. It runs for a time, then errors out with a socket error complaining about
   an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
