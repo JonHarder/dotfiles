@@ -58,6 +58,8 @@
 
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
+(setq org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t)
 (add-to-list 'org-agenda-files org-default-notes-file)
 (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
 (add-to-list 'org-agenda-files "~/schedule.org")
