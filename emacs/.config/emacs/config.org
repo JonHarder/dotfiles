@@ -12,7 +12,7 @@
 
 ** Startup performance enhancements
    The aim here is to effectively disable the garbage collector during startup
-   as emacs is not interactible during startup anyway. In the startup-hook we
+   as Emacs is not interactible during startup anyway. In the startup-hook we
    restore these settings to sensible values for runtime.
 
    #+begin_src emacs-lisp :tangle early-init.el
@@ -2034,7 +2034,6 @@
      (provide 'my-shells)
    #+end_src
 
-   
 * Typst
     Typst is great. It's a modern and easy to use reimagining of LaTeX.
 
@@ -2336,6 +2335,27 @@
     (add-hook 'text-mode-hook #'my-text-mode-hook)
   #+end_src
 
+** Functions
+*** Cycle capitalize word
+    #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+      (defun cycle-capitalization ()
+	"Cycle capitalization of previous word.
+
+      Capitalization schemes are:
+	- Regular capitalization: ensure only the first letter is capitalized
+	- All caps: Capitalize all letters of the word
+	- No caps: No Letters of the word are capitalized"
+	(interactive)
+	(save-excursion
+	  (let ((word-begin (beginning-of-thing 'word)))
+	    (goto-char word-begin)
+	    (capitalize-word 1))))
+
+      (evil-define-key '(insert normal) global-map
+	(kbd "M-c") #'cycle-capitalization)
+    #+end_src
+     
+
 ** Provide =my-text=
   #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
     (provide 'my-text)
@@ -2591,8 +2611,8 @@
    Visual/emacs state commands
 
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-    (evil-define-key '(insert emacs visual) 'global
-      (kbd "s-x") #'execute-extended-command)
+     (evil-define-key '(insert emacs visual) 'global
+       (kbd "s-x") #'execute-extended-command)
    #+end_src
 
    Normal state commands
