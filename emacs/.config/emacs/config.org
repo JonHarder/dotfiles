@@ -1405,6 +1405,7 @@
 ** Terraform 
    #+begin_src emacs-lisp :tangle "my-modules/my-terraform-mode.el" :mkdirp yes
      (straight-use-package 'terraform-mode)
+     (setq terraform-format-on-save t)
      (provide 'my-terraform-mode)
    #+end_src
 
