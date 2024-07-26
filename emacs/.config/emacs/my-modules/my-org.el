@@ -40,7 +40,8 @@
   (kbd "t") #'org-agenda-todo
   (kbd "r") #'org-agenda-redo
   (kbd "s") #'org-agenda-schedule
-  (kbd "d") #'org-agenda-deadline)
+  (kbd "d") #'org-agenda-deadline
+  (kbd "/") #'org-agenda-filter)
 
 (with-eval-after-load 'org
   (require 'org-tempo))
@@ -56,6 +57,22 @@
 (setq org-priority-highest ?A
       org-priority-lowest ?D)
 
+(setq org-tag-alist
+      '(
+	;; Places
+	(:startgroup . nil)
+	("@Work" . ?W)
+	("@Home" . ?H)
+	("@Church" . ?C)
+	(:endgroup . nil)
+	;; Types of work
+	("@Schedule" . ?s)
+        ("@Review" . ?r)
+	("@Programming" . ?p)
+	("@Planning" . ?l)
+	("@Management" . ?g)
+	("@Email" . ?e)
+	("@Meeting" . ?m)))
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (setq org-agenda-skip-deadline-if-done t

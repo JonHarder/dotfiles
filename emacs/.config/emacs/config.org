@@ -1550,7 +1550,7 @@
 	(kbd "RET") #'org-agenda-switch-to
 	(kbd "q") #'org-agenda-quit
 	(kbd ".") #'org-agenda-goto-today
-        (kbd ",") #'org-agenda-priority
+	(kbd ",") #'org-agenda-priority
 	(kbd "l") #'org-agenda-later
 	(kbd "h") #'org-agenda-earlier
 	(kbd "g w") #'org-agenda-week-view
@@ -1558,7 +1558,8 @@
 	(kbd "t") #'org-agenda-todo
 	(kbd "r") #'org-agenda-redo
 	(kbd "s") #'org-agenda-schedule
-	(kbd "d") #'org-agenda-deadline)
+	(kbd "d") #'org-agenda-deadline
+	(kbd "/") #'org-agenda-filter)
     #+end_src
 
 ** Settings
@@ -1614,6 +1615,22 @@
     those sorts of events don't really make sense to track in org.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+      (setq org-tag-alist
+	    '(
+	      ;; Places
+	      (:startgroup . nil)
+	      ("@Work" . ?W)
+	      ("@Home" . ?H)
+	      ("@Church" . ?C)
+	      (:endgroup . nil)
+	      ;; Types of work
+	      ("@Schedule" . ?s)
+              ("@Review" . ?r)
+	      ("@Programming" . ?p)
+	      ("@Planning" . ?l)
+	      ("@Management" . ?g)
+	      ("@Email" . ?e)
+	      ("@Meeting" . ?m)))
       (setq org-agenda-include-diary t)
       (setq org-agenda-restore-windows-after-quit t)
       (setq org-agenda-skip-deadline-if-done t
