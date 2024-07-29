@@ -2,7 +2,8 @@
 
 (with-eval-after-load 'org
   (require 'ol-man)
-  (add-to-list 'org-modules 'ol-man t))
+  (add-to-list 'org-modules 'ol-man t)
+  (add-to-list 'org-modules 'org-habit t))
 
 (evil-define-key 'normal org-mode-map
   (kbd "<tab>") 'org-cycle
@@ -60,24 +61,33 @@
 (setq org-tag-alist
       '(
 	;; Places
-	(:startgroup . nil)
 	("@Work" . ?W)
 	("@Home" . ?H)
 	("@Church" . ?C)
-	(:endgroup . nil)
+
+	;; Devices
+	("@Phone" . ?P)
+	("@Laptop" . ?L)
+
 	;; Types of work
 	("@Schedule" . ?s)
-        ("@Review" . ?r)
+	("@Review" . ?r)
 	("@Programming" . ?p)
 	("@Planning" . ?l)
 	("@Management" . ?g)
-	("@Email" . ?e)
-	("@Meeting" . ?m)))
+	("@Email" . ?m)
+	("@Emacs" . ?e)
+	("@Chore" . ?c)
+        ("@Writing" . ?w)))
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (setq org-agenda-skip-deadline-if-done t
       org-agenda-skip-scheduled-if-done t)
-(add-to-list 'org-agenda-files org-default-notes-file)
+(add-to-list 'org-agenda-files "~/Dropbox/emacs.org")
+(add-to-list 'org-agenda-files "~/Dropbox/work.org")
+(add-to-list 'org-agenda-files "~/Dropbox/internship.org")
+(add-to-list 'org-agenda-files "~/Dropbox/index.org")
+(add-to-list 'org-agenda-files "~/Dropbox/personal.org")
 (add-to-list 'org-agenda-files "~/blog/tech_articles.org")
 (add-to-list 'org-agenda-files "~/schedule.org")
 (add-to-list 'org-agenda-files "~/Dropbox/RBC/Internship/")
