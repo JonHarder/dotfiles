@@ -1580,8 +1580,19 @@
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-directory "~/Dropbox/notes/")
      (defvar org-work-dir (concat org-directory "/Work/"))
-     (setq org-default-notes-file (concat org-directory "index.org"))
+     (setq org-default-notes-file "~/Dropbox/index.org")
    #+end_src
+
+   Setting todo states
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+     (setq org-todo-keywords
+	   '(
+	     ;; For work requiring development, testing, merging, etc.
+	     (sequence "TODO(t)" "IN-PROGRESS(p)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
+	     ;; Scheduling
+	     (sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
+   #+end_src
+   
 
    When inserting images in org files, often they will be way to large to fit into
    the general flow of the document. Through the use of ~#+attr_html: :width NNpx~,

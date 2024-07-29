@@ -49,7 +49,14 @@
 
 (setq org-directory "~/Dropbox/notes/")
 (defvar org-work-dir (concat org-directory "/Work/"))
-(setq org-default-notes-file (concat org-directory "index.org"))
+(setq org-default-notes-file "~/Dropbox/index.org")
+
+(setq org-todo-keywords
+      '(
+	;; For work requiring development, testing, merging, etc.
+	(sequence "TODO(t)" "IN-PROGRESS(p)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
+	;; Scheduling
+	(sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
 
 (setq org-image-actual-width nil)
 
