@@ -5,6 +5,7 @@
   (kbd "<leader> ;") #'eval-expression
   (kbd "<leader> q") #'save-buffers-kill-terminal
   (kbd "<leader> x") #'execute-extended-command
+  (kbd "<leader> z") #'ispell-word
   (kbd "<leader> TAB") (lambda ()
 			 (interactive)
 			 (switch-to-buffer nil))
@@ -59,6 +60,7 @@
   (kbd "<leader> j") #'ace-jump-word-mode
   ;; org
   (kbd "<leader> o c") #'org-capture
+  (kbd "<leader> o s") #'org-store-link
   ;; occur
   (kbd "<leader> o o") #'occur
   ;; project

@@ -20,14 +20,18 @@
   (kbd "<leader> m l") #'org-insert-link
   (kbd "<leader> m f") #'org-footnote-action
   (kbd "<leader> m i") #'org-toggle-inline-images
-  (kbd "<leader> m t") #'org-babel-tangle
+  (kbd "<leader> m g") #'org-babel-tangle
+  (kbd "<leader> m t") #'org-todo
   (kbd "<leader> m n") #'org-narrow-to-subtree
   (kbd "<leader> m d") #'org-babel-demarcate-block
   (kbd "<leader> m s s") #'org-schedule
   (kbd "<leader> m s d") #'org-deadline
-  (kbd "<leader> m ,") #'org-priority)
+  (kbd "<leader> m ,") #'org-priority
+  (kbd "<leader> m c i") #'org-clock-in
+  (kbd "<leader> m c o") #'org-clock-out)
 
 (evil-define-key 'normal org-agenda-mode-map
+  (kbd "<leader> m c") #'org-agenda-columns
   (kbd "j") #'org-agenda-next-line
   (kbd "k") #'org-agenda-previous-line
   (kbd "RET") #'org-agenda-switch-to
@@ -36,25 +40,29 @@
   (kbd ",") #'org-agenda-priority
   (kbd "l") #'org-agenda-later
   (kbd "h") #'org-agenda-earlier
+  (kbd "m") #'org-agenda-bulk-mark
+  (kbd "u") #'org-agenda-bulk-unmark
+  (kbd "B") #'org-agenda-bulk-action
   (kbd "g w") #'org-agenda-week-view
   (kbd "g d") #'org-agenda-day-view
   (kbd "t") #'org-agenda-todo
   (kbd "r") #'org-agenda-redo
   (kbd "s") #'org-agenda-schedule
   (kbd "d") #'org-agenda-deadline
-  (kbd "/") #'org-agenda-filter)
+  (kbd "/") #'org-agenda-filter
+  (kbd "<") #'org-agenda-filter-by-category)
 
 (with-eval-after-load 'org
   (require 'org-tempo))
 
 (setq org-directory "~/Dropbox/notes/")
 (defvar org-work-dir (concat org-directory "/Work/"))
-(setq org-default-notes-file "~/Dropbox/index.org")
+(setq org-default-notes-file "~/Sync/inbox.org")
 
 (setq org-todo-keywords
       '(
 	;; For work requiring development, testing, merging, etc.
-	(sequence "TODO(t)" "IN-PROGRESS(p)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
+	(sequence "TODO(t)" "IN-PROGRESS(i)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
 	;; Scheduling
 	(sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
 
@@ -71,6 +79,7 @@
 	("@Work" . ?W)
 	("@Home" . ?H)
 	("@Church" . ?C)
+	("@Anywhere" . ?A)
 
 	;; Devices
 	("@Phone" . ?P)
@@ -82,22 +91,25 @@
 	("@Programming" . ?p)
 	("@Planning" . ?l)
 	("@Management" . ?g)
-	("@Email" . ?m)
 	("@Emacs" . ?e)
 	("@Chore" . ?c)
-        ("@Writing" . ?w)))
+	("@AWS" . ?a)
+	("@Messaging" . ?m)
+	("@Writing" . ?w)))
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (setq org-agenda-skip-deadline-if-done t
       org-agenda-skip-scheduled-if-done t)
-(add-to-list 'org-agenda-files "~/Dropbox/emacs.org")
-(add-to-list 'org-agenda-files "~/Dropbox/work.org")
-(add-to-list 'org-agenda-files "~/Dropbox/internship.org")
-(add-to-list 'org-agenda-files "~/Dropbox/index.org")
-(add-to-list 'org-agenda-files "~/Dropbox/personal.org")
-(add-to-list 'org-agenda-files "~/blog/tech_articles.org")
-(add-to-list 'org-agenda-files "~/schedule.org")
-(add-to-list 'org-agenda-files "~/Dropbox/RBC/Internship/")
+(setq org-agenda-category-icon-alist nil)
+(setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
+(add-to-list 'org-agenda-category-icon-alist
+	     '(".*" '(space . (:width (18)))))
+(add-to-list 'org-agenda-files "~/Sync/emacs.org")
+(add-to-list 'org-agenda-files "~/Sync/work.org")
+(add-to-list 'org-agenda-files "~/Sync/internship.org")
+(add-to-list 'org-agenda-files "~/Sync/inbox.org")
+(add-to-list 'org-agenda-files "~/Sync/personal.org")
+(add-to-list 'org-agenda-files "~/Sync/schedule.org")
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
@@ -106,11 +118,10 @@
 ;; 	       :time-grid t
 ;; 	       :todo '("TODO" "WORKING"))))
 
+(add-hook 'org-capture-mode-hook 'evil-insert-state)
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "" "Inbox")
-	 "* %?\n %i\n %a")
-	("r" "Read Article" item (file+headline "" "Reading")
-	 "%t %c%?")))
+	 "* TODO %?\n %i\n %a")))
 
 (setq org-structure-template-alist
       '(("s" . "src")

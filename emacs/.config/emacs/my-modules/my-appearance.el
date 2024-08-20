@@ -22,6 +22,7 @@
   (setq modus-themes-variable-pitch-ui nil)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-org-blocks 'gray-background)
+  ;; TODO set this to nil if a non-modus theme is active?
   (setq modus-themes-headings
 	'((1 . (variable-pitch 1.5))
 	  (2 . (1.3))
