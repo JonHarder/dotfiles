@@ -2436,7 +2436,9 @@
 	    (goto-char (beginning-of-thing 'word))
 	    (cond
 	     ((eq 'lower state)
-	      (capitalize-word 1))
+	      (let ((word-begin (beginning-of-thing 'word)))
+		(goto-char word-begin)
+		(capitalize-word 1)))
 	     ((eq 'capital state)
 	      (upcase-word 1))
 	     ((eq 'all-caps state)
