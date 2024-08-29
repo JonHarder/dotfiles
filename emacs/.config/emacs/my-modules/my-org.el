@@ -191,4 +191,6 @@
 (straight-use-package 'toc-org)
 (add-hook 'org-mode-hook 'toc-org-mode)
 
+(straight-use-package 'literate-calc-mode)
+
 (provide 'my-org)

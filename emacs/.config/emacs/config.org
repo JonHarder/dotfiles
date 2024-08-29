@@ -1906,6 +1906,18 @@
      (add-hook 'org-mode-hook 'toc-org-mode)
 #+end_src
 
+** Literate calc mode
+   Literate calc mode evaluations equations inline in your buffer and
+   prints the results as overlays in the file.
+
+   Using its minor mode in org results in a really ergonomic
+   experience with hashing out quick equations.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+     (straight-use-package 'literate-calc-mode)
+   #+end_src
+   
+
 ** Provide =my-org=
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (provide 'my-org)
