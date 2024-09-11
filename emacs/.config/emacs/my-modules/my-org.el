@@ -192,5 +192,6 @@
 (add-hook 'org-mode-hook 'toc-org-mode)
 
 (straight-use-package 'literate-calc-mode)
+(add-hook 'org-mode-hook #'literate-calc-minor-mode)
 
 (provide 'my-org)

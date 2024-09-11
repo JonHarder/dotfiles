@@ -1662,7 +1662,17 @@
 
 
 ** Org agenda
-
+#+begin_src emacs-lisp
+  (setq org-agenda-custom-commands
+	'(("p" "Planning"
+	   ((tags-todo "+@Planning")
+	    (tags-todo "-{.*}")))))
+  (setq org-agenda-time-grid
+	'((daily today require-timed remove-match)
+	  (800 1000 1200 1400 1600 1800 2000)
+	  " ┄┄┄┄┄ "
+	  "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+#+end_src
 *** basic settings
     Org agenda is cool. It tries to create a day/week/month planner out of any tasks
     or scheduled events it can find in `org-agenda-files'.
@@ -1915,6 +1925,7 @@
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (straight-use-package 'literate-calc-mode)
+     (add-hook 'org-mode-hook #'literate-calc-minor-mode)
    #+end_src
    
 
