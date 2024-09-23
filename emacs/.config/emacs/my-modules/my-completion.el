@@ -33,6 +33,13 @@
 
 (straight-use-package 'consult)
 
+(straight-use-package 'consult-dir)
+(define-Key vertico-map
+	    (kbd "M-c") #'consult-dir)
+(evil-define-key 'norma cdl
+  global-map
+  (kbd "<leader> c d") #'consult-dir)
+
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)
 (setq prefix-help-command #'embark-prefix-help-command)

@@ -12,6 +12,14 @@
   (kbd "> >") 'org-shiftmetaright
   (kbd "< <") 'org-shiftmetaleft)
 
+(defun insert-note-with-timestamp ()
+  (interactive)
+  (let ((current-prefix-arg '(16)))
+    (insert "- ")
+    (call-interactively #'org-time-stamp-inactive)
+    (insert " ")
+    (evil-insert 0)))
+
 (evil-define-key 'normal org-mode-map
   (kbd "<leader> m a") #'org-archive-subtree
   (kbd "<leader> m e") #'org-export-dispatch
@@ -21,7 +29,7 @@
   (kbd "<leader> m f") #'org-footnote-action
   (kbd "<leader> m i") #'org-toggle-inline-images
   (kbd "<leader> m g") #'org-babel-tangle
-  (kbd "<leader> m t") #'org-todo
+  (kbd "<leader> m t") #'insert-note-with-timestamp
   (kbd "<leader> m n") #'org-narrow-to-subtree
   (kbd "<leader> m d") #'org-babel-demarcate-block
   (kbd "<leader> m s s") #'org-schedule
