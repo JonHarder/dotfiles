@@ -1,6 +1,6 @@
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
-#+STARTUP: show2levels
+#+STARTUP: showeverything
 * Early init optimizations
 ** Disable built-in package.el
   #+begin_src emacs-lisp :tangle "early-init.el"
@@ -868,7 +868,7 @@
 *** consult dir
     #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
       (straight-use-package 'consult-dir)
-      (define-Key vertico-map
+      (define-key vertico-map
 		  (kbd "M-c") #'consult-dir)
       (evil-define-key 'norma cdl
 	global-map
@@ -1624,6 +1624,9 @@
       (defun insert-note-with-timestamp ()
 	(interactive)
 	(let ((current-prefix-arg '(16)))
+	  (goto-char (point-max))
+	  (evil-open-below 1)
+	  (move-beginning-of-line nil)
 	  (insert "- ")
 	  (call-interactively #'org-time-stamp-inactive)
 	  (insert " ")
@@ -2371,7 +2374,8 @@
 	     (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	     (:name "Todo" :query "tag:todo" :key "t")
 	     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
-	     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")))
+	     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
+	     (:name "Sent" :query "is:sent" :key "s")))
    #+end_src
 
 **** Sorting

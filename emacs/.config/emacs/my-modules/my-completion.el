@@ -34,7 +34,7 @@
 (straight-use-package 'consult)
 
 (straight-use-package 'consult-dir)
-(define-Key vertico-map
+(define-key vertico-map
 	    (kbd "M-c") #'consult-dir)
 (evil-define-key 'norma cdl
   global-map

@@ -30,7 +30,8 @@
 	(:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
 	(:name "Todo" :query "tag:todo" :key "t")
 	(:name "This Week" :query "date:mon..today tag:inbox" :key "w")
-	(:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")))
+	(:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
+	(:name "Sent" :query "is:sent" :key "s")))
 
 (setq notmuch-search-oldest-first nil)
 
