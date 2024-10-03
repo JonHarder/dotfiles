@@ -84,6 +84,12 @@ outer.right =      0
 # end tell'
 # '''
 
+alt-enter = 'exec-and-forget open -a Alacritty'
+
+# these shortcuts have endlessly confused me. This removes them (effectively)
+cmd-h = [] # Disable "hide application"
+cmd-alt-h = [] # Disable "hide others"
+
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
