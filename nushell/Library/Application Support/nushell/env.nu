@@ -77,7 +77,6 @@ $env.PATH = ($env.PATH | split row (char esep) | prepend '/usr/local/texlive/202
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.rd/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/Kipsu/ansible-wrapper')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/usr/local/go/bin')
-$env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/go/bin')
 
 $env.GITHUB_KEY = '/Users/jharder/.ssh/docker_github'
 $env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES'

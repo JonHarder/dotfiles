@@ -432,13 +432,13 @@ $env.config = {
   }
   color_config: $base16_theme   # if you want a light theme, replace `$dark_theme` to `$light_theme`
   # color_config: $dark_theme   # if you want a light theme, replace `$dark_theme` to `$light_theme`
-  use_grid_icons: true
+  # use_grid_icons: true
   footer_mode: "25" # always, never, number_of_rows, auto
   float_precision: 2
   # buffer_editor: "emacs" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
   use_ansi_coloring: true
   edit_mode: vi # emacs, vi
-  shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
+  # shell_integration: true # enables terminal markers and a workaround to arrow keys stop working issue
   show_banner: false # true or false to enable or disable the banner
   render_right_prompt_on_last_line: true # true or false to enable or disable right prompt to be rendered on last line of the prompt.
 
