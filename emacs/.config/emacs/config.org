@@ -2302,9 +2302,21 @@
   layer that separates emacs from the motherboard).
 
   /Google specific configuration/:
-  You will need an application password (create one [[https://myaccount.google.com/apppasswords][here]])
+  You will need an application password (create one [[https://myaccount.google.com/apppasswords][here]]). I store
+  For mbsync, I store this file here: [[file:~/gmail_app_pass.gpg]]. This
+  allows us to read mail from gmail for notmuch to index.
   Save this value into a secure place, ideally encrypted. Emacs
   supports gpg encryption out of the box, so this is a good option.
+
+  In order to send mail however, we need to have a record in:
+  [[file:~/.authinfo.gpg]] with a record for googles smtp server:
+
+  #+begin_src 
+    machine smtp.gmail.com login your.email@example.com port 465 password YOUR_PASSWORD
+  #+end_src
+
+  This password must be the same as the app password created above and
+  stored previously.
 
   *NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
   remote inboxes. It runs for a time, then errors out with a socket error complaining about
