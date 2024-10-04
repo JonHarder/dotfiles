@@ -149,6 +149,8 @@ k = ['join-with up', 'mode main']
 l = ['join-with right', 'mode main']
 
 [mode.resize.binding]
-minus =       'resize smart -50'
-shift-equal = 'resize smart +50'
-esc =         'mode main'
+left =  'resize width -50'
+right = 'resize width +50'
+up =    'resize height +50'
+down =  'resize height -50'
+esc =   'mode main'
