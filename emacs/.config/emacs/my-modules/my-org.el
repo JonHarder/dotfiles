@@ -68,7 +68,7 @@
 
 (setq org-directory "~/Dropbox/notes/")
 (defvar org-work-dir (concat org-directory "/Work/"))
-(setq org-default-notes-file "~/Sync/inbox.org")
+(setq org-default-notes-file "~/Dropbox/inbox.org")
 
 (setq org-todo-keywords
       '(
@@ -115,12 +115,12 @@
 (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
 (add-to-list 'org-agenda-category-icon-alist
 	     '(".*" '(space . (:width (18)))))
-(add-to-list 'org-agenda-files "~/Sync/emacs.org")
-(add-to-list 'org-agenda-files "~/Sync/work.org")
-(add-to-list 'org-agenda-files "~/Sync/internship.org")
-(add-to-list 'org-agenda-files "~/Sync/inbox.org")
-(add-to-list 'org-agenda-files "~/Sync/personal.org")
-(add-to-list 'org-agenda-files "~/Sync/schedule.org")
+(add-to-list 'org-agenda-files "~/Dropbox/emacs.org")
+(add-to-list 'org-agenda-files "~/Dropbox/work.org")
+(add-to-list 'org-agenda-files "~/Dropbox/internship.org")
+(add-to-list 'org-agenda-files "~/Dropbox/inbox.org")
+(add-to-list 'org-agenda-files "~/Dropbox/personal.org")
+(add-to-list 'org-agenda-files "~/Dropbox/schedule.org")
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
