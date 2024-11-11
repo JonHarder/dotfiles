@@ -6,7 +6,7 @@
 (setq denote-directory my-notes-directory)
 
 (setq denote-dired-directories
-      (list (expand-file-name denote-directory)))
+  (list (expand-file-name denote-directory)))
 (setq denote-prompts '(title subdirectory keywords))
 
 (defun denote-search-content ()
@@ -28,12 +28,12 @@ the name of this person.")
 (defun my-denote-colleagues-prompt ()
   "Prompt with completion for a name among `my-denote-colleagues'"
   (let ((default-value (car my-denote-colleagues-prompt-history)))
-    (completing-read
-     (format-prompt "New meeting with COLLEAGUE" default-value)
-     my-denote-colleagues
-     nil :require-match nil
-     'my-denote-colleagues-prompt-history
-     default-value)))
+(completing-read
+ (format-prompt "New meeting with COLLEAGUE" default-value)
+ my-denote-colleagues
+ nil :require-match nil
+ 'my-denote-colleagues-prompt-history
+ default-value)))
 
 (defun my-denote-colleagues-get-file (name)
   "Find file in variable `denote-directory' for NAME colleague.
@@ -43,12 +43,12 @@ them.
 NAME is one among `my-denote-colleagues'."
   (if-let ((files (denote-directory-files name))
 	   (length-of-files (length files)))
-      (cond
-       ((= length-of-files 1)
+  (cond
+   ((= length-of-files 1)
 	(car files))
-       ((> length-of-files 1)
+   ((> length-of-files 1)
 	(completing-read "Select a file: " files nil :require-match)))
-    (user-error "No files for colleague with name `%s'" name)))
+(user-error "No files for colleague with name `%s'" name)))
 
 (defun my-denote-colleauges-new-meeting ()
   "Prompt for the name of a colleague and insert a timestamped heading therin.
@@ -61,9 +61,9 @@ Names are defined in `my-denote-colleagues'."
   (let* ((name (my-denote-colleagues-prompt))
 	 (file (my-denote-colleagues-get-file name))
 	 (time (format-time-string "%F %a %R")))
-    (with-current-buffer (find-file file)
-      (goto-char (point-max))
-      (insert (format "* [%s]\n\n" time)))))
+(with-current-buffer (find-file file)
+  (goto-char (point-max))
+  (insert (format "* [%s]\n\n" time)))))
 
 (evil-define-key 'normal 'global
   (kbd "<leader> n /") #'denote-search-content
@@ -87,13 +87,13 @@ Names are defined in `my-denote-colleagues'."
 
 (require 'denote-silo-extras)
 (let ((my-silo-dirs (list
-		     (expand-file-name
-		      "~/Dropbox/Personal")
-		     (expand-file-name
-		      "~/Dropbox/RBC/Internship/notes"))))
+		 (expand-file-name
+		  "~/Dropbox/Personal")
+		 (expand-file-name
+		  "~/Dropbox/RBC/Internship/notes"))))
   (dolist (dir my-silo-dirs)
-    (add-to-list 'denote-silo-extras-directories dir)
-    (add-to-list 'denote-dired-directories dir)))
+(add-to-list 'denote-silo-extras-directories dir)
+(add-to-list 'denote-dired-directories dir)))
 
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 

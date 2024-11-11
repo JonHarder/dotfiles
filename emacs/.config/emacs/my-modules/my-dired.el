@@ -11,58 +11,58 @@
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 (defun dired-dotfiles-toggle ()
-  (interactive)
-  (when (equal major-mode 'dired-mode)
-    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
-	(progn
-	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
-	  (message "h")
-	  (dired-mark-files-regexp "^\\\.")
-	  (dired-do-kill-lines))
-      (progn (revert-buffer)
-	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+   (interactive)
+   (when (equal major-mode 'dired-mode)
+ (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
+	 (progn
+	   (set (make-local-variable 'dired-dotfiles-show-p) nil)
+	   (message "h")
+	   (dired-mark-files-regexp "^\\\.")
+	   (dired-do-kill-lines))
+   (progn (revert-buffer)
+	  (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
-(defun dired-mark-files-extension (extension)
-  "Mark all files with the given file EXTENSION.
+ (defun dired-mark-files-extension (extension)
+   "Mark all files with the given file EXTENSION.
 
-EXTENSION should not contain the . prefix.
-When called interactively, derive the extension from the current file
-under the point in the dired buffer."
-  (interactive
-   (list (if current-prefix-arg
-	     (read-string "Extension: ")
-	   (file-name-extension (dired-get-filename))))
-   'dired-mode)
-  (dired-mark-files-regexp (concat "." extension "$")))
+ EXTENSION should not contain the . prefix.
+ When called interactively, derive the extension from the current file
+ under the point in the dired buffer."
+   (interactive
+(list (if current-prefix-arg
+	  (read-string "Extension: ")
+	(file-name-extension (dired-get-filename))))
+'dired-mode)
+   (dired-mark-files-regexp (concat "." extension "$")))
 
 (define-key dired-mode-map (kbd "SPC") nil)
-(evil-define-key '(normal motion) dired-mode-map
-  (kbd "j") #'dired-next-line
-  (kbd "k") #'dired-previous-line
-  (kbd "J") nil
-  (kbd "K") #'dired-do-kill-lines
-  (kbd "h") #'dired-up-directory
-  (kbd "l") #'dired-find-file
-  (kbd "n") #'evil-search-next
-  (kbd "e") #'dired-mark-files-extension
-  (kbd "r") #'revert-buffer
-  (kbd "N") #'evil-search-previous
-  (kbd "s") #'eshell
-  (kbd "g o") #'dired-insert-subdir
-  (kbd "g d") #'dired-kill-subdir
-  (kbd "g j") #'dired-next-subdir
-  (kbd "g k") #'dired-prev-subdir
-  (kbd ".") #'dired-dotfiles-toggle
-  (kbd "g g") #'dired-first-file
-  (kbd "G") #'dired-last-file
-  (kbd "<left>") #'dired-up-directory
-  (kbd "<right>") #'dired-find-file
-  (kbd "<up>") #'dired-previous-line
-  (kbd "<down>") #'dired-next-line
-  ;; "find" prefix functions
-  (kbd "<leader> m f f") #'dired-mark-files-regexp
-  (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
-  (kbd "<leader> m f d") #'dired-mark-directories)
+  (evil-define-key '(normal motion) dired-mode-map
+(kbd "j") #'dired-next-line
+(kbd "k") #'dired-previous-line
+(kbd "J") nil
+(kbd "K") #'dired-do-kill-lines
+(kbd "h") #'dired-up-directory
+(kbd "l") #'dired-find-file
+(kbd "n") #'evil-search-next
+(kbd "e") #'dired-mark-files-extension
+(kbd "r") #'revert-buffer
+(kbd "N") #'evil-search-previous
+(kbd "s") #'eshell
+(kbd "g o") #'dired-insert-subdir
+(kbd "g d") #'dired-kill-subdir
+(kbd "g j") #'dired-next-subdir
+(kbd "g k") #'dired-prev-subdir
+(kbd ".") #'dired-dotfiles-toggle
+(kbd "g g") #'dired-first-file
+(kbd "G") #'dired-last-file
+(kbd "<left>") #'dired-up-directory
+(kbd "<right>") #'dired-find-file
+(kbd "<up>") #'dired-previous-line
+(kbd "<down>") #'dired-next-line
+;; "find" prefix functions
+(kbd "<leader> m f f") #'dired-mark-files-regexp
+(kbd "<leader> m f g") #'dired-mark-files-containing-regexp
+(kbd "<leader> m f d") #'dired-mark-directories)
 
 (defun dired-first-file ()
   "Jump the point to the first dired entry that isn't . or .."

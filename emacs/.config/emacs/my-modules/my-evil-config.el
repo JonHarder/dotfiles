@@ -6,18 +6,18 @@
 
 (defvar my-normal-modes
   '(Info-mode
-    Man-mode
-    magit-log-mode
-    occur-mode
-    magit-revision-mode
-    git-rebase-mode
-    notmuch-hello-mode
-    notmuch-search-mode
-    notmuch-show-mode
-    ibuffer-mode
-    calendar-mode
-    org-agenda-mode
-    grep-mode)
+Man-mode
+magit-log-mode
+occur-mode
+magit-revision-mode
+git-rebase-mode
+notmuch-hello-mode
+notmuch-search-mode
+notmuch-show-mode
+ibuffer-mode
+calendar-mode
+org-agenda-mode
+grep-mode)
   "Modes for which evil should begin in normal mode.")
 
 (dolist (mode my-normal-modes)
@@ -25,8 +25,8 @@
 
 (defvar my-insert-modes
   '(vterm-mode
-    eshell-mode
-    eat-mode)
+eshell-mode
+eat-mode)
   "Modes for which evil should begin in insert mode.")
 
 (dolist (mode my-insert-modes)
@@ -39,8 +39,8 @@
   (evil-set-initial-state mode 'emacs))
 
 (setq evil-normal-state-cursor '(box "light blue")
-      evil-insert-state-cursor '(bar "medium sea green")
-      evil-visual-state-cursor '(hollow "orange"))
+  evil-insert-state-cursor '(bar "medium sea green")
+  evil-visual-state-cursor '(hollow "orange"))
 
 (evil-set-leader 'normal (kbd "<SPC>"))
 

@@ -7,6 +7,6 @@
 (straight-use-package 'all-the-icons-completion)
 (all-the-icons-completion-mode)
 (if (require 'marginalia nil nil)
-    (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 (provide 'my-icons)

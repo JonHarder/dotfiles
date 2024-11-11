@@ -2,6 +2,7 @@
       shell-file-name "/bin/zsh")
 
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+(add-to-list 'exec-path "/usr/local/go/bin")
 
 (straight-use-package 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode +1)
@@ -13,7 +14,7 @@
 (setq eshell-visual-commands nil)
 
 (setq eshell-visual-commands
-      '("vi"
+  '("vi"
 	"vim"
 	"hx"
 	"screen"
@@ -35,61 +36,61 @@
 	"elm"))
 
 (defconst pcmpl-docker-commands
-  '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
-    "search" "version" "info"
-    "compose"))
+'("run" "exec" "ps" "build" "pull" "images" "login" "logout"
+  "search" "version" "info"
+  "compose"))
 
-(defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+  (defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
 
-(defun pcmpl-docker-images ()
-  (let ((results (shell-command-to-string docker-images-command)))
-    (string-split results "\n")))
+  (defun pcmpl-docker-images ()
+(let ((results (shell-command-to-string docker-images-command)))
+  (string-split results "\n")))
 
-(defun pcomplete/docker ()
-  "Completion for `docker'."
-  (pcomplete-here* pcmpl-docker-commands)
-  (cond
-   ((pcomplete-match (regexp-opt '("run")) 1)
-    (pcomplete-here* (pcmpl-docker-images)))))
+  (defun pcomplete/docker ()
+"Completion for `docker'."
+(pcomplete-here* pcmpl-docker-commands)
+(cond
+ ((pcomplete-match (regexp-opt '("run")) 1)
+  (pcomplete-here* (pcmpl-docker-images)))))
 
 (defun eshell/f (&optional file)
-  (interactive)
-  (if file
-      (find-file file)
-    (call-interactively #'find-file)))
+(interactive)
+(if file
+	(find-file file)
+  (call-interactively #'find-file)))
 
-(defun eshell/d (&optional dir)
-  (interactive)
-  (if dir (dired dir) (dired ".")))
+  (defun eshell/d (&optional dir)
+(interactive)
+(if dir (dired dir) (dired ".")))
 
 
-(defun eshell/o (file)
-  (interactive)
-  (find-file-other-window file))
+  (defun eshell/o (file)
+(interactive)
+(find-file-other-window file))
 
-(defun eshell/pr (&optional num)
-  (interactive "n")
-  (if num
-      (shell-command "gh pr status")
-    (progn
-      (shell-command-to-string (concat "gh pr view " num))
-      (read-key)
-      (shell-command-to-string (concat "gh pr diff " num))
-      (read-key)
-      (shell-command-to-string (concat "gh pr review " num)))))
+  (defun eshell/pr (&optional num)
+(interactive "n")
+(if num
+	(shell-command "gh pr status")
+  (progn
+	(shell-command-to-string (concat "gh pr view " num))
+	(read-key)
+	(shell-command-to-string (concat "gh pr diff " num))
+	(read-key)
+	(shell-command-to-string (concat "gh pr review " num)))))
 
 (setq eshell-prompt-function
-      (lambda ()
+  (lambda ()
 	(let* ((home-path (getenv "HOME"))
-	       (dir (string-replace home-path "~" (eshell/pwd)))
-	       (branch (magit-get-current-branch)))
-	  (concat
-	   (propertize dir 'face `(:foreground "#61bfff"))
-	   (if branch
-	       (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
-		       (propertize branch 'face `(:foreground "green")))
-	     "")
-	   " $ "))))
+	   (dir (string-replace home-path "~" (eshell/pwd)))
+	   (branch (magit-get-current-branch)))
+  (concat
+   (propertize dir 'face `(:foreground "#61bfff"))
+   (if branch
+	   (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
+		   (propertize branch 'face `(:foreground "green")))
+	 "")
+   " $ "))))
 
 (setq eshell-prompt-regexp ".*$ ")
 

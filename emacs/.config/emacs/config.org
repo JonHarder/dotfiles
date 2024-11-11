@@ -92,6 +92,7 @@
       (require 'my-epub)
       (require 'my-feed)
       (require 'my-gpg)
+      (require 'my-go-mode)
       (require 'my-help)
       (require 'my-http)
       (require 'my-ibuffer)
@@ -1318,6 +1319,9 @@
     #+end_src
     
 * Programming
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (setq-default tab-width 4)
+#+end_src
 ** Prog mode
     Emacs has a general ~prog~ mode, serving as the base major mode for
     all language specific programming modes. Adding settings and hooks
@@ -1570,6 +1574,22 @@
      ;; but that results in an error, saying it can't find the installed grammar
      (provide 'my-gleam-mode)
    #+end_src
+** Golang
+   #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
+     (straight-use-package 'go-mode)
+     (setq gofmt-command "/usr/local/go/bin/gofmt")
+     (setenv "PATH"
+	     (concat
+	      "/usr/local/go/bin:"
+	      (getenv "PATH")))
+     (defun my-go-mode-hook ()
+       (when (eq major-mode 'go-mode)
+	 (gofmt-before-save)))
+     (add-hook 'before-save-hook #'my-go-mode-hook)
+     (provide 'my-go-mode)
+   #+end_src
+   
+
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
@@ -1703,7 +1723,7 @@
      (setq org-todo-keywords
 	   '(
 	     ;; For work requiring development, testing, merging, etc.
-	     (sequence "TODO(t)" "IN-PROGRESS(i)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
+	     (sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(i)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
 	     ;; Scheduling
 	     (sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
    #+end_src
@@ -2069,6 +2089,7 @@
 *** Environment variables
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
       (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+      (add-to-list 'exec-path "/usr/local/go/bin")
     #+end_src
     
 *** Settings
@@ -2243,7 +2264,8 @@
     any intermediate windows in the cycle.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-      (straight-use-package 'ace-window)
+	  (straight-use-package 'ace-window)
+	  (setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
     #+end_src
 
 *** Window management
@@ -2875,6 +2897,7 @@
        (kbd "<leader> f B") #'bookmark-set
        (kbd "<leader> f c") #'find-config
        (kbd "<leader> f f") #'find-file
+       (kbd "<leader> f r") #'rename-visited-file
        ;; magit
        (kbd "<leader> g") #'magit
        ;; help(ful) commands
@@ -2915,13 +2938,12 @@
        ;; tab commands
        (kbd "<leader> t t") #'tab-switch
        (kbd "<leader> t n") #'tab-new
-       (kbd "<leader> t c") #'tab-close
        (kbd "<leader> t j") #'tab-next
        (kbd "<leader> t k") #'tab-previous
        (kbd "<leader> t f") #'find-file-other-tab
        (kbd "<leader> t b") #'switch-to-buffer-other-tab
        (kbd "<leader> t r") #'tab-rename
-       (kbd "<leader> t d") #'dired-other-tab
+       (kbd "<leader> t d") #'tab-close
        ;; windows
        (kbd "<leader> .") #'evil-window-split
        (kbd "<leader> /") #'evil-window-vsplit

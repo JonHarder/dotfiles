@@ -1,28 +1,28 @@
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-stream-type 'tls
-      smtpmail-smtp-service 465
-      user-mail-address "jharder@kipsu.com")
+  smtpmail-smtp-server "smtp.gmail.com"
+  smtpmail-stream-type 'tls
+  smtpmail-smtp-service 465
+  user-mail-address "jharder@kipsu.com")
 
 (straight-use-package 'notmuch)
 
 ;; (straight-use-package 'ol-notmuch)
 
 (defun my-notmuch-message-mode-hook ()
-  (auto-fill-mode -1)
-  (visual-line-mode 1))
+(auto-fill-mode -1)
+(visual-line-mode 1))
 
-(add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
+  (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
 
 (setq notmuch-hello-sections
-      '(notmuch-hello-insert-saved-searches
+  '(notmuch-hello-insert-saved-searches
 	notmuch-hello-insert-search
 	notmuch-hello-insert-alltags
 	notmuch-hello-insert-footer))
 
 (setq notmuch-saved-searches
-      '((:name "attachments" :query "tag:attachment" :key "a")
+  '((:name "attachments" :query "tag:attachment" :key "a")
 	(:name "inbox" :query "tag:inbox" :key "i")
 	(:name "unread" :query "tag:unread" :key "u")
 	(:name "flagged" :query "tag:flagged" :key "f")
@@ -36,13 +36,13 @@
 (setq notmuch-search-oldest-first nil)
 
 (evil-define-key 'normal notmuch-hello-mode-map
-  (kbd "TAB") #'widget-forward
-  (kbd "RET") #'widget-button-press
-  (kbd "m") #'notmuch-mua-mail
-  (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-  (kbd "/") #'notmuch-search
-  (kbd ".") #'notmuch-jump-search
-  (kbd "q") #'notmuch-bury-or-kill-this-buffer)
+(kbd "TAB") #'widget-forward
+(kbd "RET") #'widget-button-press
+(kbd "m") #'notmuch-mua-mail
+    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+(kbd "/") #'notmuch-search
+(kbd ".") #'notmuch-jump-search
+(kbd "q") #'notmuch-bury-or-kill-this-buffer)
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))

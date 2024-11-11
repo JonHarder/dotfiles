@@ -43,6 +43,7 @@
   (kbd "<leader> f B") #'bookmark-set
   (kbd "<leader> f c") #'find-config
   (kbd "<leader> f f") #'find-file
+  (kbd "<leader> f r") #'rename-visited-file
   ;; magit
   (kbd "<leader> g") #'magit
   ;; help(ful) commands
@@ -83,13 +84,12 @@
   ;; tab commands
   (kbd "<leader> t t") #'tab-switch
   (kbd "<leader> t n") #'tab-new
-  (kbd "<leader> t c") #'tab-close
   (kbd "<leader> t j") #'tab-next
   (kbd "<leader> t k") #'tab-previous
   (kbd "<leader> t f") #'find-file-other-tab
   (kbd "<leader> t b") #'switch-to-buffer-other-tab
   (kbd "<leader> t r") #'tab-rename
-  (kbd "<leader> t d") #'dired-other-tab
+  (kbd "<leader> t d") #'tab-close
   ;; windows
   (kbd "<leader> .") #'evil-window-split
   (kbd "<leader> /") #'evil-window-vsplit
