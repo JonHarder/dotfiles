@@ -84,7 +84,8 @@ outer.right =      0
 # end tell'
 # '''
 
-alt-enter = 'exec-and-forget open -a Alacritty'
+# This binding interferes with emacs org binding to create a new heading/list item
+# alt-enter = 'exec-and-forget open -a Alacritty'
 
 # these shortcuts have endlessly confused me. This removes them (effectively)
 cmd-h = [] # Disable "hide application"
@@ -99,6 +100,8 @@ alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
+
+alt-f = 'fullscreen'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
 alt-shift-h = 'move left'
@@ -115,12 +118,18 @@ alt-s = 'workspace Slack'
 alt-e = 'workspace Emacs'
 alt-b = 'workspace Browser'
 alt-m = 'workspace Misc'
+alt-n = 'workspace Notes'
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-s = 'move-node-to-workspace Slack'
 alt-shift-e = 'move-node-to-workspace Emacs'
 alt-shift-b = 'move-node-to-workspace Browser'
 alt-shift-m = 'move-node-to-workspace Misc'
+alt-shift-n = 'move-node-to-workspace Notes'
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -149,8 +158,8 @@ k = ['join-with up', 'mode main']
 l = ['join-with right', 'mode main']
 
 [mode.resize.binding]
-left =  'resize width -50'
-right = 'resize width +50'
-up =    'resize height +50'
-down =  'resize height -50'
+l =  'resize width -50'
+h = 'resize width +50'
+k =    'resize height +50'
+j =  'resize height -50'
 esc =   'mode main'
