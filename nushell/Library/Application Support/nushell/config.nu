@@ -5,6 +5,12 @@ alias q = exit
 # alias ap = pipenv run ansible-playbook
 alias brew = /opt/homebrew/bin/brew
 
+# Git aliases
+alias gs = git status
+alias gc = git commit
+alias gd = git diff
+alias ga = git add
+
 alias justl = just -l
 
 # Terraform aliases
