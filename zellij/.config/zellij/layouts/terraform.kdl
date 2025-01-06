@@ -1,0 +1,33 @@
+layout {
+	pane size=1 borderless=true {
+		plugin location="zellij:tab-bar"
+	}
+
+	pane split_direction="vertical" {
+		pane size="20%" {
+			name "Files"
+			plugin location="zellij:strider"
+		}
+		pane size="50%" edit="main.tf"
+		pane split_direction="horizontal" stacked=true {
+			pane name="validate" {
+				command "terraform"
+				args "validate"
+			}
+			pane name="plan" {
+				start_suspended true
+				command "terraform"
+				args "plan"
+			}
+			pane name="apply" {
+				start_suspended true
+				command "terraform"
+				args "apply"
+			}
+		}
+	}
+
+	pane size=2 borderless=true {
+		plugin location="zellij:status-bar"
+	}
+}
