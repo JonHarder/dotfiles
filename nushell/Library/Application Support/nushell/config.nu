@@ -11,6 +11,12 @@ alias gc = git commit
 alias gd = git diff
 alias ga = git add
 
+alias n = nb
+
+def "gco" [] {
+  git branch | sed 's/[\* ]*//' | fzf | git checkout $in
+}
+
 alias justl = just -l
 
 # Terraform aliases
@@ -67,6 +73,26 @@ def "ecr login" [] {
 
 def "ecr run" [image, ...commands] {
   docker run -it $"($env.AWS_ACCOUNT_ID).dkr.ecr.us-east-1.amazonaws.com/($image)" $commands
+}
+
+def "ecs list-clusters" [] {
+  aws ecs list-clusters | jq '.clusterArns[] | split("/")[-1]' -r
+}
+
+def "ecs restart-cluster" [] {
+  ecs list-clusters | fzf | ecs restart-services $in
+}
+
+def "ecs list-services" [cluster: string] {
+  aws ecs list-services --cluster $cluster | jq -r '.serviceArns[] | split("/")[-1]' | lines
+}
+
+def "ecs restart-services" [cluster: string] {
+  ecs list-services $cluster | each {|service| aws ecs update-service --force-new-deployment --cluster $cluster --service $service }
+}
+
+def "devtest" [number] {
+  aws ec2 describe-instances --filters "Name=tag:ENV,Values=DevTest" --filters $"Name=tag:ROLE,Values=kipsu_devtest_($number)" | jq '.Reservations[].Instances[].PublicDnsName' -r
 }
 
 # Zellij alias

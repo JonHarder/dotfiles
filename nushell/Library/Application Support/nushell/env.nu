@@ -64,7 +64,7 @@ $env.VISUAL = "hx"
 $env.EDITOR = $env.VISUAL
 $env.GIT_EDITOR = $env.VISUAL
 
-$env.PAGER = ""
+# $env.PAGER = "less"
 
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.cargo/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.local/bin')
