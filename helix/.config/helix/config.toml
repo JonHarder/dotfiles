@@ -1,8 +1,4 @@
-# theme = "onelight"
-# theme = "catppuccin_mocha"
-# theme = "catppuccin_macchiato"
-theme = "modus_vivendi_tinted"
-# theme = "ayu_evolve"
+theme = "catppuccin_mocha"
 
 [editor]
 line-number = "relative"
@@ -45,19 +41,22 @@ C-t = [
 "{" = "goto_prev_paragraph"
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+S-s = "split_selection_on_newline"
 
 # space "mode" mappings
 [keys.normal.space]
 q = ":quit"
 
 [keys.normal.","]
-s = ":w"
+s = "split_selection"
 k = ":bc"
 d = [":bc", "wclose"] # close buffer and window
 # Open work notes
 n = [":o ~/Dropbox/Work/notes/daily.md"]
 q = ":quit"
 Q = ":quit!"
+"," = "remove_primary_selection"
+f = ':format'
 
 [keys.normal.backspace]
 r = ":sh cargo run"
