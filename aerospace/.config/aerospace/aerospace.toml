@@ -115,23 +115,27 @@ alt-shift-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-s = 'workspace Slack'
-alt-e = 'workspace Emacs'
 alt-t = 'workspace Terminal'
 alt-b = 'workspace Browser'
 alt-m = 'workspace Misc'
-alt-n = 'workspace Notes'
+alt-g = 'workspace Logseq'
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-s = 'move-node-to-workspace Slack'
-alt-shift-e = 'move-node-to-workspace Emacs'
 alt-shift-t = 'move-node-to-workspace Terminal'
 alt-shift-b = 'move-node-to-workspace Browser'
 alt-shift-m = 'move-node-to-workspace Misc'
-alt-shift-n = 'move-node-to-workspace Notes'
+alt-shift-g = 'move-node-to-workspace Logseq'
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -141,7 +145,7 @@ alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 # See: https://nikitabobko.github.io/AeroSpace/commands#mode
 alt-shift-a = 'mode admin'
 
-alt-shift-r = 'mode resize'
+alt-r = 'mode resize'
 
 # 'admin' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -160,8 +164,8 @@ k = ['join-with up', 'mode main']
 l = ['join-with right', 'mode main']
 
 [mode.resize.binding]
-l =  'resize width -50'
-h = 'resize width +50'
-k =    'resize height +50'
-j =  'resize height -50'
-esc =   'mode main'
+l =   'resize width -50'
+h =   'resize width +50'
+k =   'resize height -50'
+j =   'resize height +50'
+esc = 'mode main'

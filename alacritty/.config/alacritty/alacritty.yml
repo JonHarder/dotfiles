@@ -1,18 +1,26 @@
 font:
   normal:
-    # family: "Fira Code"
-    family: "FiraCode Nerd Font"
+    # family: "FiraCode Nerd Font"
+    family: "JetBrains Mono"
+    style: Regular
+  bold:
+    family: "JetBrains Mono"
+    style: Bold
+  italic:
+    family: "JetBrains Mono"
+    style: Italic
   size: 16.0
+
 
 # Themes cloned from https://github.com/alacritty/alacritty-theme
 # added to ~/.config/alacritty/themes
 import:
  # - ~/.config/alacritty/themes/themes/papercolor_light.yaml
  # - ~/.config/alacritty/themes/themes/one_light.yaml
- - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-macchiato.yaml
+ # - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-macchiato.yaml
+ - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-mocha.yaml
  # - ~/.config/alacritty/themes/themes/kanagawa_wave.yaml
  # - ~/.config/alacritty/themes/themes/one_dark.yaml
- # - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-mocha.yaml
 
 window:
   decorations: full
