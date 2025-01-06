@@ -141,6 +141,11 @@ keybinds {
         bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
         bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
         bind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt Ctrl f" {
+            LaunchPlugin "filepicker" {
+                close_on_selection true
+            }
+        }
         bind "Alt k" "Alt Up" { MoveFocus "Up"; }
         bind "Alt =" "Alt +" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
@@ -271,19 +276,19 @@ themes {
         white 192 202 245
         orange 255 158 100
     }
-    kanagawa {
-        fg "#DCD7BA"
-        bg "#1F1F28"
-        red "#C34043"
-        green "#76946A"
-        yellow "#FF9E3B"
-        blue "#7E9CD8"
-        magenta "#957FB8"
-        orange "#FFA066"
-        cyan "#7FB4CA"
-        black "#16161D"
-        white "#DCD7BA"
-    }
+    // kanagawa {
+    //     fg "#DCD7BA"
+    //     bg "#1F1F28"
+    //     red "#C34043"
+    //     green "#76946A"
+    //     yellow "#FF9E3B"
+    //     blue "#7E9CD8"
+    //     magenta "#957FB8"
+    //     orange "#FFA066"
+    //     cyan "#7FB4CA"
+    //     black "#16161D"
+    //     white "#DCD7BA"
+    // }
 
     molokai-dark {
         fg 248 248 240
@@ -328,14 +333,16 @@ themes {
 }
 // theme "default"
 theme "catppuccin-mocha"
-// theme "kanagawa"
+// theme "catppuccin-macciato"
+// theme "night-owl"
+theme "kanagawa"
 // theme "pencil-light"
 // theme "one-half-dark"
 
 // The name of the default layout to load on startup
 // Default: "default"
 //
-default_layout "compact"
+default_layout "minimal"
 
 // Choose the mode that zellij uses when starting up.
 // Default: normal
