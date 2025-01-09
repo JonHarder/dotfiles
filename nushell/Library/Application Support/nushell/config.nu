@@ -1,4 +1,10 @@
 # Nushell Config File
+## NB aliases
+
+alias reading = nb q 'status: in-progress' -l
+alias books = nb q 'media: book' -l
+alias articles = nb q 'media: article' -l
+alias people = nb q \#person -l
 
 alias c = clear
 alias q = exit
