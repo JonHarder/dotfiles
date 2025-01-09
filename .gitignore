@@ -1,8 +1,10 @@
+/alacritty/.config/alacritty/themes/
 /nvim/.config/nvim/plugin
 /vifm/.config/vifm/colors
 /vifm/.config/vifm/scripts
 /vifm/.config/vifm/vifm-help.txt
 /vifm/.config/vifm/vifminfo.json
+/emacs/.config/emacs/games/
 /emacs/.config/emacs/config.el
 /emacs/.config/emacs/diary
 /emacs/.config/emacs/straight
