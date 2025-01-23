@@ -3,5 +3,5 @@ inbox = tag:inbox
 archive = not tag:deleted and not tag:sent
 trash = tag:deleted
 unread = tag:unread and tag:inbox
-sent = tag:sent
-internal = tag:inbox and from:".*@kipsu[.]com" and not to:"security@kipsu[.]com"
+sent = tag:sent and not tag:deleted
+flagged = tag:flagged and not tag:deleted
