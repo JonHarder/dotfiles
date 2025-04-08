@@ -18,9 +18,9 @@ import:
  # - ~/.config/alacritty/themes/themes/papercolor_light.yaml
  # - ~/.config/alacritty/themes/themes/one_light.yaml
  # - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-macchiato.yaml
- - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-mocha.yaml
+ # - ~/.config/alacritty/themes/themes/catppuccin/catppuccin-mocha.yaml
  # - ~/.config/alacritty/themes/themes/kanagawa_wave.yaml
- # - ~/.config/alacritty/themes/themes/one_dark.yaml
+ - ~/.config/alacritty/themes/themes/one_dark.yaml
 
 window:
   decorations: full

@@ -15,7 +15,7 @@
 
 export NB_COLOR_THEME="${NB_COLOR_THEME:-unicorn}" # Set by `nb` • Tue Nov 28 16:02:13 CST 2023
 
-export NB_LIMIT=20
+export NB_LIMIT=25
 export NB_FOOTER=0
 
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}" # Set by `nb` • Mon Dec 23 08:16:14 CST 2024

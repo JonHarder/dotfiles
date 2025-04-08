@@ -10,8 +10,8 @@ IMAPStore work-remote
 Account work
 
 MaildirStore work-local
-Path ~/Mail/gmail/
-Inbox ~/Mail/gmail/INBOX
+Path ~/Mail/kipsu/
+Inbox ~/Mail/kipsu/INBOX
 Subfolders Verbatim
 
 Channel work
@@ -20,4 +20,27 @@ Near :work-local:
 Create Both
 Expunge Both
 Patterns * !"alerts" !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin" !"[Gmail]/Trash"
+SyncState *
+
+# Home account
+IMAPAccount home
+Host imap.gmail.com
+TLSType IMAPS
+AuthMechs LOGIN
+User jonharder6@gmail.com
+PassCmd "gpg -d ~/home_email_app_password.gpg"
+
+IMAPStore home-remote
+Account home
+
+MaildirStore home-local
+Path ~/mail/home/
+Inbox ~/mail/home/INBOX
+Subfolders Verbatim
+
+Channel home
+Far :home-remote:
+Near :home-local:
+Create Both
+Expunge Both
 SyncState *

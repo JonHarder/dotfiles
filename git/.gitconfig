@@ -7,8 +7,8 @@
 	autocrlf = input
     editor = hx
 
-[interactive]
-  diffFilter = difft
+# [interactive]
+#   diffFilter = difft
 
 [merge]
   conflictstyle = diff3
@@ -33,7 +33,8 @@
     # `-t difftastic` every time.
 
 	# comment this out to return to traditional diffing
-    external = difft
+    # external = difft
+	tool = difftastic
 
 [difftool]
 	prompt = false

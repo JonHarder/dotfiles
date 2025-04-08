@@ -1,6 +1,18 @@
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
 #+STARTUP: showeverything
+* Overview
+This configuration combines the documentation and organization of a
+literate config file using org mode, and the quick parsing and startup
+times of a elisp only based configuration. This is accomplished via
+~tangle~ blocks in each source block which write the code into
+dedicated elisp files.
+
+The secret to this configuration is the ~:tangle SOURCE~ syntax which
+writes the contents to the specified file. In order to keep this up to
+date, the emacs command, ~M-x org-babel-tangle~ must be ran after
+modifying this file.
+
 * Early init optimizations
 ** Disable built-in package.el
   #+begin_src emacs-lisp :tangle "early-init.el"
@@ -148,25 +160,25 @@
       #+end_src
 **** Modus themes settings
      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-       (progn ;; Modus configuration
-	 (require-theme 'modus-themes)
-	 (setq modus-themes-completions
-	       '((matches . (extrabold underline))
-		 (selection . (semibold italic))))
-	 (setq modus-themes-prompts '(bold))
-	 (setq modus-themes-bold-constructs t)
-	 (setq modus-themes-common-palette-overrides
-	       modus-themes-preset-overrides-intense)
-	 (setq modus-themes-variable-pitch-ui nil)
-	 (setq modus-themes-italic-constructs t)
-	 (setq modus-themes-org-blocks 'gray-background)
-         ;; TODO set this to nil if a non-modus theme is active?
-	 (setq modus-themes-headings
-	       '((1 . (variable-pitch 1.5))
-		 (2 . (1.3))
-		 (agenda-date . (1.3))
-		 (agenda-structure . (variable-pitch light 1.8))
-		 (t . (1.1)))))
+	   (progn ;; Modus configuration
+		 (require-theme 'modus-themes)
+		 (setq modus-themes-completions
+			   '((matches . (extrabold underline))
+				 (selection . (semibold italic))))
+		 (setq modus-themes-prompts '(bold))
+		 (setq modus-themes-bold-constructs t)
+		 (setq modus-themes-common-palette-overrides
+			   modus-themes-preset-overrides-intense)
+		 (setq modus-themes-variable-pitch-ui nil)
+		 (setq modus-themes-italic-constructs t)
+		 (setq modus-themes-org-blocks 'gray-background)
+		 ;; TODO set this to nil if a non-modus theme is active?
+		 (setq modus-themes-headings
+			   '((1 . (variable-pitch 1.5))
+				 (2 . (1.3))
+				 (agenda-date . (1.3))
+				 (agenda-structure . (variable-pitch light 1.8))
+				 (t . (1.1)))))
     #+end_src
 **** Ef-themes settings
     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
@@ -1074,15 +1086,14 @@
    lives.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-     (require 'denote-silo-extras)
-     (let ((my-silo-dirs (list
-			  (expand-file-name
-			   "~/Dropbox/Personal")
-			  (expand-file-name
-			   "~/Dropbox/RBC/Internship/notes"))))
-       (dolist (dir my-silo-dirs)
-	 (add-to-list 'denote-silo-extras-directories dir)
-	 (add-to-list 'denote-dired-directories dir)))
+	 (require 'denote-silo-extras)
+	 (let ((my-silo-dirs (mapcar (lambda file)
+								 (expand-file-name file))
+						 '("~/Dropbox/Personal"
+						   "~/Dropbox/RBC/Internship/notes")))
+	   (dolist (dir my-silo-dirs)
+		 (add-to-list 'denote-silo-extras-directories dir)
+		 (add-to-list 'denote-dired-directories dir)))
    #+end_src
 
 ** Hooks
@@ -1772,43 +1783,43 @@
     those sorts of events don't really make sense to track in org.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (setq org-tag-alist
-	    '(
-	      ;; Places
-	      ("@Work" . ?W)
-	      ("@Home" . ?H)
-	      ("@Church" . ?C)
-	      ("@Anywhere" . ?A)
+	  (setq org-tag-alist
+		'(
+		  ;; Places
+		  ("@Work" . ?W)
+		  ("@Home" . ?H)
+		  ("@Church" . ?C)
+		  ("@Anywhere" . ?A)
 
-	      ;; Devices
-	      ("@Phone" . ?P)
-	      ("@Laptop" . ?L)
+		  ;; Devices
+		  ("@Phone" . ?P)
+		  ("@Laptop" . ?L)
 
-	      ;; Types of work
-	      ("@Schedule" . ?s)
-	      ("@Review" . ?r)
-	      ("@Programming" . ?p)
-	      ("@Planning" . ?l)
-	      ("@Management" . ?g)
-	      ("@Emacs" . ?e)
-	      ("@Chore" . ?c)
-	      ("@AWS" . ?a)
-	      ("@Messaging" . ?m)
-	      ("@Writing" . ?w)))
-      (setq org-agenda-include-diary t)
-      (setq org-agenda-restore-windows-after-quit t)
-      (setq org-agenda-skip-deadline-if-done t
-	    org-agenda-skip-scheduled-if-done t)
-      (setq org-agenda-category-icon-alist nil)
-      (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
-      (add-to-list 'org-agenda-category-icon-alist
-		   '(".*" '(space . (:width (18)))))
-      (add-to-list 'org-agenda-files "~/Dropbox/emacs.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/work.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/internship.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/inbox.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/personal.org")
-      (add-to-list 'org-agenda-files "~/Dropbox/schedule.org")
+		  ;; Types of work
+		  ("@Schedule" . ?s)
+		  ("@Review" . ?r)
+		  ("@Programming" . ?p)
+		  ("@Planning" . ?l)
+		  ("@Management" . ?g)
+		  ("@Emacs" . ?e)
+		  ("@Chore" . ?c)
+		  ("@AWS" . ?a)
+		  ("@Messaging" . ?m)
+		  ("@Writing" . ?w)))
+	  (setq org-agenda-include-diary t)
+	  (setq org-agenda-restore-windows-after-quit t)
+	  (setq org-agenda-skip-deadline-if-done t
+		org-agenda-skip-scheduled-if-done t)
+	  (setq org-agenda-category-icon-alist nil)
+	  (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
+	  (add-to-list 'org-agenda-category-icon-alist
+				   '(".*" '(space . (:width (18)))))
+
+	  (let* ((file-names '("emacs" "work" "inbox" "schedule"))
+			 (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
+		(mapc (lambda (file)
+				(add-to-list 'org-agenda-files file))
+			  filepaths))
     #+end_src
 
 *** super agenda
@@ -2879,7 +2890,7 @@
        (kbd "<leader> b s") #'save-buffer
        (kbd "<leader> b i") #'ibuffer
        (kbd "<leader> b d") #'evil-delete-buffer
-       (kbd "<leader> b k") #'kill-current-buffer
+       (kbd "<leader> b c") #'kill-current-buffer
        (kbd "<leader> b r") #'rename-buffer
        ;; config related commands
        (kbd "<leader> c .") #'find-config

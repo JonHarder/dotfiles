@@ -114,13 +114,13 @@
 (setq org-agenda-category-icon-alist nil)
 (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
 (add-to-list 'org-agenda-category-icon-alist
-	 '(".*" '(space . (:width (18)))))
-(add-to-list 'org-agenda-files "~/Dropbox/emacs.org")
-(add-to-list 'org-agenda-files "~/Dropbox/work.org")
-(add-to-list 'org-agenda-files "~/Dropbox/internship.org")
-(add-to-list 'org-agenda-files "~/Dropbox/inbox.org")
-(add-to-list 'org-agenda-files "~/Dropbox/personal.org")
-(add-to-list 'org-agenda-files "~/Dropbox/schedule.org")
+			 '(".*" '(space . (:width (18)))))
+
+(let* ((file-names '("emacs" "work" "inbox" "schedule"))
+	   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
+  (mapc (lambda (file)
+		  (add-to-list 'org-agenda-files file))
+		filepaths))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups

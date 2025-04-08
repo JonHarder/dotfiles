@@ -25,7 +25,7 @@
   (kbd "<leader> b s") #'save-buffer
   (kbd "<leader> b i") #'ibuffer
   (kbd "<leader> b d") #'evil-delete-buffer
-  (kbd "<leader> b k") #'kill-current-buffer
+  (kbd "<leader> b c") #'kill-current-buffer
   (kbd "<leader> b r") #'rename-buffer
   ;; config related commands
   (kbd "<leader> c .") #'find-config

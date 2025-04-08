@@ -62,3 +62,4 @@
 (require 'my-util)
 (require 'my-vim-mode)
 (require 'my-xref)
+(put 'narrow-to-region 'disabled nil)

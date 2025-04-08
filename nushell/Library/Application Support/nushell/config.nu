@@ -1,11 +1,18 @@
 # Nushell Config File
 ## NB aliases
 
-alias reading = nb q 'status: in-progress' -l
+### Kubernetes
+alias k = kubectl
+
+def reading [--status: string = ""] {
+  echo $"status: ($status)"
+  nb q -l 'media: book' $"status: ($status)"
+}
 alias books = nb q 'media: book' -l
 alias articles = nb q 'media: article' -l
 alias people = nb q \#person -l
 
+alias l = ls
 alias c = clear
 alias q = exit
 # alias ap = pipenv run ansible-playbook
@@ -14,7 +21,8 @@ alias brew = /opt/homebrew/bin/brew
 # Git aliases
 alias gs = git status
 alias gc = git commit
-alias gd = git diff
+alias gd = git difftool
+alias gds = git diff --staged
 alias ga = git add
 
 alias n = nb

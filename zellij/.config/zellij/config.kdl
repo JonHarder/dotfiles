@@ -135,6 +135,13 @@ keybinds {
         bind "x" { CloseFocus; SwitchToMode "Normal"; }
     }
     shared_except "locked" {
+        bind "Ctrl y" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/room.wasm" {
+                floating true
+                ignore_case true
+                quick_jump true
+            }
+        }
         bind "Ctrl g" { SwitchToMode "Locked"; }
         bind "Ctrl q" { Quit; }
         bind "Alt n" { NewPane; }
@@ -332,17 +339,17 @@ themes {
     }
 }
 // theme "default"
-theme "catppuccin-mocha"
+// theme "catppuccin-mocha"
 // theme "catppuccin-macciato"
 // theme "night-owl"
-theme "kanagawa"
+theme "onedark"
 // theme "pencil-light"
 // theme "one-half-dark"
 
 // The name of the default layout to load on startup
 // Default: "default"
 //
-default_layout "minimal"
+// default_layout "minimal"
 
 // Choose the mode that zellij uses when starting up.
 // Default: normal

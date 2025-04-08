@@ -11,24 +11,24 @@
    '(org-document-title ((t (:height 2.0 :underline t))))))
 
 (progn ;; Modus configuration
-(require-theme 'modus-themes)
-(setq modus-themes-completions
-	  '((matches . (extrabold underline))
-	(selection . (semibold italic))))
-(setq modus-themes-prompts '(bold))
-(setq modus-themes-bold-constructs t)
-(setq modus-themes-common-palette-overrides
-	  modus-themes-preset-overrides-intense)
-(setq modus-themes-variable-pitch-ui nil)
-(setq modus-themes-italic-constructs t)
-(setq modus-themes-org-blocks 'gray-background)
-    ;; TODO set this to nil if a non-modus theme is active?
-(setq modus-themes-headings
-	  '((1 . (variable-pitch 1.5))
-	(2 . (1.3))
-	(agenda-date . (1.3))
-	(agenda-structure . (variable-pitch light 1.8))
-	(t . (1.1)))))
+  (require-theme 'modus-themes)
+  (setq modus-themes-completions
+		'((matches . (extrabold underline))
+		  (selection . (semibold italic))))
+  (setq modus-themes-prompts '(bold))
+  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-common-palette-overrides
+		modus-themes-preset-overrides-intense)
+  (setq modus-themes-variable-pitch-ui nil)
+  (setq modus-themes-italic-constructs t)
+  (setq modus-themes-org-blocks 'gray-background)
+  ;; TODO set this to nil if a non-modus theme is active?
+  (setq modus-themes-headings
+		'((1 . (variable-pitch 1.5))
+		  (2 . (1.3))
+		  (agenda-date . (1.3))
+		  (agenda-structure . (variable-pitch light 1.8))
+		  (t . (1.1)))))
 
 (straight-use-package 'ef-themes)
 ;; (setq ef-themes-headings ; read the manual's entry or the doc string
