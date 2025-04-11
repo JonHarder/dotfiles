@@ -205,4 +205,22 @@
 (straight-use-package 'literate-calc-mode)
 (add-hook 'org-mode-hook #'literate-calc-minor-mode)
 
+(straight-use-package '(org :type built-in))
+(straight-use-package 'org-roam)
+(setq org-roam-directory (file-truename "~/Dropbox/roam"))
+(unless (file-directory-p org-roam-directory)
+  (make-directory "~/Dropbox/roam"))
+
+(setq org-roam-dailies-directory "daily/")
+(org-roam-db-autosync-mode)
+(straight-use-package 'org-roam-ui)
+
+(evil-define-key 'normal global-map
+  (kbd "<leader> r t") #'org-roam-dailies-capture-today
+  (kbd "<leader> r d") #'org-roam-dailies-capture-date
+  (kbd "<leader> r T") #'org-roam-dailies-goto-today
+  (kbd "<leader> r f") #'org-roam-node-find
+  (kbd "<leader> r l") #'org-roam-node-insert
+  (kbd "<leader> r b") #'org-roam-buffer-toggle)
+
 (provide 'my-org)
