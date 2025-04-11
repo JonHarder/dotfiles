@@ -5,7 +5,7 @@
 	user = JonHarder
 [core]
 	autocrlf = input
-    editor = hx
+    editor = emacsclient
 
 # [interactive]
 #   diffFilter = difft

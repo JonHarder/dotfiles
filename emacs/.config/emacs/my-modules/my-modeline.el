@@ -95,129 +95,130 @@
   "Face for modeline indicators")
 
 (defun my-modeline--major-mode-name ()
-"Return the capitalized `major-mode' name."
-(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
+  "Return the capitalized `major-mode' name."
+  (capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
-  (defun my-modeline--evil-state-name-and-face ()
-"Return a symbol associated with a face to propertize the current evil state."
-(pcase evil-state
-  ('insert '("INSERT" my-modeline-evil-insert-state))
-  ('normal '("NORMAL" my-modeline-evil-normal-state))
-  ('visual '("VISUAL" my-modeline-evil-visual-state))
-  ('replace '("REPLAC" my-modeline-indicator-red))
-  ('emacs '("EMACS" my-modeline-evil-emacs-state))))
+(defun my-modeline--evil-state-name-and-face ()
+  "Return a symbol associated with a face to propertize the current evil state."
+  (pcase evil-state
+	('insert '("INSERT" my-modeline-evil-insert-state))
+	('normal '("NORMAL" my-modeline-evil-normal-state))
+	('visual '("VISUAL" my-modeline-evil-visual-state))
+	('replace '("REPLAC" my-modeline-indicator-red))
+	('emacs '("EMACS" my-modeline-evil-emacs-state))))
 
-  (defun my-modeline--buffer-name ()
-"Return the buffer's name."
-(format "%s "(buffer-name)))
+(defun my-modeline--buffer-name ()
+  "Return the buffer's name."
+  (format "%s "(buffer-name)))
 
-  (defun my-modeline--buffer-name-face ()
-(let ((file (buffer-name)))
-  (cond
-   ((and (mode-line-window-selected-p)
-	 file
-	 (buffer-modified-p))
-	'(italic underline mode-line-buffer-id))
-   ((and file (buffer-modified-p))
-	'italic)
-   ((mode-line-window-selected-p)
-	'(underline mode-line-buffer-id)))))
+(defun my-modeline--buffer-name-face ()
+  (let ((file (buffer-name)))
+	(cond
+	 ((and (mode-line-window-selected-p)
+		   file
+		   (buffer-modified-p))
+	  '(italic underline mode-line-buffer-id))
+	 ((and file (buffer-modified-p))
+	  'italic)
+	 ((mode-line-window-selected-p)
+	  '(underline mode-line-buffer-id)))))
 
-  (defun my-modeline--major-mode-indicator ()
-(let ((indicator (cond
-		  ((derived-mode-p 'text-mode) "§")
-		  ((derived-mode-p 'prog-mode) "λ")
-		  ((or (derived-mode-p 'comint-mode)
-			   (derived-mode-p 'eshell-mode))
-		   ">_"))))
-  (propertize indicator 'face 'shadow)))
+(defun my-modeline--major-mode-indicator ()
+  (let ((indicator (cond
+					((derived-mode-p 'text-mode) "§")
+					((derived-mode-p 'prog-mode) "λ")
+					((or (derived-mode-p 'comint-mode)
+						 (derived-mode-p 'eshell-mode))
+					 ">_"))))
+	(propertize indicator 'face 'shadow)))
 
-  (defun my-modeline--git-branch ()
-"Return propertized git branch."
-(when-let ((branch (car (vc-git-branches))))
-  (propertize branch 'face 'bold)))
+(defun my-modeline--git-branch ()
+  "Return propertized git branch."
+  (when-let ((branch (car (vc-git-branches))))
+	(propertize branch 'face 'bold)))
 
 (defvar-local my-modeline-remote
-  '(:eval
-	(when (file-remote-p default-directory)
-	  (propertize " @ " 'face 'my-modeline-indicator-red-bg))))
+	'(:eval
+	  (when (file-remote-p default-directory)
+		(propertize " @ " 'face 'my-modeline-indicator-red-bg))))
 
 
-  (defvar-local my-modeline-git-branch
-  '(:eval
-	(if-let (((mode-line-window-selected-p))
-		 (branch (my-modeline--git-branch)))
-	(list
-	 " "
-	 (propertize (char-to-string #xE0A0) 'face 'shadow)
-	 " "
-	 branch
-	 " "))))
+(defvar-local my-modeline-git-branch
+	'(:eval
+	  (if-let (((mode-line-window-selected-p))
+			   (branch (my-modeline--git-branch)))
+		  (list
+		   " "
+		   (propertize (char-to-string #xE0A0) 'face 'shadow)
+		   " "
+		   branch
+		   " "))))
 
-  (defvar-local my-modeline-evil-state
-  '(:eval
-	(let* ((name-face (my-modeline--evil-state-name-and-face))
-	   (name (car name-face))
-	   (face (cadr name-face)))
-	  (propertize (upcase name) 'face face))))
+(defvar-local my-modeline-evil-state
+	'(:eval
+	  (let* ((name-face (my-modeline--evil-state-name-and-face))
+			 (name (car name-face))
+			 (face (cadr name-face)))
+		(propertize (upcase name) 'face face))))
 
-  (defvar-local my-modeline-major-mode
-  '(:eval
-	(when (mode-line-window-selected-p)
+(defvar-local my-modeline-major-mode
+	'(:eval
+	  (when (mode-line-window-selected-p)
+		(list
+		 (my-modeline--major-mode-indicator)
+		 " "
+		 (propertize (my-modeline--major-mode-name)
+					 'face 'my-modeline-buffer-face)))))
+
+(defvar-local my-modeline-buffer-name
+	'(:eval
 	  (list
-	   (my-modeline--major-mode-indicator)
 	   " "
-	   (propertize (my-modeline--major-mode-name)
-		   'face 'my-modeline-buffer-face)))))
+	   (format "%s" (propertize
+					 (my-modeline--buffer-name)
+					 'face (my-modeline--buffer-name-face)))
+	   " ")))
 
-  (defvar-local my-modeline-buffer-name
-  '(:eval
-	(list
-         " "
-	 (format "%s" (propertize
-		   (my-modeline--buffer-name)
-		   'face (my-modeline--buffer-name-face)))
-	 " ")))
+(defvar-local my-modeline-date
+	'(:eval
+	  (when (mode-line-window-selected-p)
+		(let ((date-time (format-time-string "%H:%M %b %d, %Y")))
+		  (propertize date-time 'face 'underline)))))
 
-  (defvar-local my-modeline-date
-  '(:eval
-	(when (mode-line-window-selected-p)
-	  (let ((date-time (format-time-string "%H:%M %b %d, %Y")))
-	(propertize date-time 'face 'underline)))))
+(defvar-local my-modeline-pos-in-buffer
+	'(:eval
+	  (when (mode-line-window-selected-p)
+		(let ((pos (line-number-at-pos)))
+		  (list
+		   (propertize "L" 'face 'bold)
+		   (format "%s" pos)
+		   " "
+		   )))))
 
-  (defvar-local my-modeline-pos-in-buffer
-  '(:eval
-	(when (mode-line-window-selected-p)
-	  (let ((pos (line-number-at-pos)))
-	(list
-	 (propertize "L" 'face 'bold)
-	 (format "%s" pos)
-	 " "
-	 )))))
-
-  ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
-  (dolist (component '(my-modeline-git-branch
-		   my-modeline-major-mode
-		   my-modeline-buffer-name
-		   my-modeline-remote
-		   my-modeline-evil-state
-		   my-modeline-pos-in-buffer
-		   my-modeline-date))
-(put component 'risky-local-variable t))
+;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
+(dolist (component '(my-modeline-git-branch
+					 my-modeline-major-mode
+					 my-modeline-buffer-name
+					 my-modeline-remote
+					 my-modeline-evil-state
+					 my-modeline-pos-in-buffer
+					 my-modeline-date))
+  (put component 'risky-local-variable t))
 
 ;;; My mode line
-(setq mode-line-right-align-edge 'right-margin)
-(setq-default mode-line-format
-	  '("%e"
-		my-modeline-evil-state
-		my-modeline-remote
-		my-modeline-buffer-name
-		my-modeline-major-mode
-		" "
-		my-modeline-git-branch
-		" "
-                my-modeline-pos-in-buffer
-		my-modeline-date))
+;;; Disabled for now in favor of 'doom-modeline
+;; (setq mode-line-right-align-edge 'right-margin)
+;; (setq-default mode-line-format
+;; 	  '("%e"
+;; 		my-modeline-evil-state
+;; 		my-modeline-remote
+;; 		my-modeline-buffer-name
+;; 		my-modeline-major-mode
+;; 		" "
+;; 		my-modeline-git-branch
+;; 		" "
+;;                 my-modeline-pos-in-buffer
+;; 		my-modeline-date))
 
 ;;; The default mode line
 ;; (setq-default mode-line-format
@@ -230,4 +231,5 @@
 ;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
 ;; 		       mode-line-misc-info mode-line-end-spaces))
 
+(straight-use-package 'doom-modeline) 
 (provide 'my-modeline)

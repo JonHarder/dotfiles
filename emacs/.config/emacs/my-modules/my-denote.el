@@ -86,11 +86,10 @@ Names are defined in `my-denote-colleagues'."
 (add-to-list 'denote-dired-directories denote-journal-extras-directory)
 
 (require 'denote-silo-extras)
-(let ((my-silo-dirs (list
-		 (expand-file-name
-		  "~/Dropbox/Personal")
-		 (expand-file-name
-		  "~/Dropbox/RBC/Internship/notes"))))
+(let ((my-silo-dirs (mapcar (lambda (file)
+			  (expand-file-name file))
+			'("~/Dropbox/Personal"
+			  "~/Dropbox/RBC/Internship/notes"))))
   (dolist (dir my-silo-dirs)
 (add-to-list 'denote-silo-extras-directories dir)
 (add-to-list 'denote-dired-directories dir)))

@@ -116,7 +116,7 @@
 (add-to-list 'org-agenda-category-icon-alist
 			 '(".*" '(space . (:width (18)))))
 
-(let* ((file-names '("emacs" "work" "inbox" "schedule"))
+(let* ((file-names '("emacs" "work" "inbox" "schedule" "tasks"))
 	   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
   (mapc (lambda (file)
 		  (add-to-list 'org-agenda-files file))

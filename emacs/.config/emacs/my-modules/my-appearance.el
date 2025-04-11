@@ -1,4 +1,8 @@
-(straight-use-package my-theme-package)
+(setq my-theme '(doom-themes . doom-oceanic-next))
+(straight-use-package (car my-theme))
+(add-hook 'after-init-hook
+	  (lambda ()
+	(load-theme (cdr my-theme) t)))
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
@@ -49,8 +53,6 @@
   doom-themes-enable-bold t
   doom-themes-enable-italic t)
 
-(load-theme my-theme t)
-
 (menu-bar-mode 1)
 
 (scroll-bar-mode -1)
@@ -68,11 +70,14 @@
 
 (display-time)
 
-(let ((size 175))
-  (set-face-attribute 'default nil :font my-font :height size)
-  (set-frame-font my-font nil t)
-  (add-to-list 'default-frame-alist
-	   `(font . ,my-font)))
+(add-hook 'after-init-hook
+		  (lambda ()
+			(let ((size 175))
+			  (set-face-attribute 'default nil :font my-font :height size)
+			  (set-frame-font my-font nil t)
+			  (add-to-list 'default-frame-alist
+						   `(font . ,my-font))
+			  (load-theme (cdr my-theme) t))))
 
 (setq tab-bar-show 1)
 

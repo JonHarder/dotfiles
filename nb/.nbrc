@@ -18,12 +18,13 @@ export NB_COLOR_THEME="${NB_COLOR_THEME:-unicorn}" # Set by `nb` • Tue Nov 28 
 export NB_LIMIT=25
 export NB_FOOTER=0
 
-export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}" # Set by `nb` • Mon Dec 23 08:16:14 CST 2024
 
-export EDITOR="hx" # Set by `nb` • Mon Dec 23 08:17:33 CST 2024
+export EDITOR="emacsclient" # Set by `nb` • Mon Dec 23 08:17:33 CST 2024
 
 export NB_ACE_ENABLED=1
 export NB_ACE_KEYBOARD=vim
 
 # This doesn't work for some reason. It just prints gibberish to the screen.
 export NB_MARKDOWN_TOOL="glow"
+
+export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-org}" # Set by `nb` • Thu Apr 10 16:41:38 CDT 2025

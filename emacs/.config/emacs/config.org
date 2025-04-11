@@ -142,7 +142,11 @@ modifying this file.
    in any lighting situation.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (straight-use-package my-theme-package)
+     (setq my-theme '(doom-themes . doom-oceanic-next))
+     (straight-use-package (car my-theme))
+     (add-hook 'after-init-hook
+	       (lambda ()
+		 (load-theme (cdr my-theme) t)))
    #+end_src
 
 *** Settings
@@ -204,10 +208,6 @@ modifying this file.
 	     doom-themes-enable-bold t
 	     doom-themes-enable-italic t)
      #+end_src
-*** Load theme
-    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-      (load-theme my-theme t)
-   #+end_src
 
 ** Tweak display of UI elements
 *** Menu bar mode
@@ -262,11 +262,14 @@ modifying this file.
    I use FiraCode patched with the Nerd icons
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (let ((size 175))
-       (set-face-attribute 'default nil :font my-font :height size)
-       (set-frame-font my-font nil t)
-       (add-to-list 'default-frame-alist
-		    `(font . ,my-font)))
+	 (add-hook 'after-init-hook
+			   (lambda ()
+				 (let ((size 175))
+				   (set-face-attribute 'default nil :font my-font :height size)
+				   (set-frame-font my-font nil t)
+				   (add-to-list 'default-frame-alist
+								`(font . ,my-font))
+				   (load-theme (cdr my-theme) t))))
    #+end_src
 
 ** Tabs
@@ -389,151 +392,153 @@ modifying this file.
 
 ** Helper functions to return strings for display in the modeline 
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-      (defun my-modeline--major-mode-name ()
-	"Return the capitalized `major-mode' name."
-	(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
+	  (defun my-modeline--major-mode-name ()
+		"Return the capitalized `major-mode' name."
+		(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
 
-      (defun my-modeline--evil-state-name-and-face ()
-	"Return a symbol associated with a face to propertize the current evil state."
-	(pcase evil-state
-	  ('insert '("INSERT" my-modeline-evil-insert-state))
-	  ('normal '("NORMAL" my-modeline-evil-normal-state))
-	  ('visual '("VISUAL" my-modeline-evil-visual-state))
-	  ('replace '("REPLAC" my-modeline-indicator-red))
-	  ('emacs '("EMACS" my-modeline-evil-emacs-state))))
+	  (defun my-modeline--evil-state-name-and-face ()
+		"Return a symbol associated with a face to propertize the current evil state."
+		(pcase evil-state
+		  ('insert '("INSERT" my-modeline-evil-insert-state))
+		  ('normal '("NORMAL" my-modeline-evil-normal-state))
+		  ('visual '("VISUAL" my-modeline-evil-visual-state))
+		  ('replace '("REPLAC" my-modeline-indicator-red))
+		  ('emacs '("EMACS" my-modeline-evil-emacs-state))))
 
-      (defun my-modeline--buffer-name ()
-	"Return the buffer's name."
-	(format "%s "(buffer-name)))
+	  (defun my-modeline--buffer-name ()
+		"Return the buffer's name."
+		(format "%s "(buffer-name)))
 
-      (defun my-modeline--buffer-name-face ()
-	(let ((file (buffer-name)))
-	  (cond
-	   ((and (mode-line-window-selected-p)
-		 file
-		 (buffer-modified-p))
-	    '(italic underline mode-line-buffer-id))
-	   ((and file (buffer-modified-p))
-	    'italic)
-	   ((mode-line-window-selected-p)
-	    '(underline mode-line-buffer-id)))))
+	  (defun my-modeline--buffer-name-face ()
+		(let ((file (buffer-name)))
+		  (cond
+		   ((and (mode-line-window-selected-p)
+				 file
+				 (buffer-modified-p))
+			'(italic underline mode-line-buffer-id))
+		   ((and file (buffer-modified-p))
+			'italic)
+		   ((mode-line-window-selected-p)
+			'(underline mode-line-buffer-id)))))
 
-      (defun my-modeline--major-mode-indicator ()
-	(let ((indicator (cond
-			  ((derived-mode-p 'text-mode) "§")
-			  ((derived-mode-p 'prog-mode) "λ")
-			  ((or (derived-mode-p 'comint-mode)
-			       (derived-mode-p 'eshell-mode))
-			   ">_"))))
-	  (propertize indicator 'face 'shadow)))
+	  (defun my-modeline--major-mode-indicator ()
+		(let ((indicator (cond
+						  ((derived-mode-p 'text-mode) "§")
+						  ((derived-mode-p 'prog-mode) "λ")
+						  ((or (derived-mode-p 'comint-mode)
+							   (derived-mode-p 'eshell-mode))
+						   ">_"))))
+		  (propertize indicator 'face 'shadow)))
 
-      (defun my-modeline--git-branch ()
-	"Return propertized git branch."
-	(when-let ((branch (car (vc-git-branches))))
-	  (propertize branch 'face 'bold)))
+	  (defun my-modeline--git-branch ()
+		"Return propertized git branch."
+		(when-let ((branch (car (vc-git-branches))))
+		  (propertize branch 'face 'bold)))
     #+end_src
 
 ** Local variables which make up the segments of my modeline
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-      (defvar-local my-modeline-remote
-	  '(:eval
-	    (when (file-remote-p default-directory)
-	      (propertize " @ " 'face 'my-modeline-indicator-red-bg))))
+	  (defvar-local my-modeline-remote
+		  '(:eval
+			(when (file-remote-p default-directory)
+			  (propertize " @ " 'face 'my-modeline-indicator-red-bg))))
 
 
-      (defvar-local my-modeline-git-branch
-	  '(:eval
-	    (if-let (((mode-line-window-selected-p))
-		     (branch (my-modeline--git-branch)))
-		(list
-		 " "
-		 (propertize (char-to-string #xE0A0) 'face 'shadow)
-		 " "
-		 branch
-		 " "))))
+	  (defvar-local my-modeline-git-branch
+		  '(:eval
+			(if-let (((mode-line-window-selected-p))
+					 (branch (my-modeline--git-branch)))
+				(list
+				 " "
+				 (propertize (char-to-string #xE0A0) 'face 'shadow)
+				 " "
+				 branch
+				 " "))))
 
-      (defvar-local my-modeline-evil-state
-	  '(:eval
-	    (let* ((name-face (my-modeline--evil-state-name-and-face))
-		   (name (car name-face))
-		   (face (cadr name-face)))
-	      (propertize (upcase name) 'face face))))
+	  (defvar-local my-modeline-evil-state
+		  '(:eval
+			(let* ((name-face (my-modeline--evil-state-name-and-face))
+				   (name (car name-face))
+				   (face (cadr name-face)))
+			  (propertize (upcase name) 'face face))))
 
-      (defvar-local my-modeline-major-mode
-	  '(:eval
-	    (when (mode-line-window-selected-p)
-	      (list
-	       (my-modeline--major-mode-indicator)
-	       " "
-	       (propertize (my-modeline--major-mode-name)
-			   'face 'my-modeline-buffer-face)))))
+	  (defvar-local my-modeline-major-mode
+		  '(:eval
+			(when (mode-line-window-selected-p)
+			  (list
+			   (my-modeline--major-mode-indicator)
+			   " "
+			   (propertize (my-modeline--major-mode-name)
+						   'face 'my-modeline-buffer-face)))))
 
-      (defvar-local my-modeline-buffer-name
-	  '(:eval
-	    (list
-             " "
-	     (format "%s" (propertize
-			   (my-modeline--buffer-name)
-			   'face (my-modeline--buffer-name-face)))
-	     " ")))
+	  (defvar-local my-modeline-buffer-name
+		  '(:eval
+			(list
+			 " "
+			 (format "%s" (propertize
+						   (my-modeline--buffer-name)
+						   'face (my-modeline--buffer-name-face)))
+			 " ")))
 
-      (defvar-local my-modeline-date
-	  '(:eval
-	    (when (mode-line-window-selected-p)
-	      (let ((date-time (format-time-string "%H:%M %b %d, %Y")))
-		(propertize date-time 'face 'underline)))))
+	  (defvar-local my-modeline-date
+		  '(:eval
+			(when (mode-line-window-selected-p)
+			  (let ((date-time (format-time-string "%H:%M %b %d, %Y")))
+				(propertize date-time 'face 'underline)))))
 
-      (defvar-local my-modeline-pos-in-buffer
-	  '(:eval
-	    (when (mode-line-window-selected-p)
-	      (let ((pos (line-number-at-pos)))
-		(list
-		 (propertize "L" 'face 'bold)
-		 (format "%s" pos)
-		 " "
-		 )))))
+	  (defvar-local my-modeline-pos-in-buffer
+		  '(:eval
+			(when (mode-line-window-selected-p)
+			  (let ((pos (line-number-at-pos)))
+				(list
+				 (propertize "L" 'face 'bold)
+				 (format "%s" pos)
+				 " "
+				 )))))
 
-      ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
-      (dolist (component '(my-modeline-git-branch
-			   my-modeline-major-mode
-			   my-modeline-buffer-name
-			   my-modeline-remote
-			   my-modeline-evil-state
-			   my-modeline-pos-in-buffer
-			   my-modeline-date))
-	(put component 'risky-local-variable t))
+	  ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
+	  (dolist (component '(my-modeline-git-branch
+						   my-modeline-major-mode
+						   my-modeline-buffer-name
+						   my-modeline-remote
+						   my-modeline-evil-state
+						   my-modeline-pos-in-buffer
+						   my-modeline-date))
+		(put component 'risky-local-variable t))
     #+end_src
 
 ** The mode line format
      #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-       ;;; My mode line
-       (setq mode-line-right-align-edge 'right-margin)
-       (setq-default mode-line-format
-		     '("%e"
-		       my-modeline-evil-state
-		       my-modeline-remote
-		       my-modeline-buffer-name
-		       my-modeline-major-mode
-		       " "
-		       my-modeline-git-branch
-		       " "
-                       my-modeline-pos-in-buffer
-		       my-modeline-date))
+	   ;;; My mode line
+	   ;;; Disabled for now in favor of 'doom-modeline
+	   ;; (setq mode-line-right-align-edge 'right-margin)
+	   ;; (setq-default mode-line-format
+	   ;; 	  '("%e"
+	   ;; 		my-modeline-evil-state
+	   ;; 		my-modeline-remote
+	   ;; 		my-modeline-buffer-name
+	   ;; 		my-modeline-major-mode
+	   ;; 		" "
+	   ;; 		my-modeline-git-branch
+	   ;; 		" "
+	   ;;                 my-modeline-pos-in-buffer
+	   ;; 		my-modeline-date))
 
-       ;;; The default mode line
-       ;; (setq-default mode-line-format
-       ;; 		     '("%e" mode-line-front-space
-       ;; 		       (:propertize
-       ;; 			("" mode-line-mule-info mode-line-client mode-line-modified
-       ;; 			 mode-line-remote)
-       ;; 			display (min-width (5.0)))
-       ;; 		       mode-line-frame-identification mode-line-buffer-identification "   "
-       ;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
-       ;; 		       mode-line-misc-info mode-line-end-spaces))
+	   ;;; The default mode line
+	   ;; (setq-default mode-line-format
+	   ;; 		     '("%e" mode-line-front-space
+	   ;; 		       (:propertize
+	   ;; 			("" mode-line-mule-info mode-line-client mode-line-modified
+	   ;; 			 mode-line-remote)
+	   ;; 			display (min-width (5.0)))
+	   ;; 		       mode-line-frame-identification mode-line-buffer-identification "   "
+	   ;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
+	   ;; 		       mode-line-misc-info mode-line-end-spaces))
      #+end_src
 ** Provide =my-modeline=
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-      (provide 'my-modeline)
+	  (straight-use-package 'doom-modeline) 
+	  (provide 'my-modeline)
     #+end_src
 
 * Base settings
@@ -1086,14 +1091,14 @@ modifying this file.
    lives.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	 (require 'denote-silo-extras)
-	 (let ((my-silo-dirs (mapcar (lambda file)
-								 (expand-file-name file))
-						 '("~/Dropbox/Personal"
-						   "~/Dropbox/RBC/Internship/notes")))
-	   (dolist (dir my-silo-dirs)
-		 (add-to-list 'denote-silo-extras-directories dir)
-		 (add-to-list 'denote-dired-directories dir)))
+     (require 'denote-silo-extras)
+     (let ((my-silo-dirs (mapcar (lambda (file)
+				   (expand-file-name file))
+				 '("~/Dropbox/Personal"
+				   "~/Dropbox/RBC/Internship/notes"))))
+       (dolist (dir my-silo-dirs)
+	 (add-to-list 'denote-silo-extras-directories dir)
+	 (add-to-list 'denote-dired-directories dir)))
    #+end_src
 
 ** Hooks
@@ -1815,7 +1820,7 @@ modifying this file.
 	  (add-to-list 'org-agenda-category-icon-alist
 				   '(".*" '(space . (:width (18)))))
 
-	  (let* ((file-names '("emacs" "work" "inbox" "schedule"))
+	  (let* ((file-names '("emacs" "work" "inbox" "schedule" "tasks"))
 			 (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
 		(mapc (lambda (file)
 				(add-to-list 'org-agenda-files file))
@@ -2030,6 +2035,27 @@ modifying this file.
      (add-hook 'org-mode-hook #'literate-calc-minor-mode)
    #+end_src
    
+
+** org-roam
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+	 (straight-use-package '(org :type built-in))
+	 (straight-use-package 'org-roam)
+	 (setq org-roam-directory (file-truename "~/Dropbox/roam"))
+	 (unless (file-directory-p org-roam-directory)
+	   (make-directory "~/Dropbox/roam"))
+
+	 (setq org-roam-dailies-directory "daily/")
+	 (org-roam-db-autosync-mode)
+	 (straight-use-package 'org-roam-ui)
+
+	 (evil-define-key 'normal global-map
+	   (kbd "<leader> r t") #'org-roam-dailies-capture-today
+	   (kbd "<leader> r d") #'org-roam-dailies-capture-date
+	   (kbd "<leader> r T") #'org-roam-dailies-goto-today
+	   (kbd "<leader> r f") #'org-roam-node-find
+	   (kbd "<leader> r l") #'org-roam-node-insert
+	   (kbd "<leader> r b") #'org-roam-buffer-toggle)
+   #+end_src
 
 ** Provide =my-org=
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
