@@ -42,40 +42,45 @@
   (kbd "<leader> m c o") #'org-clock-out)
 
 (evil-define-key 'normal org-agenda-mode-map
-    (kbd "<leader> m c") #'org-agenda-columns
-(kbd "j") #'org-agenda-next-line
-(kbd "k") #'org-agenda-previous-line
-(kbd "RET") #'org-agenda-switch-to
-(kbd "q") #'org-agenda-quit
-(kbd ".") #'org-agenda-goto-today
-(kbd ",") #'org-agenda-priority
-(kbd "l") #'org-agenda-later
-(kbd "h") #'org-agenda-earlier
-(kbd "m") #'org-agenda-bulk-mark
-(kbd "u") #'org-agenda-bulk-unmark
-(kbd "B") #'org-agenda-bulk-action
-(kbd "g w") #'org-agenda-week-view
-(kbd "g d") #'org-agenda-day-view
-(kbd "t") #'org-agenda-todo
-(kbd "r") #'org-agenda-redo
-(kbd "s") #'org-agenda-schedule
-(kbd "d") #'org-agenda-deadline
-(kbd "/") #'org-agenda-filter
-(kbd "<") #'org-agenda-filter-by-category)
+  (kbd "<leader> m c") #'org-agenda-columns
+  (kbd "j") #'org-agenda-next-line
+  (kbd "k") #'org-agenda-previous-line
+  (kbd "RET") #'org-agenda-switch-to
+  (kbd "q") #'org-agenda-quit
+  (kbd ".") #'org-agenda-goto-today
+  (kbd ",") #'org-agenda-priority
+  (kbd "l") #'org-agenda-later
+  (kbd "h") #'org-agenda-earlier
+  (kbd "m") #'org-agenda-bulk-mark
+  (kbd "u") #'org-agenda-bulk-unmark
+  (kbd "B") #'org-agenda-bulk-action
+  (kbd "g w") #'org-agenda-week-view
+  (kbd "g d") #'org-agenda-day-view
+  (kbd "t") #'org-agenda-todo
+  (kbd "r") #'org-agenda-redo
+  (kbd "s") #'org-agenda-schedule
+  (kbd "d") #'org-agenda-deadline
+  (kbd "/") #'org-agenda-filter
+  (kbd "<") #'org-agenda-filter-by-category)
 
 (with-eval-after-load 'org
   (require 'org-tempo))
 
-(setq org-directory "~/Dropbox/notes/")
-(defvar org-work-dir (concat org-directory "/Work/"))
-(setq org-default-notes-file "~/Dropbox/inbox.org")
+(setq org-directory "~/Dropbox/gtd/")
+(defvar org-work-dir (concat org-directory "/zettelkasten/work"))
+(setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
 
 (setq org-todo-keywords
-  '(
-	;; For work requiring development, testing, merging, etc.
-	(sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(i)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
-	;; Scheduling
-	(sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
+	  '(
+		(sequence
+		 "TODO(t)"
+		 "NEXT(n)"
+		 "WAIT(w)"
+		 "IN-PROGRESS(i)"
+		 "BLOCKED(b)"
+		 "REVIEW(r)"
+		 "|"
+		 "DONE(d)")))
 
 (setq org-image-actual-width nil)
 
@@ -84,43 +89,88 @@
 (setq org-priority-highest ?A
   org-priority-lowest ?D)
 
+(setq org-agenda-custom-commands
+	  '(("g" "GTD Review"
+		 ((agenda ""
+				  ((org-agenda-overriding-header "Planned and upcoming")
+				   (org-agenda-span 'week)))
+		  (tags "+proj-archive+LEVEL=1" ((org-agenda-overriding-header "Active Projects")))
+		  (tags "-delegate+TODO=\"IN-PROGRESS\"" ((org-agenda-overriding-header "In Progress")))
+		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+		  (todo "WAIT|REVIEW" ((org-agenda-overriding-header "Waiting...")))
+		  (tags "+delegate-TODO=\"DONE\""
+				((org-agenda-overriding-header "Delegated")))
+		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
+				((org-agenda-overriding-header "One Off Tasks")
+				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
+		("d" "GTD Daily View"
+		 ((agenda ""
+				  ((org-agenda-overriding-header "Today")
+				   (org-agenda-span 1)))
+		  (tags "TODO=\"IN-PROGRESS\""
+				((org-agenda-overriding-header "In Progress")))
+		  (tags "TODO=\"NEXT\""
+				((org-agenda-overriding-header "Next Actions")))))))
+
+(setq org-agenda-time-grid
+	  '((daily today require-timed remove-match)
+		(800 1000 1200 1400 1600 1800 2000)
+		" ┄┄┄┄┄ "
+		"┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+
+(setq org-stuck-projects
+	  '("+proj-archive+LEVEL=1/-DONE" ("NEXT") nil ""))
+
+(setq org-refile-targets
+	  '((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
+		(("~/Dropbox/gtd/someday.org") . (:level . 1))
+		(org-agenda-files . (:tag . "proj"))))
+
 (setq org-tag-alist
-  '(
-	;; Places
-	("@Work" . ?W)
-	("@Home" . ?H)
-	("@Church" . ?C)
-	("@Anywhere" . ?A)
+	  '((:startgroup)
+		("proj" . ?p)
+		("area" . ?a)
+		(:endgroup)
 
-	;; Devices
-	("@Phone" . ?P)
-	("@Laptop" . ?L)
+		;; mental/emotional level
+		(:startgroup)
+		("@lowenergy" . ?l)
+		("@highenergy" . ?h)
+		(:endgroup)
 
-	;; Types of work
-	("@Schedule" . ?s)
-	("@Review" . ?r)
-	("@Programming" . ?p)
-	("@Planning" . ?l)
-	("@Management" . ?g)
-	("@Emacs" . ?e)
-	("@Chore" . ?c)
-	("@AWS" . ?a)
-	("@Messaging" . ?m)
-	("@Writing" . ?w)))
+		;; locations
+		(:startgroup)
+		("@Church" . ?C)
+		("@Work" . ?W)
+		("@Home" . ?H)
+		("@Anywhere" . ?A)
+		("@Outsize" . ?O)
+		(:endgroup)
+
+		;; devices
+		(:startgroup)
+		("@Laptop" . ?L)
+		("@Phone" . ?P)
+		(:endgroup)))
+
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (setq org-agenda-skip-deadline-if-done t
-  org-agenda-skip-scheduled-if-done t)
+	  org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-category-icon-alist nil)
 (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
 (add-to-list 'org-agenda-category-icon-alist
 			 '(".*" '(space . (:width (18)))))
 
-(let* ((file-names '("emacs" "work" "inbox" "schedule" "tasks"))
-	   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
+(let* ((file-names '("inbox" "oneoff" "schedule"))
+	   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/gtd/" f ".org")) file-names)))
   (mapc (lambda (file)
 		  (add-to-list 'org-agenda-files file))
 		filepaths))
+(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten"))
+(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/work"))
+(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/personal"))
+(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/church"))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
@@ -131,8 +181,19 @@
 
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 (setq org-capture-templates
-  '(("t" "Todo" entry (file+headline "" "Inbox")
-	 "* TODO %?\n %i\n %a")))
+	  '(("f" "Fleeting note" plain
+		 (file+headline org-default-notes-file "Notes")
+		 "- %?")
+		("p" "Permanent note" plain
+		 (file denote-last-path)
+		 #'denote-org-capture
+		 :no-save t
+		 :immediate-finish nil
+		 :kill-buffer t
+		 :jump-to-captured t)
+		("t" "New Task" entry
+		 (file+headline org-default-notes-file "Tasks")
+		 "* TODO %i%?")))
 
 (setq org-structure-template-alist
   '(("s" . "src")
@@ -193,34 +254,16 @@
 ;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
 
 (org-babel-do-load-languages
-'org-babel-load-languages
-'((emacs-lisp . t)
-  (python . t)
-  (calc . t)
-  (shell . t)))
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (calc . t)
+   (shell . t)))
 
 (straight-use-package 'toc-org)
 (add-hook 'org-mode-hook 'toc-org-mode)
 
 (straight-use-package 'literate-calc-mode)
 (add-hook 'org-mode-hook #'literate-calc-minor-mode)
-
-(straight-use-package '(org :type built-in))
-(straight-use-package 'org-roam)
-(setq org-roam-directory (file-truename "~/Dropbox/roam"))
-(unless (file-directory-p org-roam-directory)
-  (make-directory "~/Dropbox/roam"))
-
-(setq org-roam-dailies-directory "daily/")
-(org-roam-db-autosync-mode)
-(straight-use-package 'org-roam-ui)
-
-(evil-define-key 'normal global-map
-  (kbd "<leader> r t") #'org-roam-dailies-capture-today
-  (kbd "<leader> r d") #'org-roam-dailies-capture-date
-  (kbd "<leader> r T") #'org-roam-dailies-goto-today
-  (kbd "<leader> r f") #'org-roam-node-find
-  (kbd "<leader> r l") #'org-roam-node-insert
-  (kbd "<leader> r b") #'org-roam-buffer-toggle)
 
 (provide 'my-org)

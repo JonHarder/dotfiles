@@ -87,51 +87,51 @@ modifying this file.
 
 ** Require all my modules
     #+begin_src emacs-lisp :tangle "init.el"
-      (require 'my-appearance)
-      (require 'my-modeline)
-      (require 'my-core)
-      (require 'my-evil-config)
-      (require 'my-bindings)
+	  (require 'my-appearance)
+	  (require 'my-modeline)
+	  (require 'my-core)
+	  (require 'my-evil-config)
+	  (require 'my-bindings)
 
-      (require 'my-calendar)
-      (require 'my-completion)
-      (require 'my-tree-sitter)
-      (require 'my-denote)
-      (require 'my-dired)
-      (require 'my-docker-mode)
-      (require 'my-ediff)
-      (require 'my-email)
-      (require 'my-epub)
-      (require 'my-feed)
-      (require 'my-gpg)
-      (require 'my-go-mode)
-      (require 'my-help)
-      (require 'my-http)
-      (require 'my-ibuffer)
-      (require 'my-icons)
-      (require 'my-lisp-mode)
-      (require 'my-git)
-      (require 'my-markup)
-      (require 'my-navigation)
-      (require 'my-nushell-mode)
-      (require 'my-org)
-      (require 'my-php-mode)
-      (require 'my-prog-mode)
-      (require 'my-python-mode)
-      (require 'my-rest-mode)
-      (require 'my-gleam-mode)
-      (require 'my-spotify)
-      (require 'my-text)
-      (require 'my-just)
+	  (require 'my-calendar)
+	  (require 'my-completion)
+	  (require 'my-tree-sitter)
+	  (require 'my-denote)
+	  (require 'my-dired)
+	  (require 'my-docker-mode)
+	  (require 'my-ediff)
+	  (require 'my-email)
+	  (require 'my-epub)
+	  (require 'my-feed)
+	  (require 'my-gpg)
+	  (require 'my-go-mode)
+	  (require 'my-help)
+	  (require 'my-http)
+	  (require 'my-ibuffer)
+	  (require 'my-icons)
+	  (require 'my-lisp-mode)
+	  (require 'my-git)
+	  (require 'my-markup)
+	  (require 'my-navigation)
+	  (require 'my-web)
+	  (require 'my-nushell-mode)
+	  (require 'my-org)
+	  (require 'my-php-mode)
+	  (require 'my-prog-mode)
+	  (require 'my-python-mode)
+	  (require 'my-rest-mode)
+	  (require 'my-gleam-mode)
+	  (require 'my-text)
+	  (require 'my-just)
 
-      (require 'my-rust-mode)
-      (require 'my-search)
-      (require 'my-shells)
-      (require 'my-typst)
-      (require 'my-terraform-mode)
-      (require 'my-util)
-      (require 'my-vim-mode)
-      (require 'my-xref)
+	  (require 'my-rust-mode)
+	  (require 'my-search)
+	  (require 'my-shells)
+	  (require 'my-typst)
+	  (require 'my-terraform-mode)
+	  (require 'my-util)
+	  (require 'my-vim-mode)
+	  (require 'my-xref)
     #+end_src
 
 * Appearance
@@ -142,10 +142,10 @@ modifying this file.
    in any lighting situation.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (setq my-theme '(doom-themes . doom-oceanic-next))
-     (straight-use-package (car my-theme))
-     (add-hook 'after-init-hook
-	       (lambda ()
+	 (setq my-theme '(doom-themes . doom-gruvbox))
+	 (straight-use-package (car my-theme))
+	 (add-hook 'after-init-hook
+		   (lambda ()
 		 (load-theme (cdr my-theme) t)))
    #+end_src
 
@@ -293,101 +293,101 @@ modifying this file.
 * mode line
 ** Faces for the modeline
    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-     ;; TODO: update faces to make this prettier
-     ;; how do you work off of the color palette of the current theme?
-     (defface my-modeline-mode-face
-       '((t :background "grey50" :foreground "white" :inherit bold))
-       "Face for the major mode when displayed in the modeline.")
+	 ;; TODO: update faces to make this prettier
+	 ;; how do you work off of the color palette of the current theme?
+	 (defface my-modeline-mode-face
+	   '((t :background "grey50" :foreground "white" :inherit bold))
+	   "Face for the major mode when displayed in the modeline.")
 
-     (defface my-modeline-buffer-face
-       '((t :inherit bold))
-       "Face for displaying the buffer name on the modeline.")
+	 (defface my-modeline-buffer-face
+	   '((t :inherit bold))
+	   "Face for displaying the buffer name on the modeline.")
 
-     (defface my-modeline-evil-replace-state
-       '((t :background "red"))
-       "Face to indicate the current evil state is replace.")
-     (defface my-modeline-evil-emacs-state
-       '((t :background "purple"))
-       "Face to indicate the current evil state is Emacs.")
+	 (defface my-modeline-evil-replace-state
+	   '((t :background "red"))
+	   "Face to indicate the current evil state is replace.")
+	 (defface my-modeline-evil-emacs-state
+	   '((t :background "purple"))
+	   "Face to indicate the current evil state is Emacs.")
 
-     (defface my-modeline-evil-insert-state
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :background "#6a1aaf" :foreground "black")
-	 (((class color) (min-colors 88) (background dark))
-	  :background "#e0a0ff" :foreground "black")
-	 (t :background "magenta" :foreground "black"))
-       "Face for insert mode indicator.")
+	 (defface my-modeline-evil-insert-state
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :background "#6a1aaf" :foreground "black")
+		 (((class color) (min-colors 88) (background dark))
+		  :background "#e0a0ff" :foreground "black")
+		 (t :background "magenta" :foreground "black"))
+	   "Face for insert mode indicator.")
 
-     (defface my-modeline-evil-normal-state
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :background "#005f00" :foreground "black")
-	 (((class color) (min-colors 88) (background dark))
-	  :background "#73fa7f" :foreground "black")
-	 (t :background "green" :foreground "black"))
-       "Face for normal mode indicator.")
+	 (defface my-modeline-evil-normal-state
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :background "#005f00" :foreground "black")
+		 (((class color) (min-colors 88) (background dark))
+		  :background "#73fa7f" :foreground "black")
+		 (t :background "green" :foreground "black"))
+	   "Face for normal mode indicator.")
 
-     (defface my-modeline-evil-visual-state
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :background "#6f4000" :foreground "black")
-	 (((class color) (min-colors 88) (background dark))
-	  :background "#f0c526" :foreground "black")
-	 (t :background "yellow" :foreground "black"))
-       "Face for normal mode indicator.")
+	 (defface my-modeline-evil-visual-state
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :background "#6f4000" :foreground "black")
+		 (((class color) (min-colors 88) (background dark))
+		  :background "#f0c526" :foreground "black")
+		 (t :background "yellow" :foreground "black"))
+	   "Face for normal mode indicator.")
 
-     (defface my-modeline-indicator-red-bg
-       '((default :inherit bold)
-	 (((class color) (min-colors 88))
-	  :foreground "white" :background "red"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-red-bg
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88))
+		  :foreground "white" :background "red"))
+	   "Face for modeline indicators")
 
-     (defface my-modeline-indicator-blue
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :foreground "#00228a")
-	 (((class color) (min-colors 88) (background dark))
-	  :foreground "#880bfff")
-	 (t :foreground "blue"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-blue
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :foreground "#00228a")
+		 (((class color) (min-colors 88) (background dark))
+		  :foreground "#880bfff")
+		 (t :foreground "blue"))
+	   "Face for modeline indicators")
 
-     (defface my-modeline-indicator-green
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :foreground "#005f00")
-	 (((class color) (min-colors 88) (background dark))
-	  :foreground "#73fa7f")
-	 (t :foreground "green"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-green
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :foreground "#005f00")
+		 (((class color) (min-colors 88) (background dark))
+		  :foreground "#73fa7f")
+		 (t :foreground "green"))
+	   "Face for modeline indicators")
 
-     (defface my-modeline-indicator-red
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :foreground "#880000")
-	 (((class color) (min-colors 88) (background dark))
-	  :foreground "#ff9f9f")
-	 (t :foreground "red"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-red
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :foreground "#880000")
+		 (((class color) (min-colors 88) (background dark))
+		  :foreground "#ff9f9f")
+		 (t :foreground "red"))
+	   "Face for modeline indicators")
 
 
-     (defface my-modeline-indicator-magenta
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :foreground "#6a1aaf")
-	 (((class color) (min-colors 88) (background dark))
-	  :foreground "#e0a0ff")
-	 (t :foreground "magenta"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-magenta
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :foreground "#6a1aaf")
+		 (((class color) (min-colors 88) (background dark))
+		  :foreground "#e0a0ff")
+		 (t :foreground "magenta"))
+	   "Face for modeline indicators")
 
-     (defface my-modeline-indicator-yellow
-       '((default :inherit bold)
-	 (((class color) (min-colors 88) (background light))
-	  :foreground "#6f4000")
-	 (((class color) (min-colors 88) (background dark))
-	  :foreground "#f0c526")
-	 (t :foreground "yellow"))
-       "Face for modeline indicators")
+	 (defface my-modeline-indicator-yellow
+	   '((default :inherit bold)
+		 (((class color) (min-colors 88) (background light))
+		  :foreground "#6f4000")
+		 (((class color) (min-colors 88) (background dark))
+		  :foreground "#f0c526")
+		 (t :foreground "yellow"))
+	   "Face for modeline indicators")
    #+end_src
 
 ** Helper functions to return strings for display in the modeline 
@@ -538,6 +538,8 @@ modifying this file.
 ** Provide =my-modeline=
     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
 	  (straight-use-package 'doom-modeline) 
+	  (setq doom-modeline-height 35)
+	  (doom-modeline-mode 1)
 	  (provide 'my-modeline)
     #+end_src
 
@@ -618,24 +620,24 @@ modifying this file.
 
 *** Normal modes
    #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (defvar my-normal-modes
-       '(Info-mode
-	 Man-mode
-	 magit-log-mode
-	 occur-mode
-	 magit-revision-mode
-	 git-rebase-mode
-	 notmuch-hello-mode
-	 notmuch-search-mode
-	 notmuch-show-mode
-	 ibuffer-mode
-	 calendar-mode
-	 org-agenda-mode
-	 grep-mode)
-       "Modes for which evil should begin in normal mode.")
+	 (defvar my-normal-modes
+	   '(Info-mode
+		 Man-mode
+		 magit-log-mode
+		 occur-mode
+		 magit-revision-mode
+		 git-rebase-mode
+		 notmuch-hello-mode
+		 notmuch-search-mode
+		 notmuch-show-mode
+		 ibuffer-mode
+		 calendar-mode
+		 org-agenda-mode
+		 grep-mode)
+	   "Modes for which evil should begin in normal mode.")
 
-     (dolist (mode my-normal-modes)
-       (evil-set-initial-state mode 'normal))
+	 (dolist (mode my-normal-modes)
+	   (evil-set-initial-state mode 'normal))
   #+end_src
 
 *** Insert modes
@@ -966,32 +968,19 @@ modifying this file.
     (provide 'my-ediff)
   #+end_src
   
-* Spotify
-#+begin_src emacs-lisp :tangle "my-modules/my-spotify.el" :mkdirp yes
-  (straight-use-package 'smudge)
-
-  (defun load-spotify-credentials ()
-    (interactive)
-    (load "~/spotify.el.gpg"))
-
-  (evil-define-key 'normal smudge-track-search-mode-map
-    (kbd "RET") #'smudge-track-select)
-
-  (provide 'my-spotify)
-#+end_src
 * Denote
 ** Basic settings
   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-    (straight-use-package 'denote)
+	(straight-use-package 'denote)
 
-    (denote-rename-buffer-mode 1)
-    (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
+	(denote-rename-buffer-mode 1)
+	(setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-    (setq denote-directory my-notes-directory)
+	(setq denote-directory my-notes-directory)
 
-    (setq denote-dired-directories
-	  (list (expand-file-name denote-directory)))
-    (setq denote-prompts '(title subdirectory keywords))
+	(setq denote-dired-directories-include-subdirectories t
+		  denote-dired-directories (list denote-directory))
+	(setq denote-prompts '(title subdirectory keywords))
   #+end_src
 
 ** Helper functions
@@ -1056,17 +1045,18 @@ modifying this file.
 ** Bindings
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-     (evil-define-key 'normal 'global
-       (kbd "<leader> n /") #'denote-search-content
-       (kbd "<leader> n J") #'denote-journal-extras-new-entry
-       (kbd "<leader> n b") #'denote-backlinks
-       (kbd "<leader> n d") #'denote-dired
-       (kbd "<leader> n f") #'denote-open-or-create
-       (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
-       (kbd "<leader> n l") #'denote-link
-       (kbd "<leader> n n") #'denote
-       (kbd "<leader> n r") #'denote-rename-file
-       (kbd "<leader> n s") #'denote-signature)
+	 (evil-define-key 'normal 'global
+	   (kbd "<leader> n /") #'denote-search-content
+	   (kbd "<leader> n J") #'denote-journal-extras-new-entry
+	   (kbd "<leader> n b") #'denote-backlinks
+	   (kbd "<leader> n d") #'denote-dired
+	   (kbd "<leader> n f") #'denote-open-or-create
+	   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+	   (kbd "<leader> n l") #'denote-link
+	   (kbd "<leader> n n") #'denote
+	   (kbd "<leader> n r") #'denote-rename-file
+	   (kbd "<leader> n s") #'denote-signature
+	   (kbd "<leader> n t") #'denote-template)
    #+end_src
 
    And for the specialized ~backlinks-mode~ to display all links to the current
@@ -1091,14 +1081,13 @@ modifying this file.
    lives.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-     (require 'denote-silo-extras)
-     (let ((my-silo-dirs (mapcar (lambda (file)
-				   (expand-file-name file))
-				 '("~/Dropbox/Personal"
-				   "~/Dropbox/RBC/Internship/notes"))))
-       (dolist (dir my-silo-dirs)
-	 (add-to-list 'denote-silo-extras-directories dir)
-	 (add-to-list 'denote-dired-directories dir)))
+	 ;; (require 'denote-silo-extras)
+	 ;; (let ((my-silo-dirs (mapcar (lambda (file)
+	 ;; 							  (expand-file-name file))
+	 ;; 							'("~/Dropbox/Personal"))))
+	 ;;   (dolist (dir my-silo-dirs)
+	 ;; 	(add-to-list 'denote-silo-extras-directories dir)
+	 ;; 	(add-to-list 'denote-dired-directories dir)))
    #+end_src
 
 ** Hooks
@@ -1106,6 +1095,34 @@ modifying this file.
     (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
    #+end_src
 
+** Templates
+    Denote allows for defining templates when creating a new note. The
+    selected template will pre-fill the newly created note.
+
+	#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+	  (setq denote-templates
+			`((onboarding . ,(concat "* Onboarding Tasks\n"
+									 "  - [ ] Welcome, office tour\n"
+									 "  - [ ] Get laptop (Ada)\n"
+									 "  - [ ] Kipsu Platform Architecture\n"
+									 "    - https://kipsudev.atlassian.net/wiki/spaces/EN/pages/3145105581/-+Architecture\n"
+									 "  - [ ] Set up local environment\n"
+									 "  - [ ] Get peripherals\n"
+									 "  - [ ] PagerDuty Access\n"
+									 "  - [ ] Account access\n"
+									 "    - AUDIT ticket\n"
+									 "    - github\n"
+									 "    - aws\n"
+									 "    - jira\n"
+									 "    - confluence"))
+			  (journal . ,(concat "* Daily habits\n"
+								  "  - [[denote:20250423T155338][Be Still and Wonder]]\n\n"
+								  "* Notes\n\n"
+								  "* Meetings\n"))
+			  (person . ,(concat "* Relationships\n\n"
+								 "* Prayer requests\n\n"
+								 "* Meetings\n"))))
+	#+end_src
 ** Provide the module
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
     (provide 'my-denote)
@@ -1390,6 +1407,14 @@ modifying this file.
 		    `(terraform-mode . ("terraform-ls" "serve"))))
    #+end_src
 
+   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+	 (with-eval-after-load 'eglot
+	   (evil-define-key 'normal prog-mode-map
+		 (kbd "<leader> r d") #'eglot-find-declaration
+		 ;; #'eglot-find-implementation is already handled by embark
+		 (kbd "<leader> r r") #'xref-find-references))
+   #+end_src
+
 *** Highlight TODO statements
 
    #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
@@ -1604,8 +1629,6 @@ modifying this file.
      (add-hook 'before-save-hook #'my-go-mode-hook)
      (provide 'my-go-mode)
    #+end_src
-   
-
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
@@ -1691,27 +1714,27 @@ modifying this file.
 
 *** Agenda mappings
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (evil-define-key 'normal org-agenda-mode-map
-        (kbd "<leader> m c") #'org-agenda-columns
-	(kbd "j") #'org-agenda-next-line
-	(kbd "k") #'org-agenda-previous-line
-	(kbd "RET") #'org-agenda-switch-to
-	(kbd "q") #'org-agenda-quit
-	(kbd ".") #'org-agenda-goto-today
-	(kbd ",") #'org-agenda-priority
-	(kbd "l") #'org-agenda-later
-	(kbd "h") #'org-agenda-earlier
-	(kbd "m") #'org-agenda-bulk-mark
-	(kbd "u") #'org-agenda-bulk-unmark
-	(kbd "B") #'org-agenda-bulk-action
-	(kbd "g w") #'org-agenda-week-view
-	(kbd "g d") #'org-agenda-day-view
-	(kbd "t") #'org-agenda-todo
-	(kbd "r") #'org-agenda-redo
-	(kbd "s") #'org-agenda-schedule
-	(kbd "d") #'org-agenda-deadline
-	(kbd "/") #'org-agenda-filter
-	(kbd "<") #'org-agenda-filter-by-category)
+	  (evil-define-key 'normal org-agenda-mode-map
+		(kbd "<leader> m c") #'org-agenda-columns
+		(kbd "j") #'org-agenda-next-line
+		(kbd "k") #'org-agenda-previous-line
+		(kbd "RET") #'org-agenda-switch-to
+		(kbd "q") #'org-agenda-quit
+		(kbd ".") #'org-agenda-goto-today
+		(kbd ",") #'org-agenda-priority
+		(kbd "l") #'org-agenda-later
+		(kbd "h") #'org-agenda-earlier
+		(kbd "m") #'org-agenda-bulk-mark
+		(kbd "u") #'org-agenda-bulk-unmark
+		(kbd "B") #'org-agenda-bulk-action
+		(kbd "g w") #'org-agenda-week-view
+		(kbd "g d") #'org-agenda-day-view
+		(kbd "t") #'org-agenda-todo
+		(kbd "r") #'org-agenda-redo
+		(kbd "s") #'org-agenda-schedule
+		(kbd "d") #'org-agenda-deadline
+		(kbd "/") #'org-agenda-filter
+		(kbd "<") #'org-agenda-filter-by-category)
     #+end_src
 
 ** Settings
@@ -1729,19 +1752,24 @@ modifying this file.
    act globally, such as [[*Org capture][org-capture]].
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-directory "~/Dropbox/notes/")
-     (defvar org-work-dir (concat org-directory "/Work/"))
-     (setq org-default-notes-file "~/Dropbox/inbox.org")
+     (setq org-directory "~/Dropbox/gtd/")
+     (defvar org-work-dir (concat org-directory "/zettelkasten/work"))
+     (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
    #+end_src
 
    Setting todo states
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-todo-keywords
-	   '(
-	     ;; For work requiring development, testing, merging, etc.
-	     (sequence "TODO(t)" "NEXT(n)" "IN-PROGRESS(i)" "BLOCKED(b)" "REVIEW(r)" "|" "DONE(d)")
-	     ;; Scheduling
-	     (sequence "SCHEDULE(s)" "CONFLICTED(c)" "|" "DONE(d)")))
+	 (setq org-todo-keywords
+		   '(
+			 (sequence
+			  "TODO(t)"
+			  "NEXT(n)"
+			  "WAIT(w)"
+			  "IN-PROGRESS(i)"
+			  "BLOCKED(b)"
+			  "REVIEW(r)"
+			  "|"
+			  "DONE(d)")))
    #+end_src
    
 
@@ -1767,19 +1795,55 @@ modifying this file.
 	   org-priority-lowest ?D)
    #+end_src
 
-
 ** Org agenda
-#+begin_src emacs-lisp
+*** Custom commands
+    These commands show up in the org-agenda view and will produce
+    lists of org headings matching a variety of criteria.
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-agenda-custom-commands
-	'(("p" "Planning"
-	   ((tags-todo "+@Planning")
-	    (tags-todo "-{.*}")))))
-  (setq org-agenda-time-grid
-	'((daily today require-timed remove-match)
-	  (800 1000 1200 1400 1600 1800 2000)
-	  " ┄┄┄┄┄ "
-	  "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+		'(("g" "GTD Review"
+		   ((agenda ""
+					((org-agenda-overriding-header "Planned and upcoming")
+					 (org-agenda-span 'week)))
+			(tags "+proj-archive+LEVEL=1" ((org-agenda-overriding-header "Active Projects")))
+			(tags "-delegate+TODO=\"IN-PROGRESS\"" ((org-agenda-overriding-header "In Progress")))
+			(tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+			(todo "WAIT|REVIEW" ((org-agenda-overriding-header "Waiting...")))
+			(tags "+delegate-TODO=\"DONE\""
+				  ((org-agenda-overriding-header "Delegated")))
+			(tags "-delegate+CATEGORY=\"oneoff\"/TODO"
+				  ((org-agenda-overriding-header "One Off Tasks")
+				   (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
+		  ("d" "GTD Daily View"
+		   ((agenda ""
+					((org-agenda-overriding-header "Today")
+					 (org-agenda-span 1)))
+			(tags "TODO=\"IN-PROGRESS\""
+				  ((org-agenda-overriding-header "In Progress")))
+			(tags "TODO=\"NEXT\""
+				  ((org-agenda-overriding-header "Next Actions")))))))
 #+end_src
+
+*** agenda view settings
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+	(setq org-agenda-time-grid
+		  '((daily today require-timed remove-match)
+			(800 1000 1200 1400 1600 1800 2000)
+			" ┄┄┄┄┄ "
+			"┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
+#+end_src
+
+*** Stuck projects
+     A stuck project is a project which has no identified "next"
+     action on it. Using my "getting things done" system, this means a
+     project is one which has the tag "proj" and a task with the
+     "NEXT" todo state.
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-stuck-projects
+		'("+proj-archive+LEVEL=1/-DONE" ("NEXT") nil ""))
+#+end_src
+
+
 *** basic settings
     Org agenda is cool. It tries to create a day/week/month planner out of any tasks
     or scheduled events it can find in `org-agenda-files'.
@@ -1787,49 +1851,75 @@ modifying this file.
     I want it to pull in appointments or reminders from the diary as well since
     those sorts of events don't really make sense to track in org.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  (setq org-tag-alist
-		'(
-		  ;; Places
-		  ("@Work" . ?W)
-		  ("@Home" . ?H)
-		  ("@Church" . ?C)
-		  ("@Anywhere" . ?A)
+*** Refile targets
 
-		  ;; Devices
-		  ("@Phone" . ?P)
-		  ("@Laptop" . ?L)
+	#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+	  (setq org-refile-targets
+			'((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
+			  (("~/Dropbox/gtd/someday.org") . (:level . 1))
+			  (org-agenda-files . (:tag . "proj"))))
+	#+end_src
 
-		  ;; Types of work
-		  ("@Schedule" . ?s)
-		  ("@Review" . ?r)
-		  ("@Programming" . ?p)
-		  ("@Planning" . ?l)
-		  ("@Management" . ?g)
-		  ("@Emacs" . ?e)
-		  ("@Chore" . ?c)
-		  ("@AWS" . ?a)
-		  ("@Messaging" . ?m)
-		  ("@Writing" . ?w)))
-	  (setq org-agenda-include-diary t)
-	  (setq org-agenda-restore-windows-after-quit t)
-	  (setq org-agenda-skip-deadline-if-done t
-		org-agenda-skip-scheduled-if-done t)
-	  (setq org-agenda-category-icon-alist nil)
-	  (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
-	  (add-to-list 'org-agenda-category-icon-alist
-				   '(".*" '(space . (:width (18)))))
+*** Tag list
 
-	  (let* ((file-names '("emacs" "work" "inbox" "schedule" "tasks"))
-			 (filepaths (mapcar (lambda (f) (concat "~/Dropbox/" f ".org")) file-names)))
-		(mapc (lambda (file)
-				(add-to-list 'org-agenda-files file))
-			  filepaths))
+    These tags allow you to select from a list of these predefined
+    tags using single-key shortcuts (if provided) to toggle tags from
+    a heading.
+
+	  #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+		(setq org-tag-alist
+			  '((:startgroup)
+				("proj" . ?p)
+				("area" . ?a)
+				(:endgroup)
+
+				;; mental/emotional level
+				(:startgroup)
+				("@lowenergy" . ?l)
+				("@highenergy" . ?h)
+				(:endgroup)
+
+				;; locations
+				(:startgroup)
+				("@Church" . ?C)
+				("@Work" . ?W)
+				("@Home" . ?H)
+				("@Anywhere" . ?A)
+				("@Outsize" . ?O)
+				(:endgroup)
+
+				;; devices
+				(:startgroup)
+				("@Laptop" . ?L)
+				("@Phone" . ?P)
+				(:endgroup)))
+
+		(setq org-agenda-include-diary t)
+		(setq org-agenda-restore-windows-after-quit t)
+		(setq org-agenda-skip-deadline-if-done t
+			  org-agenda-skip-scheduled-if-done t)
+		(setq org-agenda-category-icon-alist nil)
+		(setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
+		(add-to-list 'org-agenda-category-icon-alist
+					 '(".*" '(space . (:width (18)))))
+
+		(let* ((file-names '("inbox" "oneoff" "schedule"))
+			   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/gtd/" f ".org")) file-names)))
+		  (mapc (lambda (file)
+				  (add-to-list 'org-agenda-files file))
+				filepaths))
+		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten"))
+		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/work"))
+		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/personal"))
+		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/church"))
     #+end_src
 
 *** super agenda
     NOTE: this package recipe appears to be broken
     currently. Something about the version of org is wrong.
+
+	*NOTE*: Maybe since I pinned the org version to the local one this
+     should work better?
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
       ;; (straight-use-package 'org-super-agenda)
       ;; (setq org-super-agenda-groups
@@ -1838,7 +1928,6 @@ modifying this file.
       ;; 	       :time-grid t
       ;; 	       :todo '("TODO" "WORKING"))))
     #+end_src
-    
 
 ** Org capture
 
@@ -1863,10 +1952,21 @@ modifying this file.
    the variable ~org-capture-templates~.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (add-hook 'org-capture-mode-hook 'evil-insert-state)
-     (setq org-capture-templates
-	   '(("t" "Todo" entry (file+headline "" "Inbox")
-	      "* TODO %?\n %i\n %a")))
+	 (add-hook 'org-capture-mode-hook 'evil-insert-state)
+	 (setq org-capture-templates
+		   '(("f" "Fleeting note" plain
+			  (file+headline org-default-notes-file "Notes")
+			  "- %?")
+			 ("p" "Permanent note" plain
+			  (file denote-last-path)
+			  #'denote-org-capture
+			  :no-save t
+			  :immediate-finish nil
+			  :kill-buffer t
+			  :jump-to-captured t)
+			 ("t" "New Task" entry
+			  (file+headline org-default-notes-file "Tasks")
+			  "* TODO %i%?")))
    #+end_src
 
 ** Org structures
@@ -2002,12 +2102,12 @@ modifying this file.
 *** Enabling more languages
 
      #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-       (org-babel-do-load-languages
-	'org-babel-load-languages
-	'((emacs-lisp . t)
-	  (python . t)
-	  (calc . t)
-	  (shell . t)))
+	   (org-babel-do-load-languages
+		'org-babel-load-languages
+		'((emacs-lisp . t)
+		  (python . t)
+		  (calc . t)
+		  (shell . t)))
      #+end_src
 
 ** toc-org
@@ -2035,28 +2135,6 @@ modifying this file.
      (add-hook 'org-mode-hook #'literate-calc-minor-mode)
    #+end_src
    
-
-** org-roam
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	 (straight-use-package '(org :type built-in))
-	 (straight-use-package 'org-roam)
-	 (setq org-roam-directory (file-truename "~/Dropbox/roam"))
-	 (unless (file-directory-p org-roam-directory)
-	   (make-directory "~/Dropbox/roam"))
-
-	 (setq org-roam-dailies-directory "daily/")
-	 (org-roam-db-autosync-mode)
-	 (straight-use-package 'org-roam-ui)
-
-	 (evil-define-key 'normal global-map
-	   (kbd "<leader> r t") #'org-roam-dailies-capture-today
-	   (kbd "<leader> r d") #'org-roam-dailies-capture-date
-	   (kbd "<leader> r T") #'org-roam-dailies-goto-today
-	   (kbd "<leader> r f") #'org-roam-node-find
-	   (kbd "<leader> r l") #'org-roam-node-insert
-	   (kbd "<leader> r b") #'org-roam-buffer-toggle)
-   #+end_src
-
 ** Provide =my-org=
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (provide 'my-org)
@@ -2292,7 +2370,6 @@ modifying this file.
  
 * Navigation
 ** Windows
-
 *** ace-window
 
     Ace window is a handy way to supercharge `other-window' by giving
@@ -2342,6 +2419,19 @@ modifying this file.
     (provide 'my-navigation)
   #+end_src
 
+* Web Browsing
+   this is mostly for eww
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+	 (evil-define-key 'normal eww-mode-map
+	   (kbd "q") #'quit-window
+	   (kbd "H") #'eww-back-url
+	   (kbd "L") #'eww-forward-url
+	   (kbd "<leader> m b") #'eww-switch-to-buffer
+	   ;; (kbd "g") #'eww
+	   )
+	 (provide 'my-web)
+   #+end_src
 * Email
 ** Mail server/client setup
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
@@ -2907,8 +2997,6 @@ modifying this file.
        (kbd "<leader> a a") #'org-agenda
        (kbd "<leader> a n") #'notmuch
        (kbd "<leader> a =") #'calc
-       ;;; spotify
-       (kbd "<leader> a s") #'smudge-command-map
        ;; buffers
        (kbd "<leader> b b") #'consult-buffer
        (kbd "<leader> b n") #'next-buffer
@@ -3032,6 +3120,10 @@ modifying this file.
    
 * Xref
 ** Bindings
+*** xref mode map
+    these bindings are for when I'm actually in an xref buffer,
+    viewing results.
+	
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
      (evil-define-key 'normal xref--xref-buffer-mode-map
        (kbd "j") #'xref-next-line
@@ -3039,6 +3131,10 @@ modifying this file.
        (kbd "RET") #'xref-goto-xref
        (kbd "q") #'quit-window)
    #+end_src
+
+*** entry points to xref
+    These are used for kicking off xref queries such as, go to
+    definition, go to references, etc.
 
 ** Provide =my-xref=
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes

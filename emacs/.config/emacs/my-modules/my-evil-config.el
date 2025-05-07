@@ -6,18 +6,18 @@
 
 (defvar my-normal-modes
   '(Info-mode
-Man-mode
-magit-log-mode
-occur-mode
-magit-revision-mode
-git-rebase-mode
-notmuch-hello-mode
-notmuch-search-mode
-notmuch-show-mode
-ibuffer-mode
-calendar-mode
-org-agenda-mode
-grep-mode)
+	Man-mode
+	magit-log-mode
+	occur-mode
+	magit-revision-mode
+	git-rebase-mode
+	notmuch-hello-mode
+	notmuch-search-mode
+	notmuch-show-mode
+	ibuffer-mode
+	calendar-mode
+	org-agenda-mode
+	grep-mode)
   "Modes for which evil should begin in normal mode.")
 
 (dolist (mode my-normal-modes)

@@ -1,4 +1,4 @@
-(setq my-theme '(doom-themes . doom-oceanic-next))
+(setq my-theme '(doom-themes . doom-gruvbox))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
 	  (lambda ()

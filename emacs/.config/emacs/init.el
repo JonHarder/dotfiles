@@ -43,6 +43,7 @@
 (require 'my-git)
 (require 'my-markup)
 (require 'my-navigation)
+(require 'my-web)
 (require 'my-nushell-mode)
 (require 'my-org)
 (require 'my-php-mode)
@@ -50,7 +51,6 @@
 (require 'my-python-mode)
 (require 'my-rest-mode)
 (require 'my-gleam-mode)
-(require 'my-spotify)
 (require 'my-text)
 (require 'my-just)
 
