@@ -3,6 +3,9 @@
 (straight-use-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+(straight-use-package 'lsp-mode)
+(straight-use-package 'lsp-ui)
+
 (defvar menu-bar-project-menu '())
 
 (add-hook 'eglot-managed-mode-hook

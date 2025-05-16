@@ -3,11 +3,20 @@
 (denote-rename-buffer-mode 1)
 (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-(setq denote-directory my-notes-directory)
+(setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
 
 (setq denote-dired-directories-include-subdirectories t
-	  denote-dired-directories (list denote-directory))
+	  denote-dired-directories (list denote-directory gtd-projects-directory))
 (setq denote-prompts '(title subdirectory keywords))
+
+(defun create-meeting-note (person)
+  (interactive (let ((people-files (denote-directory-files "_person" t t)))
+				 (list (completing-read
+						"Person:"
+						(mapcar (lambda (f)
+								  (denote-retrieve-title-or-filename f 'org))
+								people-files)))))
+  (denote person '("meeting") 'org))
 
 (defun denote-search-content ()
   (interactive)
@@ -74,6 +83,7 @@ Names are defined in `my-denote-colleagues'."
   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link
   (kbd "<leader> n n") #'denote
+  (kbd "<leader> n m") #'create-meeting-note
   (kbd "<leader> n r") #'denote-rename-file
   (kbd "<leader> n s") #'denote-signature
   (kbd "<leader> n t") #'denote-template)

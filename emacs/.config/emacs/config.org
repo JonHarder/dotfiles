@@ -1,6 +1,6 @@
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
-#+STARTUP: showeverything
+#+STARTUP: fold
 * Overview
 This configuration combines the documentation and organization of a
 literate config file using org mode, and the quick parsing and startup
@@ -96,6 +96,7 @@ modifying this file.
 	  (require 'my-calendar)
 	  (require 'my-completion)
 	  (require 'my-tree-sitter)
+	  (require 'my-gtd)
 	  (require 'my-denote)
 	  (require 'my-dired)
 	  (require 'my-docker-mode)
@@ -968,6 +969,18 @@ modifying this file.
     (provide 'my-ediff)
   #+end_src
   
+* Getting Things Done (GTD)
+#+begin_src emacs-lisp :tangle "my-modules/my-gtd.el" :mkdirp yes
+  (defvar gtd-directory (expand-file-name "~/Dropbox/gtd")
+	"The directory my 'Getting Things Done' system is stored in")
+
+  (defvar gtd-projects-directory (concat gtd-directory "/projects")
+	"The directory holding gtd project files.
+
+  By default it is based off of the location of `gtd-directory'")
+
+  (provide 'my-gtd)
+#+end_src
 * Denote
 ** Basic settings
   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
@@ -976,34 +989,43 @@ modifying this file.
 	(denote-rename-buffer-mode 1)
 	(setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-	(setq denote-directory my-notes-directory)
+	(setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
 
 	(setq denote-dired-directories-include-subdirectories t
-		  denote-dired-directories (list denote-directory))
+		  denote-dired-directories (list denote-directory gtd-projects-directory))
 	(setq denote-prompts '(title subdirectory keywords))
   #+end_src
 
 ** Helper functions
   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-    (defun denote-search-content ()
-      (interactive)
-      (consult-ripgrep denote-directory))
+	(defun create-meeting-note (person)
+	  (interactive (let ((people-files (denote-directory-files "_person" t t)))
+					 (list (completing-read
+							"Person:"
+							(mapcar (lambda (f)
+									  (denote-retrieve-title-or-filename f 'org))
+									people-files)))))
+	  (denote person '("meeting") 'org))
 
-    (defun denote-dired ()
-      (interactive)
-      (dired denote-directory))
+	(defun denote-search-content ()
+	  (interactive)
+	  (consult-ripgrep denote-directory))
 
-    (defvar my-denote-colleagues '("austin-reese" "jordan-carr" "peter-bajurny" "othman-smihi" "brian-merz" "molly-schroeder")
-      "List of names I collaborate with.
-    There is at least one file in the variable `denote-directory' that has
-    the name of this person.")
+	(defun denote-dired ()
+	  (interactive)
+	  (dired denote-directory))
 
-    (defvar my-denote-colleagues-prompt-history nil
-      "Minibuffer history for `my-denote-colleagues-new-meeting'.")
+	(defvar my-denote-colleagues '("austin-reese" "jordan-carr" "peter-bajurny" "othman-smihi" "brian-merz" "molly-schroeder")
+	  "List of names I collaborate with.
+	There is at least one file in the variable `denote-directory' that has
+	the name of this person.")
 
-    (defun my-denote-colleagues-prompt ()
-      "Prompt with completion for a name among `my-denote-colleagues'"
-      (let ((default-value (car my-denote-colleagues-prompt-history)))
+	(defvar my-denote-colleagues-prompt-history nil
+	  "Minibuffer history for `my-denote-colleagues-new-meeting'.")
+
+	(defun my-denote-colleagues-prompt ()
+	  "Prompt with completion for a name among `my-denote-colleagues'"
+	  (let ((default-value (car my-denote-colleagues-prompt-history)))
 	(completing-read
 	 (format-prompt "New meeting with COLLEAGUE" default-value)
 	 my-denote-colleagues
@@ -1011,32 +1033,32 @@ modifying this file.
 	 'my-denote-colleagues-prompt-history
 	 default-value)))
 
-    (defun my-denote-colleagues-get-file (name)
-      "Find file in variable `denote-directory' for NAME colleague.
-    If there is more than one file, prompt with completion for one among
-    them.
+	(defun my-denote-colleagues-get-file (name)
+	  "Find file in variable `denote-directory' for NAME colleague.
+	If there is more than one file, prompt with completion for one among
+	them.
 
-    NAME is one among `my-denote-colleagues'."
-      (if-let ((files (denote-directory-files name))
-	       (length-of-files (length files)))
+	NAME is one among `my-denote-colleagues'."
+	  (if-let ((files (denote-directory-files name))
+		   (length-of-files (length files)))
 	  (cond
 	   ((= length-of-files 1)
-	    (car files))
+		(car files))
 	   ((> length-of-files 1)
-	    (completing-read "Select a file: " files nil :require-match)))
+		(completing-read "Select a file: " files nil :require-match)))
 	(user-error "No files for colleague with name `%s'" name)))
 
-    (defun my-denote-colleauges-new-meeting ()
-      "Prompt for the name of a colleague and insert a timestamped heading therin.
-    The name of a colleague corresponds to at least one file in the variable `denote-directory'.
-    In case there are multiple files, prompt to choose one among them and operate therin.
+	(defun my-denote-colleauges-new-meeting ()
+	  "Prompt for the name of a colleague and insert a timestamped heading therin.
+	The name of a colleague corresponds to at least one file in the variable `denote-directory'.
+	In case there are multiple files, prompt to choose one among them and operate therin.
 
-    Names are defined in `my-denote-colleagues'."
-      (declare (interactive-only t))
-      (interactive)
-      (let* ((name (my-denote-colleagues-prompt))
-	     (file (my-denote-colleagues-get-file name))
-	     (time (format-time-string "%F %a %R")))
+	Names are defined in `my-denote-colleagues'."
+	  (declare (interactive-only t))
+	  (interactive)
+	  (let* ((name (my-denote-colleagues-prompt))
+		 (file (my-denote-colleagues-get-file name))
+		 (time (format-time-string "%F %a %R")))
 	(with-current-buffer (find-file file)
 	  (goto-char (point-max))
 	  (insert (format "* [%s]\n\n" time)))))
@@ -1054,6 +1076,7 @@ modifying this file.
 	   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
 	   (kbd "<leader> n l") #'denote-link
 	   (kbd "<leader> n n") #'denote
+	   (kbd "<leader> n m") #'create-meeting-note
 	   (kbd "<leader> n r") #'denote-rename-file
 	   (kbd "<leader> n s") #'denote-signature
 	   (kbd "<leader> n t") #'denote-template)
@@ -1371,6 +1394,11 @@ modifying this file.
       (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
     #+end_src
 
+*** LSP (Language Server Protocol)
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (straight-use-package 'lsp-mode)
+  (straight-use-package 'lsp-ui)
+#+end_src
 *** Eglot
 
    Language server client implimentation. Comes baked into emacs starting
@@ -1753,7 +1781,6 @@ modifying this file.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-directory "~/Dropbox/gtd/")
-     (defvar org-work-dir (concat org-directory "/zettelkasten/work"))
      (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
    #+end_src
 
@@ -1805,12 +1832,18 @@ modifying this file.
 		   ((agenda ""
 					((org-agenda-overriding-header "Planned and upcoming")
 					 (org-agenda-span 'week)))
-			(tags "+proj-archive+LEVEL=1" ((org-agenda-overriding-header "Active Projects")))
-			(tags "-delegate+TODO=\"IN-PROGRESS\"" ((org-agenda-overriding-header "In Progress")))
-			(tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
-			(todo "WAIT|REVIEW" ((org-agenda-overriding-header "Waiting...")))
+			(tags "+proj+actions-archive+LEVEL=1"
+				  ((org-agenda-overriding-header "Active Projects")))
+			(tags "-delegate+TODO=\"IN-PROGRESS\""
+				  ((org-agenda-overriding-header "In Progress")))
 			(tags "+delegate-TODO=\"DONE\""
 				  ((org-agenda-overriding-header "Delegated")))
+			(todo "WAIT|REVIEW"
+				  ((org-agenda-overriding-header "Waiting...")))
+			(tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+			;; Is this last section really even needed?
+			;; update: yes, this is helpful for the review step.
+            ;; athe daily view should be used for the engage step.
 			(tags "-delegate+CATEGORY=\"oneoff\"/TODO"
 				  ((org-agenda-overriding-header "One Off Tasks")
 				   (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
@@ -1842,7 +1875,6 @@ modifying this file.
   (setq org-stuck-projects
 		'("+proj-archive+LEVEL=1/-DONE" ("NEXT") nil ""))
 #+end_src
-
 
 *** basic settings
     Org agenda is cool. It tries to create a day/week/month planner out of any tasks
@@ -1903,15 +1935,8 @@ modifying this file.
 		(add-to-list 'org-agenda-category-icon-alist
 					 '(".*" '(space . (:width (18)))))
 
-		(let* ((file-names '("inbox" "oneoff" "schedule"))
-			   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/gtd/" f ".org")) file-names)))
-		  (mapc (lambda (file)
-				  (add-to-list 'org-agenda-files file))
-				filepaths))
-		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten"))
-		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/work"))
-		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/personal"))
-		(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/church"))
+		(add-to-list 'org-agenda-files org-directory)
+		(add-to-list 'org-agenda-files gtd-projects-directory)
     #+end_src
 
 *** super agenda

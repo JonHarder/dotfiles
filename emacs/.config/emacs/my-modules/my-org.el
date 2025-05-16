@@ -67,7 +67,6 @@
   (require 'org-tempo))
 
 (setq org-directory "~/Dropbox/gtd/")
-(defvar org-work-dir (concat org-directory "/zettelkasten/work"))
 (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
 
 (setq org-todo-keywords
@@ -94,12 +93,18 @@
 		 ((agenda ""
 				  ((org-agenda-overriding-header "Planned and upcoming")
 				   (org-agenda-span 'week)))
-		  (tags "+proj-archive+LEVEL=1" ((org-agenda-overriding-header "Active Projects")))
-		  (tags "-delegate+TODO=\"IN-PROGRESS\"" ((org-agenda-overriding-header "In Progress")))
-		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
-		  (todo "WAIT|REVIEW" ((org-agenda-overriding-header "Waiting...")))
+		  (tags "+proj+actions-archive+LEVEL=1"
+				((org-agenda-overriding-header "Active Projects")))
+		  (tags "-delegate+TODO=\"IN-PROGRESS\""
+				((org-agenda-overriding-header "In Progress")))
 		  (tags "+delegate-TODO=\"DONE\""
 				((org-agenda-overriding-header "Delegated")))
+		  (todo "WAIT|REVIEW"
+				((org-agenda-overriding-header "Waiting...")))
+		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+		  ;; Is this last section really even needed?
+		  ;; update: yes, this is helpful for the review step.
+          ;; athe daily view should be used for the engage step.
 		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
 				((org-agenda-overriding-header "One Off Tasks")
 				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
@@ -162,15 +167,8 @@
 (add-to-list 'org-agenda-category-icon-alist
 			 '(".*" '(space . (:width (18)))))
 
-(let* ((file-names '("inbox" "oneoff" "schedule"))
-	   (filepaths (mapcar (lambda (f) (concat "~/Dropbox/gtd/" f ".org")) file-names)))
-  (mapc (lambda (file)
-		  (add-to-list 'org-agenda-files file))
-		filepaths))
-(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten"))
-(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/work"))
-(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/personal"))
-(add-to-list 'org-agenda-files (concat denote-directory "/zettelkasten/church"))
+(add-to-list 'org-agenda-files org-directory)
+(add-to-list 'org-agenda-files gtd-projects-directory)
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
