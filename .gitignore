@@ -25,3 +25,7 @@
 /emacs/.config/emacs/tree-sitter/
 /emacs/.config/emacs/elpa/
 /emacs/.config/emacs/forge-database.sqlite
+.DS_Store
+org-roam.db
+.lsp-session-v1
+.org-id-locations
