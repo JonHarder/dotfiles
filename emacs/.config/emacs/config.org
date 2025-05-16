@@ -606,11 +606,12 @@ modifying this file.
 ** Install the package and enable it
 
   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-    (straight-use-package 'evil)
-    (setq evil-vsplit-window-right t)
-    (setq evil-split-window-below t)
-    (setq evil-undo-system 'undo-redo)
-    (evil-mode 1)
+	(setq evil-want-keybinding nil)
+	(straight-use-package 'evil)
+	(setq evil-vsplit-window-right t)
+	(setq evil-split-window-below t)
+	(setq evil-undo-system 'undo-redo)
+	(evil-mode 1)
   #+end_src
 
 ** Starting state for major modes
@@ -701,6 +702,15 @@ modifying this file.
   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
     (evil-set-leader 'normal (kbd "<SPC>"))
   #+end_src
+
+** Evil collection
+    This enables evil bindings for many, many modes. Many more than
+    what the default evil installation includes support for.i
+
+	#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+	  (straight-use-package 'evil-collection)
+	  (evil-collection-init)
+	#+end_src
 
 ** Evil surround
   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
@@ -999,7 +1009,7 @@ modifying this file.
 ** Helper functions
   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
 	(defun denote-meeting (person)
-	  (interactive (let ((people-files (denote-directory-files "_person" t t)))
+	  (interactive (let ((people-files (denote-directory-files "_person" nil t)))
 					 (list (completing-read
 							"Person:"
 							(mapcar (lambda (f)

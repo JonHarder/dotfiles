@@ -10,7 +10,7 @@
 (setq denote-prompts '(title subdirectory keywords))
 
 (defun denote-meeting (person)
-  (interactive (let ((people-files (denote-directory-files "_person" t t)))
+  (interactive (let ((people-files (denote-directory-files "_person" nil t)))
 				 (list (completing-read
 						"Person:"
 						(mapcar (lambda (f)
@@ -75,6 +75,7 @@
 							   "    - confluence"))
 		(journal . ,(concat "* Daily habits\n"
 							"  - [[denote:20250423T155338][Be Still and Wonder]]\n\n"
+							"  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
 							"* Notes\n\n"
 							"* Meetings\n"))
 		(person . ,(concat "* Relationships\n\n"

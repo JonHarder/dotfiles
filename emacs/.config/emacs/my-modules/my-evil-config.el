@@ -1,3 +1,4 @@
+(setq evil-want-keybinding nil)
 (straight-use-package 'evil)
 (setq evil-vsplit-window-right t)
 (setq evil-split-window-below t)
@@ -43,6 +44,9 @@ eat-mode)
   evil-visual-state-cursor '(hollow "orange"))
 
 (evil-set-leader 'normal (kbd "<SPC>"))
+
+(straight-use-package 'evil-collection)
+(evil-collection-init)
 
 (straight-use-package 'evil-surround)
 (global-evil-surround-mode 1)
