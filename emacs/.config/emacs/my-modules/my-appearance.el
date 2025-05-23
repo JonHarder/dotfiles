@@ -1,4 +1,4 @@
-(setq my-theme '(doom-themes . doom-gruvbox))
+(setq my-theme '(catppuccin-theme . catppuccin))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
 	  (lambda ()
