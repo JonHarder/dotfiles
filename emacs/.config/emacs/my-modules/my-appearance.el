@@ -1,4 +1,4 @@
-(setq my-theme '(catppuccin-theme . catppuccin))
+(setq my-theme '(modus-themes . modus-vivendi))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
 	  (lambda ()
