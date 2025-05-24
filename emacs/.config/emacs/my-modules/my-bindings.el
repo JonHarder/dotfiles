@@ -100,6 +100,7 @@
   (kbd "<leader> w v") #'evil-window-vsplit
   (kbd "<leader> w s") #'evil-window-split
   (kbd "<leader> w o") #'delete-other-windows
+  (kbd "<leader> w =") #'balance-windows
   ;; toggles
   (kbd "<leader> T t") #'modus-themes-toggle
   (kbd "<leader> T n") #'display-line-numbers-mode
