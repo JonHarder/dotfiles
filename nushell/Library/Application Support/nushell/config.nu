@@ -18,6 +18,9 @@ alias q = exit
 # alias ap = pipenv run ansible-playbook
 alias brew = /opt/homebrew/bin/brew
 
+# JJ (jujutsu) alias
+alias j = jj
+
 # Git aliases
 alias gs = git status
 alias gc = git commit
