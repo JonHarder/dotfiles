@@ -2193,43 +2193,50 @@ modifying this file.
 ** Eshell
 *** Environment variables
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
-      (add-to-list 'exec-path "/usr/local/go/bin")
+	  (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+	  (add-to-list 'exec-path "/usr/local/go/bin")
     #+end_src
-    
+
+*** hook
+    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+	  (add-hook 'eshell-mode-hook
+				(lambda ()
+				  (setenv "TERM" "eterm")))
+
+    #+end_src
 *** Settings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (straight-use-package 'eshell-syntax-highlighting)
-      (eshell-syntax-highlighting-global-mode +1)
-      (require 'eshell)
-      ;; (require 'em-smart)
-      (setq eshell-where-to-jump 'begin)
-      (setq eshell-review-quick-commands nil)
-      (setq eshell-smart-space-goes-to-end nil)
-      (setq eshell-visual-commands nil)
+	  (straight-use-package 'eshell-syntax-highlighting)
+	  (eshell-syntax-highlighting-global-mode +1)
+	  (require 'eshell)
+	  ;; (require 'em-smart)
+	  (setq eshell-where-to-jump 'begin)
+	  (setq eshell-review-quick-commands nil)
+	  (setq eshell-smart-space-goes-to-end nil)
+	  (setq eshell-visual-commands nil)
 
-      (setq eshell-visual-commands
-	    '("vi"
-	      "vim"
-	      "hx"
-	      "screen"
-	      "nvim"
-              "bacon"
-	      ;; "gh"
-	      "tmux"
-	      "top"
-	      "htop"
-	      "less"
-	      "more"
-	      "lynx"
-	      "links"
-	      "ncftp"
-	      "mutt"
-	      "pine"
-	      "tin"
-	      "trn"
-	      "elm"))
+	  (setq eshell-visual-commands
+		'("vi"
+		  "vim"
+		  "hx"
+		  "screen"
+		  "nvim"
+			  "bacon"
+		  ;; "gh"
+		  "tmux"
+		  "top"
+		  "htop"
+		  "less"
+		  "more"
+		  "lynx"
+		  "links"
+		  "ncftp"
+		  "mutt"
+		  "pine"
+		  "tin"
+		  "trn"
+		  "elm"))
     #+end_src
 
 *** Completion
@@ -2262,31 +2269,31 @@ modifying this file.
     #+end_src
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (defun eshell/f (&optional file)
-	(interactive)
-	(if file
-	    (find-file file)
-	  (call-interactively #'find-file)))
+	  (defun eshell/f (&optional file)
+		(interactive)
+		(if file
+			(find-file file)
+		  (call-interactively #'find-file)))
 
-      (defun eshell/d (&optional dir)
-	(interactive)
-	(if dir (dired dir) (dired ".")))
+	  (defun eshell/d (&optional dir)
+		(interactive)
+		(if dir (dired dir) (dired ".")))
 
 
-      (defun eshell/o (file)
-	(interactive)
-	(find-file-other-window file))
+	  (defun eshell/o (file)
+		(interactive)
+		(find-file-other-window file))
 
-      (defun eshell/pr (&optional num)
-	(interactive "n")
-	(if num
-	    (shell-command "gh pr status")
-	  (progn
-	    (shell-command-to-string (concat "gh pr view " num))
-	    (read-key)
-	    (shell-command-to-string (concat "gh pr diff " num))
-	    (read-key)
-	    (shell-command-to-string (concat "gh pr review " num)))))
+	  (defun eshell/pr (&optional num)
+		(interactive "n")
+		(if num
+			(shell-command "gh pr status")
+		  (progn
+			(shell-command-to-string (concat "gh pr view " num))
+			(read-key)
+			(shell-command-to-string (concat "gh pr diff " num))
+			(read-key)
+			(shell-command-to-string (concat "gh pr review " num)))))
     #+end_src
 *** Prompt
     Because eshell is just elisp, the prompt can be set using elisp as well.
