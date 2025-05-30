@@ -1,4 +1,4 @@
-(setq my-theme '(modus-themes . modus-vivendi))
+(setq my-theme '(modus-themes . modus-vivendi-tinted))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
 	  (lambda ()
