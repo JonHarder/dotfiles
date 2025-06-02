@@ -22,7 +22,7 @@ alias brew = /opt/homebrew/bin/brew
 alias j = jj
 
 # Git aliases
-alias gs = git status
+alias gs = git status --short
 alias gc = git commit
 alias gd = git difftool
 alias gds = git diff --staged
