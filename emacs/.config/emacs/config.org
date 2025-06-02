@@ -1599,31 +1599,31 @@ modifying this file.
    the Erlang Beam vm.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-gleam-mode.el" :mkdirp yes
-     (straight-use-package
-      '(gleam-mode
-	:type git
-	:host github
-	:branch "gleam-ts-mode"
-	:repo "gleam-lang/gleam-mode"))
-     ;; Note, this doesn't seem to work by itself just yet. I may need to add some additional code to help it out.
-     ;; I'm not totally sure that it picks up the gleam-ts-mode correctly
-     ;; running `(load-library "gleam-ts-mode")` afterwords picks up tne new #'gleam-ts-install-grammar
-     ;; but that results in an error, saying it can't find the installed grammar
-     (provide 'my-gleam-mode)
+	 (straight-use-package
+	  '(gleam-mode
+		:type git
+		:host github
+		:branch "gleam-ts-mode"
+		:repo "gleam-lang/gleam-mode"))
+	 ;; Note, this doesn't seem to work by itself just yet. I may need to add some additional code to help it out.
+	 ;; I'm not totally sure that it picks up the gleam-ts-mode correctly
+	 ;; running `(load-library "gleam-ts-mode")` afterwords picks up tne new #'gleam-ts-install-grammar
+	 ;; but that results in an error, saying it can't find the installed grammar
+	 (provide 'my-gleam-mode)
    #+end_src
 ** Golang
    #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
-     (straight-use-package 'go-mode)
-     (setq gofmt-command "/usr/local/go/bin/gofmt")
-     (setenv "PATH"
-	     (concat
-	      "/usr/local/go/bin:"
-	      (getenv "PATH")))
-     (defun my-go-mode-hook ()
-       (when (eq major-mode 'go-mode)
-	 (gofmt-before-save)))
-     (add-hook 'before-save-hook #'my-go-mode-hook)
-     (provide 'my-go-mode)
+	 (straight-use-package 'go-mode)
+	 (setq gofmt-command "/usr/local/go/bin/gofmt")
+	 (setenv "PATH"
+		 (concat
+		  "/usr/local/go/bin:"
+		  (getenv "PATH")))
+	 (defun my-go-mode-hook ()
+	   (when (eq major-mode 'go-mode)
+		 (gofmt-before-save)))
+	 (add-hook 'before-save-hook #'my-go-mode-hook)
+	 (provide 'my-go-mode)
    #+end_src
 * Org
 
