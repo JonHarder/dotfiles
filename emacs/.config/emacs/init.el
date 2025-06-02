@@ -54,6 +54,7 @@
 (require 'my-gleam-mode)
 (require 'my-text)
 (require 'my-just)
+(require 'my-jj)
 
 (require 'my-rust-mode)
 (require 'my-search)

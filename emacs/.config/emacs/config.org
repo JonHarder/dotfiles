@@ -124,6 +124,7 @@ modifying this file.
 	  (require 'my-gleam-mode)
 	  (require 'my-text)
 	  (require 'my-just)
+	  (require 'my-jj)
 
 	  (require 'my-rust-mode)
 	  (require 'my-search)
@@ -2130,6 +2131,16 @@ modifying this file.
      (provide 'my-org)
    #+end_src
 
+* Jujutsu (jj)
+   Jujutsu in a simple, but powerful version control system. It's
+   great. It uses git as the backing change database (though a native,
+   novel storage backend is in the works) so it can be seamlessly used
+   in a git based project and even used alongside with other
+   contributors who are still using git directly.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
+	 (provide 'my-jj)
+   #+end_src
 * Search
 ** Isearch
     There are a variety of entrypoints into emacs' built in searching
