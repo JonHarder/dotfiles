@@ -24,7 +24,7 @@ alias j = jj
 # Git aliases
 alias gs = git status --short
 alias gc = git commit
-alias gd = git difftool
+alias gd = git difftool --output-indicator-new=' ' --output-indicator-old=' '
 alias gds = git diff --staged
 alias ga = git add
 
