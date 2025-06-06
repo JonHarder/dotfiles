@@ -93,7 +93,7 @@
 		 ((agenda ""
 				  ((org-agenda-overriding-header "Planned and upcoming")
 				   (org-agenda-span 'week)))
-		  (tags "+proj+actions-archive+LEVEL=1"
+		  (tags "+proj-archive+LEVEL=1"
 				((org-agenda-overriding-header "Active Projects")))
 		  (tags "-delegate+TODO=\"IN-PROGRESS\""
 				((org-agenda-overriding-header "In Progress")))

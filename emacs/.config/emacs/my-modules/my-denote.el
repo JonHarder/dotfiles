@@ -51,7 +51,7 @@
 ;; (require 'denote-silo-extras)
 ;; (let ((my-silo-dirs (mapcar (lambda (file)
 ;; 							  (expand-file-name file))
-;; 							'("~/Dropbox/Personal"))))
+;; 							'("~/Dropbox/gtd"))))
 ;;   (dolist (dir my-silo-dirs)
 ;; 	(add-to-list 'denote-silo-extras-directories dir)
 ;; 	(add-to-list 'denote-dired-directories dir)))
@@ -74,7 +74,7 @@
 							   "    - jira\n"
 							   "    - confluence"))
 		(journal . ,(concat "* Daily habits\n"
-							"  - [[denote:20250423T155338][Be Still and Wonder]]\n\n"
+							"  - [[denote:20250423T155338][Be Still and Wonder]]\n"
 							"  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
 							"* Notes\n\n"
 							"* Meetings\n"))
