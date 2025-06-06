@@ -6,9 +6,15 @@
 [core]
 	autocrlf = input
     editor = emacsclient
+	compression = 9
 
 # [interactive]
 #   diffFilter = difft
+
+[status]
+	branch = true
+	showStash = true
+	showUntrackedFiles = all
 
 [merge]
   conflictstyle = diff3
@@ -42,3 +48,6 @@
 [difftool "difftastic"]
     # See `man git-difftool` for a description of MERGED, LOCAL and REMOTE.
     cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
+
+[url "git@github.com:Kipsu/"]
+	 insteadOf = "k:"
