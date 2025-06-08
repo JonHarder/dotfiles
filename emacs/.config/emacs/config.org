@@ -144,7 +144,7 @@ modifying this file.
    in any lighting situation.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	 (setq my-theme '(modus-themes . modus-vivendi-tinted))
+	 (setq my-theme '(ddom-themes . doom-material-dark))
 	 (straight-use-package (car my-theme))
 	 (add-hook 'after-init-hook
 		   (lambda ()
