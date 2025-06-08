@@ -1,6 +1,12 @@
 # Nushell Config File
 ## NB aliases
 
+def create-smseagle-wave [--wave: string, --num: int] {
+	let exp_date = (date now) + 30day | format date "%Y-%m-%dT%H:%M-05:00"
+	let result = aws ssm create-activation --description $"Managed Wave ($wave)" --iam-role smseagle-remote-mgmt-service-role --registration-limit $num --region us-east-1 --expiration-date $exp_date | from json
+	echo ($result | insert "Expiration Date" $exp_date)
+}
+
 ### Kubernetes
 alias k = kubectl
 
