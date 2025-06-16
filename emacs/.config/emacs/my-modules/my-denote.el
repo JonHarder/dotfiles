@@ -48,13 +48,13 @@
 (setq denote-journal-extras-directory (concat denote-directory "/journal"))
 (add-to-list 'denote-dired-directories denote-journal-extras-directory)
 
-;; (require 'denote-silo-extras)
-;; (let ((my-silo-dirs (mapcar (lambda (file)
-;; 							  (expand-file-name file))
-;; 							'("~/Dropbox/gtd"))))
-;;   (dolist (dir my-silo-dirs)
-;; 	(add-to-list 'denote-silo-extras-directories dir)
-;; 	(add-to-list 'denote-dired-directories dir)))
+(require 'denote-silo-extras)
+(let ((my-silo-dirs (mapcar (lambda (file)
+							  (expand-file-name file))
+							'("~/Dropbox/gtd/projects"))))
+  (dolist (dir my-silo-dirs)
+	(add-to-list 'denote-silo-extras-directories dir)
+	(add-to-list 'denote-dired-directories dir)))
 
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 

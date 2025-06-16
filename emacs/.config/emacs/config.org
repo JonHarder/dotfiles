@@ -144,7 +144,7 @@ modifying this file.
    in any lighting situation.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	 (setq my-theme '(ddom-themes . doom-material-dark))
+	 (setq my-theme '(doom-themes . doom-material-dark))
 	 (straight-use-package (car my-theme))
 	 (add-hook 'after-init-hook
 		   (lambda ()
@@ -1071,13 +1071,13 @@ modifying this file.
    lives.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	 ;; (require 'denote-silo-extras)
-	 ;; (let ((my-silo-dirs (mapcar (lambda (file)
-	 ;; 							  (expand-file-name file))
-	 ;; 							'("~/Dropbox/gtd"))))
-	 ;;   (dolist (dir my-silo-dirs)
-	 ;; 	(add-to-list 'denote-silo-extras-directories dir)
-	 ;; 	(add-to-list 'denote-dired-directories dir)))
+	 (require 'denote-silo-extras)
+	 (let ((my-silo-dirs (mapcar (lambda (file)
+								   (expand-file-name file))
+								 '("~/Dropbox/gtd/projects"))))
+	   (dolist (dir my-silo-dirs)
+		 (add-to-list 'denote-silo-extras-directories dir)
+		 (add-to-list 'denote-dired-directories dir)))
    #+end_src
 
 ** Hooks
