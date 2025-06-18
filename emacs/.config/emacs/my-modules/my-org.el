@@ -99,12 +99,12 @@
 				((org-agenda-overriding-header "In Progress")))
 		  (tags "+delegate-TODO=\"DONE\""
 				((org-agenda-overriding-header "Delegated")))
-		  (todo "WAIT|REVIEW"
+		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
 		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
 		  ;; Is this last section really even needed?
 		  ;; update: yes, this is helpful for the review step.
-		  ;; athe daily view should be used for the engage step.
+		  ;; and the daily view should be used for the engage step.
 		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
 				((org-agenda-overriding-header "One Off Tasks")
 				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
@@ -114,7 +114,7 @@
 				   (org-agenda-span 1)))
 		  (tags "TODO=\"IN-PROGRESS\""
 				((org-agenda-overriding-header "In Progress")))
-		  (todo "WAIT|REVIEW"
+		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
 		  (tags "-archive+TODO=\"NEXT\""
 				((org-agenda-overriding-header "Next Actions")))))))
