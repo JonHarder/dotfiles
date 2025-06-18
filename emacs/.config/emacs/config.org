@@ -1709,23 +1709,22 @@ modifying this file.
     #+end_src
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	(evil-define-key 'normal org-mode-map
-	  (kbd "<leader> m a") #'org-archive-subtree
-	  (kbd "<leader> m e") #'org-export-dispatch
-	  (kbd "<leader> m p") #'org-publish-project
-	  (kbd "<leader> m r") #'org-refile
-	  (kbd "<leader> m l") #'org-insert-link
-	  (kbd "<leader> m f") #'org-footnote-action
-	  (kbd "<leader> m i") #'org-toggle-inline-images
-	  (kbd "<leader> m g") #'org-babel-tangle
-	  (kbd "<leader> m t") #'insert-note-with-timestamp
-	  (kbd "<leader> m n") #'org-narrow-to-subtree
-	  (kbd "<leader> m d") #'org-babel-demarcate-block
-	  (kbd "<leader> m s s") #'org-schedule
-	  (kbd "<leader> m s d") #'org-deadline
-	  (kbd "<leader> m ,") #'org-priority
-	  (kbd "<leader> m c i") #'org-clock-in
-	  (kbd "<leader> m c o") #'org-clock-out)
+	  (evil-define-key 'normal org-mode-map
+		(kbd "<leader> m a") #'org-archive-subtree
+		(kbd "<leader> m e") #'org-export-dispatch
+		(kbd "<leader> m p") #'org-publish-project
+		(kbd "<leader> m r") #'org-refile
+		(kbd "<leader> m l") #'org-insert-link
+		(kbd "<leader> m f") #'org-footnote-action
+		(kbd "<leader> m i") #'org-toggle-inline-images
+		(kbd "<leader> m t") #'org-babel-tangle
+		(kbd "<leader> m n") #'org-narrow-to-subtree
+		(kbd "<leader> m d") #'org-babel-demarcate-block
+		(kbd "<leader> m s s") #'org-schedule
+		(kbd "<leader> m s d") #'org-deadline
+		(kbd "<leader> m ,") #'org-priority
+		(kbd "<leader> m c i") #'org-clock-in
+		(kbd "<leader> m c o") #'org-clock-out)
     #+end_src
 
 *** Agenda mappings
