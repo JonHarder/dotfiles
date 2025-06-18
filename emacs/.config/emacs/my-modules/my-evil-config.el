@@ -59,4 +59,21 @@ eat-mode)
 (evil-commentary-mode)
 (evil-define-key '(insert normal visual) evil-commentary-mode-map (kbd "s-;") #'evil-commentary-line)
 
+(defun evil-org-dwim-insert-below ()
+  "Insert a heading or item below current line.
+
+Replaces the evil 'o' binding."
+  (interactive)
+  (if (org-at-heading-p)
+	  (progn (org-insert-heading-after-current)
+			 (call-interactively #'evil-insert))
+	(if (org-at-heading-or-item-p)
+		(progn
+		  (evil-append-line 1)
+		  (org-insert-item))
+	  (call-interactively #'evil-open-below))))
+
+(evil-define-key 'normal org-mode-map
+  (kbd "o") #'evil-org-dwim-insert-below)
+
 (provide 'my-evil-config)
