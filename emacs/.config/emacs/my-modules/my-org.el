@@ -13,15 +13,15 @@
 (kbd "< <") 'org-shiftmetaleft)
 
 (defun insert-note-with-timestamp ()
-(interactive)
-(let ((current-prefix-arg '(16)))
-  (goto-char (point-max))
-  (evil-open-below 1)
-  (move-beginning-of-line nil)
-  (insert "- ")
-  (call-interactively #'org-time-stamp-inactive)
-  (insert " ")
-  (evil-insert 0)))
+  (interactive)
+  (let ((current-prefix-arg '(16)))
+	(goto-char (point-max))
+	(evil-open-below 1)
+	(move-beginning-of-line nil)
+	(insert "- ")
+	(call-interactively #'org-time-stamp-inactive)
+	(insert " ")
+	(evil-insert 0)))
 
 (evil-define-key 'normal org-mode-map
   (kbd "<leader> m a") #'org-archive-subtree

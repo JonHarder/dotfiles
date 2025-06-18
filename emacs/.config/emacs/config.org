@@ -1696,16 +1696,16 @@ modifying this file.
     These are [[*Meta-mode prefix][meta]] leader prefixed keybindings to add additional mode-aware
     contextual functionality.
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (defun insert-note-with-timestamp ()
-	(interactive)
-	(let ((current-prefix-arg '(16)))
-	  (goto-char (point-max))
-	  (evil-open-below 1)
-	  (move-beginning-of-line nil)
-	  (insert "- ")
-	  (call-interactively #'org-time-stamp-inactive)
-	  (insert " ")
-	  (evil-insert 0)))
+	  (defun insert-note-with-timestamp ()
+		(interactive)
+		(let ((current-prefix-arg '(16)))
+		  (goto-char (point-max))
+		  (evil-open-below 1)
+		  (move-beginning-of-line nil)
+		  (insert "- ")
+		  (call-interactively #'org-time-stamp-inactive)
+		  (insert " ")
+		  (evil-insert 0)))
     #+end_src
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
