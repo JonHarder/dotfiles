@@ -747,7 +747,7 @@ modifying this file.
 	(defun evil-org-dwim-insert-below ()
 	  "Insert a heading or item below current line.
 
-	Replaces the evil 'o' binding."
+	Replaces the evil 'o' binding `evil-open-below'."
 	  (interactive)
 	  (if (org-at-heading-p)
 		  (progn (org-insert-heading-after-current)
