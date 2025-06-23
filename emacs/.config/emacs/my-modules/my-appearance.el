@@ -1,4 +1,4 @@
-(setq my-theme '(doom-themes . doom-material-dark))
+(setq my-theme '(doom-themes . doom-old-hope))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
 	  (lambda ()
