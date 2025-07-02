@@ -511,7 +511,11 @@ $env.config = {
     }]
     env_change: {
       PWD: [{|before, after|
-        null  # replace with source code to run if the PWD environment is different since the last repl input
+	    # code to run if the PWD environment is different since the last repl input
+	    if (which direnv | is-empty) {
+		  return
+        }
+		direnv export json | from json | default {} | load-env
       }]
     }
   }
