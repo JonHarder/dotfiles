@@ -1659,7 +1659,8 @@ modifying this file.
   is extracted and ran to formulate the actual config.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-    (require 'org)
+	(straight-use-package '(org :type built-in))
+	(require 'org)
   #+end_src
 
 ** modules
@@ -1809,6 +1810,11 @@ modifying this file.
 	   org-priority-lowest ?D)
    #+end_src
 
+** Modern org
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+	 (straight-use-package 'org-modern)
+	 (with-eval-after-load 'org (global-org-modern-mode))
+   #+end_src
 ** Org agenda
 *** Custom commands
     These commands show up in the org-agenda view and will produce

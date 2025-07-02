@@ -1,3 +1,4 @@
+(straight-use-package '(org :type built-in))
 (require 'org)
 
 (with-eval-after-load 'org
@@ -86,6 +87,9 @@
 
 (setq org-priority-highest ?A
   org-priority-lowest ?D)
+
+(straight-use-package 'org-modern)
+(with-eval-after-load 'org (global-org-modern-mode))
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
