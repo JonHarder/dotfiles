@@ -191,7 +191,7 @@
 		 :kill-buffer t
 		 :jump-to-captured t)
 		("t" "New Task" entry
-		 (file+headline org-default-notes-file "Tasks")
+		 (file+headline "~/Dropbox/gtd/oneoff.org" "One Off")
 		 "* TODO %i%?")))
 
 (setq org-structure-template-alist
