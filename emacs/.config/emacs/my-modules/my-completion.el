@@ -40,6 +40,16 @@
   global-map
   (kbd "<leader> c d") #'consult-dir)
 
+(straight-use-package 'consult-notes)
+(setq consult-notes-file-dir-source
+      '(("Notes" ?n "~/Dropbox/zettelkasten")
+        ("Projects" ?p "~/Dropbox/gtd/projects")))
+
+(when (locate-library "denote")
+  (consult-notes-denote-mode)
+  (setq consult-notes-denote-display-id nil)
+  (setq consult-notes-denote-dir nil))
+
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)
 (setq prefix-help-command #'embark-prefix-help-command)

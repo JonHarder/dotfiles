@@ -688,6 +688,24 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
     (kbd "<leader> c d") #'consult-dir)
 #+end_src
 
+*** consult-notes
+
+This package allows for fancy searching, filtering, and categorization
+of notes from various back-ends. In our case, its integration with
+denote is quite nice.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'consult-notes)
+  (setq consult-notes-file-dir-source
+        '(("Notes" ?n "~/Dropbox/zettelkasten")
+          ("Projects" ?p "~/Dropbox/gtd/projects")))
+
+  (when (locate-library "denote")
+    (consult-notes-denote-mode)
+    (setq consult-notes-denote-display-id nil)
+    (setq consult-notes-denote-dir nil))
+#+end_src
+
 ** Embark
 
 It's kinda like right click, for your keyboard.
@@ -818,7 +836,8 @@ window at the bottom of the current frame.
     (kbd "<leader> n f") #'denote-open-or-create
     (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
     (kbd "<leader> n l") #'denote-link
-    (kbd "<leader> n n") #'denote
+    (kbd "<leader> n n") #'consult-notes
+    ;; (kbd "<leader> n n") #'denote
     (kbd "<leader> n m") #'denote-meeting
     (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
     (kbd "<leader> n r") #'denote-rename-file-using-front-matter
