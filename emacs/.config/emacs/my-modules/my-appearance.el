@@ -1,8 +1,8 @@
-(setq my-theme '(doom-themes . doom-old-hope))
+(setq my-theme '(modus-themes . modus-vivendi-tinted))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
-	  (lambda ()
-	(load-theme (cdr my-theme) t)))
+          (lambda ()
+            (load-theme (cdr my-theme) t)))
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
@@ -17,22 +17,22 @@
 (progn ;; Modus configuration
   (require-theme 'modus-themes)
   (setq modus-themes-completions
-		'((matches . (extrabold underline))
-		  (selection . (semibold italic))))
+        '((matches . (extrabold underline))
+          (selection . (semibold italic))))
   (setq modus-themes-prompts '(bold))
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-common-palette-overrides
-		modus-themes-preset-overrides-intense)
+        modus-themes-preset-overrides-intense)
   (setq modus-themes-variable-pitch-ui nil)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-org-blocks 'gray-background)
   ;; TODO set this to nil if a non-modus theme is active?
   (setq modus-themes-headings
-		'((1 . (variable-pitch 1.5))
-		  (2 . (1.3))
-		  (agenda-date . (1.3))
-		  (agenda-structure . (variable-pitch light 1.8))
-		  (t . (1.1)))))
+        '((1 . (variable-pitch 1.5))
+          (2 . (1.3))
+          (agenda-date . (1.3))
+          (agenda-structure . (variable-pitch light 1.8))
+          (t . (1.1)))))
 
 (straight-use-package 'ef-themes)
 ;; (setq ef-themes-headings ; read the manual's entry or the doc string
@@ -50,8 +50,8 @@
 
 (straight-use-package 'doom-themes)
 (setq doom-rouge-brighter-comments t
-  doom-themes-enable-bold t
-  doom-themes-enable-italic t)
+      doom-themes-enable-bold t
+      doom-themes-enable-italic t)
 
 (menu-bar-mode 1)
 
@@ -60,9 +60,9 @@
 (tool-bar-mode -1)
 
 (setq frame-resize-pixelwise t
-  frame-inhibit-implied-resize t
-  inhibit-splash-screen t
-  inhibit-startup-screen t)
+      frame-inhibit-implied-resize t
+      inhibit-splash-screen t
+      inhibit-startup-screen t)
 
 (setq ring-bell-function 'ignore)
 
@@ -71,13 +71,13 @@
 (display-time)
 
 (add-hook 'after-init-hook
-		  (lambda ()
-			(let ((size 175))
-			  (set-face-attribute 'default nil :font my-font :height size)
-			  (set-frame-font my-font nil t)
-			  (add-to-list 'default-frame-alist
-						   `(font . ,my-font))
-			  (load-theme (cdr my-theme) t))))
+          (lambda ()
+            (let ((size 175))
+              (set-face-attribute 'default nil :font my-font :height size)
+              (set-frame-font my-font nil t)
+              (add-to-list 'default-frame-alist
+                           `(font . ,my-font))
+              (load-theme (cdr my-theme) t))))
 
 (setq tab-bar-show 1)
 

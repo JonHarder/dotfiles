@@ -84,12 +84,19 @@
 (setq org-image-actual-width nil)
 
 (setq org-src-preserve-indentation nil)
+(setq org-startup-indented t)
+(straight-use-package
+ '(org-modern-indent
+   :type git
+   :host github
+   :repo "jdtsmith/org-modern-indent"))
+(require 'org-modern-indent)
+(add-hook 'org-mode-hook #'org-modern-indent-mode 90)
+
+(setq org-hide-emphasis-markers t)
 
 (setq org-priority-highest ?A
   org-priority-lowest ?D)
-
-(straight-use-package 'org-modern)
-(with-eval-after-load 'org (global-org-modern-mode))
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
@@ -129,7 +136,7 @@
 		"┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
 
 (setq org-stuck-projects
-	  '("+proj-archive+LEVEL=1/-DONE" ("NEXT") nil ""))
+	  '("+proj-archive+LEVEL=1/-DONE" ("NEXT" "IN-PROGRESS") nil ""))
 
 (setq org-refile-targets
 	  '((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
@@ -137,40 +144,40 @@
 		(org-agenda-files . (:tag . "proj"))))
 
 (setq org-tag-alist
-	  '((:startgroup)
-		("proj" . ?p)
-		("area" . ?a)
-		(:endgroup)
+      '((:startgroup)
+        ("proj" . ?p)
+        ("area" . ?a)
+        (:endgroup)
 
-		;; mental/emotional level
-		(:startgroup)
-		("@lowenergy" . ?l)
-		("@highenergy" . ?h)
-		(:endgroup)
+        ;; mental/emotional level
+        (:startgroup)
+        ("@lowenergy" . ?l)
+        ("@highenergy" . ?h)
+        (:endgroup)
 
-		;; locations
-		(:startgroup)
-		("@Church" . ?C)
-		("@Work" . ?W)
-		("@Home" . ?H)
-		("@Anywhere" . ?A)
-		("@Outsize" . ?O)
-		(:endgroup)
+        ;; locations
+        (:startgroup)
+        ("@Church" . ?C)
+        ("@Work" . ?W)
+        ("@Home" . ?H)
+        ("@Anywhere" . ?A)
+        ("@Outsize" . ?O)
+        (:endgroup)
 
-		;; devices
-		(:startgroup)
-		("@Laptop" . ?L)
-		("@Phone" . ?P)
-		(:endgroup)))
+        ;; devices
+        (:startgroup)
+        ("@Laptop" . ?L)
+        ("@Phone" . ?P)
+        (:endgroup)))
 
 (setq org-agenda-include-diary t)
 (setq org-agenda-restore-windows-after-quit t)
 (setq org-agenda-skip-deadline-if-done t
-	  org-agenda-skip-scheduled-if-done t)
+      org-agenda-skip-scheduled-if-done t)
 (setq org-agenda-category-icon-alist nil)
 (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
 (add-to-list 'org-agenda-category-icon-alist
-			 '(".*" '(space . (:width (18)))))
+             '(".*" '(space . (:width (18)))))
 
 (add-to-list 'org-agenda-files org-directory)
 (add-to-list 'org-agenda-files gtd-projects-directory)
@@ -220,37 +227,41 @@
 
 (setq org-publish-project-alist
   (list (list "blog"
-		  :components (list "blog-org" "blog-static"))
-	(list "blog-org"
-		  :base-directory "~/blog/org"
-		  :publishing-directory "~/blog/public"
-		  :auto-sitemap nil
-		  :recursive t
-		  :with-broken-links t
+          :components (list "blog-org" "blog-static"))
+    (list "blog-org"
+          :base-directory "~/blog/org"
+          :publishing-directory "~/blog/public"
+          :auto-sitemap nil
+          :recursive t
+          :with-broken-links t
                   :with-creator t
-		  :section-numbers nil
-		  :exclude "README"
-		  :export-exclude-tags (list "draft")
-		  :with-author "Jon Harder"
-		  :with-toc nil
-		  :html-htmlize-output-type 'inline-css
-		  :html-doctype "html5"
-		  :html-html5-fancy t
-		  :html-preamble nil
-		  :html-postamble nil)
-	(list "blog-static"
-		  :base-directory "~/blog/org/"
-		  :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
-		  :publishing-directory "~/blog/public/"
-		  :recursive t
-		  :publishing-function #'org-publish-attachment)))
+          :section-numbers nil
+          :exclude "README"
+          :export-exclude-tags (list "draft")
+          :with-author "Jon Harder"
+          :with-toc nil
+          :html-htmlize-output-type 'inline-css
+          :html-doctype "html5"
+          :html-html5-fancy t
+          :html-preamble nil
+          :html-postamble nil)
+    (list "blog-static"
+          :base-directory "~/blog/org/"
+          :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
+          :publishing-directory "~/blog/public/"
+          :recursive t
+          :publishing-function #'org-publish-attachment)))
 
-(setq org-hide-emphasis-markers nil)
+(setq org-hide-emphasis-markers t)
 
-(straight-use-package 'org-bullets)
-(add-hook 'org-mode-hook
-    	(lambda ()
-      (org-bullets-mode 1)))
+(straight-use-package 'org-modern)
+(with-eval-after-load 'org (global-org-modern-mode))
+
+;;; NOTE: currently not used in favor of the org-modern package
+;; (straight-use-package 'org-bullets)
+;; (add-hook 'org-mode-hook
+;;     	(lambda ()
+;;       (org-bullets-mode 1)))
 
 ;; (font-lock-add-keywords 'org-mode
 ;; 			      '(("^ +\\([-*]\\) "

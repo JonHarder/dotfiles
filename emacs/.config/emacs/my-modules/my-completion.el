@@ -19,8 +19,8 @@
 
 (straight-use-package 'corfu)
 (setq corfu-auto t
-  corfu-separator ?\s
-  tab-always-indent 'complete)
+      corfu-separator ?\s
+      tab-always-indent 'complete)
 (global-corfu-mode 1)
 
 (straight-use-package 'marginalia)
@@ -28,26 +28,26 @@
 
 (straight-use-package 'orderless)
 (setq completion-styles '(orderless basic)
-  completion-category-defaults nil
-  completion-category-overrides '((file (styles partial-completion))))
+      completion-category-defaults nil
+      completion-category-overrides '((file (styles partial-completion))))
 
 (straight-use-package 'consult)
 
 (straight-use-package 'consult-dir)
-  (define-key vertico-map
-	  (kbd "M-c") #'consult-dir)
-  (evil-define-key 'norma cdl
-global-map
-(kbd "<leader> c d") #'consult-dir)
+(define-key vertico-map
+            (kbd "M-c") #'consult-dir)
+(evil-define-key 'norma cdl
+  global-map
+  (kbd "<leader> c d") #'consult-dir)
 
 (straight-use-package 'embark)
-  (straight-use-package 'embark-consult)
-  (setq prefix-help-command #'embark-prefix-help-command)
-  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  (evil-define-key '(normal motion visual insert emacs) 'global
-(kbd "s-<return>") #'embark-dwim
-(kbd "C-<return>") #'embark-act)
-  (define-key minibuffer-local-map
-(kbd "C-<return>") #'embark-act)
+(straight-use-package 'embark-consult)
+(setq prefix-help-command #'embark-prefix-help-command)
+(add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+(evil-define-key '(normal motion visual insert emacs) 'global
+  (kbd "s-<return>") #'embark-dwim
+  (kbd "C-<return>") #'embark-act)
+(define-key minibuffer-local-map
+            (kbd "C-<return>") #'embark-act)
 
 (provide 'my-completion)

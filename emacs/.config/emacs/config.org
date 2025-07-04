@@ -15,803 +15,560 @@ modifying this file.
 
 * Early init optimizations
 ** Disable built-in package.el
-  #+begin_src emacs-lisp :tangle "early-init.el"
-    ;; disable package.el in favor of straight.el
-    (setq package-enable-at-startup nil)
-  #+end_src
+ #+begin_src emacs-lisp :tangle "early-init.el"
+   ;; disable package.el in favor of straight.el
+   (setq package-enable-at-startup nil)
+ #+end_src
 
   #+RESULTS:
 
 ** Startup performance enhancements
-   The aim here is to effectively disable the garbage collector during startup
-   as Emacs is not interactible during startup anyway. In the startup-hook we
-   restore these settings to sensible values for runtime.
+The aim here is to effectively disable the garbage collector during startup
+as Emacs is not interactible during startup anyway. In the startup-hook we
+restore these settings to sensible values for runtime.
 
-   #+begin_src emacs-lisp :tangle early-init.el
-     (setq gc-cons-threshold most-positive-fixnum
-	   gc-cons-percentage 0.5)
-   #+end_src
+ #+begin_src emacs-lisp :tangle early-init.el
+   (setq gc-cons-threshold most-positive-fixnum
+         gc-cons-percentage 0.5)
+ #+end_src
 
 ** Performance monitoring
-  It's helpful to track how long Emacs takes to load up. This normally
-  isn't the most critical metric to track as I usually run emacs with
-  ~emacs --daemon~, and open new emacs windows with ~emacsclient~, but
-  helpful nonetheless.
+It's helpful to track how long Emacs takes to load up. This normally
+isn't the most critical metric to track as I usually run emacs with
+~emacs --daemon~, and open new emacs windows with ~emacsclient~, but
+helpful nonetheless.
 
-  #+begin_src emacs-lisp :tangle "early-init.el"
-    (add-hook 'emacs-startup-hook
-	      (lambda ()
-		(setq gc-cons-threshold (* 1024 1024 20)
-		      gc-cons-percentage 0.2)
-		(message "*** Emacs loaded in %s with %d garbage collections."
-			 (format "%.2f seconds"
-				 (float-time
-				  (time-subtract after-init-time before-init-time)))
-			 gcs-done)))
-  #+end_src
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold (* 1024 1024 20)
+                    gc-cons-percentage 0.2)
+              (message "*** Emacs loaded in %s with %d garbage collections."
+                       (format "%.2f seconds"
+                               (float-time
+                                (time-subtract after-init-time before-init-time)))
+                       gcs-done)))
+#+end_src
 
 * Package management
 ** Set up straight.el (package management)
 
-   #+begin_src emacs-lisp :tangle "init.el"
+ #+begin_src emacs-lisp :tangle "init.el"
    (setq straight-repository-branch "develop")
-   
+
    (defvar bootstrap-version)
    (let ((bootstrap-file
           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
          (bootstrap-verision 6))
      (unless (file-exists-p bootstrap-file)
        (with-current-buffer
-   	(url-retrieve-synchronously
-   	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-   	 'silent 'inhibit-cookies)
+    (url-retrieve-synchronously
+     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+     'silent 'inhibit-cookies)
          (goto-char (point-max))
          (eval-print-last-sexp)))
      (load bootstrap-file nil 'nomessage))
-   #+end_src
+ #+end_src
 ** Local lisp loading
 *** Load local-config
-    There are some configuration settings that are local to the particular
-    machine I'm running emacs on. These settings are stored in the file,
-    =local-config.el=.
+There are some configuration settings that are local to the particular
+machine I'm running emacs on. These settings are stored in the file,
+=local-config.el=.
 
-    This gets loaded first so that any later configuration can utilize it.
+This gets loaded first so that any later configuration can utilize it.
 
-    #+begin_src emacs-lisp :tangle "init.el"
-      (load-file (expand-file-name "local-config.el" user-emacs-directory))
-    #+end_src
+#+begin_src emacs-lisp :tangle "init.el"
+  (load-file (expand-file-name "local-config.el" user-emacs-directory))
+#+end_src
 *** Adding my-modules to the load path
-    #+begin_src emacs-lisp :tangle "init.el"
-    (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
-    #+end_src
+#+begin_src emacs-lisp :tangle "init.el"
+   (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
+#+end_src
 
 ** Require all my modules
-    #+begin_src emacs-lisp :tangle "init.el"
-	  (require 'my-appearance)
-	  (require 'my-modeline)
-	  (require 'my-core)
-	  (require 'my-evil-config)
-	  (require 'my-bindings)
+#+begin_src emacs-lisp :tangle "init.el"
+  (require 'my-appearance)
+  (require 'my-modeline)
+  (require 'my-core)
+  (require 'my-evil-config)
+  (require 'my-bindings)
 
-	  (require 'my-calendar)
-	  (require 'my-completion)
-	  (require 'my-tree-sitter)
-	  (require 'my-gtd)
-	  (require 'my-denote)
-	  (require 'my-dired)
-	  (require 'my-docker-mode)
-	  (require 'my-ediff)
-	  (require 'my-email)
-	  (require 'my-epub)
-	  (require 'my-feed)
-	  (require 'my-gpg)
-	  (require 'my-go-mode)
-	  (require 'my-help)
-	  (require 'my-http)
-	  (require 'my-ibuffer)
-	  (require 'my-icons)
-	  (require 'my-lisp-mode)
-	  (require 'my-git)
-	  (require 'my-markup)
-	  (require 'my-navigation)
-	  (require 'my-web)
-	  (require 'my-nushell-mode)
-	  (require 'my-org)
-	  (require 'my-php-mode)
-	  (require 'my-prog-mode)
-	  (require 'my-python-mode)
-	  (require 'my-rest-mode)
-	  (require 'my-gleam-mode)
-	  (require 'my-text)
-	  (require 'my-just)
-	  (require 'my-jj)
+  (require 'my-calendar)
+  (require 'my-completion)
+  (require 'my-tree-sitter)
+  (require 'my-gtd)
+  (require 'my-denote)
+  (require 'my-dired)
+  (require 'my-docker-mode)
+  (require 'my-ediff)
+  (require 'my-email)
+  (require 'my-epub)
+  (require 'my-feed)
+  (require 'my-gpg)
+  (require 'my-go-mode)
+  (require 'my-help)
+  (require 'my-http)
+  (require 'my-ibuffer)
+  (require 'my-icons)
+  (require 'my-lisp-mode)
+  (require 'my-git)
+  (require 'my-markup)
+  (require 'my-navigation)
+  (require 'my-web)
+  (require 'my-nushell-mode)
+  (require 'my-org)
+  (require 'my-php-mode)
+  (require 'my-prog-mode)
+  (require 'my-python-mode)
+  (require 'my-rest-mode)
+  (require 'my-gleam-mode)
+  (require 'my-text)
+  (require 'my-just)
+  (require 'my-jj)
 
-	  (require 'my-rust-mode)
-	  (require 'my-search)
-	  (require 'my-shells)
-	  (require 'my-typst)
-	  (require 'my-terraform-mode)
-	  (require 'my-util)
-	  (require 'my-vim-mode)
-	  (require 'my-xref)
-    #+end_src
+  (require 'my-rust-mode)
+  (require 'my-search)
+  (require 'my-shells)
+  (require 'my-typst)
+  (require 'my-terraform-mode)
+  (require 'my-util)
+  (require 'my-vim-mode)
+  (require 'my-xref)
+#+end_src
 
 * Appearance
 ** Color theme
-   The modus theme set is the most complete and polished emacs color theme I've
-   encountered. It's also WCAG 2 compliant meaning it will always have high color
-   contrast between UI elements, making it one of the easiest themes on the eyes
-   in any lighting situation.
+The modus theme set is the most complete and polished emacs color theme I've
+encountered. It's also WCAG 2 compliant meaning it will always have high color
+contrast between UI elements, making it one of the easiest themes on the eyes
+in any lighting situation.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	 (setq my-theme '(doom-themes . doom-old-hope))
-	 (straight-use-package (car my-theme))
-	 (add-hook 'after-init-hook
-		   (lambda ()
-		 (load-theme (cdr my-theme) t)))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (setq my-theme '(modus-themes . modus-vivendi-tinted))
+  (straight-use-package (car my-theme))
+  (add-hook 'after-init-hook
+            (lambda ()
+              (load-theme (cdr my-theme) t)))
+#+end_src
 
 *** Settings
 **** Basic theme configuration
-      #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	(set-face-attribute 'bold nil :weight 'ultra-bold)
-	(when t
-	  (custom-set-faces
-	   '(org-level-1 ((t (:height 1.3 :inherit outline-1))))
-	   '(org-level-2 ((t (:height 1.2 :inherit outline-2))))
-	   '(org-level-3 ((t (:height 1.1 :inherit outline-3))))
-	   '(org-level-4 ((t (:height 1.0 :inherit outline-4))))
-	   '(org-level-5 ((t (:height 1.0 :inherit outline-5))))
-	   '(org-document-title ((t (:height 2.0 :underline t))))))
-      #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (set-face-attribute 'bold nil :weight 'ultra-bold)
+  (when t
+    (custom-set-faces
+     '(org-level-1 ((t (:height 1.3 :inherit outline-1))))
+     '(org-level-2 ((t (:height 1.2 :inherit outline-2))))
+     '(org-level-3 ((t (:height 1.1 :inherit outline-3))))
+     '(org-level-4 ((t (:height 1.0 :inherit outline-4))))
+     '(org-level-5 ((t (:height 1.0 :inherit outline-5))))
+     '(org-document-title ((t (:height 2.0 :underline t))))))
+#+end_src
 **** Modus themes settings
-     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	   (progn ;; Modus configuration
-		 (require-theme 'modus-themes)
-		 (setq modus-themes-completions
-			   '((matches . (extrabold underline))
-				 (selection . (semibold italic))))
-		 (setq modus-themes-prompts '(bold))
-		 (setq modus-themes-bold-constructs t)
-		 (setq modus-themes-common-palette-overrides
-			   modus-themes-preset-overrides-intense)
-		 (setq modus-themes-variable-pitch-ui nil)
-		 (setq modus-themes-italic-constructs t)
-		 (setq modus-themes-org-blocks 'gray-background)
-		 ;; TODO set this to nil if a non-modus theme is active?
-		 (setq modus-themes-headings
-			   '((1 . (variable-pitch 1.5))
-				 (2 . (1.3))
-				 (agenda-date . (1.3))
-				 (agenda-structure . (variable-pitch light 1.8))
-				 (t . (1.1)))))
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (progn ;; Modus configuration
+    (require-theme 'modus-themes)
+    (setq modus-themes-completions
+          '((matches . (extrabold underline))
+            (selection . (semibold italic))))
+    (setq modus-themes-prompts '(bold))
+    (setq modus-themes-bold-constructs t)
+    (setq modus-themes-common-palette-overrides
+          modus-themes-preset-overrides-intense)
+    (setq modus-themes-variable-pitch-ui nil)
+    (setq modus-themes-italic-constructs t)
+    (setq modus-themes-org-blocks 'gray-background)
+    ;; TODO set this to nil if a non-modus theme is active?
+    (setq modus-themes-headings
+          '((1 . (variable-pitch 1.5))
+            (2 . (1.3))
+            (agenda-date . (1.3))
+            (agenda-structure . (variable-pitch light 1.8))
+            (t . (1.1)))))
+#+end_src
 **** Ef-themes settings
-    #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-      (straight-use-package 'ef-themes)
-      ;; (setq ef-themes-headings ; read the manual's entry or the doc string
-      ;;       '((0 variable-pitch bold 1.9)
-      ;; 	(1 variable-pitch bold 1.8)
-      ;; 	(2 variable-pitch regular 1.7)
-      ;; 	(3 variable-pitch regular 1.6)
-      ;; 	(4 variable-pitch light 1.5)
-      ;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
-      ;; 	(6 variable-pitch light 1.3)
-      ;; 	(7 variable-pitch light 1.2)
-      ;; 	(t variable-pitch light 1.1)
-      ;; 	(agenda-date . (1.3))
-      ;; 	(agenda-structure . (variable pitch light 1.8))))
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (straight-use-package 'ef-themes)
+  ;; (setq ef-themes-headings ; read the manual's entry or the doc string
+  ;;       '((0 variable-pitch bold 1.9)
+  ;; 	(1 variable-pitch bold 1.8)
+  ;; 	(2 variable-pitch regular 1.7)
+  ;; 	(3 variable-pitch regular 1.6)
+  ;; 	(4 variable-pitch light 1.5)
+  ;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
+  ;; 	(6 variable-pitch light 1.3)
+  ;; 	(7 variable-pitch light 1.2)
+  ;; 	(t variable-pitch light 1.1)
+  ;; 	(agenda-date . (1.3))
+  ;; 	(agenda-structure . (variable pitch light 1.8))))
+#+end_src
 
 **** Doom themes settings
-     #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-       (straight-use-package 'doom-themes)
-       (setq doom-rouge-brighter-comments t
-	     doom-themes-enable-bold t
-	     doom-themes-enable-italic t)
-     #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (straight-use-package 'doom-themes)
+  (setq doom-rouge-brighter-comments t
+        doom-themes-enable-bold t
+        doom-themes-enable-italic t)
+#+end_src
 
 ** Tweak display of UI elements
 *** Menu bar mode
 
-   The menu bar is the list of contextual dropdown options in the top of the
-   application (or in the universal top bar on macs).
+The menu bar is the list of contextual dropdown options in the top of the
+application (or in the universal top bar on macs).
 
-   I'm all for getting rid of UI clutter, especially if it's unused, but there
-   are a lot of features in emacs... Having contextual help aids discoverability,
-   and so it stays on.
+I'm all for getting rid of UI clutter, especially if it's unused, but there
+are a lot of features in emacs... Having contextual help aids discoverability,
+and so it stays on.
    
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (menu-bar-mode 1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (menu-bar-mode 1)
+#+end_src
    
 *** Scroll bar mode
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (scroll-bar-mode -1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (scroll-bar-mode -1)
+#+end_src
 *** Tool bar mode
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (tool-bar-mode -1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (tool-bar-mode -1)
+#+end_src
 
 ** Frame settings
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (setq frame-resize-pixelwise t
-	   frame-inhibit-implied-resize t
-	   inhibit-splash-screen t
-	   inhibit-startup-screen t)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (setq frame-resize-pixelwise t
+        frame-inhibit-implied-resize t
+        inhibit-splash-screen t
+        inhibit-startup-screen t)
+#+end_src
 ** Bells are evil
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (setq ring-bell-function 'ignore)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (setq ring-bell-function 'ignore)
+#+end_src
 ** Time display
 *** Format
-    I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
+I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-      (setq display-time-24hr-format t)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (setq display-time-24hr-format t)
+#+end_src
 
 *** Add the time to the mode line
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (display-time)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (display-time)
+#+end_src
 
 ** Font
 
-   I use FiraCode patched with the Nerd icons
+I use FiraCode patched with the Nerd icons
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-	 (add-hook 'after-init-hook
-			   (lambda ()
-				 (let ((size 175))
-				   (set-face-attribute 'default nil :font my-font :height size)
-				   (set-frame-font my-font nil t)
-				   (add-to-list 'default-frame-alist
-								`(font . ,my-font))
-				   (load-theme (cdr my-theme) t))))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (add-hook 'after-init-hook
+            (lambda ()
+              (let ((size 175))
+                (set-face-attribute 'default nil :font my-font :height size)
+                (set-frame-font my-font nil t)
+                (add-to-list 'default-frame-alist
+                             `(font . ,my-font))
+                (load-theme (cdr my-theme) t))))
+#+end_src
 
 ** Tabs
-   Tabs are a useful workspace organization concept. You can have discrete window/buffer arrangements per tab,
-   allowing you to switch between them at will. They are pretty flexible so you could use them for keeping
-   track of different projects. Or you could have different window configuations for the same set of buffers
-   on different tabs to help with different types of work within the same project.
+Tabs are a useful workspace organization concept. You can have discrete window/buffer arrangements per tab,
+allowing you to switch between them at will. They are pretty flexible so you could use them for keeping
+track of different projects. Or you could have different window configuations for the same set of buffers
+on different tabs to help with different types of work within the same project.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (setq tab-bar-show 1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+   (setq tab-bar-show 1)
+#+end_src
 ** Spacious Padding
-   #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-     (straight-use-package 'spacious-padding)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (straight-use-package 'spacious-padding)
+#+end_src
 
 ** provide the module
-  #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-    (provide 'my-appearance)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (provide 'my-appearance)
+#+end_src
 * mode line
-** Faces for the modeline
-   #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-	 ;; TODO: update faces to make this prettier
-	 ;; how do you work off of the color palette of the current theme?
-	 (defface my-modeline-mode-face
-	   '((t :background "grey50" :foreground "white" :inherit bold))
-	   "Face for the major mode when displayed in the modeline.")
-
-	 (defface my-modeline-buffer-face
-	   '((t :inherit bold))
-	   "Face for displaying the buffer name on the modeline.")
-
-	 (defface my-modeline-evil-replace-state
-	   '((t :background "red"))
-	   "Face to indicate the current evil state is replace.")
-	 (defface my-modeline-evil-emacs-state
-	   '((t :background "purple"))
-	   "Face to indicate the current evil state is Emacs.")
-
-	 (defface my-modeline-evil-insert-state
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :background "#6a1aaf" :foreground "black")
-		 (((class color) (min-colors 88) (background dark))
-		  :background "#e0a0ff" :foreground "black")
-		 (t :background "magenta" :foreground "black"))
-	   "Face for insert mode indicator.")
-
-	 (defface my-modeline-evil-normal-state
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :background "#005f00" :foreground "black")
-		 (((class color) (min-colors 88) (background dark))
-		  :background "#73fa7f" :foreground "black")
-		 (t :background "green" :foreground "black"))
-	   "Face for normal mode indicator.")
-
-	 (defface my-modeline-evil-visual-state
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :background "#6f4000" :foreground "black")
-		 (((class color) (min-colors 88) (background dark))
-		  :background "#f0c526" :foreground "black")
-		 (t :background "yellow" :foreground "black"))
-	   "Face for normal mode indicator.")
-
-	 (defface my-modeline-indicator-red-bg
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88))
-		  :foreground "white" :background "red"))
-	   "Face for modeline indicators")
-
-	 (defface my-modeline-indicator-blue
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :foreground "#00228a")
-		 (((class color) (min-colors 88) (background dark))
-		  :foreground "#880bfff")
-		 (t :foreground "blue"))
-	   "Face for modeline indicators")
-
-	 (defface my-modeline-indicator-green
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :foreground "#005f00")
-		 (((class color) (min-colors 88) (background dark))
-		  :foreground "#73fa7f")
-		 (t :foreground "green"))
-	   "Face for modeline indicators")
-
-	 (defface my-modeline-indicator-red
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :foreground "#880000")
-		 (((class color) (min-colors 88) (background dark))
-		  :foreground "#ff9f9f")
-		 (t :foreground "red"))
-	   "Face for modeline indicators")
-
-
-	 (defface my-modeline-indicator-magenta
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :foreground "#6a1aaf")
-		 (((class color) (min-colors 88) (background dark))
-		  :foreground "#e0a0ff")
-		 (t :foreground "magenta"))
-	   "Face for modeline indicators")
-
-	 (defface my-modeline-indicator-yellow
-	   '((default :inherit bold)
-		 (((class color) (min-colors 88) (background light))
-		  :foreground "#6f4000")
-		 (((class color) (min-colors 88) (background dark))
-		  :foreground "#f0c526")
-		 (t :foreground "yellow"))
-	   "Face for modeline indicators")
-   #+end_src
-
-** Helper functions to return strings for display in the modeline 
-    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-	  (defun my-modeline--major-mode-name ()
-		"Return the capitalized `major-mode' name."
-		(capitalize (string-replace "-mode" "" (symbol-name major-mode))))
-
-	  (defun my-modeline--evil-state-name-and-face ()
-		"Return a symbol associated with a face to propertize the current evil state."
-		(pcase evil-state
-		  ('insert '("INSERT" my-modeline-evil-insert-state))
-		  ('normal '("NORMAL" my-modeline-evil-normal-state))
-		  ('visual '("VISUAL" my-modeline-evil-visual-state))
-		  ('replace '("REPLAC" my-modeline-indicator-red))
-		  ('emacs '("EMACS" my-modeline-evil-emacs-state))))
-
-	  (defun my-modeline--buffer-name ()
-		"Return the buffer's name."
-		(format "%s "(buffer-name)))
-
-	  (defun my-modeline--buffer-name-face ()
-		(let ((file (buffer-name)))
-		  (cond
-		   ((and (mode-line-window-selected-p)
-				 file
-				 (buffer-modified-p))
-			'(italic underline mode-line-buffer-id))
-		   ((and file (buffer-modified-p))
-			'italic)
-		   ((mode-line-window-selected-p)
-			'(underline mode-line-buffer-id)))))
-
-	  (defun my-modeline--major-mode-indicator ()
-		(let ((indicator (cond
-						  ((derived-mode-p 'text-mode) "§")
-						  ((derived-mode-p 'prog-mode) "λ")
-						  ((or (derived-mode-p 'comint-mode)
-							   (derived-mode-p 'eshell-mode))
-						   ">_"))))
-		  (propertize indicator 'face 'shadow)))
-
-	  (defun my-modeline--git-branch ()
-		"Return propertized git branch."
-		(when-let ((branch (car (vc-git-branches))))
-		  (propertize branch 'face 'bold)))
-    #+end_src
-
-** Local variables which make up the segments of my modeline
-    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-	  (defvar-local my-modeline-remote
-		  '(:eval
-			(when (file-remote-p default-directory)
-			  (propertize " @ " 'face 'my-modeline-indicator-red-bg))))
-
-
-	  (defvar-local my-modeline-git-branch
-		  '(:eval
-			(if-let (((mode-line-window-selected-p))
-					 (branch (my-modeline--git-branch)))
-				(list
-				 " "
-				 (propertize (char-to-string #xE0A0) 'face 'shadow)
-				 " "
-				 branch
-				 " "))))
-
-	  (defvar-local my-modeline-evil-state
-		  '(:eval
-			(let* ((name-face (my-modeline--evil-state-name-and-face))
-				   (name (car name-face))
-				   (face (cadr name-face)))
-			  (propertize (upcase name) 'face face))))
-
-	  (defvar-local my-modeline-major-mode
-		  '(:eval
-			(when (mode-line-window-selected-p)
-			  (list
-			   (my-modeline--major-mode-indicator)
-			   " "
-			   (propertize (my-modeline--major-mode-name)
-						   'face 'my-modeline-buffer-face)))))
-
-	  (defvar-local my-modeline-buffer-name
-		  '(:eval
-			(list
-			 " "
-			 (format "%s" (propertize
-						   (my-modeline--buffer-name)
-						   'face (my-modeline--buffer-name-face)))
-			 " ")))
-
-	  (defvar-local my-modeline-date
-		  '(:eval
-			(when (mode-line-window-selected-p)
-			  (let ((date-time (format-time-string "%H:%M %b %d, %Y")))
-				(propertize date-time 'face 'underline)))))
-
-	  (defvar-local my-modeline-pos-in-buffer
-		  '(:eval
-			(when (mode-line-window-selected-p)
-			  (let ((pos (line-number-at-pos)))
-				(list
-				 (propertize "L" 'face 'bold)
-				 (format "%s" pos)
-				 " "
-				 )))))
-
-	  ;; Any variable used in the mode line format MUST be marked as `risky-local-variable'.
-	  (dolist (component '(my-modeline-git-branch
-						   my-modeline-major-mode
-						   my-modeline-buffer-name
-						   my-modeline-remote
-						   my-modeline-evil-state
-						   my-modeline-pos-in-buffer
-						   my-modeline-date))
-		(put component 'risky-local-variable t))
-    #+end_src
-
-** The mode line format
-     #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-	   ;;; My mode line
-	   ;;; Disabled for now in favor of 'doom-modeline
-	   ;; (setq mode-line-right-align-edge 'right-margin)
-	   ;; (setq-default mode-line-format
-	   ;; 	  '("%e"
-	   ;; 		my-modeline-evil-state
-	   ;; 		my-modeline-remote
-	   ;; 		my-modeline-buffer-name
-	   ;; 		my-modeline-major-mode
-	   ;; 		" "
-	   ;; 		my-modeline-git-branch
-	   ;; 		" "
-	   ;;                 my-modeline-pos-in-buffer
-	   ;; 		my-modeline-date))
-
-	   ;;; The default mode line
-	   ;; (setq-default mode-line-format
-	   ;; 		     '("%e" mode-line-front-space
-	   ;; 		       (:propertize
-	   ;; 			("" mode-line-mule-info mode-line-client mode-line-modified
-	   ;; 			 mode-line-remote)
-	   ;; 			display (min-width (5.0)))
-	   ;; 		       mode-line-frame-identification mode-line-buffer-identification "   "
-	   ;; 		       mode-line-position evil-mode-line-tag (vc-mode vc-mode) "  " mode-line-modes
-	   ;; 		       mode-line-misc-info mode-line-end-spaces))
-     #+end_src
 ** Provide =my-modeline=
-    #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-	  (straight-use-package 'doom-modeline) 
-	  (setq doom-modeline-height 35)
-	  (setq doom-modeline-bar-width 4)
-	  (setq doom-modeline-hud t)
-	  (setq doom-modeline-major-mode-color-icon t)
-	  (setq doom-modeline-enable-word-count t)
-	  (doom-modeline-mode 1)
-	  (provide 'my-modeline)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+  (straight-use-package 'doom-modeline) 
+  (setq doom-modeline-height 35)
+  (setq doom-modeline-bar-width 4)
+  (setq doom-modeline-hud t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-enable-word-count t)
+  (doom-modeline-mode 1)
+  (provide 'my-modeline)
+#+end_src
 
 * Base settings
 ** Customization file
 
-  Here's just a holding ground for general emacs settings that
-  don't seem to fit in any more specific location.
+Here's just a holding ground for general emacs settings that
+don't seem to fit in any more specific location.
 
-  When emacs makes customizations on my behalf, it throws the
-  resultant elist code into my init file. It's great that it
-  produces visible, editable, version controllable config, but
-  I don't like it in my init file. Let's move it somewhere else.
+When emacs makes customizations on my behalf, it throws the
+resultant elist code into my init file. It's great that it
+produces visible, editable, version controllable config, but
+I don't like it in my init file. Let's move it somewhere else.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-    (setq custom-file (concat user-emacs-directory "custom.el"))
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq custom-file (concat user-emacs-directory "custom.el"))
+#+end_src
 
 ** Backups
 
-  Emacs helpfully creates local backups of any files you're editing so that
-  if something happens to your session before saving the file, you'll have
-  a backup of the local changes.
+Emacs helpfully creates local backups of any files you're editing so that
+if something happens to your session before saving the file, you'll have
+a backup of the local changes.
 
-  It *un*-helpfully defaults to placing them in the same directory as the file
-  you are editing. This clutters things up immensely, particularily when you
-  are working in a version-controlled project and have to tell your VC tool
-  to ignore them.
+It *un*-helpfully defaults to placing them in the same directory as the file
+you are editing. This clutters things up immensely, particularily when you
+are working in a version-controlled project and have to tell your VC tool
+to ignore them.
 
-  Much better to just place them in a dedicated directory and forget about them.
-  Emacs will still save the day if something happens, but you don't have to
-  worry about it.
+Much better to just place them in a dedicated directory and forget about them.
+Emacs will still save the day if something happens, but you don't have to
+worry about it.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-    (setq backup-directory-alist '(("." . "~/.backups")))
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq backup-directory-alist '(("." . "~/.backups")))
+#+end_src
 
 ** Dictionary
 
-   Emacs has built in dictionary support (because of course it does). By dafault, it
-   expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
-   it falls back to [[dict.org]]. I'm fine with going over the wire for my definitions,
-   so let's just set it as default.
+Emacs has built in dictionary support (because of course it does). By dafault, it
+expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
+it falls back to [[dict.org]]. I'm fine with going over the wire for my definitions,
+so let's just set it as default.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-     (setq dictionary-server "dict.org")
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq dictionary-server "dict.org")
+#+end_src
 
 ** Provide the module
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-     (provide 'my-core)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (provide 'my-core)
+#+end_src
 
 * Evil (vim)
 
-  Evil mode is the backbone of this configuration. Coming from years
-  of vim use, modal editing is burned into my brain stem.
+Evil mode is the backbone of this configuration. Coming from years
+of vim use, modal editing is burned into my brain stem.
 
-  Fortunately, emacs has some of the best vim emulation of any editor
-  or environment around in the way of ~evil-mode~.
+Fortunately, emacs has some of the best vim emulation of any editor
+or environment around in the way of ~evil-mode~.
 
 ** Install the package and enable it
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-	(setq evil-want-keybinding nil)
-	(straight-use-package 'evil)
-	(setq evil-vsplit-window-right t)
-	(setq evil-split-window-below t)
-	(setq evil-undo-system 'undo-redo)
-	(evil-mode 1)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (setq evil-want-keybinding nil)
+  (straight-use-package 'evil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
+  (setq evil-undo-system 'undo-redo)
+  (evil-mode 1)
+#+end_src
 
 ** Starting state for major modes
 
-   Sometimes I want to have some evil state other than =normal= for a particular
-   major mode, or the mode might not start in =normal= mode for some reason.
-   Regardless, configure thes modes with the desired initial state.
+Sometimes I want to have some evil state other than =normal= for a particular
+major mode, or the mode might not start in =normal= mode for some reason.
+Regardless, configure thes modes with the desired initial state.
 
 *** Normal modes
-   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-	 (defvar my-normal-modes
-	   '(Info-mode
-		 Man-mode
-		 magit-log-mode
-		 occur-mode
-		 magit-revision-mode
-		 git-rebase-mode
-		 notmuch-hello-mode
-		 notmuch-search-mode
-		 notmuch-show-mode
-		 ibuffer-mode
-		 calendar-mode
-		 org-agenda-mode
-		 grep-mode)
-	   "Modes for which evil should begin in normal mode.")
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (defvar my-normal-modes
+    '(Info-mode
+      Man-mode
+      magit-log-mode
+      occur-mode
+      magit-revision-mode
+      git-rebase-mode
+      notmuch-hello-mode
+      notmuch-search-mode
+      notmuch-show-mode
+      ibuffer-mode
+      calendar-mode
+      org-agenda-mode
+      grep-mode)
+    "Modes for which evil should begin in normal mode.")
 
-	 (dolist (mode my-normal-modes)
-	   (evil-set-initial-state mode 'normal))
-  #+end_src
+  (dolist (mode my-normal-modes)
+    (evil-set-initial-state mode 'normal))
+#+end_src
 
 *** Insert modes
-   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (defvar my-insert-modes
-       '(vterm-mode
-	 eshell-mode
-	 eat-mode)
-       "Modes for which evil should begin in insert mode.")
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (defvar my-insert-modes
+    '(vterm-mode
+      eshell-mode
+      eat-mode)
+    "Modes for which evil should begin in insert mode.")
 
-     (dolist (mode my-insert-modes)
-       (evil-set-initial-state mode 'insert))
-  #+end_src
+  (dolist (mode my-insert-modes)
+    (evil-set-initial-state mode 'insert))
+#+end_src
 
 *** Emacs modes
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (defvar my-emacs-modes '()
-       "Modes to start in native emacs mode.")
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (defvar my-emacs-modes '()
+    "Modes to start in native emacs mode.")
 
-     (dolist (mode my-emacs-modes)
-       (evil-set-initial-state mode 'emacs))
-   #+end_src
+  (dolist (mode my-emacs-modes)
+    (evil-set-initial-state mode 'emacs))
+#+end_src
 
 ** Cursor shape/color
 
-   It's helpful to set the cursor to different colors and shapes to help remind
-   me what evil state I'm currently in.
+It's helpful to set the cursor to different colors and shapes to help remind
+me what evil state I'm currently in.
 
-   /NOTE:/ is there a way to set these colors to something theme compatible?
+NOTE:/ is there a way to set these colors to something theme compatible?
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (setq evil-normal-state-cursor '(box "light blue")
-	   evil-insert-state-cursor '(bar "medium sea green")
-	   evil-visual-state-cursor '(hollow "orange"))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (setq evil-normal-state-cursor '(box "light blue")
+        evil-insert-state-cursor '(bar "medium sea green")
+        evil-visual-state-cursor '(hollow "orange"))
+#+end_src
 
 ** Leader key
 
-  The leader key is a super handy global prefix for keybindings.
-  It's used in this configuration as the entrypoint for most bindings.
+The leader key is a super handy global prefix for keybindings.
+It's used in this configuration as the entrypoint for most bindings.
 
-  After entering the leader key =SPC=, bindings are further subdivided
-  by the logical operations or object those bindings act on.
+After entering the leader key =SPC=, bindings are further subdivided
+by the logical operations or object those bindings act on.
 
-  | _binding_ | _action_                           |
-  |---------+----------------------------------|
-  | SPC a   | application launcher             |
-  | SPC b   | buffer actions                   |
-  | SPC c   | config actions                   |
-  | SPC d   | dired actions                    |
-  | SPC e   | evaluation actions               |
-  | SPC f   | file based actions               |
-  | SPC g   | magit                            |
-  | SPC h   | help actions                     |
-  | SPC m   | [reserved] mode specific actions |
-  | SPC o   | org actions                      |
-  | SPC t   | tab actions                      |
-  | SPC w   | window based actions             |
+| _binding_ | _action_                           |
+|---------+----------------------------------|
+| SPC a   | application launcher             |
+| SPC b   | buffer actions                   |
+| SPC c   | config actions                   |
+| SPC d   | dired actions                    |
+| SPC e   | evaluation actions               |
+| SPC f   | file based actions               |
+| SPC g   | magit                            |
+| SPC h   | help actions                     |
+| SPC m   | [reserved] mode specific actions |
+| SPC o   | org actions                      |
+| SPC t   | tab actions                      |
+| SPC w   | window based actions             |
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-    (evil-set-leader 'normal (kbd "<SPC>"))
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (evil-set-leader 'normal (kbd "<SPC>"))
+#+end_src
 
 ** Evil collection
-    This enables evil bindings for many, many modes. Many more than
-    what the default evil installation includes support for.i
+This enables evil bindings for many, many modes. Many more than
+what the default evil installation includes support for.
 
-	#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-	  (straight-use-package 'evil-collection)
-	  (evil-collection-init)
-	#+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (straight-use-package 'evil-collection)
+  (evil-collection-init)
+#+end_src
 
 ** Evil surround
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-    (straight-use-package 'evil-surround)
-    (global-evil-surround-mode 1)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (straight-use-package 'evil-surround)
+  (global-evil-surround-mode 1)
+#+end_src
 
 ** Evil numbers
 
-   For some reason, vim's increment and decrement number functionality
-   is not replicated by evil. This package just re-introduces that
-   behavior
+For some reason, vim's increment and decrement number functionality
+is not replicated by evil. This package just re-introduces that
+behavior
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (straight-use-package 'evil-numbers)
-     (define-key evil-normal-state-map (kbd "C-a") #'evil-numbers/inc-at-pt)
-     (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (straight-use-package 'evil-numbers)
+  (define-key evil-normal-state-map (kbd "C-a") #'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
+#+end_src
 
 ** Evil comments
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-    (straight-use-package 'evil-commentary)
-    (evil-commentary-mode)
-    (evil-define-key '(insert normal visual) evil-commentary-mode-map (kbd "s-;") #'evil-commentary-line)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (straight-use-package 'evil-commentary)
+  (evil-commentary-mode)
+  (evil-define-key '(insert normal visual) evil-commentary-mode-map
+    (kbd "s-;") #'evil-commentary-line)
+#+end_src
 
 ** Evil org enhancements
-  #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-	(defun evil-org-dwim-insert-below ()
-	  "Insert a heading or item below current line.
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (defun evil-org-dwim-insert-below ()
+    "Insert a heading or item below current line.
 
-	Replaces the evil 'o' binding `evil-open-below'."
-	  (interactive)
-	  (if (org-at-heading-p)
-		  (progn (org-insert-heading-after-current)
-				 (call-interactively #'evil-insert))
-		(if (org-at-heading-or-item-p)
-			(progn
-			  (evil-append-line 1)
-			  (org-insert-item))
-		  (call-interactively #'evil-open-below))))
+  Replaces the evil 'o' binding `evil-open-below'."
+    (interactive)
+    (if (org-at-heading-p)
+        (progn (org-insert-heading-after-current)
+               (call-interactively #'evil-insert))
+      (if (org-at-heading-or-item-p)
+          (progn
+            (evil-append-line 1)
+            (org-insert-item))
+        (call-interactively #'evil-open-below))))
 
-	(evil-define-key 'normal org-mode-map
-	  (kbd "o") #'evil-org-dwim-insert-below)
-	#+end_src
+  (evil-define-key 'normal org-mode-map
+    (kbd "o") #'evil-org-dwim-insert-below)
+#+end_src
 ** Provide the module
   
-   #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-     (provide 'my-evil-config)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
+  (provide 'my-evil-config)
+#+end_src
 
 * Calendar
 ** Base settings
 
-   Set the date style to iso (day month year).
+Set the date style to iso (day month year).
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-     (setq calendar-date-style 'iso)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+  (setq calendar-date-style 'iso)
+#+end_src
 ** Bindings
-   #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp
-     ;; movement commands
-     (evil-define-key '(normal visual) calendar-mode-map
-       (kbd "l") #'calendar-forward-day
-       (kbd "h") #'calendar-backward-day
-       (kbd "k") #'calendar-backward-week
-       (kbd "j") #'calendar-forward-week
-       (kbd "b") #'calendar-backward-week
-       (kbd "w") #'calendar-forward-week
-       (kbd "<") #'calendar-scroll-left
-       (kbd ">") #'calendar-scroll-right
-       (kbd "0") #'calendar-beginning-of-week
-       (kbd "$") #'calendar-end-of-week
-       (kbd ".") #'calendar-goto-today)
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp
+  ;; movement commands
+  (evil-define-key '(normal visual) calendar-mode-map
+    (kbd "l") #'calendar-forward-day
+    (kbd "h") #'calendar-backward-day
+    (kbd "k") #'calendar-backward-week
+    (kbd "j") #'calendar-forward-week
+    (kbd "b") #'calendar-backward-week
+    (kbd "w") #'calendar-forward-week
+    (kbd "<") #'calendar-scroll-left
+    (kbd ">") #'calendar-scroll-right
+    (kbd "0") #'calendar-beginning-of-week
+    (kbd "$") #'calendar-end-of-week
+    (kbd ".") #'calendar-goto-today)
 
-     (evil-define-key 'normal calendar-mode-map
-       (kbd "q") #'calendar-exit
-       (kbd "d d") #'diary-view-entries
-       (kbd "d i") #'diary-insert-entry)
-   #+end_src
+  (evil-define-key 'normal calendar-mode-map
+    (kbd "q") #'calendar-exit
+    (kbd "d d") #'diary-view-entries
+    (kbd "d i") #'diary-insert-entry)
+#+end_src
 ** Diary
 
-   The diary is (for me) mostly a way to jot down an appointment or reminder.
+The diary is (for me) mostly a way to jot down an appointment or reminder.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-     (appt-activate 1)
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+  (appt-activate 1)
 
-     (evil-define-key 'normal diary-fancy-display-mode-map
-       (kbd "q") 'quit-window)
-   #+end_src
+  (evil-define-key 'normal diary-fancy-display-mode-map
+    (kbd "q") 'quit-window)
+#+end_src
 
 ** Provide the module
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-    (provide 'my-calendar)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+  (provide 'my-calendar)
+#+end_src
 * Completion
 
 ** General minibuffer settings
@@ -884,8 +641,8 @@ modifying this file.
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
     (straight-use-package 'corfu)
     (setq corfu-auto t
-	  corfu-separator ?\s
-	  tab-always-indent 'complete)
+          corfu-separator ?\s
+          tab-always-indent 'complete)
     (global-corfu-mode 1)
   #+end_src
 
@@ -909,60 +666,59 @@ modifying this file.
    (by default) and finds results regardless of search term order, thus, orderless.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-     (straight-use-package 'orderless)
-     (setq completion-styles '(orderless basic)
-	   completion-category-defaults nil
-	   completion-category-overrides '((file (styles partial-completion))))
+    (straight-use-package 'orderless)
+    (setq completion-styles '(orderless basic)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion))))
    #+end_src
    
 ** Consult
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-    (straight-use-package 'consult)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'consult)
+#+end_src
 
 *** consult dir
-    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-      (straight-use-package 'consult-dir)
-      (define-key vertico-map
-		  (kbd "M-c") #'consult-dir)
-      (evil-define-key 'norma cdl
-	global-map
-	(kbd "<leader> c d") #'consult-dir)
-    #+end_src
-
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'consult-dir)
+  (define-key vertico-map
+              (kbd "M-c") #'consult-dir)
+  (evil-define-key 'norma cdl
+    global-map
+    (kbd "<leader> c d") #'consult-dir)
+#+end_src
 
 ** Embark
 
-    It's kinda like right click, for your keyboard.
-    Activating embark gives you a context-aware menu
-    of actions to perform on the target under point.
+It's kinda like right click, for your keyboard.
+Activating embark gives you a context-aware menu
+of actions to perform on the target under point.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-      (straight-use-package 'embark)
-      (straight-use-package 'embark-consult)
-      (setq prefix-help-command #'embark-prefix-help-command)
-      (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-      (evil-define-key '(normal motion visual insert emacs) 'global
-	(kbd "s-<return>") #'embark-dwim
-	(kbd "C-<return>") #'embark-act)
-      (define-key minibuffer-local-map
-	(kbd "C-<return>") #'embark-act)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'embark)
+  (straight-use-package 'embark-consult)
+  (setq prefix-help-command #'embark-prefix-help-command)
+  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  (evil-define-key '(normal motion visual insert emacs) 'global
+    (kbd "s-<return>") #'embark-dwim
+    (kbd "C-<return>") #'embark-act)
+  (define-key minibuffer-local-map
+              (kbd "C-<return>") #'embark-act)
+#+end_src
    
 ** Provide the module
-    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-      (provide 'my-completion)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (provide 'my-completion)
+#+end_src
  
 * Icons
 ** Set up all the icons
-  #+begin_src emacs-lisp :tangle "my-modules/my-icons.el" :mkdirp yes
-    ;; Icons
-    (straight-use-package 'all-the-icons)
-    ;;; If icons aren't showing up, you may need to install the font.
-    ;;; If so, uncomment and execute the following line.
-    ;; (all-the-icons-install-fonts t)
+#+begin_src emacs-lisp :tangle "my-modules/my-icons.el" :mkdirp yes
+  ;; Icons
+  (straight-use-package 'all-the-icons)
+  ;;; If icons aren't showing up, you may need to install the font.
+  ;;; If so, uncomment and execute the following line.
+  ;; (all-the-icons-install-fonts t)
 #+end_src
 
 ** And completion support for all the icons
@@ -982,27 +738,27 @@ modifying this file.
 
 * Ediff
 ** Window management
-   Ediff puts its control panal in a separate frame, which makes tiling window managers
-   quite unhappy. Let's configure it to use the /plain/ setup which just makes a small
-   window at the bottom of the current frame.
+Ediff puts its control panal in a separate frame, which makes tiling window managers
+quite unhappy. Let's configure it to use the /plain/ setup which just makes a small
+window at the bottom of the current frame.
    
-  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-    (require 'ediff)
-    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-    (setq ediff-split-window-function 'split-window-horizontally)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+  (require 'ediff)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally)
+#+end_src
 
 ** Bindings
-  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-    (evil-define-key 'normal ediff-mode-map
-      (kbd "j") #'ediff-next-difference
-      (kbd "k") #'ediff-previous-difference)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+  (evil-define-key 'normal ediff-mode-map
+    (kbd "j") #'ediff-next-difference
+    (kbd "k") #'ediff-previous-difference)
+#+end_src
 
 ** Provide =my-ediff=
-  #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-    (provide 'my-ediff)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
+  (provide 'my-ediff)
+#+end_src
   
 * Getting Things Done (GTD)
 #+begin_src emacs-lisp :tangle "my-modules/my-gtd.el" :mkdirp yes
@@ -1018,369 +774,387 @@ modifying this file.
 #+end_src
 * Denote
 ** Basic settings
-  #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	(straight-use-package 'denote)
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (straight-use-package 'denote)
 
-	(denote-rename-buffer-mode 1)
-	(setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
+  (denote-rename-buffer-mode 1)
+  (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-	(setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
+  (setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
 
-	(setq denote-dired-directories-include-subdirectories t
-		  denote-dired-directories (list denote-directory gtd-projects-directory))
-	(setq denote-prompts '(title subdirectory keywords))
-  #+end_src
+  (setq denote-dired-directories-include-subdirectories t
+        denote-dired-directories (list denote-directory gtd-projects-directory))
+  (setq denote-prompts '(title subdirectory keywords))
+#+end_src
 
 ** Helper functions
-  #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	(defun denote-meeting (person)
-	  (interactive (let ((people-files (denote-directory-files "_person" nil t)))
-					 (list (completing-read
-							"Person:"
-							(mapcar (lambda (f)
-									  (denote-retrieve-title-or-filename f 'org))
-									people-files)))))
-	  (denote person '("meeting") 'org))
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (defun denote-meeting (person)
+    (interactive (let ((people-files (denote-directory-files "_person" nil t)))
+                   (list (completing-read
+                          "Person:"
+                          (mapcar (lambda (f)
+                                    (denote-retrieve-title-or-filename f 'org))
+                                  people-files)))))
+    (denote person '("meeting") 'org))
 
-	(defun denote-search-content ()
-	  (interactive)
-	  (consult-ripgrep denote-directory))
+  (defun denote-search-content ()
+    (interactive)
+    (consult-ripgrep denote-directory))
 
-	(defun denote-dired ()
-	  (interactive)
-	  (dired denote-directory))
-  #+end_src
+  (defun denote-dired ()
+    (interactive)
+    (dired denote-directory))
+#+end_src
    
 ** Bindings
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	 (evil-define-key 'normal 'global
-	   (kbd "<leader> n /") #'denote-search-content
-	   (kbd "<leader> n J") #'denote-journal-extras-new-entry
-	   (kbd "<leader> n b") #'denote-backlinks
-	   (kbd "<leader> n d") #'denote-dired
-	   (kbd "<leader> n f") #'denote-open-or-create
-	   (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
-	   (kbd "<leader> n l") #'denote-link
-	   (kbd "<leader> n n") #'denote
-	   (kbd "<leader> n m") #'denote-meeting
-	   (kbd "<leader> n r") #'denote-rename-file
-	   (kbd "<leader> n s") #'denote-signature
-	   (kbd "<leader> n t") #'denote-template)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (evil-define-key 'normal 'global
+    (kbd "<leader> n /") #'denote-search-content
+    (kbd "<leader> n J") #'denote-journal-extras-new-entry
+    (kbd "<leader> n b") #'denote-backlinks
+    (kbd "<leader> n d") #'denote-dired
+    (kbd "<leader> n f") #'denote-open-or-create
+    (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+    (kbd "<leader> n l") #'denote-link
+    (kbd "<leader> n n") #'denote
+    (kbd "<leader> n m") #'denote-meeting
+    (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
+    (kbd "<leader> n r") #'denote-rename-file-using-front-matter
+    (kbd "<leader> n s") #'denote-signature
+    (kbd "<leader> n t") #'denote-template)
+#+end_src
 
-   And for the specialized ~backlinks-mode~ to display all links to the current
-   denote buffer.
+And for the specialized ~backlinks-mode~ to display all links to the current
+denote buffer.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-     (evil-define-key 'normal denote-backlinks-mode-map
-       (kbd "j") #'denote-backlinks-next
-       (kbd "k") #'denote-backlinks-prev)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (evil-define-key 'normal denote-backlinks-mode-map
+    (kbd "j") #'denote-backlinks-next
+    (kbd "k") #'denote-backlinks-prev)
+#+end_src
 
 ** Journaling
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-     (require 'denote-journal-extras)
-     (setq denote-journal-extras-directory (concat denote-directory "/journal"))
-     (add-to-list 'denote-dired-directories denote-journal-extras-directory)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (require 'denote-journal-extras)
+  (setq denote-journal-extras-directory (concat denote-directory "/journal"))
+  (add-to-list 'denote-dired-directories denote-journal-extras-directory)
+#+end_src
 
 ** Silos
-   Silos are a way to fully sepparate notes from each other. In order
-   to fully support them, we'll need to tell denote where each silo
-   lives.
+Silos are a way to fully sepparate notes from each other. In order
+to fully support them, we'll need to tell denote where each silo
+lives.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	 (require 'denote-silo-extras)
-	 (let ((my-silo-dirs (mapcar (lambda (file)
-								   (expand-file-name file))
-								 '("~/Dropbox/gtd/projects"))))
-	   (dolist (dir my-silo-dirs)
-		 (add-to-list 'denote-silo-extras-directories dir)
-		 (add-to-list 'denote-dired-directories dir)))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (require 'denote-silo-extras)
+  (let ((my-silo-dirs (mapcar (lambda (file)
+                                (expand-file-name file))
+                              '("~/Dropbox/gtd/projects"))))
+    (dolist (dir my-silo-dirs)
+      (add-to-list 'denote-silo-extras-directories dir)
+      (add-to-list 'denote-dired-directories dir)))
+#+end_src
 
 ** Hooks
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-    (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+#+end_src
+
+** Denote Explore
+Denote explore is a great little package that supplies some helper
+function meant to aid in managing your denote notes.
+
+It is separated into four categories:
+
+1. statistical information about your notes
+2. random walks to help spur creative thinking about your notes
+3. janitorial tasks to organize and clean up your notes
+4. visualization methods to see the relationships between your notes
+
+see [[info:denote-explore][here]] for a full manual on the package
+
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (straight-use-package 'denote-explore)
+#+end_src
 
 ** Templates
-    Denote allows for defining templates when creating a new note. The
-    selected template will pre-fill the newly created note.
+Denote allows for defining templates when creating a new note. The
+selected template will pre-fill the newly created note.
 
-	#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-	  (setq denote-templates
-			`((onboarding . ,(concat "* Onboarding Tasks\n"
-									 "  - [ ] Welcome, office tour\n"
-									 "  - [ ] Get laptop (Ada)\n"
-									 "  - [ ] Kipsu Platform Architecture\n"
-									 "    - https://kipsudev.atlassian.net/wiki/spaces/EN/pages/3145105581/-+Architecture\n"
-									 "  - [ ] Set up local environment\n"
-									 "  - [ ] Get peripherals\n"
-									 "  - [ ] PagerDuty Access\n"
-									 "  - [ ] Account access\n"
-									 "    - AUDIT ticket\n"
-									 "    - github\n"
-									 "    - aws\n"
-									 "    - jira\n"
-									 "    - confluence"))
-			  (journal . ,(concat "* Daily habits\n"
-								  "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
-								  "  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
-								  "* Notes\n\n"
-								  "* Meetings\n"))
-			  (person . ,(concat "* Relationships\n\n"
-								 "* Prayer requests\n\n"
-								 "* Meetings\n"))))
-	#+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (setq denote-templates
+        `((onboarding . ,(concat "* Onboarding Tasks\n"
+                                 "  - [ ] Welcome, office tour\n"
+                                 "  - [ ] Get laptop (Ada)\n"
+                                 "  - [ ] Kipsu Platform Architecture\n"
+                                 "    - https://kipsudev.atlassian.net/wiki/spaces/EN/pages/3145105581/-+Architecture\n"
+                                 "  - [ ] Set up local environment\n"
+                                 "  - [ ] Get peripherals\n"
+                                 "  - [ ] PagerDuty Access\n"
+                                 "  - [ ] Account access\n"
+                                 "    - AUDIT ticket\n"
+                                 "    - github\n"
+                                 "    - aws\n"
+                                 "    - jira\n"
+                                 "    - confluence"))
+          (journal . ,(concat "* Daily habits\n"
+                              "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
+                              "  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
+                              "* Notes\n\n"
+                              "* Meetings\n"))
+          (person . ,(concat "* Relationships\n\n"
+                             "* Prayer requests\n\n"
+                             "* Meetings\n"))))
+#+end_src
 ** Provide the module
-   #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-    (provide 'my-denote)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (provide 'my-denote)
+#+end_src
 
 * Dired
 
-  The Dir(ectory) Ed(itor). [[elisp:(info "(emacs) Dired")][Dired]] is a text based file manager, baked into
-  emacs. It uses the modest [[man:ls][ls]] command to generate the directory listing,
-  and adds a ton of functionality on top, allowing for inteligent commands
-  to operate on the seleted file(s). This only scratches the surface of
-  what it can do, so seriously, read the info doc.
+The Dir(ectory) Ed(itor). [[elisp:(info "(emacs) Dired")][Dired]] is a text based file manager, baked into
+emacs. It uses the modest [[man:ls][ls]] command to generate the directory listing,
+and adds a ton of functionality on top, allowing for inteligent commands
+to operate on the seleted file(s). This only scratches the surface of
+what it can do, so seriously, read the info doc.
 
 ** Settings
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-     (setq dired-kill-when-opening-new-dired-buffer t) 
-     (require 'dired)
-     (setq dired-listing-switches "-hAl")
-     ;; this pre-fills the destination prompt of copy and rename
-     ;; commands with the directory of the other dired buffer
-     ;; if one is open. Very handy
-     (setq dired-dwim-target t)
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (setq dired-kill-when-opening-new-dired-buffer t) 
+  (require 'dired)
+  (setq dired-listing-switches "-hAl")
+  ;; this pre-fills the destination prompt of copy and rename
+  ;; commands with the directory of the other dired buffer
+  ;; if one is open. Very handy
+  (setq dired-dwim-target t)
 
-     ;; don't show all the file details by default
-     ;; They're still accessible with '('
-     (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-   #+end_src
+  ;; don't show all the file details by default
+  ;; They're still accessible with '('
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+#+end_src
 
-   I want to be able to toggle the display of dotfiles in dired. This function allows me to
-   do exactly that.
+I want to be able to toggle the display of dotfiles in dired. This function allows me to
+do exactly that.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-     (defun dired-dotfiles-toggle ()
-       (interactive)
-       (when (equal major-mode 'dired-mode)
-	 (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
-	     (progn
-	       (set (make-local-variable 'dired-dotfiles-show-p) nil)
-	       (message "h")
-	       (dired-mark-files-regexp "^\\\.")
-	       (dired-do-kill-lines))
-	   (progn (revert-buffer)
-		  (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (defun dired-dotfiles-toggle ()
+    (interactive)
+    (when (equal major-mode 'dired-mode)
+      (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
+          (progn
+            (set (make-local-variable 'dired-dotfiles-show-p) nil)
+            (message "h")
+            (dired-mark-files-regexp "^\\\.")
+            (dired-do-kill-lines))
+        (progn (revert-buffer)
+               (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
-     (defun dired-mark-files-extension (extension)
-       "Mark all files with the given file EXTENSION.
+  (defun dired-mark-files-extension (extension)
+    "Mark all files with the given file EXTENSION.
 
-     EXTENSION should not contain the . prefix.
-     When called interactively, derive the extension from the current file
-     under the point in the dired buffer."
-       (interactive
-	(list (if current-prefix-arg
-		  (read-string "Extension: ")
-		(file-name-extension (dired-get-filename))))
-	'dired-mode)
-       (dired-mark-files-regexp (concat "." extension "$")))
-   #+end_src
+   EXTENSION should not contain the . prefix.
+   When called interactively, derive the extension from the current file
+   under the point in the dired buffer."
+    (interactive
+     (list (if current-prefix-arg
+               (read-string "Extension: ")
+             (file-name-extension (dired-get-filename))))
+     'dired-mode)
+    (dired-mark-files-regexp (concat "." extension "$")))
+#+end_src
 ** Bindings
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-      (define-key dired-mode-map (kbd "SPC") nil)
-      (evil-define-key '(normal motion) dired-mode-map
-	(kbd "j") #'dired-next-line
-	(kbd "k") #'dired-previous-line
-	(kbd "J") nil
-	(kbd "K") #'dired-do-kill-lines
-	(kbd "h") #'dired-up-directory
-	(kbd "l") #'dired-find-file
-	(kbd "n") #'evil-search-next
-	(kbd "e") #'dired-mark-files-extension
-	(kbd "r") #'revert-buffer
-	(kbd "N") #'evil-search-previous
-	(kbd "s") #'eshell
-	(kbd "g o") #'dired-insert-subdir
-	(kbd "g d") #'dired-kill-subdir
-	(kbd "g j") #'dired-next-subdir
-	(kbd "g k") #'dired-prev-subdir
-	(kbd ".") #'dired-dotfiles-toggle
-	(kbd "g g") #'dired-first-file
-	(kbd "G") #'dired-last-file
-	(kbd "<left>") #'dired-up-directory
-	(kbd "<right>") #'dired-find-file
-	(kbd "<up>") #'dired-previous-line
-	(kbd "<down>") #'dired-next-line
-	;; "find" prefix functions
-	(kbd "<leader> m f f") #'dired-mark-files-regexp
-	(kbd "<leader> m f g") #'dired-mark-files-containing-regexp
-	(kbd "<leader> m f d") #'dired-mark-directories)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (define-key dired-mode-map (kbd "SPC") nil)
+  (evil-define-key '(normal motion) dired-mode-map
+    (kbd "j") #'dired-next-line
+    (kbd "k") #'dired-previous-line
+    (kbd "J") nil
+    (kbd "K") #'dired-do-kill-lines
+    (kbd "h") #'dired-up-directory
+    (kbd "l") #'dired-find-file
+    (kbd "n") #'evil-search-next
+    (kbd "e") #'dired-mark-files-extension
+    (kbd "r") #'revert-buffer
+    (kbd "N") #'evil-search-previous
+    (kbd "s") #'eshell
+    (kbd "g o") #'dired-insert-subdir
+    (kbd "g d") #'dired-kill-subdir
+    (kbd "g j") #'dired-next-subdir
+    (kbd "g k") #'dired-prev-subdir
+    (kbd ".") #'dired-dotfiles-toggle
+    (kbd "g g") #'dired-first-file
+    (kbd "G") #'dired-last-file
+    (kbd "<left>") #'dired-up-directory
+    (kbd "<right>") #'dired-find-file
+    (kbd "<up>") #'dired-previous-line
+    (kbd "<down>") #'dired-next-line
+    ;; "find" prefix functions
+    (kbd "<leader> m f f") #'dired-mark-files-regexp
+    (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
+    (kbd "<leader> m f d") #'dired-mark-directories)
+#+end_src
 ** Helper functions
   
-   #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-     (defun dired-first-file ()
-       "Jump the point to the first dired entry that isn't . or .."
-       (interactive)
-       (beginning-of-buffer)
-       (dired-next-line 1))
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (defun dired-first-file ()
+    "Jump the point to the first dired entry that isn't . or .."
+    (interactive)
+    (beginning-of-buffer)
+    (dired-next-line 1))
 
-     (defun dired-last-file ()
-       "Jump the point to the last dired entry."
-       (interactive)
-       (end-of-buffer)
-       (dired-next-line -1))
+  (defun dired-last-file ()
+    "Jump the point to the last dired entry."
+    (interactive)
+    (end-of-buffer)
+    (dired-next-line -1))
 
-   #+end_src
+#+end_src
 
 ** dired-preview
 
-   sometimes it's handy to preview the file under point as you're navigating
-   a directory. dired-preview allows for exactly this behavior.
+sometimes it's handy to preview the file under point as you're navigating
+a directory. dired-preview allows for exactly this behavior.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-     (straight-use-package 'dired-preview)
-     (setq dired-preview-delay 0.2)
-     (evil-define-key 'normal dired-mode-map
-       (kbd "P") #'dired-preview-global-mode)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (straight-use-package 'dired-preview)
+  (setq dired-preview-delay 0.2)
+  (evil-define-key 'normal dired-mode-map
+    (kbd "P") #'dired-preview-global-mode)
+#+end_src
 
 ** Icons
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-    (straight-use-package 'all-the-icons-dired)
-    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-    (setq all-the-icons-dired-monochrome nil)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (straight-use-package 'all-the-icons-dired)
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  (setq all-the-icons-dired-monochrome nil)
+#+end_src
 
 ** Provide the module
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-    (provide 'my-dired)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (provide 'my-dired)
+#+end_src
   
 * GPG (egp)
 
-  GPG allows you to easily encrypt/decrypt files with either symmetric
-  (shared key) or asymetric (private key) encryption.
+GPG allows you to easily encrypt/decrypt files with either symmetric
+(shared key) or asymetric (private key) encryption.
 
-  Emacs hooks into this seemlessly by automatically decrypting encrypted
-  files automatically when opening them using any loaded encyption keys
-  you have on the system.
+Emacs hooks into this seemlessly by automatically decrypting encrypted
+files automatically when opening them using any loaded encyption keys
+you have on the system.
 
 ** Disable waiting for status
 
-  There is an outstanding bug in epg where waiting for the enryption status
-  will hang, which blocks the whole editor. We can disable this for now.
+There is an outstanding bug in epg where waiting for the enryption status
+will hang, which blocks the whole editor. We can disable this for now.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-    (fset 'epg-wait-for-status 'ignore)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+  (fset 'epg-wait-for-status 'ignore)
+#+end_src
 
 ** PIN entry
 
-  PIN entry is used to authorize a gpg key for use. By default emacs will
-  reach out to an external proccess to prompt for the PIN. But this is
-  emacs, let's make emacs do it.
+PIN entry is used to authorize a gpg key for use. By default emacs will
+reach out to an external proccess to prompt for the PIN. But this is
+emacs, let's make emacs do it.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-    (setq epg-pinentry-mode 'loopback)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+  (setq epg-pinentry-mode 'loopback)
+#+end_src
 
 ** Bindings
-   #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-     (evil-define-key 'normal epa-key-list-mode-map
-       (kbd "TAB") #'forward-button
-       (kbd "m") #'epa-mark-key
-       (kbd "u") #'epa-unmark-key)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+   (evil-define-key 'normal epa-key-list-mode-map
+     (kbd "TAB") #'forward-button
+     (kbd "m") #'epa-mark-key
+     (kbd "u") #'epa-unmark-key)
+#+end_src
 
 ** Provide the module
   
-  #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-    (provide 'my-gpg)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+  (provide 'my-gpg)
+#+end_src
 
 * Http server (simple-httpd)
-  This allows emacs to spin up a local http server to serve local
-  files on the filesystem.
+This allows emacs to spin up a local http server to serve local
+files on the filesystem.
 
 ** Add the package
-  #+begin_src emacs-lisp :tangle "my-modules/my-http.el" :mkdirp yes
-    (straight-use-package 'simple-httpd)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-http.el" :mkdirp yes
+  (straight-use-package 'simple-httpd)
+#+end_src
 
 ** Provide the module
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-http.el" :mkdirp yes
-    (provide 'my-http)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-http.el" :mkdirp yes
+  (provide 'my-http)
+#+end_src
 
 * Epub support
 ** Load nov mode and associate it with .epub files
-   #+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
-     (straight-use-package 'nov)
-     (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
+  (straight-use-package 'nov)
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+#+end_src
 
 ** Provide the module
-   #+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
-     (provide 'my-epub)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
+  (provide 'my-epub)
+#+end_src
 
 * Feed reader
-    We use the wonderful `elfeed` package to track and read feeds.
+We use the wonderful `elfeed` package to track and read feeds.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
-      (straight-use-package 'elfeed)
-      (setq elfeed-feeds
-	    '("https://protesilaos.com/codelog.xml"
-	      "http://rss.desiringgod.org/"
-	      "https://www.thegospelcoalition.org/feed/"
-	      "https://www.firstthings.com/rss/web-exclusives"))
+#+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
+  (straight-use-package 'elfeed)
+  (setq elfeed-feeds
+        '("https://protesilaos.com/codelog.xml"
+          "http://rss.desiringgod.org/"
+          "https://www.thegospelcoalition.org/feed/"
+          "https://www.firstthings.com/rss/web-exclusives"))
 
-      (evil-define-key 'normal elfeed-search-mode-map
-	(kbd "q") #'quit-window
-	(kbd "j") #'next-line
-	(kbd "k") #'previous-line
-	(kbd "u") #'elfeed-update
-	(kbd "+") #'elfeed-search-tag-all
-	(kbd "-") #'elfeed-search-untag-all
-	(kbd "RET") #'elfeed-search-show-entry)
+  (evil-define-key 'normal elfeed-search-mode-map
+    (kbd "q") #'quit-window
+    (kbd "j") #'next-line
+    (kbd "k") #'previous-line
+    (kbd "u") #'elfeed-update
+    (kbd "+") #'elfeed-search-tag-all
+    (kbd "-") #'elfeed-search-untag-all
+    (kbd "RET") #'elfeed-search-show-entry)
 
-      (evil-define-key 'normal elfeed-show-mode-map
-	(kbd "q") #'elfeed-kill-buffer)
+  (evil-define-key 'normal elfeed-show-mode-map
+    (kbd "q") #'elfeed-kill-buffer)
 
-      (provide 'my-feed)
-    #+end_src
+  (provide 'my-feed)
+#+end_src
     
 * Programming
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   (setq-default tab-width 4)
 #+end_src
 ** Prog mode
-    Emacs has a general ~prog~ mode, serving as the base major mode for
-    all language specific programming modes. Adding settings and hooks
-    for this mode means they will be set for all programming languages.
+Emacs has a general ~prog~ mode, serving as the base major mode for
+all language specific programming modes. Adding settings and hooks
+for this mode means they will be set for all programming languages.
 
 *** Rainbow delimiters
    
-    Highlight netsted delimeters with unique colors so you can tell
-    at a glance how deep you are.
+Highlight netsted delimeters with unique colors so you can tell
+at a glance how deep you are.
 
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-      (straight-use-package 'rainbow-delimiters)
-      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (straight-use-package 'rainbow-delimiters)
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+#+end_src
 
 *** LSP (Language Server Protocol)
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
@@ -1449,6 +1223,24 @@ modifying this file.
      (provide 'my-prog-mode)
    #+end_src
     
+** Flycheck (error checking)
+This replaces the venerable, but outdated flymake.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
+  (straight-use-package 'flycheck)
+  (global-flycheck-mode 1)
+#+end_src
+
+** Flyover (inline diagnostics)
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
+  (straight-use-package '(flyover
+                          :type git
+                          :host github
+                          :repo "konrad1977/flyover"))
+  (add-hook 'flycheck-mode-hook #'flyover-mode)
+  (setq flyover-levels '(error warning info))
+#+end_src
+
 ** Tree Sitter
 *** Overview
     Tree sitter allows for parsing structured text formats into an
@@ -1619,31 +1411,31 @@ modifying this file.
    the Erlang Beam vm.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-gleam-mode.el" :mkdirp yes
-	 (straight-use-package
-	  '(gleam-mode
-		:type git
-		:host github
-		:branch "gleam-ts-mode"
-		:repo "gleam-lang/gleam-mode"))
-	 ;; Note, this doesn't seem to work by itself just yet. I may need to add some additional code to help it out.
-	 ;; I'm not totally sure that it picks up the gleam-ts-mode correctly
-	 ;; running `(load-library "gleam-ts-mode")` afterwords picks up tne new #'gleam-ts-install-grammar
-	 ;; but that results in an error, saying it can't find the installed grammar
-	 (provide 'my-gleam-mode)
+     (straight-use-package
+      '(gleam-mode
+        :type git
+        :host github
+        :branch "gleam-ts-mode"
+        :repo "gleam-lang/gleam-mode"))
+     ;; Note, this doesn't seem to work by itself just yet. I may need to add some additional code to help it out.
+     ;; I'm not totally sure that it picks up the gleam-ts-mode correctly
+     ;; running `(load-library "gleam-ts-mode")` afterwords picks up tne new #'gleam-ts-install-grammar
+     ;; but that results in an error, saying it can't find the installed grammar
+     (provide 'my-gleam-mode)
    #+end_src
 ** Golang
    #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
-	 (straight-use-package 'go-mode)
-	 (setq gofmt-command "/usr/local/go/bin/gofmt")
-	 (setenv "PATH"
-		 (concat
-		  "/usr/local/go/bin:"
-		  (getenv "PATH")))
-	 (defun my-go-mode-hook ()
-	   (when (eq major-mode 'go-mode)
-		 (gofmt-before-save)))
-	 (add-hook 'before-save-hook #'my-go-mode-hook)
-	 (provide 'my-go-mode)
+     (straight-use-package 'go-mode)
+     (setq gofmt-command "/usr/local/go/bin/gofmt")
+     (setenv "PATH"
+         (concat
+          "/usr/local/go/bin:"
+          (getenv "PATH")))
+     (defun my-go-mode-hook ()
+       (when (eq major-mode 'go-mode)
+         (gofmt-before-save)))
+     (add-hook 'before-save-hook #'my-go-mode-hook)
+     (provide 'my-go-mode)
    #+end_src
 * Org
 
@@ -1659,8 +1451,8 @@ modifying this file.
   is extracted and ran to formulate the actual config.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	(straight-use-package '(org :type built-in))
-	(require 'org)
+    (straight-use-package '(org :type built-in))
+    (require 'org)
   #+end_src
 
 ** modules
@@ -1754,7 +1546,7 @@ modifying this file.
     #+end_src
 
 ** Settings
-
+*** org tempo
     Org tempo does a lot, I should really look into more of what it has to offer.
     At the very least, I use it for really handy expansion for scr blocks.
     I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
@@ -1764,6 +1556,8 @@ modifying this file.
        (require 'org-tempo))
    #+end_src
 
+*** default files and directories
+
    These are a handful of settings that set up default destinations for actions that
    act globally, such as [[*Org capture][org-capture]].
 
@@ -1771,6 +1565,8 @@ modifying this file.
      (setq org-directory "~/Dropbox/gtd/")
      (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
    #+end_src
+
+*** todo statuses
 
    Setting todo states
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
@@ -1787,6 +1583,7 @@ modifying this file.
 			  "DONE(d)")))
    #+end_src
    
+*** images
 
    When inserting images in org files, often they will be way to large to fit into
    the general flow of the document. Through the use of ~#+attr_html: :width NNpx~,
@@ -1797,24 +1594,34 @@ modifying this file.
      (setq org-image-actual-width nil)
    #+end_src
 
+*** indentation
+
    messing with org src block indentation
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-src-preserve-indentation nil)
+     (setq org-startup-indented t)
+     (straight-use-package
+      '(org-modern-indent
+        :type git
+        :host github
+        :repo "jdtsmith/org-modern-indent"))
+     (require 'org-modern-indent)
+     (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
    #+end_src
 
-   Priority
+*** display settings
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+     (setq org-hide-emphasis-markers t)
+   #+end_src
+
+*** Priority
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-priority-highest ?A
 	   org-priority-lowest ?D)
    #+end_src
 
-** Modern org
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	 (straight-use-package 'org-modern)
-	 (with-eval-after-load 'org (global-org-modern-mode))
-   #+end_src
 ** Org agenda
 *** Custom commands
     These commands show up in the org-agenda view and will produce
@@ -1862,13 +1669,14 @@ modifying this file.
 #+end_src
 
 *** Stuck projects
-     A stuck project is a project which has no identified "next"
-     action on it. Using my "getting things done" system, this means a
-     project is one which has the tag "proj" and a task with the
-     "NEXT" todo state.
+A stuck project is a project which has no identified "next"
+action on it. Using my "getting things done" system, this means a
+project is one which has the tag "proj" and a task with the
+"NEXT" or "IN-PROGRESS" todo state.
+
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-stuck-projects
-		'("+proj-archive+LEVEL=1/-DONE" ("NEXT") nil ""))
+		'("+proj-archive+LEVEL=1/-DONE" ("NEXT" "IN-PROGRESS") nil ""))
 #+end_src
 
 *** basic settings
@@ -1894,44 +1702,44 @@ modifying this file.
     a heading.
 
 	  #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-		(setq org-tag-alist
-			  '((:startgroup)
-				("proj" . ?p)
-				("area" . ?a)
-				(:endgroup)
+        (setq org-tag-alist
+              '((:startgroup)
+                ("proj" . ?p)
+                ("area" . ?a)
+                (:endgroup)
 
-				;; mental/emotional level
-				(:startgroup)
-				("@lowenergy" . ?l)
-				("@highenergy" . ?h)
-				(:endgroup)
+                ;; mental/emotional level
+                (:startgroup)
+                ("@lowenergy" . ?l)
+                ("@highenergy" . ?h)
+                (:endgroup)
 
-				;; locations
-				(:startgroup)
-				("@Church" . ?C)
-				("@Work" . ?W)
-				("@Home" . ?H)
-				("@Anywhere" . ?A)
-				("@Outsize" . ?O)
-				(:endgroup)
+                ;; locations
+                (:startgroup)
+                ("@Church" . ?C)
+                ("@Work" . ?W)
+                ("@Home" . ?H)
+                ("@Anywhere" . ?A)
+                ("@Outsize" . ?O)
+                (:endgroup)
 
-				;; devices
-				(:startgroup)
-				("@Laptop" . ?L)
-				("@Phone" . ?P)
-				(:endgroup)))
+                ;; devices
+                (:startgroup)
+                ("@Laptop" . ?L)
+                ("@Phone" . ?P)
+                (:endgroup)))
 
-		(setq org-agenda-include-diary t)
-		(setq org-agenda-restore-windows-after-quit t)
-		(setq org-agenda-skip-deadline-if-done t
-			  org-agenda-skip-scheduled-if-done t)
-		(setq org-agenda-category-icon-alist nil)
-		(setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
-		(add-to-list 'org-agenda-category-icon-alist
-					 '(".*" '(space . (:width (18)))))
+        (setq org-agenda-include-diary t)
+        (setq org-agenda-restore-windows-after-quit t)
+        (setq org-agenda-skip-deadline-if-done t
+              org-agenda-skip-scheduled-if-done t)
+        (setq org-agenda-category-icon-alist nil)
+        (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
+        (add-to-list 'org-agenda-category-icon-alist
+                     '(".*" '(space . (:width (18)))))
 
-		(add-to-list 'org-agenda-files org-directory)
-		(add-to-list 'org-agenda-files gtd-projects-directory)
+        (add-to-list 'org-agenda-files org-directory)
+        (add-to-list 'org-agenda-files gtd-projects-directory)
     #+end_src
 
 *** super agenda
@@ -2032,31 +1840,31 @@ modifying this file.
      (straight-use-package 'htmlize)
 
      (setq org-publish-project-alist
-	   (list (list "blog"
-		       :components (list "blog-org" "blog-static"))
-		 (list "blog-org"
-		       :base-directory "~/blog/org"
-		       :publishing-directory "~/blog/public"
-		       :auto-sitemap nil
-		       :recursive t
-		       :with-broken-links t
+       (list (list "blog"
+               :components (list "blog-org" "blog-static"))
+         (list "blog-org"
+               :base-directory "~/blog/org"
+               :publishing-directory "~/blog/public"
+               :auto-sitemap nil
+               :recursive t
+               :with-broken-links t
                        :with-creator t
-		       :section-numbers nil
-		       :exclude "README"
-		       :export-exclude-tags (list "draft")
-		       :with-author "Jon Harder"
-		       :with-toc nil
-		       :html-htmlize-output-type 'inline-css
-		       :html-doctype "html5"
-		       :html-html5-fancy t
-		       :html-preamble nil
-		       :html-postamble nil)
-		 (list "blog-static"
-		       :base-directory "~/blog/org/"
-		       :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
-		       :publishing-directory "~/blog/public/"
-		       :recursive t
-		       :publishing-function #'org-publish-attachment)))
+               :section-numbers nil
+               :exclude "README"
+               :export-exclude-tags (list "draft")
+               :with-author "Jon Harder"
+               :with-toc nil
+               :html-htmlize-output-type 'inline-css
+               :html-doctype "html5"
+               :html-html5-fancy t
+               :html-preamble nil
+               :html-postamble nil)
+         (list "blog-static"
+               :base-directory "~/blog/org/"
+               :base-extension "css\\|ico\\|png\\|jpg\\|jpeg\\|gif"
+               :publishing-directory "~/blog/public/"
+               :recursive t
+               :publishing-function #'org-publish-attachment)))
    #+end_src
 
 ** Visual enhancements
@@ -2066,9 +1874,19 @@ modifying this file.
     Hide the markers which annotate different emphasis indicators in text.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (setq org-hide-emphasis-markers nil)
+      (setq org-hide-emphasis-markers t)
     #+end_src
 
+*** Org Modern
+
+~org-modern~ uses emacs built-in text properties to style org elements
+in a beautiful way. It incapsulates ~org-bullets~ and thus that
+package is disabled.
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+	 (straight-use-package 'org-modern)
+	 (with-eval-after-load 'org (global-org-modern-mode))
+   #+end_src
 *** bullets
 
     It's nice to have some visual distinction between headers of different levels apart
@@ -2078,10 +1896,11 @@ modifying this file.
     them according to level.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (straight-use-package 'org-bullets)
-      (add-hook 'org-mode-hook
-    	      (lambda ()
-    		(org-bullets-mode 1)))
+	  ;;; NOTE: currently not used in favor of the org-modern package
+	  ;; (straight-use-package 'org-bullets)
+	  ;; (add-hook 'org-mode-hook
+	  ;;     	(lambda ()
+	  ;;       (org-bullets-mode 1)))
     #+end_src
 
 *** better lists
@@ -2336,26 +2155,26 @@ modifying this file.
 			(shell-command-to-string (concat "gh pr review " num)))))
     #+end_src
 *** Prompt
-    Because eshell is just elisp, the prompt can be set using elisp as well.
-    This unlocks the full power of emacs as an environment and can be harnesed
-    to make eshell as fancy as you can dream up (and program)
+Because eshell is just elisp, the prompt can be set using elisp as well.
+This unlocks the full power of emacs as an environment and can be harnesed
+to make eshell as fancy as you can dream up (and program)
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (setq eshell-prompt-function
-	    (lambda ()
-	      (let* ((home-path (getenv "HOME"))
-		     (dir (string-replace home-path "~" (eshell/pwd)))
-		     (branch (magit-get-current-branch)))
-		(concat
-		 (propertize dir 'face `(:foreground "#61bfff"))
-		 (if branch
-		     (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
-			     (propertize branch 'face `(:foreground "green")))
-		   "")
-		 " $ "))))
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (setq eshell-prompt-function
+        (lambda ()
+          (let* ((home-path (getenv "HOME"))
+                 (dir (string-replace home-path "~" (eshell/pwd)))
+                 (branch (magit-get-current-branch)))
+            (concat
+             (propertize dir 'face `(:foreground "#61bfff"))
+             (if branch
+                 (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
+                         (propertize branch 'face `(:foreground "green")))
+               "")
+             " $ "))))
 
-      (setq eshell-prompt-regexp ".*$ ")
-    #+end_src
+  (setq eshell-prompt-regexp ".*$ ")
+#+end_src
 ** Eat
   [[https://codeberg.org/akib/emacs-eat][Eat]] is a new kind of shell for emacs, handling fully interactive, fullscreen terminal apps
   cleanly. I think it can replace vterm, and has the benefit of not needing system
@@ -2457,8 +2276,7 @@ modifying this file.
   #+end_src
 
 * Web Browsing
-   this is mostly for eww
-
+** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
 	 (evil-define-key 'normal eww-mode-map
 	   (kbd "q") #'quit-window
@@ -2469,6 +2287,29 @@ modifying this file.
 	   )
 	 (provide 'my-web)
    #+end_src
+
+** Convenience functions
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+     (defun google-this (start end)
+       "google-this googles either the selected region or the symbol at point.
+
+     It makes use of the `browse-url' method which can be configured
+     to query using a variety of tools.  By default, it will search
+     using an external browser configured via the operating system."
+       (interactive "rGoogle: ")
+       (let ((query (if (region-active-p)
+                        (buffer-substring start end)
+                      (thing-at-point 'symbol t))))
+         (browse-url (format "https://google.com/search?q=%s" query))))
+   #+end_src
+   
+** Provide my-web
+
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+	 (provide 'my-web)
+   #+end_src
+
 * Email
 ** Mail server/client setup
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes

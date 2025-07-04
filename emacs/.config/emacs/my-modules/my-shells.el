@@ -84,17 +84,17 @@
 	  (shell-command-to-string (concat "gh pr review " num)))))
 
 (setq eshell-prompt-function
-  (lambda ()
-	(let* ((home-path (getenv "HOME"))
-	   (dir (string-replace home-path "~" (eshell/pwd)))
-	   (branch (magit-get-current-branch)))
-  (concat
-   (propertize dir 'face `(:foreground "#61bfff"))
-   (if branch
-	   (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
-		   (propertize branch 'face `(:foreground "green")))
-	 "")
-   " $ "))))
+      (lambda ()
+        (let* ((home-path (getenv "HOME"))
+               (dir (string-replace home-path "~" (eshell/pwd)))
+               (branch (magit-get-current-branch)))
+          (concat
+           (propertize dir 'face `(:foreground "#61bfff"))
+           (if branch
+               (concat (propertize " on \uE0A0 " 'face `(:foreground "white"))
+                       (propertize branch 'face `(:foreground "green")))
+             "")
+           " $ "))))
 
 (setq eshell-prompt-regexp ".*$ ")
 
