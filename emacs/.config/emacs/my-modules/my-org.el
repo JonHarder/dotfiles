@@ -191,19 +191,9 @@
 
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 (setq org-capture-templates
-	  '(("f" "Fleeting note" plain
-		 (file+headline org-default-notes-file "Notes")
-		 "- %?")
-		("p" "Permanent note" plain
-		 (file denote-last-path)
-		 #'denote-org-capture
-		 :no-save t
-		 :immediate-finish nil
-		 :kill-buffer t
-		 :jump-to-captured t)
-		("t" "New Task" entry
-		 (file+headline "~/Dropbox/gtd/oneoff.org" "One Off")
-		 "* TODO %i%?")))
+      `(("i" "Inbox" entry (file org-default-notes-file)
+         ,(concat "* TODO %?\n"
+                  "/Entered on/ %U"))))
 
 (setq org-structure-template-alist
   '(("s" . "src")
