@@ -1,4 +1,4 @@
-(setq my-theme '(modus-themes . modus-vivendi-tinted))
+(setq my-theme '(doom-themes . doom-oceanic-next))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
           (lambda ()
