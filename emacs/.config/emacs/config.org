@@ -1200,12 +1200,11 @@ at a glance how deep you are.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
      (add-hook 'eglot-managed-mode-hook
-	       (lambda ()
-		 (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
-		 (setq eldoc-documentation-functions
-		       '(flymake-eldoc-function
-			 eglot-signature-eldoc-function
-			 eglot-hover-eldoc-function))))
+               (lambda ()
+                 (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
+                 (setq eldoc-documentation-functions
+                       '(eglot-signature-eldoc-function
+                         eglot-hover-eldoc-function))))
    #+end_src
 
    And for support for languages that aren't pre-configured out of
@@ -1247,6 +1246,8 @@ at a glance how deep you are.
 This replaces the venerable, but outdated flymake.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
+  ;; need to set some flymake variable that aparently needs to be in scope
+  (setq flymake-allowed-file-name-masks nil)
   (straight-use-package 'flycheck)
   (global-flycheck-mode 1)
 #+end_src

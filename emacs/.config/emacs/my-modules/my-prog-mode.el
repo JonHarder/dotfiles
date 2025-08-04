@@ -9,12 +9,11 @@
 (defvar menu-bar-project-menu '())
 
 (add-hook 'eglot-managed-mode-hook
-	  (lambda ()
-	(setq eldoc-documentation-strategy #'eldoc-documentation-compose)
-	(setq eldoc-documentation-functions
-		  '(flymake-eldoc-function
-		eglot-signature-eldoc-function
-		eglot-hover-eldoc-function))))
+          (lambda ()
+            (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
+            (setq eldoc-documentation-functions
+                  '(eglot-signature-eldoc-function
+                    eglot-hover-eldoc-function))))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
@@ -33,6 +32,8 @@
 
 (provide 'my-prog-mode)
 
+;; need to set some flymake variable that aparently needs to be in scope
+(setq flymake-allowed-file-name-masks nil)
 (straight-use-package 'flycheck)
 (global-flycheck-mode 1)
 
