@@ -830,11 +830,11 @@ window at the bottom of the current frame.
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (evil-define-key 'normal 'global
     (kbd "<leader> n /") #'denote-search-content
-    (kbd "<leader> n J") #'denote-journal-extras-new-entry
+    (kbd "<leader> n J") #'denote-journal-new-entry
     (kbd "<leader> n b") #'denote-backlinks
     (kbd "<leader> n d") #'denote-dired
     (kbd "<leader> n f") #'denote-open-or-create
-    (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+    (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
     (kbd "<leader> n l") #'denote-link
     (kbd "<leader> n n") #'consult-notes
     ;; (kbd "<leader> n n") #'denote
@@ -856,9 +856,9 @@ denote buffer.
 
 ** Journaling
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (require 'denote-journal-extras)
-  (setq denote-journal-extras-directory (concat denote-directory "/journal"))
-  (add-to-list 'denote-dired-directories denote-journal-extras-directory)
+  (straight-use-package 'denote-journal)
+  (setq denote-journal-directory (concat denote-directory "/journal"))
+  (add-to-list 'denote-dired-directories denote-journal-directory)
 #+end_src
 
 ** Silos
@@ -867,12 +867,13 @@ to fully support them, we'll need to tell denote where each silo
 lives.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (require 'denote-silo-extras)
+  (straight-use-package 'denote-silo)
+  (setq denote-silo-directories '())
   (let ((my-silo-dirs (mapcar (lambda (file)
                                 (expand-file-name file))
                               '("~/Dropbox/gtd/projects"))))
     (dolist (dir my-silo-dirs)
-      (add-to-list 'denote-silo-extras-directories dir)
+      (add-to-list 'denote-silo-directories dir)
       (add-to-list 'denote-dired-directories dir)))
 #+end_src
 

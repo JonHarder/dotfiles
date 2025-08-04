@@ -28,13 +28,14 @@
 
 (evil-define-key 'normal 'global
   (kbd "<leader> n /") #'denote-search-content
-  (kbd "<leader> n J") #'denote-journal-extras-new-entry
+  (kbd "<leader> n J") #'denote-journal-new-entry
   (kbd "<leader> n b") #'denote-backlinks
   (kbd "<leader> n d") #'denote-dired
   (kbd "<leader> n f") #'denote-open-or-create
-  (kbd "<leader> n j") #'denote-journal-extras-new-or-existing-entry
+  (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link
-  (kbd "<leader> n n") #'denote
+  (kbd "<leader> n n") #'consult-notes
+  ;; (kbd "<leader> n n") #'denote
   (kbd "<leader> n m") #'denote-meeting
   (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
   (kbd "<leader> n r") #'denote-rename-file-using-front-matter
@@ -45,16 +46,17 @@
   (kbd "j") #'denote-backlinks-next
   (kbd "k") #'denote-backlinks-prev)
 
-(require 'denote-journal-extras)
-(setq denote-journal-extras-directory (concat denote-directory "/journal"))
-(add-to-list 'denote-dired-directories denote-journal-extras-directory)
+(straight-use-package 'denote-journal)
+(setq denote-journal-directory (concat denote-directory "/journal"))
+(add-to-list 'denote-dired-directories denote-journal-directory)
 
-(require 'denote-silo-extras)
+(straight-use-package 'denote-silo)
+(setq denote-silo-directories '())
 (let ((my-silo-dirs (mapcar (lambda (file)
                               (expand-file-name file))
                             '("~/Dropbox/gtd/projects"))))
   (dolist (dir my-silo-dirs)
-    (add-to-list 'denote-silo-extras-directories dir)
+    (add-to-list 'denote-silo-directories dir)
     (add-to-list 'denote-dired-directories dir)))
 
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
