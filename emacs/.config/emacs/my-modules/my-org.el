@@ -7,22 +7,11 @@
   (add-to-list 'org-modules 'org-habit t))
 
 (evil-define-key 'normal org-mode-map
-(kbd "<tab>") 'org-cycle
-(kbd "s-j") 'org-metadown
-(kbd "s-k") 'org-metaup
-(kbd "> >") 'org-shiftmetaright
-(kbd "< <") 'org-shiftmetaleft)
-
-(defun insert-note-with-timestamp ()
-  (interactive)
-  (let ((current-prefix-arg '(16)))
-	(goto-char (point-max))
-	(evil-open-below 1)
-	(move-beginning-of-line nil)
-	(insert "- ")
-	(call-interactively #'org-time-stamp-inactive)
-	(insert " ")
-	(evil-insert 0)))
+  (kbd "<tab>") 'org-cycle
+  (kbd "s-j") 'org-metadown
+  (kbd "s-k") 'org-metaup
+  (kbd "> >") 'org-shiftmetaright
+  (kbd "< <") 'org-shiftmetaleft)
 
 (evil-define-key 'normal org-mode-map
   (kbd "<leader> m a") #'org-archive-subtree
@@ -70,16 +59,15 @@
 (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
 
 (setq org-todo-keywords
-	  '(
-		(sequence
-		 "TODO(t)"
-		 "NEXT(n)"
-		 "WAIT(w)"
-		 "IN-PROGRESS(i)"
-		 "BLOCKED(b)"
-		 "REVIEW(r)"
-		 "|"
-		 "DONE(d)")))
+      '((sequence
+         "TODO(t)"
+         "NEXT(n)"
+         "WAIT(w)"
+         "IN-PROGRESS(i)"
+         "BLOCKED(b)"
+         "REVIEW(r)"
+         "|"
+         "DONE(d)")))
 
 (setq org-image-actual-width nil)
 
@@ -196,10 +184,10 @@
                   "/Entered on/ %U"))))
 
 (setq org-structure-template-alist
-  '(("s" . "src")
-	("e" . "src emacs-lisp")
+      '(("s" . "src")
+        ("e" . "src emacs-lisp")
         ("b" . "src bash")
-	("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
+        ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
 
 (require 'ox-publish)
 
@@ -246,16 +234,6 @@
 
 (straight-use-package 'org-modern)
 (with-eval-after-load 'org (global-org-modern-mode))
-
-;;; NOTE: currently not used in favor of the org-modern package
-;; (straight-use-package 'org-bullets)
-;; (add-hook 'org-mode-hook
-;;     	(lambda ()
-;;       (org-bullets-mode 1)))
-
-;; (font-lock-add-keywords 'org-mode
-;; 			      '(("^ +\\([-*]\\) "
-;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
 
 (org-babel-do-load-languages
  'org-babel-load-languages

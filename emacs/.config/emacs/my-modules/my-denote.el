@@ -18,16 +18,8 @@
                                 people-files)))))
   (denote person '("meeting") 'org))
 
-(defun denote-search-content ()
-  (interactive)
-  (consult-ripgrep denote-directory))
-
-(defun denote-dired ()
-  (interactive)
-  (dired denote-directory))
-
 (evil-define-key 'normal 'global
-  (kbd "<leader> n /") #'denote-search-content
+  (kbd "<leader> n /") #'denote-grep
   (kbd "<leader> n J") #'denote-journal-new-entry
   (kbd "<leader> n b") #'denote-backlinks
   (kbd "<leader> n d") #'denote-dired
@@ -60,6 +52,8 @@
     (add-to-list 'denote-dired-directories dir)))
 
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+
+(straight-use-package 'denote-org)
 
 (straight-use-package 'denote-explore)
 

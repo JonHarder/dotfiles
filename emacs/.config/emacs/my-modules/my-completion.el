@@ -42,7 +42,7 @@
 
 (straight-use-package 'consult-notes)
 (setq consult-notes-file-dir-source
-      '(("Notes" ?n "~/Dropbox/zettelkasten")
+       (("Notes" ?n "~/Dropbox/zettelkasten")
         ("Projects" ?p "~/Dropbox/gtd/projects")))
 
 (when (locate-library "denote")

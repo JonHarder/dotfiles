@@ -40,28 +40,27 @@
 	"elm"))
 
 (defconst pcmpl-docker-commands
-'("run" "exec" "ps" "build" "pull" "images" "login" "logout"
-  "search" "version" "info"
-  "compose"))
+  '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
+    "search" "version" "info"
+    "compose"))
 
-  (defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+(defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+(defun pcmpl-docker-images ()
+  (let ((results (shell-command-to-string docker-images-command)))
+    (string-split results "\n")))
 
-  (defun pcmpl-docker-images ()
-(let ((results (shell-command-to-string docker-images-command)))
-  (string-split results "\n")))
-
-  (defun pcomplete/docker ()
-"Completion for `docker'."
-(pcomplete-here* pcmpl-docker-commands)
-(cond
- ((pcomplete-match (regexp-opt '("run")) 1)
-  (pcomplete-here* (pcmpl-docker-images)))))
+(defun pcomplete/docker ()
+  "Completion for `docker'."
+  (pcomplete-here* pcmpl-docker-commands)
+  (cond
+   ((pcomplete-match (regexp-opt '("run")) 1)
+    (pcomplete-here* (pcmpl-docker-images)))))
 
 (defun eshell/f (&optional file)
   (interactive)
   (if file
-	  (find-file file)
-	(call-interactively #'find-file)))
+      (find-file file)
+    (call-interactively #'find-file)))
 
 (defun eshell/d (&optional dir)
   (interactive)
@@ -75,13 +74,13 @@
 (defun eshell/pr (&optional num)
   (interactive "n")
   (if num
-	  (shell-command "gh pr status")
-	(progn
-	  (shell-command-to-string (concat "gh pr view " num))
-	  (read-key)
-	  (shell-command-to-string (concat "gh pr diff " num))
-	  (read-key)
-	  (shell-command-to-string (concat "gh pr review " num)))))
+      (shell-command "gh pr status")
+    (progn
+      (shell-command-to-string (concat "gh pr view " num))
+      (read-key)
+      (shell-command-to-string (concat "gh pr diff " num))
+      (read-key)
+      (shell-command-to-string (concat "gh pr review " num)))))
 
 (setq eshell-prompt-function
       (lambda ()

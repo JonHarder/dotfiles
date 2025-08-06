@@ -697,7 +697,7 @@ denote is quite nice.
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'consult-notes)
   (setq consult-notes-file-dir-source
-        '(("Notes" ?n "~/Dropbox/zettelkasten")
+         (("Notes" ?n "~/Dropbox/zettelkasten")
           ("Projects" ?p "~/Dropbox/gtd/projects")))
 
   (when (locate-library "denote")
@@ -815,21 +815,13 @@ window at the bottom of the current frame.
                                     (denote-retrieve-title-or-filename f 'org))
                                   people-files)))))
     (denote person '("meeting") 'org))
-
-  (defun denote-search-content ()
-    (interactive)
-    (consult-ripgrep denote-directory))
-
-  (defun denote-dired ()
-    (interactive)
-    (dired denote-directory))
 #+end_src
    
 ** Bindings
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (evil-define-key 'normal 'global
-    (kbd "<leader> n /") #'denote-search-content
+    (kbd "<leader> n /") #'denote-grep
     (kbd "<leader> n J") #'denote-journal-new-entry
     (kbd "<leader> n b") #'denote-backlinks
     (kbd "<leader> n d") #'denote-dired
@@ -881,6 +873,12 @@ lives.
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 #+end_src
+
+** Org integration
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (straight-use-package 'denote-org)
+#+end_src
+
 
 ** Denote Explore
 Denote explore is a great little package that supplies some helper
@@ -1498,72 +1496,60 @@ This replaces the venerable, but outdated flymake.
     
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
       (evil-define-key 'normal org-mode-map
-	(kbd "<tab>") 'org-cycle
-	(kbd "s-j") 'org-metadown
-	(kbd "s-k") 'org-metaup
-	(kbd "> >") 'org-shiftmetaright
-	(kbd "< <") 'org-shiftmetaleft)
+        (kbd "<tab>") 'org-cycle
+        (kbd "s-j") 'org-metadown
+        (kbd "s-k") 'org-metaup
+        (kbd "> >") 'org-shiftmetaright
+        (kbd "< <") 'org-shiftmetaleft)
     #+end_src
 
 *** meta mappings
 
     These are [[*Meta-mode prefix][meta]] leader prefixed keybindings to add additional mode-aware
     contextual functionality.
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  (defun insert-note-with-timestamp ()
-		(interactive)
-		(let ((current-prefix-arg '(16)))
-		  (goto-char (point-max))
-		  (evil-open-below 1)
-		  (move-beginning-of-line nil)
-		  (insert "- ")
-		  (call-interactively #'org-time-stamp-inactive)
-		  (insert " ")
-		  (evil-insert 0)))
-    #+end_src
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  (evil-define-key 'normal org-mode-map
-		(kbd "<leader> m a") #'org-archive-subtree
-		(kbd "<leader> m e") #'org-export-dispatch
-		(kbd "<leader> m p") #'org-publish-project
-		(kbd "<leader> m r") #'org-refile
-		(kbd "<leader> m l") #'org-insert-link
-		(kbd "<leader> m f") #'org-footnote-action
-		(kbd "<leader> m i") #'org-toggle-inline-images
-		(kbd "<leader> m t") #'org-babel-tangle
-		(kbd "<leader> m n") #'org-narrow-to-subtree
-		(kbd "<leader> m d") #'org-babel-demarcate-block
-		(kbd "<leader> m s s") #'org-schedule
-		(kbd "<leader> m s d") #'org-deadline
-		(kbd "<leader> m ,") #'org-priority
-		(kbd "<leader> m c i") #'org-clock-in
-		(kbd "<leader> m c o") #'org-clock-out)
+      (evil-define-key 'normal org-mode-map
+        (kbd "<leader> m a") #'org-archive-subtree
+        (kbd "<leader> m e") #'org-export-dispatch
+        (kbd "<leader> m p") #'org-publish-project
+        (kbd "<leader> m r") #'org-refile
+        (kbd "<leader> m l") #'org-insert-link
+        (kbd "<leader> m f") #'org-footnote-action
+        (kbd "<leader> m i") #'org-toggle-inline-images
+        (kbd "<leader> m t") #'org-babel-tangle
+        (kbd "<leader> m n") #'org-narrow-to-subtree
+        (kbd "<leader> m d") #'org-babel-demarcate-block
+        (kbd "<leader> m s s") #'org-schedule
+        (kbd "<leader> m s d") #'org-deadline
+        (kbd "<leader> m ,") #'org-priority
+        (kbd "<leader> m c i") #'org-clock-in
+        (kbd "<leader> m c o") #'org-clock-out)
     #+end_src
 
 *** Agenda mappings
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  (evil-define-key 'normal org-agenda-mode-map
-		(kbd "<leader> m c") #'org-agenda-columns
-		(kbd "j") #'org-agenda-next-line
-		(kbd "k") #'org-agenda-previous-line
-		(kbd "RET") #'org-agenda-switch-to
-		(kbd "q") #'org-agenda-quit
-		(kbd ".") #'org-agenda-goto-today
-		(kbd ",") #'org-agenda-priority
-		(kbd "l") #'org-agenda-later
-		(kbd "h") #'org-agenda-earlier
-		(kbd "m") #'org-agenda-bulk-mark
-		(kbd "u") #'org-agenda-bulk-unmark
-		(kbd "B") #'org-agenda-bulk-action
-		(kbd "g w") #'org-agenda-week-view
-		(kbd "g d") #'org-agenda-day-view
-		(kbd "t") #'org-agenda-todo
-		(kbd "r") #'org-agenda-redo
-		(kbd "s") #'org-agenda-schedule
-		(kbd "d") #'org-agenda-deadline
-		(kbd "/") #'org-agenda-filter
-		(kbd "<") #'org-agenda-filter-by-category)
+      (evil-define-key 'normal org-agenda-mode-map
+        (kbd "<leader> m c") #'org-agenda-columns
+        (kbd "j") #'org-agenda-next-line
+        (kbd "k") #'org-agenda-previous-line
+        (kbd "RET") #'org-agenda-switch-to
+        (kbd "q") #'org-agenda-quit
+        (kbd ".") #'org-agenda-goto-today
+        (kbd ",") #'org-agenda-priority
+        (kbd "l") #'org-agenda-later
+        (kbd "h") #'org-agenda-earlier
+        (kbd "m") #'org-agenda-bulk-mark
+        (kbd "u") #'org-agenda-bulk-unmark
+        (kbd "B") #'org-agenda-bulk-action
+        (kbd "g w") #'org-agenda-week-view
+        (kbd "g d") #'org-agenda-day-view
+        (kbd "t") #'org-agenda-todo
+        (kbd "r") #'org-agenda-redo
+        (kbd "s") #'org-agenda-schedule
+        (kbd "d") #'org-agenda-deadline
+        (kbd "/") #'org-agenda-filter
+        (kbd "<") #'org-agenda-filter-by-category)
     #+end_src
 
 ** Settings
@@ -1591,17 +1577,16 @@ This replaces the venerable, but outdated flymake.
 
    Setting todo states
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	 (setq org-todo-keywords
-		   '(
-			 (sequence
-			  "TODO(t)"
-			  "NEXT(n)"
-			  "WAIT(w)"
-			  "IN-PROGRESS(i)"
-			  "BLOCKED(b)"
-			  "REVIEW(r)"
-			  "|"
-			  "DONE(d)")))
+     (setq org-todo-keywords
+           '((sequence
+              "TODO(t)"
+              "NEXT(n)"
+              "WAIT(w)"
+              "IN-PROGRESS(i)"
+              "BLOCKED(b)"
+              "REVIEW(r)"
+              "|"
+              "DONE(d)")))
    #+end_src
    
 *** images
@@ -1818,10 +1803,10 @@ project is one which has the tag "proj" and a task with the
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-structure-template-alist
-	   '(("s" . "src")
-	     ("e" . "src emacs-lisp")
+           '(("s" . "src")
+             ("e" . "src emacs-lisp")
              ("b" . "src bash")
-	     ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
+             ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
    #+end_src
 ** Org publish
 
@@ -1896,35 +1881,9 @@ in a beautiful way. It incapsulates ~org-bullets~ and thus that
 package is disabled.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	 (straight-use-package 'org-modern)
-	 (with-eval-after-load 'org (global-org-modern-mode))
+     (straight-use-package 'org-modern)
+     (with-eval-after-load 'org (global-org-modern-mode))
    #+end_src
-*** bullets
-
-    It's nice to have some visual distinction between headers of different levels apart
-    from the default increasing number of astericks.
-
-    The org-bullets package replaces the astericks with different bullet glyphs and indents
-    them according to level.
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  ;;; NOTE: currently not used in favor of the org-modern package
-	  ;; (straight-use-package 'org-bullets)
-	  ;; (add-hook 'org-mode-hook
-	  ;;     	(lambda ()
-	  ;;       (org-bullets-mode 1)))
-    #+end_src
-
-*** better lists
-
-    It's nice to have unicode bullet glyphs in place of the org `-' and `*'.
-
-    I don't know if I like this...
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      ;; (font-lock-add-keywords 'org-mode
-      ;; 			      '(("^ +\\([-*]\\) "
-      ;;                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "·"))))))
-    #+end_src
 
 ** Babel
 
@@ -1953,12 +1912,12 @@ package is disabled.
 *** Enabling more languages
 
      #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	   (org-babel-do-load-languages
-		'org-babel-load-languages
-		'((emacs-lisp . t)
-		  (python . t)
-		  (calc . t)
-		  (shell . t)))
+       (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+          (python . t)
+          (calc . t)
+          (shell . t)))
      #+end_src
 
 ** toc-org
@@ -1999,7 +1958,7 @@ package is disabled.
    contributors who are still using git directly.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
-	 (provide 'my-jj)
+     (provide 'my-jj)
    #+end_src
 * Search
 ** Isearch
@@ -2120,51 +2079,50 @@ package is disabled.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
       (defconst pcmpl-docker-commands
-	'("run" "exec" "ps" "build" "pull" "images" "login" "logout"
-	  "search" "version" "info"
-	  "compose"))
+        '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
+          "search" "version" "info"
+          "compose"))
 
       (defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
-
       (defun pcmpl-docker-images ()
-	(let ((results (shell-command-to-string docker-images-command)))
-	  (string-split results "\n")))
+        (let ((results (shell-command-to-string docker-images-command)))
+          (string-split results "\n")))
 
       (defun pcomplete/docker ()
-	"Completion for `docker'."
-	(pcomplete-here* pcmpl-docker-commands)
-	(cond
-	 ((pcomplete-match (regexp-opt '("run")) 1)
-	  (pcomplete-here* (pcmpl-docker-images)))))
+        "Completion for `docker'."
+        (pcomplete-here* pcmpl-docker-commands)
+        (cond
+         ((pcomplete-match (regexp-opt '("run")) 1)
+          (pcomplete-here* (pcmpl-docker-images)))))
 
     #+end_src
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-	  (defun eshell/f (&optional file)
-		(interactive)
-		(if file
-			(find-file file)
-		  (call-interactively #'find-file)))
+      (defun eshell/f (&optional file)
+        (interactive)
+        (if file
+            (find-file file)
+          (call-interactively #'find-file)))
 
-	  (defun eshell/d (&optional dir)
-		(interactive)
-		(if dir (dired dir) (dired ".")))
+      (defun eshell/d (&optional dir)
+        (interactive)
+        (if dir (dired dir) (dired ".")))
 
 
-	  (defun eshell/o (file)
-		(interactive)
-		(find-file-other-window file))
+      (defun eshell/o (file)
+        (interactive)
+        (find-file-other-window file))
 
-	  (defun eshell/pr (&optional num)
-		(interactive "n")
-		(if num
-			(shell-command "gh pr status")
-		  (progn
-			(shell-command-to-string (concat "gh pr view " num))
-			(read-key)
-			(shell-command-to-string (concat "gh pr diff " num))
-			(read-key)
-			(shell-command-to-string (concat "gh pr review " num)))))
+      (defun eshell/pr (&optional num)
+        (interactive "n")
+        (if num
+            (shell-command "gh pr status")
+          (progn
+            (shell-command-to-string (concat "gh pr view " num))
+            (read-key)
+            (shell-command-to-string (concat "gh pr diff " num))
+            (read-key)
+            (shell-command-to-string (concat "gh pr review " num)))))
     #+end_src
 *** Prompt
 Because eshell is just elisp, the prompt can be set using elisp as well.
