@@ -1,17 +1,17 @@
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-default-smtp-server "smtp.gmail.com"
-  smtpmail-smtp-server "smtp.gmail.com"
-  smtpmail-stream-type 'tls
-  smtpmail-smtp-service 465
-  user-mail-address "jharder@kipsu.com")
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-stream-type 'tls
+      smtpmail-smtp-service 465
+      user-mail-address "jharder@kipsu.com")
 
 (straight-use-package 'notmuch)
 
 ;; (straight-use-package 'ol-notmuch)
 
 (defun my-notmuch-message-mode-hook ()
-(auto-fill-mode -1)
-(visual-line-mode 1))
+  (auto-fill-mode -1)
+  (visual-line-mode 1))
 
   (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
 

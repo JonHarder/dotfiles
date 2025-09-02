@@ -10,14 +10,25 @@
   (kbd "~") 'ibuffer-toggle-marks
   (kbd "u") 'ibuffer-unmark-forward
   (kbd "DEL") 'ibuffer-unmark-backward
-  (kbd "* *") 'ibuffer-mark-special-buffers
   (kbd "U") 'ibuffer-unmark-all-marks
+  (kbd "* *") 'ibuffer-mark-special-buffers
   (kbd "* m") 'ibuffer-mark-by-mode
-  (kbd "* M") 'ibuffer-mark-modified-buffers
+  (kbd "* i") 'ibuffer-mark-unsaved-buffers
+  (kbd "* n") #'ibuffer-mark-by-name-regexp
   (kbd "* r") 'ibuffer-mark-read-only-buffers
   (kbd "* /") 'ibuffer-mark-dired-buffers
   (kbd "* h") 'ibuffer-mark-help-buffers
   (kbd "d") 'ibuffer-mark-for-delete
+
+  ;; filtering
+  (kbd "/ m") #'ibuffer-filter-by-mode
+  (kbd "/ i") #'ibuffer-filter-by-modified
+  (kbd "/ n") #'ibuffer-filter-by-name
+  (kbd "/ f") #'ibuffer-filter-by-filename
+  (kbd "/ .") #'ibuffer-filter-by-file-extension
+  (kbd "/ s") #'ibuffer-save-filters
+  (kbd "/ /") #'ibuffer-filter-disable
+
 
   ;; actions
   (kbd "x") 'ibuffer-do-kill-on-deletion-marks

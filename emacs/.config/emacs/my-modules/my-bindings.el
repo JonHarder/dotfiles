@@ -7,8 +7,8 @@
   (kbd "<leader> x") #'execute-extended-command
   (kbd "<leader> z") #'ispell-word
   (kbd "<leader> TAB") (lambda ()
-			 (interactive)
-			 (switch-to-buffer nil))
+                         (interactive)
+                         (switch-to-buffer nil))
   (kbd "g r") #'revert-buffer
   (kbd "SPC SPC") #'other-window
   ;; App launcher
@@ -34,19 +34,23 @@
   (kbd "<leader> d j") #'dired
   ;; evaluation
   (kbd "<leader> e e") #'eval-last-sexp
-  (kbd "<leader> e d") #'eval-deful
+  (kbd "<leader> e d") #'eval-defun
   ;; files
   (kbd "<leader> f b") #'bookmark-jump
+  (kbd "<leader> f d") #'diff-buffer-with-file
   (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
   (kbd "<leader> f B") #'bookmark-set
   (kbd "<leader> f c") #'find-config
   (kbd "<leader> f f") #'find-file
   (kbd "<leader> f r") #'rename-visited-file
-  ;; magit
-  (kbd "<leader> g") #'magit
+  ;; getting things done (gtd)
+  (kbd "<leader> g s") #'gtd-find-schedule
+  (kbd "<leader> g o") #'gtd-find-oneoff
+  (kbd "<leader> g i") #'gtd-find-inbox
+  (kbd "<leader> g c") #'gtd-capture
   ;; help(ful) commands
   (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
-			 (info (format "(%s)Top" node)))
+                         (info (format "(%s)Top" node)))
   (kbd "<leader> h M") #'info-emacs-manual
   (kbd "<leader> h v") #'helpful-variable
   (kbd "<leader> h f") #'helpful-function
@@ -76,7 +80,7 @@
   (kbd "<leader> p p") #'project-switch-project
   (kbd "<leader> p /") #'project-find-regexp
   ;; shells
-  (kbd "<leader> s e") #'eshell
+  (kbd "<leader> s e") #'eshell-here
   ;;; (kbd "<leader> s t") #'eat
   (kbd "<leader> s t") #'multi-vterm
   ;; tab commands

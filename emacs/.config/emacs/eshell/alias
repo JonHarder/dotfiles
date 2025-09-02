@@ -1,2 +1,4 @@
+alias ap /Users/jharder/Kipsu/ansible-wrapper/ap
 alias q exit
-alias c clear
+alias c clear nil
+alias j jj $@*

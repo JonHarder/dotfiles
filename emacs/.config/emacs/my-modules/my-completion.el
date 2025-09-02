@@ -42,13 +42,14 @@
 
 (straight-use-package 'consult-notes)
 (setq consult-notes-file-dir-source
-       (("Notes" ?n "~/Dropbox/zettelkasten")
+      '(("Notes" ?n "~/Dropbox/zettelkasten")
         ("Projects" ?p "~/Dropbox/gtd/projects")))
 
-(when (locate-library "denote")
-  (consult-notes-denote-mode)
-  (setq consult-notes-denote-display-id nil)
-  (setq consult-notes-denote-dir nil))
+(eval-after-load 'denote
+  (progn
+    (consult-notes-denote-mode)
+    (setq consult-notes-denote-display-id nil)
+    (setq consult-notes-denote-dir nil)))
 
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)

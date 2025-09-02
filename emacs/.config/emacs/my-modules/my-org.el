@@ -126,6 +126,8 @@
 (setq org-stuck-projects
 	  '("+proj-archive+LEVEL=1/-DONE" ("NEXT" "IN-PROGRESS") nil ""))
 
+(advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
+
 (setq org-refile-targets
 	  '((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
 		(("~/Dropbox/gtd/someday.org") . (:level . 1))
@@ -147,6 +149,7 @@
         (:startgroup)
         ("@Church" . ?C)
         ("@Work" . ?W)
+        ("@Transit" . ?T)
         ("@Home" . ?H)
         ("@Anywhere" . ?A)
         ("@Outsize" . ?O)

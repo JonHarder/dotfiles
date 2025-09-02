@@ -3,9 +3,7 @@
 #+STARTUP: fold
 * Overview
 This configuration combines the documentation and organization of a
-literate config file using org mode, and the quick parsing and startup
-times of a elisp only based configuration. This is accomplished via
-~tangle~ blocks in each source block which write the code into
+literate config file using org mode, and the quick parsing and starwrite the code into
 dedicated elisp files.
 
 The secret to this configuration is the ~:tangle SOURCE~ syntax which
@@ -117,6 +115,8 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-web)
   (require 'my-nushell-mode)
   (require 'my-org)
+  (require 'my-howm)
+  (require 'my-hyperbole)
   (require 'my-php-mode)
   (require 'my-prog-mode)
   (require 'my-python-mode)
@@ -144,7 +144,7 @@ contrast between UI elements, making it one of the easiest themes on the eyes
 in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (setq my-theme '(doom-themes . doom-oceanic-next))
+  (setq my-theme '(doom-themes . doom-monokai-classic))
   (straight-use-package (car my-theme))
   (add-hook 'after-init-hook
             (lambda ()
@@ -697,13 +697,14 @@ denote is quite nice.
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'consult-notes)
   (setq consult-notes-file-dir-source
-         (("Notes" ?n "~/Dropbox/zettelkasten")
+        '(("Notes" ?n "~/Dropbox/zettelkasten")
           ("Projects" ?p "~/Dropbox/gtd/projects")))
 
-  (when (locate-library "denote")
-    (consult-notes-denote-mode)
-    (setq consult-notes-denote-display-id nil)
-    (setq consult-notes-denote-dir nil))
+  (eval-after-load 'denote
+    (progn
+      (consult-notes-denote-mode)
+      (setq consult-notes-denote-display-id nil)
+      (setq consult-notes-denote-dir nil)))
 #+end_src
 
 ** Embark
@@ -711,6 +712,8 @@ denote is quite nice.
 It's kinda like right click, for your keyboard.
 Activating embark gives you a context-aware menu
 of actions to perform on the target under point.
+
+*NOTE:* disabling embark as an experiment while I try [[Hyperbole]]
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'embark)
@@ -781,12 +784,29 @@ window at the bottom of the current frame.
 * Getting Things Done (GTD)
 #+begin_src emacs-lisp :tangle "my-modules/my-gtd.el" :mkdirp yes
   (defvar gtd-directory (expand-file-name "~/Dropbox/gtd")
-	"The directory my 'Getting Things Done' system is stored in")
+    "The directory my 'Getting Things Done' system is stored in")
 
   (defvar gtd-projects-directory (concat gtd-directory "/projects")
-	"The directory holding gtd project files.
+    "The directory holding gtd project files.
 
   By default it is based off of the location of `gtd-directory'")
+
+  (defun gtd-find-oneoff ()
+    (interactive)
+    (find-file (concat gtd-directory "/oneoff.org")))
+
+  (defun gtd-find-schedule ()
+    (interactive)
+    (find-file (concat gtd-directory "/schedule.org")))
+
+  (defun gtd-find-inbox ()
+    (interactive)
+    (find-file (concat gtd-directory "/inbox.org")))
+
+  (defun gtd-capture ()
+    "Capture a thought and store in my gtd inbox."
+    (interactive)
+    (org-capture nil "i"))
 
   (provide 'my-gtd)
 #+end_src
@@ -805,18 +825,6 @@ window at the bottom of the current frame.
   (setq denote-prompts '(title subdirectory keywords))
 #+end_src
 
-** Helper functions
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (defun denote-meeting (person)
-    (interactive (let ((people-files (denote-directory-files "_person" nil t)))
-                   (list (completing-read
-                          "Person:"
-                          (mapcar (lambda (f)
-                                    (denote-retrieve-title-or-filename f 'org))
-                                  people-files)))))
-    (denote person '("meeting") 'org))
-#+end_src
-   
 ** Bindings
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
@@ -837,8 +845,16 @@ window at the bottom of the current frame.
     (kbd "<leader> n t") #'denote-template)
 #+end_src
 
-And for the specialized ~backlinks-mode~ to display all links to the current
-denote buffer.
+binding insert mode so I can link without having to exit.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (evil-define-key '(visual insert) text-mode-map
+    (kbd "C-l") #'denote-link-or-create)
+#+end_src
+
+
+  And for the specialized ~backlinks-mode~ to display all links to the current
+  denote buffer.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (evil-define-key 'normal denote-backlinks-mode-map
@@ -879,7 +895,17 @@ lives.
   (straight-use-package 'denote-org)
 #+end_src
 
+** Sequences
+Denote has optional support for sequences of notes, making
+hierarchical series of notes with parent, child, sibling
+relationships.
 
+This sequence information is encoded in the denote [[denote:20231121T144329][File Naming Scheme]]
+in the [[denote:20231205T093346][signature]] section.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (straight-use-package 'denote-sequence)
+#+end_src
 ** Denote Explore
 Denote explore is a great little package that supplies some helper
 function meant to aid in managing your denote notes.
@@ -1310,6 +1336,15 @@ This replaces the venerable, but outdated flymake.
      (provide 'my-docker-mode)
    #+end_src
 ** Lisp modes
+*** Structured editing
+**** Symex
+#+begin_src emacs-lisp :tangle "my-modues/my-lisp-mode.el" :mkdirp yes
+  (straight-use-package 'symex)
+  (symex-initialize)
+
+  (evil-define-key 'normal symex-mode-map
+    (kbd "s-;") #'symex-mode-inferface)
+#+end_src
 *** Indentation
    #+begin_src emacs-lisp :tangle "my-modules/my-lisp-mode.el" :mkdirp yes
      (straight-use-package 'aggressive-indent)
@@ -1447,9 +1482,11 @@ This replaces the venerable, but outdated flymake.
      (straight-use-package 'go-mode)
      (setq gofmt-command "/usr/local/go/bin/gofmt")
      (setenv "PATH"
-         (concat
-          "/usr/local/go/bin:"
-          (getenv "PATH")))
+             (concat
+              "/usr/local/go/bin:"
+              "/Library/TeX/texbin:"
+              "/opt/homebrew/bin:"
+              (getenv "PATH")))
      (defun my-go-mode-hook ()
        (when (eq major-mode 'go-mode)
          (gofmt-before-save)))
@@ -1692,6 +1729,13 @@ project is one which has the tag "proj" and a task with the
     I want it to pull in appointments or reminders from the diary as well since
     those sorts of events don't really make sense to track in org.
 
+    This will cause emacs to save all the associated buffers attached
+    to the headings shown in the agenda buffer.
+
+    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+      (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
+    #+end_src
+
 *** Refile targets
 
 	#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
@@ -1724,6 +1768,7 @@ project is one which has the tag "proj" and a task with the
                 (:startgroup)
                 ("@Church" . ?C)
                 ("@Work" . ?W)
+                ("@Transit" . ?T)
                 ("@Home" . ?H)
                 ("@Anywhere" . ?A)
                 ("@Outsize" . ?O)
@@ -1950,6 +1995,41 @@ package is disabled.
      (provide 'my-org)
    #+end_src
 
+* Howm
+  #+begin_src emacs-lisp :tangle "my-modules/my-howm.el" :mkdirp yes
+    (straight-use-package 'howm)
+    ;; Commenting this out for now since getting all the linking working
+    ;; in org is a bit of a pain
+    ;; NOTE: must be set before howm itself loads
+    ;; (require 'howm-org)
+    (setq howm-follow-theme t)
+
+    (require 'howm)
+    (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
+    (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
+
+    ;; Bindings
+    (evil-define-key 'normal howm-mode-map
+      (kbd "RET") #'action-lock-magic-return)
+
+    (define-key howm-menu-mode-map (kbd "j") #'next-line)
+    (define-key howm-menu-mode-map (kbd "k") #'previous-line)
+
+    (evil-define-key 'normal howm-view-summary-mode-map
+      (kbd "j") #'next-line
+      (kbd "k") #'previous-line
+      (kbd "r") #'howm-view-sort-reverse
+      (kbd "J") #'riffle-scroll-other-window
+      (kbd "K") #'riffle-scroll-other-window-down
+      (kbd "s") #'howm-list-grep-fixed
+      (kbd "S") #'howm-view-sort
+      (kbd "/") #'howm-list-grep
+      (kbd "RET") #'howm-view-summary-open
+      (kbd "q") #'howm-view-kill-buffer)
+
+    (provide 'my-howm)
+  #+end_src
+
 * Jujutsu (jj)
    Jujutsu in a simple, but powerful version control system. It's
    great. It uses git as the backing change database (though a native,
@@ -1958,6 +2038,10 @@ package is disabled.
    contributors who are still using git directly.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
+     (straight-use-package
+      '(jj-mode :type git
+                :host github
+                :repo "bolivier/jj-mode.el"))
      (provide 'my-jj)
    #+end_src
 * Search
@@ -1971,8 +2055,8 @@ package is disabled.
 *** Settings
      #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
        (setq isearch-lazy-count t
-	     lazy-count-prefix-format "(%s/%s) "
-	     lazy-count-suffix-format nil)
+             lazy-count-prefix-format "(%s/%s) "
+             lazy-count-suffix-format nil)
      #+end_src
 ** Occur
    Occur is a handy search functionality which collects all matches of a search
@@ -2023,50 +2107,57 @@ package is disabled.
 ** Eshell
 *** Environment variables
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-	  (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
-	  (add-to-list 'exec-path "/usr/local/go/bin")
+      (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+      (setenv "PAGER" "cat"
+      (add-to-list 'exec-path "/usr/local/go/bin")
+      (add-to-list 'exec-path "/opt/homebrew/bin")
+      (add-to-list 'exec-path "/Library/TeX/texbin")
     #+end_src
 
 *** hook
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-	  (add-hook 'eshell-mode-hook
-				(lambda ()
-				  (setenv "TERM" "eterm")))
+      (add-hook 'eshell-mode-hook
+                (lambda ()
+                  (setenv "TERM" "eterm")
+                  (setenv "PAGER" "cat")))
 
     #+end_src
 *** Settings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-	  (straight-use-package 'eshell-syntax-highlighting)
-	  (eshell-syntax-highlighting-global-mode +1)
-	  (require 'eshell)
-	  ;; (require 'em-smart)
-	  (setq eshell-where-to-jump 'begin)
-	  (setq eshell-review-quick-commands nil)
-	  (setq eshell-smart-space-goes-to-end nil)
-	  (setq eshell-visual-commands nil)
+      (straight-use-package 'eshell-syntax-highlighting)
+      (eshell-syntax-highlighting-global-mode +1)
+      (require 'eshell)
+      ;; (require 'em-smart)
+      (setq eshell-where-to-jump 'begin)
+      (setq eshell-review-quick-commands nil)
+      ;; (setq eshell-smart-space-goes-to-end nil)
+      (setq eshell-visual-commands nil)
 
-	  (setq eshell-visual-commands
-		'("vi"
-		  "vim"
-		  "hx"
-		  "screen"
-		  "nvim"
-			  "bacon"
-		  ;; "gh"
-		  "tmux"
-		  "top"
-		  "htop"
-		  "less"
-		  "more"
-		  "lynx"
-		  "links"
-		  "ncftp"
-		  "mutt"
-		  "pine"
-		  "tin"
-		  "trn"
-		  "elm"))
+      (setq eshell-visual-commands
+            '("vi"
+              "vim"
+              "hx"
+              "screen"
+              "nvim"
+              "bacon"
+              ;; "gh"
+              "tmux"
+              "top"
+              "htop"
+              "less"
+              "more"
+              "lynx"
+              "links"
+              "ncftp"
+              "mutt"
+              "pine"
+              "tin"
+              "trn"
+              "elm"))
+
+      (setq eshell-visual-subcommands
+            '(("jj" "diff")))
     #+end_src
 
 *** Completion
@@ -2083,7 +2174,7 @@ package is disabled.
           "search" "version" "info"
           "compose"))
 
-      (defvar docker-images-command "docker images | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+      (defvar docker-images-command "docker image ls | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
       (defun pcmpl-docker-images ()
         (let ((results (shell-command-to-string docker-images-command)))
           (string-split results "\n")))
@@ -2098,20 +2189,37 @@ package is disabled.
     #+end_src
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+      (require 'eshell)
+
+      (defun eshell/less (file)
+        "Use `view-file' instead of less."
+        (interactive)
+        (view-file file))
+
       (defun eshell/f (&optional file)
+        "Shorthand for `find-file', opening FILE."
         (interactive)
         (if file
             (find-file file)
           (call-interactively #'find-file)))
 
       (defun eshell/d (&optional dir)
+        "Run `dired' for directory DIR, or current dir if not given."
         (interactive)
         (if dir (dired dir) (dired ".")))
 
 
       (defun eshell/o (file)
+        "Shorthand for `find-file-other-window', opening FILE."
         (interactive)
         (find-file-other-window file))
+
+      (defun eshell/x ()
+        "Kill the `eshell' process and close its window."
+        (interactive)
+        (insert "exit")
+        (eshell-send-input)
+        (delete-window))
 
       (defun eshell/pr (&optional num)
         (interactive "n")
@@ -2123,6 +2231,17 @@ package is disabled.
             (shell-command-to-string (concat "gh pr diff " num))
             (read-key)
             (shell-command-to-string (concat "gh pr review " num)))))
+
+      (defun eshell-here ()
+        (interactive)
+        (let* ((parent (if (buffer-file-name)
+                           (file-name-directory (buffer-file-name))
+                         default-directory))
+               (name (car (last (split-string parent "/" t)))))
+          (eshell "new")
+          (rename-buffer (concat "*eshell: " name "*"))
+          (insert "ls")
+          (eshell-send-input)))
     #+end_src
 *** Prompt
 Because eshell is just elisp, the prompt can be set using elisp as well.
@@ -2134,7 +2253,7 @@ to make eshell as fancy as you can dream up (and program)
         (lambda ()
           (let* ((home-path (getenv "HOME"))
                  (dir (string-replace home-path "~" (eshell/pwd)))
-                 (branch (magit-get-current-branch)))
+                 (branch nil)) ; (magit-get-current-branch)))
             (concat
              (propertize dir 'face `(:foreground "#61bfff"))
              (if branch
@@ -2151,17 +2270,7 @@ to make eshell as fancy as you can dream up (and program)
   dependencies nor a compilation step.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-    (when nil
-      (straight-use-package
-       '(eat :type git
-	     :host codeberg
-	     :repo "akib/emacs-eat"
-	     :files ("*.el" ("term" "term/*.el") "*.texi"
-		     "*.ti" ("terminfo/e" "terminfo/e/*")
-		     ("terminfo/65" "terminfo/65/*")
-		     ("integration" "integration/*")
-		     (:exclude ".dir-locals.el" "*-tests.el"))))
-      (eat-eshell-mode 1))
+    (straight-use-package 'eat)
   #+end_src
 ** Vterm
 
@@ -2182,11 +2291,11 @@ to make eshell as fancy as you can dream up (and program)
     #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
       (straight-use-package
        '(typst-ts-mode
-	 :type git
-	 :host sourcehut
-	 :repo "meow_king/typst-ts-mode"
-	 :custom
-	 (typst-ts-mode-watch-options "--open")))
+         :type git
+         :host sourcehut
+         :repo "meow_king/typst-ts-mode"
+         :custom
+         (typst-ts-mode-watch-options "--open")))
     #+end_src
 
 ** Provide feature =my-typst=
@@ -2204,8 +2313,8 @@ to make eshell as fancy as you can dream up (and program)
     any intermediate windows in the cycle.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-	  (straight-use-package 'ace-window)
-	  (setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
+      (straight-use-package 'ace-window)
+      (setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
     #+end_src
 
 *** Window management
@@ -2218,17 +2327,50 @@ to make eshell as fancy as you can dream up (and program)
       (setq switch-to-buffer-obey-display-actions t)
 
       (add-to-list 'display-buffer-alist
-		   '("\\*eshell\\*"
-		     (display-buffer-at-bottom)
-		     (side . bottom)
-		     (slot . 0)
-		     (window-height . 15)))
+                   '("\\*eshell\\*"
+                     (display-buffer-at-bottom)
+                     (side . bottom)
+                     (slot . 0)
+                     (window-height . 15)))
 
       (add-to-list 'display-buffer-alist
-		   '("Calendar"
-		     (display-buffer-below-selected)
-		     (window-height . 15)))
+                   '("\\*vterm.*\\*"
+                     (display-buffer-at-bottom)
+                     (side . bottom)
+                     (slot . 0)
+                     (window-height . 30)))
+
+      (add-to-list 'display-buffer-alist
+                   '("Calendar"
+                     (display-buffer-below-selected)
+                     (window-height . 15)))
     #+end_src
+
+Growing, shrinking, and moving windows is a fairly common task, yet
+usually involves resorting to the mouse, or performing a long series
+of keyboard commands to perform the desired action solely through the
+keyboard.  Using emacs' transient maps, we can create our own little
+sub-mode with a persistent map.  This map defines some purpose-driven
+commands around manipulating windows, and as soon as a key not in the
+map is pressed, it exits the transient map and fires off the normal
+command for the key as usual.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (defun window-management-mode ()
+    "Manipulate windows (size, location, number, etc)."
+    (interactive)
+    (let ((transient-keymap (make-sparse-keymap)))
+      (define-key transient-keymap (kbd "j") (lambda () (interactive) (enlarge-window 5)))
+      (define-key transient-keymap (kbd "k") (lambda () (interactive) (shrink-window 5)))
+      (define-key transient-keymap (kbd "h") (lambda () (interactive) (shrink-window-horizontally 5)))
+      (define-key transient-keymap (kbd "l") (lambda () (interactive) (enlarge-window-horizontally 5)))
+
+      (set-transient-map transient-keymap t nil "Window management keymap: [j]grow height, [k]shrink height, [l]grow width, [h]shrink width")
+      (message "Window management transient keymap activated.")))
+
+  (evil-define-key 'normal 'global
+    (kbd "<leader> w m") #'window-management-mode)
+#+end_src
 
 ** Ace jump
 
@@ -2248,14 +2390,14 @@ to make eshell as fancy as you can dream up (and program)
 * Web Browsing
 ** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
-	 (evil-define-key 'normal eww-mode-map
-	   (kbd "q") #'quit-window
-	   (kbd "H") #'eww-back-url
-	   (kbd "L") #'eww-forward-url
-	   (kbd "<leader> m b") #'eww-switch-to-buffer
-	   ;; (kbd "g") #'eww
-	   )
-	 (provide 'my-web)
+     (evil-define-key 'normal eww-mode-map
+       (kbd "q") #'quit-window
+       (kbd "H") #'eww-back-url
+       (kbd "L") #'eww-forward-url
+       (kbd "<leader> m b") #'eww-switch-to-buffer
+       ;; (kbd "g") #'eww
+       )
+     (provide 'my-web)
    #+end_src
 
 ** Convenience functions
@@ -2277,7 +2419,7 @@ to make eshell as fancy as you can dream up (and program)
 ** Provide my-web
 
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
-	 (provide 'my-web)
+     (provide 'my-web)
    #+end_src
 
 * Email
@@ -2285,10 +2427,10 @@ to make eshell as fancy as you can dream up (and program)
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
     (setq send-mail-function 'smtpmail-send-it)
     (setq smtpmail-default-smtp-server "smtp.gmail.com"
-	  smtpmail-smtp-server "smtp.gmail.com"
-	  smtpmail-stream-type 'tls
-	  smtpmail-smtp-service 465
-	  user-mail-address "jharder@kipsu.com")
+          smtpmail-smtp-server "smtp.gmail.com"
+          smtpmail-stream-type 'tls
+          smtpmail-smtp-service 465
+          user-mail-address "jharder@kipsu.com")
   #+end_src
 
 ** mbsync setup
@@ -2347,10 +2489,10 @@ to make eshell as fancy as you can dream up (and program)
 **** Composing emails
     #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
       (defun my-notmuch-message-mode-hook ()
-	(auto-fill-mode -1)
-	(visual-line-mode 1))
+        (auto-fill-mode -1)
+        (visual-line-mode 1))
 
-      (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
+        (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
     #+end_src
 
 **** Hello sections
@@ -2601,47 +2743,49 @@ to make eshell as fancy as you can dream up (and program)
     (provide 'my-util)
   #+end_src
 
-* Magit (git)
+* Git
+** Magit
   Magit is amazing
   
-*** Install the package
+**** Install the package
 
   #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-    (straight-use-package 'magit)
+    (straight-use-package
+     '(magit :type git :host github :repo "magit/magit"))
     (evil-set-initial-state 'magit-status-mode 'normal)
   #+end_src
 
-*** Set up bindings for the various magit modes
-**** Status mode
+**** Set up bindings for the various magit modes
+***** Status mode
     Normal mode bindings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-status-mode-map
-	(kbd "?") #'magit-dispatch
-	(kbd "b") #'magit-branch
-	(kbd "q") #'magit-mode-bury-buffer
-	(kbd "c") #'magit-commit
-	(kbd "e") #'magit-ediff-dwim
+        (kbd "?") #'magit-dispatch
+        (kbd "b") #'magit-branch
+        (kbd "q") #'magit-mode-bury-buffer
+        (kbd "c") #'magit-commit
+        (kbd "e") #'magit-ediff-dwim
         (kbd "f") #'magit-fetch
-	(kbd "j") #'magit-next-line
-	(kbd "k") #'magit-previous-line
-	(kbd "}") #'magit-section-forward
-	(kbd "{") #'magit-section-backward
-	(kbd "TAB") #'magit-section-toggle
-	(kbd "RET") #'magit-visit-thing
-	(kbd "i") #'magit-gitignore
-	(kbd "l") #'magit-log
-	(kbd "m") #'magit-merge
-	(kbd "P") #'magit-push
-	(kbd "p") #'magit-pull
-	(kbd "M") #'magit-remote
-	(kbd "r") #'magit-rebase
-	(kbd "t") #'magit-tag
-	(kbd "R") #'magit-reset
-	(kbd "$") #'magit-process-buffer
-	;; delete
-	(kbd "d d") 'magit-discard
-	(kbd "z") #'magit-stash)
+        (kbd "j") #'magit-next-line
+        (kbd "k") #'magit-previous-line
+        (kbd "}") #'magit-section-forward
+        (kbd "{") #'magit-section-backward
+        (kbd "TAB") #'magit-section-toggle
+        (kbd "RET") #'magit-visit-thing
+        (kbd "i") #'magit-gitignore
+        (kbd "l") #'magit-log
+        (kbd "m") #'magit-merge
+        (kbd "P") #'magit-push
+        (kbd "p") #'magit-pull
+        (kbd "M") #'magit-remote
+        (kbd "r") #'magit-rebase
+        (kbd "t") #'magit-tag
+        (kbd "R") #'magit-reset
+        (kbd "$") #'magit-process-buffer
+        ;; delete
+        (kbd "d d") 'magit-discard
+        (kbd "z") #'magit-stash)
     #+end_src
 
     Visual mode bindings
@@ -2652,7 +2796,7 @@ to make eshell as fancy as you can dream up (and program)
     	(kbd "u") 'magit-unstage)
     #+end_src
 
-**** Log mode
+***** Log mode
     Normal mode bindings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
@@ -2667,7 +2811,7 @@ to make eshell as fancy as you can dream up (and program)
         (kbd "f") #'magit-fetch)
     #+end_src
 
-**** Rebase mode
+***** Rebase mode
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal) git-rebase-mode-map
 	(kbd "p") #'git-rebase-pick
@@ -2681,18 +2825,18 @@ to make eshell as fancy as you can dream up (and program)
 	(kbd "K") #'git-rebase-move-line-up)
     #+end_src
 
-**** Revision mode
+***** Revision mode
     The revision mode im magit is TODO (what actual part of magit does this even relate to?)
     
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (evil-define-key '(normal motion) magit-revision-mode-map
-	(kbd "j") 'magit-next-line
-	(kbd "k") 'magit-previous-line
-	(kbd "}") 'magit-section-forward
-	(kbd "{") 'magit-section-backward
-	(kbd "TAB") 'magit-section-toggle
-	(kbd "RET") 'magit-visit-thing
-	(kbd "q") 'magit-mode-bury-buffer)
+        (kbd "j") 'magit-next-line
+        (kbd "k") 'magit-previous-line
+        (kbd "}") 'magit-section-forward
+        (kbd "{") 'magit-section-backward
+        (kbd "TAB") 'magit-section-toggle
+        (kbd "RET") 'magit-visit-thing
+        (kbd "q") 'magit-mode-bury-buffer)
     #+end_src
 
 ** Forge
@@ -2774,26 +2918,37 @@ to make eshell as fancy as you can dream up (and program)
       ;; navigation
       (kbd "{") 'ibuffer-backwards-next-marked
       (kbd "}") 'ibuffer-forward-next-marked
-  
+
       ;; mark commands
       (kbd "J") 'ibuffer-jump-to-buffer
       (kbd "m") 'ibuffer-mark-forward
       (kbd "~") 'ibuffer-toggle-marks
       (kbd "u") 'ibuffer-unmark-forward
       (kbd "DEL") 'ibuffer-unmark-backward
-      (kbd "* *") 'ibuffer-mark-special-buffers
       (kbd "U") 'ibuffer-unmark-all-marks
+      (kbd "* *") 'ibuffer-mark-special-buffers
       (kbd "* m") 'ibuffer-mark-by-mode
-      (kbd "* M") 'ibuffer-mark-modified-buffers
+      (kbd "* i") 'ibuffer-mark-unsaved-buffers
+      (kbd "* n") #'ibuffer-mark-by-name-regexp
       (kbd "* r") 'ibuffer-mark-read-only-buffers
       (kbd "* /") 'ibuffer-mark-dired-buffers
       (kbd "* h") 'ibuffer-mark-help-buffers
       (kbd "d") 'ibuffer-mark-for-delete
-  
+
+      ;; filtering
+      (kbd "/ m") #'ibuffer-filter-by-mode
+      (kbd "/ i") #'ibuffer-filter-by-modified
+      (kbd "/ n") #'ibuffer-filter-by-name
+      (kbd "/ f") #'ibuffer-filter-by-filename
+      (kbd "/ .") #'ibuffer-filter-by-file-extension
+      (kbd "/ s") #'ibuffer-save-filters
+      (kbd "/ /") #'ibuffer-filter-disable
+
+
       ;; actions
       (kbd "x") 'ibuffer-do-kill-on-deletion-marks
       (kbd "gr") 'ibuffer-update
-  
+
       ;; immediate actions
       (kbd "A") 'ibuffer-do-view
       (kbd "D") 'ibuffer-do-delete
@@ -2830,111 +2985,115 @@ to make eshell as fancy as you can dream up (and program)
    Normal state commands
    
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-	 (evil-define-key 'normal 'global
-	   (kbd "<leader> ;") #'eval-expression
-	   (kbd "<leader> q") #'save-buffers-kill-terminal
-	   (kbd "<leader> x") #'execute-extended-command
-	   (kbd "<leader> z") #'ispell-word
-	   (kbd "<leader> TAB") (lambda ()
-				  (interactive)
-				  (switch-to-buffer nil))
-	   (kbd "g r") #'revert-buffer
-	   (kbd "SPC SPC") #'other-window
-	   ;; App launcher
-	   (kbd "<leader> a c") #'calendar
-	   (kbd "<leader> a a") #'org-agenda
-	   (kbd "<leader> a n") #'notmuch
-	   (kbd "<leader> a =") #'calc
-	   ;; buffers
-	   (kbd "<leader> b b") #'consult-buffer
-	   (kbd "<leader> b n") #'next-buffer
-	   (kbd "<leader> b p") #'previous-buffer
-	   (kbd "<leader> b s") #'save-buffer
-	   (kbd "<leader> b i") #'ibuffer
-	   (kbd "<leader> b d") #'evil-delete-buffer
-	   (kbd "<leader> b c") #'kill-current-buffer
-	   (kbd "<leader> b r") #'rename-buffer
-	   ;; config related commands
-	   (kbd "<leader> c .") #'find-config
-	   (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
-	   (kbd "<leader> c t") #'consult-theme
-	   ;; dired
-	   (kbd "<leader> d d") #'dired-jump
-	   (kbd "<leader> d j") #'dired
-	   ;; evaluation
-	   (kbd "<leader> e e") #'eval-last-sexp
-	   (kbd "<leader> e d") #'eval-deful
-	   ;; files
-	   (kbd "<leader> f b") #'bookmark-jump
-	   (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
-	   (kbd "<leader> f B") #'bookmark-set
-	   (kbd "<leader> f c") #'find-config
-	   (kbd "<leader> f f") #'find-file
-	   (kbd "<leader> f r") #'rename-visited-file
-	   ;; magit
-	   (kbd "<leader> g") #'magit
-	   ;; help(ful) commands
-	   (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
-				  (info (format "(%s)Top" node)))
-	   (kbd "<leader> h M") #'info-emacs-manual
-	   (kbd "<leader> h v") #'helpful-variable
-	   (kbd "<leader> h f") #'helpful-function
-	   (kbd "<leader> h k") #'helpful-key
-	   (kbd "<leader> h m") #'describe-mode
-	   (kbd "<leader> h r") #'info-display-manual
-	   ;; imenu
-	   (kbd "<leader> i") #'consult-outline
-	   ;; jumping (ace)
-	   (kbd "<leader> j") #'ace-jump-word-mode
-	   ;; org
-	   (kbd "<leader> o c") #'org-capture
-	   (kbd "<leader> o s") #'org-store-link
-	   ;; occur
-	   (kbd "<leader> o o") #'occur
-	   ;; project
-	   (kbd "<leader> p !") #'project-shell-command
-	   (kbd "<leader> p &") #'project-async-shell-command
-	   (kbd "<leader> p D") #'project-dired
-	   (kbd "<leader> p b") #'project-switch-to-buffer
-	   (kbd "<leader> p c") #'compile
-	   (kbd "<leader> p d") #'project-find-dir
-	   (kbd "<leader> p e") #'project-eshell
-	   (kbd "<leader> p f") #'project-find-file
-	   (kbd "<leader> p m") #'magit-project-status
-	   (kbd "<leader> p k") #'project-kill-buffers
-	   (kbd "<leader> p p") #'project-switch-project
-	   (kbd "<leader> p /") #'project-find-regexp
-	   ;; shells
-	   (kbd "<leader> s e") #'eshell
-	   ;;; (kbd "<leader> s t") #'eat
-	   (kbd "<leader> s t") #'multi-vterm
-	   ;; tab commands
-	   (kbd "<leader> t t") #'tab-switch
-	   (kbd "<leader> t n") #'tab-new
-	   (kbd "<leader> t j") #'tab-next
-	   (kbd "<leader> t k") #'tab-previous
-	   (kbd "<leader> t f") #'find-file-other-tab
-	   (kbd "<leader> t b") #'switch-to-buffer-other-tab
-	   (kbd "<leader> t r") #'tab-rename
-	   (kbd "<leader> t d") #'tab-close
-	   ;; windows
-	   (kbd "<leader> .") #'evil-window-split
-	   (kbd "<leader> /") #'evil-window-vsplit
-	   (kbd "<leader> w w") #'ace-window
-	   (kbd "<leader> w H") #'evil-window-move-far-left
-	   (kbd "<leader> w L") #'evil-window-move-far-right
-	   (kbd "<leader> w K") #'evil-window-move-very-top
-	   (kbd "<leader> w J") #'evil-window-move-very-bottom
-	   (kbd "<leader> w c") #'evil-window-delete
-	   (kbd "<leader> w v") #'evil-window-vsplit
-	   (kbd "<leader> w s") #'evil-window-split
-	   (kbd "<leader> w o") #'delete-other-windows
-	   (kbd "<leader> w =") #'balance-windows
-	   ;; toggles
-	   (kbd "<leader> T t") #'modus-themes-toggle
-	   (kbd "<leader> T n") #'display-line-numbers-mode
-	   (kbd "<leader> T s") #'spacious-padding-mode
-	   (kbd "<leader> T w") #'whitespace-mode)
+     (evil-define-key 'normal 'global
+       (kbd "<leader> ;") #'eval-expression
+       (kbd "<leader> q") #'save-buffers-kill-terminal
+       (kbd "<leader> x") #'execute-extended-command
+       (kbd "<leader> z") #'ispell-word
+       (kbd "<leader> TAB") (lambda ()
+                              (interactive)
+                              (switch-to-buffer nil))
+       (kbd "g r") #'revert-buffer
+       (kbd "SPC SPC") #'other-window
+       ;; App launcher
+       (kbd "<leader> a c") #'calendar
+       (kbd "<leader> a a") #'org-agenda
+       (kbd "<leader> a n") #'notmuch
+       (kbd "<leader> a =") #'calc
+       ;; buffers
+       (kbd "<leader> b b") #'consult-buffer
+       (kbd "<leader> b n") #'next-buffer
+       (kbd "<leader> b p") #'previous-buffer
+       (kbd "<leader> b s") #'save-buffer
+       (kbd "<leader> b i") #'ibuffer
+       (kbd "<leader> b d") #'evil-delete-buffer
+       (kbd "<leader> b c") #'kill-current-buffer
+       (kbd "<leader> b r") #'rename-buffer
+       ;; config related commands
+       (kbd "<leader> c .") #'find-config
+       (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
+       (kbd "<leader> c t") #'consult-theme
+       ;; dired
+       (kbd "<leader> d d") #'dired-jump
+       (kbd "<leader> d j") #'dired
+       ;; evaluation
+       (kbd "<leader> e e") #'eval-last-sexp
+       (kbd "<leader> e d") #'eval-defun
+       ;; files
+       (kbd "<leader> f b") #'bookmark-jump
+       (kbd "<leader> f d") #'diff-buffer-with-file
+       (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
+       (kbd "<leader> f B") #'bookmark-set
+       (kbd "<leader> f c") #'find-config
+       (kbd "<leader> f f") #'find-file
+       (kbd "<leader> f r") #'rename-visited-file
+       ;; getting things done (gtd)
+       (kbd "<leader> g s") #'gtd-find-schedule
+       (kbd "<leader> g o") #'gtd-find-oneoff
+       (kbd "<leader> g i") #'gtd-find-inbox
+       (kbd "<leader> g c") #'gtd-capture
+       ;; help(ful) commands
+       (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
+                              (info (format "(%s)Top" node)))
+       (kbd "<leader> h M") #'info-emacs-manual
+       (kbd "<leader> h v") #'helpful-variable
+       (kbd "<leader> h f") #'helpful-function
+       (kbd "<leader> h k") #'helpful-key
+       (kbd "<leader> h m") #'describe-mode
+       (kbd "<leader> h r") #'info-display-manual
+       ;; imenu
+       (kbd "<leader> i") #'consult-outline
+       ;; jumping (ace)
+       (kbd "<leader> j") #'ace-jump-word-mode
+       ;; org
+       (kbd "<leader> o c") #'org-capture
+       (kbd "<leader> o s") #'org-store-link
+       ;; occur
+       (kbd "<leader> o o") #'occur
+       ;; project
+       (kbd "<leader> p !") #'project-shell-command
+       (kbd "<leader> p &") #'project-async-shell-command
+       (kbd "<leader> p D") #'project-dired
+       (kbd "<leader> p b") #'project-switch-to-buffer
+       (kbd "<leader> p c") #'compile
+       (kbd "<leader> p d") #'project-find-dir
+       (kbd "<leader> p e") #'project-eshell
+       (kbd "<leader> p f") #'project-find-file
+       (kbd "<leader> p m") #'magit-project-status
+       (kbd "<leader> p k") #'project-kill-buffers
+       (kbd "<leader> p p") #'project-switch-project
+       (kbd "<leader> p /") #'project-find-regexp
+       ;; shells
+       (kbd "<leader> s e") #'eshell-here
+       ;;; (kbd "<leader> s t") #'eat
+       (kbd "<leader> s t") #'multi-vterm
+       ;; tab commands
+       (kbd "<leader> t t") #'tab-switch
+       (kbd "<leader> t n") #'tab-new
+       (kbd "<leader> t j") #'tab-next
+       (kbd "<leader> t k") #'tab-previous
+       (kbd "<leader> t f") #'find-file-other-tab
+       (kbd "<leader> t b") #'switch-to-buffer-other-tab
+       (kbd "<leader> t r") #'tab-rename
+       (kbd "<leader> t d") #'tab-close
+       ;; windows
+       (kbd "<leader> .") #'evil-window-split
+       (kbd "<leader> /") #'evil-window-vsplit
+       (kbd "<leader> w w") #'ace-window
+       (kbd "<leader> w H") #'evil-window-move-far-left
+       (kbd "<leader> w L") #'evil-window-move-far-right
+       (kbd "<leader> w K") #'evil-window-move-very-top
+       (kbd "<leader> w J") #'evil-window-move-very-bottom
+       (kbd "<leader> w c") #'evil-window-delete
+       (kbd "<leader> w v") #'evil-window-vsplit
+       (kbd "<leader> w s") #'evil-window-split
+       (kbd "<leader> w o") #'delete-other-windows
+       (kbd "<leader> w =") #'balance-windows
+       ;; toggles
+       (kbd "<leader> T t") #'modus-themes-toggle
+       (kbd "<leader> T n") #'display-line-numbers-mode
+       (kbd "<leader> T s") #'spacious-padding-mode
+       (kbd "<leader> T w") #'whitespace-mode)
    #+end_src
 
 *** S-expression navigation

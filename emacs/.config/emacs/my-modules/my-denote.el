@@ -9,15 +9,6 @@
       denote-dired-directories (list denote-directory gtd-projects-directory))
 (setq denote-prompts '(title subdirectory keywords))
 
-(defun denote-meeting (person)
-  (interactive (let ((people-files (denote-directory-files "_person" nil t)))
-                 (list (completing-read
-                        "Person:"
-                        (mapcar (lambda (f)
-                                  (denote-retrieve-title-or-filename f 'org))
-                                people-files)))))
-  (denote person '("meeting") 'org))
-
 (evil-define-key 'normal 'global
   (kbd "<leader> n /") #'denote-grep
   (kbd "<leader> n J") #'denote-journal-new-entry
@@ -33,6 +24,9 @@
   (kbd "<leader> n r") #'denote-rename-file-using-front-matter
   (kbd "<leader> n s") #'denote-signature
   (kbd "<leader> n t") #'denote-template)
+
+(evil-define-key '(visual insert) text-mode-map
+  (kbd "C-l") #'denote-link-or-create)
 
 (evil-define-key 'normal denote-backlinks-mode-map
   (kbd "j") #'denote-backlinks-next
@@ -54,6 +48,8 @@
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
 (straight-use-package 'denote-org)
+
+(straight-use-package 'denote-sequence)
 
 (straight-use-package 'denote-explore)
 

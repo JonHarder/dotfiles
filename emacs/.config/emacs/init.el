@@ -47,6 +47,8 @@
 (require 'my-web)
 (require 'my-nushell-mode)
 (require 'my-org)
+(require 'my-howm)
+(require 'my-hyperbole)
 (require 'my-php-mode)
 (require 'my-prog-mode)
 (require 'my-python-mode)
