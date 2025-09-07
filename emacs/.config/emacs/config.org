@@ -2108,7 +2108,6 @@ package is disabled.
 *** Environment variables
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
       (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
-      (setenv "PAGER" "cat"
       (add-to-list 'exec-path "/usr/local/go/bin")
       (add-to-list 'exec-path "/opt/homebrew/bin")
       (add-to-list 'exec-path "/Library/TeX/texbin")
@@ -2214,7 +2213,7 @@ package is disabled.
         (interactive)
         (find-file-other-window file))
 
-      (defun eshell/x ()
+      (defun eshell/q ()
         "Kill the `eshell' process and close its window."
         (interactive)
         (insert "exit")

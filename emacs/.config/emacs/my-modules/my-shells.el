@@ -8,7 +8,8 @@
 
 (add-hook 'eshell-mode-hook
           (lambda ()
-            (setenv "TERM" "eterm")))
+            (setenv "TERM" "eterm")
+            (setenv "PAGER" "cat")))
 
 (straight-use-package 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode +1)
@@ -86,7 +87,7 @@
   (interactive)
   (find-file-other-window file))
 
-(defun eshell/x ()
+(defun eshell/q ()
   "Kill the `eshell' process and close its window."
   (interactive)
   (insert "exit")
