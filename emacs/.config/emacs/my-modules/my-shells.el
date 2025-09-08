@@ -68,9 +68,10 @@
     (pcomplete-here* (pcmpl-docker-images)))))
 
 (require 'eshell)
+(require 'esh-mode)
 
 (defun eshell/less (file)
-  "Use `view-file' instead of less."
+  "Use `view-file' instead of less when viewing FILE."
   (interactive)
   (view-file file))
 
@@ -97,9 +98,12 @@
   (interactive)
   (insert "exit")
   (eshell-send-input)
-  (delete-window))
+  (if (one-window-p)
+      (kill-this-buffer)
+    (delete-window)))
 
 (defun eshell/pr (&optional num)
+  "Review a github pull request number NUM."
   (interactive "n")
   (if num
       (shell-command "gh pr status")
@@ -111,6 +115,7 @@
       (shell-command-to-string (concat "gh pr review " num)))))
 
 (defun eshell-here ()
+  "Open an `eshell' window relative to the active buffer's file."
   (interactive)
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name))

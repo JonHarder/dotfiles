@@ -1,4 +1,4 @@
-(setq my-theme '(doom-themes . doom-monokai-classic))
+(setq my-theme '(doom-themes . doom-bluloco-dark))
 (straight-use-package (car my-theme))
 (add-hook 'after-init-hook
           (lambda ()

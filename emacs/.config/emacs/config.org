@@ -14,6 +14,13 @@ modifying this file.
 * Early init optimizations
 ** Disable built-in package.el
  #+begin_src emacs-lisp :tangle "early-init.el"
+   ;;; early-init.el --- The first lisp code emacs runs before normal initialization.
+   ;;; Commentary:
+   ;; This file is evaluated at the very start of Emacs initialization.
+   ;; It is used here to ensure the native `package' initialization is inhibeted.
+
+   ;;; Code:
+
    ;; disable package.el in favor of straight.el
    (setq package-enable-at-startup nil)
  #+end_src
@@ -46,6 +53,9 @@ helpful nonetheless.
                                (float-time
                                 (time-subtract after-init-time before-init-time)))
                        gcs-done)))
+
+  (provide 'early-init)
+  ;;; early-init.el ends here
 #+end_src
 
 * Package management
@@ -144,7 +154,7 @@ contrast between UI elements, making it one of the easiest themes on the eyes
 in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (setq my-theme '(doom-themes . doom-monokai-classic))
+  (setq my-theme '(doom-themes . doom-bluloco-dark))
   (straight-use-package (car my-theme))
   (add-hook 'after-init-hook
             (lambda ()
@@ -2211,9 +2221,10 @@ package is disabled.
 *** Custom functions
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
       (require 'eshell)
+      (require 'esh-mode)
 
       (defun eshell/less (file)
-        "Use `view-file' instead of less."
+        "Use `view-file' instead of less when viewing FILE."
         (interactive)
         (view-file file))
 
@@ -2240,9 +2251,12 @@ package is disabled.
         (interactive)
         (insert "exit")
         (eshell-send-input)
-        (delete-window))
+        (if (one-window-p)
+            (kill-this-buffer)
+          (delete-window)))
 
       (defun eshell/pr (&optional num)
+        "Review a github pull request number NUM."
         (interactive "n")
         (if num
             (shell-command "gh pr status")
@@ -2254,6 +2268,7 @@ package is disabled.
             (shell-command-to-string (concat "gh pr review " num)))))
 
       (defun eshell-here ()
+        "Open an `eshell' window relative to the active buffer's file."
         (interactive)
         (let* ((parent (if (buffer-file-name)
                            (file-name-directory (buffer-file-name))
@@ -2263,6 +2278,7 @@ package is disabled.
           (rename-buffer (concat "*eshell: " name "*"))
           (insert "ls")
           (eshell-send-input)))
+
     #+end_src
 *** Prompt
 Because eshell is just elisp, the prompt can be set using elisp as well.

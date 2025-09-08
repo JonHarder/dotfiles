@@ -20,5 +20,6 @@
                              (float-time
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)))
+
 (provide 'early-init)
 ;;; early-init.el ends here
