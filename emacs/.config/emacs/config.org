@@ -828,6 +828,23 @@ window at the bottom of the current frame.
 ** Bindings
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  ;;; Code:
+  (require 'evil)
+
+  (defun denote-recently-modified (&optional last-days)
+    "View a `dired' buffer containing notes modified in the last LAST-DAYS days.
+
+  This uses the first element of `denote-directories' to determine where notes are stored."
+    (interactive (list
+                  (read-number "Last days: " 7)))
+    (let* ((default-directory (car (denote-directories)))
+           ;; find files recently modified and sort by modification time
+           (find-command (format "find . -type f -mtime -%d ! -name .DS_Store | xargs ls -t | cut -c3-"
+                                 last-days))
+           (files (split-string
+                   (shell-command-to-string find-command))))
+      (dired (cons default-directory files))))
+
   (evil-define-key 'normal 'global
     (kbd "<leader> n /") #'denote-grep
     (kbd "<leader> n J") #'denote-journal-new-entry
@@ -838,7 +855,7 @@ window at the bottom of the current frame.
     (kbd "<leader> n l") #'denote-link
     (kbd "<leader> n n") #'consult-notes
     ;; (kbd "<leader> n n") #'denote
-    (kbd "<leader> n m") #'denote-meeting
+    (kbd "<leader> n m") #'denote-recently-modified
     (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
     (kbd "<leader> n r") #'denote-rename-file-using-front-matter
     (kbd "<leader> n s") #'denote-signature
@@ -2124,14 +2141,17 @@ package is disabled.
 *** Settings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (straight-use-package 'eshell-syntax-highlighting)
-      (eshell-syntax-highlighting-global-mode +1)
       (require 'eshell)
+      (straight-use-package 'eshell-syntax-highlighting)
+      (require 'eshell-syntax-highlighting)
+      (eshell-syntax-highlighting-global-mode +1)
+
       ;; (require 'em-smart)
-      (setq eshell-where-to-jump 'begin)
-      (setq eshell-review-quick-commands nil)
+      ;; (setq eshell-where-to-jump 'begin)
       ;; (setq eshell-smart-space-goes-to-end nil)
-      (setq eshell-visual-commands nil)
+
+      ;; (setq eshell-review-quick-commands nil)
+      (require 'em-term)
 
       (setq eshell-visual-commands
             '("vi"
@@ -2156,7 +2176,9 @@ package is disabled.
               "elm"))
 
       (setq eshell-visual-subcommands
-            '(("jj" "diff")))
+            '(
+              ;; ("jj" "diff")
+              ))
     #+end_src
 
 *** Completion
@@ -2330,7 +2352,7 @@ to make eshell as fancy as you can dream up (and program)
                      (display-buffer-at-bottom)
                      (side . bottom)
                      (slot . 0)
-                     (window-height . 15)))
+                     (window-height . 30)))
 
       (add-to-list 'display-buffer-alist
                    '("\\*vterm.*\\*"

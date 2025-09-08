@@ -9,6 +9,23 @@
       denote-dired-directories (list denote-directory gtd-projects-directory))
 (setq denote-prompts '(title subdirectory keywords))
 
+;;; Code:
+(require 'evil)
+
+(defun denote-recently-modified (&optional last-days)
+  "View a `dired' buffer containing notes modified in the last LAST-DAYS days.
+
+This uses the first element of `denote-directories' to determine where notes are stored."
+  (interactive (list
+                (read-number "Last days: " 7)))
+  (let* ((default-directory (car (denote-directories)))
+         ;; find files recently modified and sort by modification time
+         (find-command (format "find . -type f -mtime -%d ! -name .DS_Store | xargs ls -t | cut -c3-"
+                               last-days))
+         (files (split-string
+                 (shell-command-to-string find-command))))
+    (dired (cons default-directory files))))
+
 (evil-define-key 'normal 'global
   (kbd "<leader> n /") #'denote-grep
   (kbd "<leader> n J") #'denote-journal-new-entry
@@ -19,7 +36,7 @@
   (kbd "<leader> n l") #'denote-link
   (kbd "<leader> n n") #'consult-notes
   ;; (kbd "<leader> n n") #'denote
-  (kbd "<leader> n m") #'denote-meeting
+  (kbd "<leader> n m") #'denote-recently-modified
   (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
   (kbd "<leader> n r") #'denote-rename-file-using-front-matter
   (kbd "<leader> n s") #'denote-signature

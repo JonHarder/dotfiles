@@ -8,7 +8,7 @@
                (display-buffer-at-bottom)
                (side . bottom)
                (slot . 0)
-               (window-height . 15)))
+               (window-height . 30)))
 
 (add-to-list 'display-buffer-alist
              '("\\*vterm.*\\*"

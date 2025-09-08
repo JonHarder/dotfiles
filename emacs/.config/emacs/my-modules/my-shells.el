@@ -11,14 +11,17 @@
             (setenv "TERM" "eterm")
             (setenv "PAGER" "cat")))
 
-(straight-use-package 'eshell-syntax-highlighting)
-(eshell-syntax-highlighting-global-mode +1)
 (require 'eshell)
+(straight-use-package 'eshell-syntax-highlighting)
+(require 'eshell-syntax-highlighting)
+(eshell-syntax-highlighting-global-mode +1)
+
 ;; (require 'em-smart)
-(setq eshell-where-to-jump 'begin)
-(setq eshell-review-quick-commands nil)
+;; (setq eshell-where-to-jump 'begin)
 ;; (setq eshell-smart-space-goes-to-end nil)
-(setq eshell-visual-commands nil)
+
+;; (setq eshell-review-quick-commands nil)
+(require 'em-term)
 
 (setq eshell-visual-commands
       '("vi"
@@ -43,7 +46,9 @@
         "elm"))
 
 (setq eshell-visual-subcommands
-      '(("jj" "diff")))
+      '(
+        ;; ("jj" "diff")
+        ))
 
 (defconst pcmpl-docker-commands
   '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
