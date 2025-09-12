@@ -12,6 +12,8 @@
             (setenv "PAGER" "cat")))
 
 (require 'eshell)
+(add-to-list 'eshell-modules-list 'eshell-smart)
+
 (straight-use-package 'eshell-syntax-highlighting)
 (require 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode +1)
@@ -120,11 +122,17 @@
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name))
                    default-directory))
-         (name (car (last (split-string parent "/" t)))))
-    (eshell "new")
-    (rename-buffer (concat "*eshell: " name "*"))
-    (insert "ls")
-    (eshell-send-input)))
+         (name (car (last (split-string parent "/" t))))
+         (buffer-name (concat "*eshell: " name "*")))
+    (if-let ((buffer (get-buffer buffer-name)))
+        (progn
+          (display-buffer buffer)
+          (switch-to-buffer buffer))
+      (progn
+        (eshell "new")
+        (rename-buffer (concat "*eshell: " name "*"))
+        (insert "ls")
+        (eshell-send-input)))))
 
 (setq eshell-prompt-function
       (lambda ()

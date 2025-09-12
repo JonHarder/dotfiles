@@ -126,7 +126,6 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-nushell-mode)
   (require 'my-org)
   (require 'my-howm)
-  (require 'my-hyperbole)
   (require 'my-php-mode)
   (require 'my-prog-mode)
   (require 'my-python-mode)
@@ -608,6 +607,13 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
      (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
    #+end_src
    
+** Capf autosuggest
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'capf-autosuggest)
+  (add-hook 'eshell-mode-hook #'capf-autosuggest-mode)
+  (with-eval-after-load 'capf-autosuggest
+    (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
+#+end_src
 ** Vertico
 
    Vertico is a minibuffer completion enhancement library which wraps emacs'
@@ -950,6 +956,11 @@ see [[info:denote-explore][here]] for a full manual on the package
   (straight-use-package 'denote-explore)
 #+end_src
 
+** Consult Denote
+#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+  (straight-use-package 'consult-denote)
+  (consult-denote-mode 1)
+#+end_src
 ** Templates
 Denote allows for defining templates when creating a new note. The
 selected template will pre-fill the newly created note.
@@ -1363,15 +1374,6 @@ This replaces the venerable, but outdated flymake.
      (provide 'my-docker-mode)
    #+end_src
 ** Lisp modes
-*** Structured editing
-**** Symex
-#+begin_src emacs-lisp :tangle "my-modues/my-lisp-mode.el" :mkdirp yes
-  (straight-use-package 'symex)
-  (symex-initialize)
-
-  (evil-define-key 'normal symex-mode-map
-    (kbd "s-;") #'symex-mode-inferface)
-#+end_src
 *** Indentation
    #+begin_src emacs-lisp :tangle "my-modules/my-lisp-mode.el" :mkdirp yes
      (straight-use-package 'aggressive-indent)
@@ -1692,6 +1694,17 @@ This replaces the venerable, but outdated flymake.
 	   org-priority-lowest ?D)
    #+end_src
 
+*** export
+Org can export content into a variety of formats.  Most relevant to my
+purposes is LaTeX/pdf.  What follows are various settings specific to
+configuring the environment for exporting org documents into TeX and
+then into pdfs
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+
+
 ** Org agenda
 *** Custom commands
     These commands show up in the org-agenda view and will produce
@@ -1817,7 +1830,8 @@ project is one which has the tag "proj" and a task with the
                      '(".*" '(space . (:width (18)))))
 
         (add-to-list 'org-agenda-files org-directory)
-        (add-to-list 'org-agenda-files gtd-projects-directory)
+        ;; (add-to-list 'org-agenda-files gtd-projects-directory)
+        (add-to-list 'org-agenda-files (concat gtd-directory "/projects.org"))
     #+end_src
 
 *** super agenda
@@ -2152,6 +2166,8 @@ package is disabled.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
       (require 'eshell)
+      (add-to-list 'eshell-modules-list 'eshell-smart)
+
       (straight-use-package 'eshell-syntax-highlighting)
       (require 'eshell-syntax-highlighting)
       (eshell-syntax-highlighting-global-mode +1)
@@ -2273,11 +2289,17 @@ package is disabled.
         (let* ((parent (if (buffer-file-name)
                            (file-name-directory (buffer-file-name))
                          default-directory))
-               (name (car (last (split-string parent "/" t)))))
-          (eshell "new")
-          (rename-buffer (concat "*eshell: " name "*"))
-          (insert "ls")
-          (eshell-send-input)))
+               (name (car (last (split-string parent "/" t))))
+               (buffer-name (concat "*eshell: " name "*")))
+          (if-let ((buffer (get-buffer buffer-name)))
+              (progn
+                (display-buffer buffer)
+                (switch-to-buffer buffer))
+            (progn
+              (eshell "new")
+              (rename-buffer (concat "*eshell: " name "*"))
+              (insert "ls")
+              (eshell-send-input)))))
 
     #+end_src
 *** Prompt
@@ -2364,18 +2386,18 @@ to make eshell as fancy as you can dream up (and program)
       (setq switch-to-buffer-obey-display-actions t)
 
       (add-to-list 'display-buffer-alist
-                   '("\\*eshell\\*"
+                   '("\\*eshell.*\\*"
                      (display-buffer-at-bottom)
                      (side . bottom)
                      (slot . 0)
-                     (window-height . .30)))
+                     (window-height . .40)))
 
       (add-to-list 'display-buffer-alist
                    '("\\*vterm.*\\*"
                      (display-buffer-at-bottom)
                      (side . bottom)
                      (slot . 0)
-                     (window-height . .30)))
+                     (window-height . .40)))
 
       (add-to-list 'display-buffer-alist
                    '("Calendar"
@@ -3040,6 +3062,8 @@ command for the key as usual.
    Normal state commands
    
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
+     (require 'evil)
+
      (evil-define-key 'normal 'global
        (kbd "<leader> ;") #'eval-expression
        (kbd "<leader> q") #'save-buffers-kill-terminal
@@ -3135,6 +3159,10 @@ command for the key as usual.
        (kbd "<leader> .") #'evil-window-split
        (kbd "<leader> /") #'evil-window-vsplit
        (kbd "<leader> w w") #'ace-window
+       (kbd "<leader> w h") #'evil-window-left
+       (kbd "<leader> w l") #'evil-window-right
+       (kbd "<leader> w j") #'evil-window-down
+       (kbd "<leader> w k") #'evil-window-up
        (kbd "<leader> w H") #'evil-window-move-far-left
        (kbd "<leader> w L") #'evil-window-move-far-right
        (kbd "<leader> w K") #'evil-window-move-very-top
@@ -3203,3 +3231,4 @@ command for the key as usual.
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
      (provide 'my-xref)
    #+end_src
+t

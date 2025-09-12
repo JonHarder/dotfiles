@@ -1,6 +1,8 @@
 (evil-define-key '(insert emacs visual) 'global
   (kbd "s-x") #'execute-extended-command)
 
+(require 'evil)
+
 (evil-define-key 'normal 'global
   (kbd "<leader> ;") #'eval-expression
   (kbd "<leader> q") #'save-buffers-kill-terminal
@@ -96,6 +98,10 @@
   (kbd "<leader> .") #'evil-window-split
   (kbd "<leader> /") #'evil-window-vsplit
   (kbd "<leader> w w") #'ace-window
+  (kbd "<leader> w h") #'evil-window-left
+  (kbd "<leader> w l") #'evil-window-right
+  (kbd "<leader> w j") #'evil-window-down
+  (kbd "<leader> w k") #'evil-window-up
   (kbd "<leader> w H") #'evil-window-move-far-left
   (kbd "<leader> w L") #'evil-window-move-far-right
   (kbd "<leader> w K") #'evil-window-move-very-top

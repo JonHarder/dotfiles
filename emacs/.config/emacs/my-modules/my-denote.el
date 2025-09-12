@@ -70,6 +70,9 @@ This uses the first element of `denote-directories' to determine where notes are
 
 (straight-use-package 'denote-explore)
 
+(straight-use-package 'consult-denote)
+(consult-denote-mode 1)
+
 (setq denote-templates
       `((onboarding . ,(concat "* Onboarding Tasks\n"
                                "  - [ ] Welcome, office tour\n"

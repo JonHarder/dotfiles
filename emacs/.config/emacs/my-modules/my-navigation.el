@@ -4,18 +4,18 @@
 (setq switch-to-buffer-obey-display-actions t)
 
 (add-to-list 'display-buffer-alist
-             '("\\*eshell\\*"
+             '("\\*eshell.*\\*"
                (display-buffer-at-bottom)
                (side . bottom)
                (slot . 0)
-               (window-height . .30)))
+               (window-height . .40)))
 
 (add-to-list 'display-buffer-alist
              '("\\*vterm.*\\*"
                (display-buffer-at-bottom)
                (side . bottom)
                (slot . 0)
-               (window-height . .30)))
+               (window-height . .40)))
 
 (add-to-list 'display-buffer-alist
              '("Calendar"

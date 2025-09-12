@@ -86,6 +86,8 @@
 (setq org-priority-highest ?A
   org-priority-lowest ?D)
 
+(setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
 		 ((agenda ""
@@ -171,7 +173,8 @@
              '(".*" '(space . (:width (18)))))
 
 (add-to-list 'org-agenda-files org-directory)
-(add-to-list 'org-agenda-files gtd-projects-directory)
+;; (add-to-list 'org-agenda-files gtd-projects-directory)
+(add-to-list 'org-agenda-files (concat gtd-directory "/projects.org"))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
