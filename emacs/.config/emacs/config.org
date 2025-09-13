@@ -608,11 +608,14 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
    #+end_src
    
 ** Capf autosuggest
+This is disabled until I can find a way to make suggestion usage work
+and play nicely with ~eshell-smart~
+
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'capf-autosuggest)
-  (add-hook 'eshell-mode-hook #'capf-autosuggest-mode)
-  (with-eval-after-load 'capf-autosuggest
-    (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
+  ;; (straight-use-package 'capf-autosuggest)
+  ;; (add-hook 'eshell-mode-hook #'capf-autosuggest-mode)
+  ;; (with-eval-after-load 'capf-autosuggest
+  ;;   (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
 #+end_src
 ** Vertico
 
