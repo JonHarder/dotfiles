@@ -37,6 +37,8 @@
   ;; evaluation
   (kbd "<leader> e e") #'eval-last-sexp
   (kbd "<leader> e d") #'eval-defun
+  (kbd "<leader> e b") #'eval-buffer
+  
   ;; files
   (kbd "<leader> f b") #'bookmark-jump
   (kbd "<leader> f d") #'diff-buffer-with-file
@@ -50,6 +52,8 @@
   (kbd "<leader> g o") #'gtd-find-oneoff
   (kbd "<leader> g i") #'gtd-find-inbox
   (kbd "<leader> g c") #'gtd-capture
+  (kbd "<leader> g e") #'gtd-engage
+  (kbd "<leader> g r") #'gtd-review
   ;; help(ful) commands
   (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
                          (info (format "(%s)Top" node)))

@@ -1,4 +1,4 @@
-;;; early-init.el --- The first lisp code emacs runs before normal initialization.
+;;; early-init.el --- The first lisp code emacs runs before normal initialization. -*- lexical-binding: t -*-
 ;;; Commentary:
 ;; This file is evaluated at the very start of Emacs initialization.
 ;; It is used here to ensure the native `package' initialization is inhibeted.

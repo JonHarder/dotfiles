@@ -1,3 +1,11 @@
+;;; init --- Basic, initial settings -*- lexical-binding: t -*-
+
+;;; Commentary:
+;;; This setups up straight.el for package management and
+;;; loads my modules
+
+;;; Code:
+
 (setq straight-repository-branch "develop")
 
 (defvar bootstrap-version)
@@ -65,3 +73,6 @@
 (require 'my-util)
 (require 'my-vim-mode)
 (require 'my-xref)
+
+(provide 'init)
+;;; init.el ends here

@@ -14,7 +14,7 @@ modifying this file.
 * Early init optimizations
 ** Disable built-in package.el
  #+begin_src emacs-lisp :tangle "early-init.el"
-   ;;; early-init.el --- The first lisp code emacs runs before normal initialization.
+   ;;; early-init.el --- The first lisp code emacs runs before normal initialization. -*- lexical-binding: t -*-
    ;;; Commentary:
    ;; This file is evaluated at the very start of Emacs initialization.
    ;; It is used here to ensure the native `package' initialization is inhibeted.
@@ -62,6 +62,14 @@ helpful nonetheless.
 ** Set up straight.el (package management)
 
  #+begin_src emacs-lisp :tangle "init.el"
+   ;;; init --- Basic, initial settings -*- lexical-binding: t -*-
+
+   ;;; Commentary:
+   ;;; This setups up straight.el for package management and
+   ;;; loads my modules
+
+   ;;; Code:
+
    (setq straight-repository-branch "develop")
 
    (defvar bootstrap-version)
@@ -143,21 +151,36 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-util)
   (require 'my-vim-mode)
   (require 'my-xref)
+
+  (provide 'init)
+  ;;; init.el ends here
 #+end_src
 
 * Appearance
-** Color theme
-The modus theme set is the most complete and polished emacs color theme I've
-encountered. It's also WCAG 2 compliant meaning it will always have high color
-contrast between UI elements, making it one of the easiest themes on the eyes
-in any lighting situation.
+** Base Settings
+Sets things like the theme and font.  Actually using and loading
+themes, setting font configuration, etc. is handled later in the
+configuration.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (setq my-theme '(doom-themes . doom-bluloco-dark))
+  (defvar my-theme '(doom-themes . doom-dark+)
+    "Cons of the symbols representing the theme package, and theme name.")
+  (defvar my-font '(:name "JetBrains Mono" :size 170)
+    "Font (:name string :size integer).")
+#+end_src
+** Color theme
+
+The modus theme set is the most complete and polished emacs color
+theme I've encountered. It's also WCAG 2 compliant meaning it will
+always have high color contrast between UI elements, making it one of
+the easiest themes on the eyes in any lighting situation.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (straight-use-package (car my-theme))
-  (add-hook 'after-init-hook
-            (lambda ()
-              (load-theme (cdr my-theme) t)))
+  (load-theme (cdr my-theme) t)
+  ;; (add-hook 'after-init-hook
+  ;;           (lambda ()
+  ;;             (load-theme (cdr my-theme) t)))
 #+end_src
 
 *** Settings
@@ -175,49 +198,33 @@ in any lighting situation.
 #+end_src
 **** Modus themes settings
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (progn ;; Modus configuration
+  (when (eq 'modus-themes (car my-theme)) ;; Modus configuration
     (require-theme 'modus-themes)
     (setq modus-themes-completions
-          '((matches . (extrabold underline))
+  		'((matches . (extrabold underline))
             (selection . (semibold italic))))
     (setq modus-themes-prompts '(bold))
     (setq modus-themes-bold-constructs t)
     (setq modus-themes-common-palette-overrides
-          modus-themes-preset-overrides-intense)
+  		modus-themes-preset-overrides-intense)
     (setq modus-themes-variable-pitch-ui nil)
     (setq modus-themes-italic-constructs t)
     (setq modus-themes-org-blocks 'gray-background)
     ;; TODO set this to nil if a non-modus theme is active?
     (setq modus-themes-headings
-          '((1 . (variable-pitch 1.5))
+  		'((1 . (variable-pitch 1.5))
             (2 . (1.3))
             (agenda-date . (1.3))
             (agenda-structure . (variable-pitch light 1.8))
             (t . (1.1)))))
 #+end_src
-**** Ef-themes settings
-#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (straight-use-package 'ef-themes)
-  ;; (setq ef-themes-headings ; read the manual's entry or the doc string
-  ;;       '((0 variable-pitch bold 1.9)
-  ;; 	(1 variable-pitch bold 1.8)
-  ;; 	(2 variable-pitch regular 1.7)
-  ;; 	(3 variable-pitch regular 1.6)
-  ;; 	(4 variable-pitch light 1.5)
-  ;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
-  ;; 	(6 variable-pitch light 1.3)
-  ;; 	(7 variable-pitch light 1.2)
-  ;; 	(t variable-pitch light 1.1)
-  ;; 	(agenda-date . (1.3))
-  ;; 	(agenda-structure . (variable pitch light 1.8))))
-#+end_src
-
 **** Doom themes settings
+
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (straight-use-package 'doom-themes)
-  (setq doom-rouge-brighter-comments t
-        doom-themes-enable-bold t
-        doom-themes-enable-italic t)
+  (when (eq 'doom-themes (car my-theme))
+    (setq doom-rouge-brighter-comments t
+  		doom-themes-enable-bold t
+  		doom-themes-enable-italic t))
 #+end_src
 
 ** Tweak display of UI elements
@@ -270,17 +277,21 @@ I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
 
 ** Font
 
-I use FiraCode patched with the Nerd icons
+I use [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]]
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (add-hook 'after-init-hook
             (lambda ()
-              (let ((size 175))
-                (set-face-attribute 'default nil :font my-font :height size)
-                (set-frame-font my-font nil t)
+              (let ((size (plist-get my-font :size))
+  				  (font (plist-get my-font :name))
+  				  (theme (cdr my-theme)))
+  			  (set-face-attribute 'default nil
+  								  :font font
+  								  :height size)
+                (set-frame-font font nil t)
                 (add-to-list 'default-frame-alist
-                             `(font . ,my-font))
-                (load-theme (cdr my-theme) t))))
+                             `(font . ,font))
+                (load-theme theme t))))
 #+end_src
 
 ** Tabs
@@ -1300,11 +1311,11 @@ at a glance how deep you are.
    #+end_src
 
    #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-	 (with-eval-after-load 'eglot
-	   (evil-define-key 'normal prog-mode-map
-		 (kbd "<leader> r d") #'eglot-find-declaration
-		 ;; #'eglot-find-implementation is already handled by embark
-		 (kbd "<leader> r r") #'xref-find-references))
+     (with-eval-after-load 'eglot
+       (evil-define-key 'normal prog-mode-map
+     	 (kbd "<leader> r d") #'eglot-find-declaration
+     	 ;; #'eglot-find-implementation is already handled by embark
+     	 (kbd "<leader> r r") #'xref-find-references))
    #+end_src
 
 *** Highlight TODO statements
@@ -1722,7 +1733,18 @@ configuring the environment for exporting org documents into TeX and
 then into pdfs
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  ;; for handling CSL citation languages in org exporting to latex
+  (straight-use-package 'citeproc)
+
+  ;; use latexmk for generating pdfs from tex files
   (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+
+With the ~ox-typst~ package, org can export to typst documents.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (with-eval-after-load 'org
+    (straight-use-package 'ox-typst))
 #+end_src
 
 
@@ -3141,6 +3163,8 @@ This is the mode which handles actually composing messages.
        ;; evaluation
        (kbd "<leader> e e") #'eval-last-sexp
        (kbd "<leader> e d") #'eval-defun
+       (kbd "<leader> e b") #'eval-buffer
+       
        ;; files
        (kbd "<leader> f b") #'bookmark-jump
        (kbd "<leader> f d") #'diff-buffer-with-file
@@ -3261,6 +3285,7 @@ This is the mode which handles actually composing messages.
     viewing results.
 	
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
+     ;; -*- lexical-binding: t -*-
      (evil-define-key 'normal xref--xref-buffer-mode-map
        (kbd "j") #'xref-next-line
        (kbd "k") #'xref-prev-line

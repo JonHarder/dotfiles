@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (evil-define-key 'normal xref--xref-buffer-mode-map
   (kbd "j") #'xref-next-line
   (kbd "k") #'xref-prev-line

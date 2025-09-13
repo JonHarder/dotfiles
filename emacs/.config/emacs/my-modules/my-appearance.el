@@ -1,8 +1,13 @@
-(setq my-theme '(doom-themes . doom-bluloco-dark))
+(defvar my-theme '(doom-themes . doom-dark+)
+  "Cons of the symbols representing the theme package, and theme name.")
+(defvar my-font '(:name "JetBrains Mono" :size 170)
+  "Font (:name string :size integer).")
+
 (straight-use-package (car my-theme))
-(add-hook 'after-init-hook
-          (lambda ()
-            (load-theme (cdr my-theme) t)))
+(load-theme (cdr my-theme) t)
+;; (add-hook 'after-init-hook
+;;           (lambda ()
+;;             (load-theme (cdr my-theme) t)))
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
@@ -14,44 +19,30 @@
    '(org-level-5 ((t (:height 1.0 :inherit outline-5))))
    '(org-document-title ((t (:height 2.0 :underline t))))))
 
-(progn ;; Modus configuration
+(when (eq 'modus-themes (car my-theme)) ;; Modus configuration
   (require-theme 'modus-themes)
   (setq modus-themes-completions
-        '((matches . (extrabold underline))
+		'((matches . (extrabold underline))
           (selection . (semibold italic))))
   (setq modus-themes-prompts '(bold))
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-common-palette-overrides
-        modus-themes-preset-overrides-intense)
+		modus-themes-preset-overrides-intense)
   (setq modus-themes-variable-pitch-ui nil)
   (setq modus-themes-italic-constructs t)
   (setq modus-themes-org-blocks 'gray-background)
   ;; TODO set this to nil if a non-modus theme is active?
   (setq modus-themes-headings
-        '((1 . (variable-pitch 1.5))
+		'((1 . (variable-pitch 1.5))
           (2 . (1.3))
           (agenda-date . (1.3))
           (agenda-structure . (variable-pitch light 1.8))
           (t . (1.1)))))
 
-(straight-use-package 'ef-themes)
-;; (setq ef-themes-headings ; read the manual's entry or the doc string
-;;       '((0 variable-pitch bold 1.9)
-;; 	(1 variable-pitch bold 1.8)
-;; 	(2 variable-pitch regular 1.7)
-;; 	(3 variable-pitch regular 1.6)
-;; 	(4 variable-pitch light 1.5)
-;; 	(5 variable-pitch light 1.4) ; absence of weight means `bold'
-;; 	(6 variable-pitch light 1.3)
-;; 	(7 variable-pitch light 1.2)
-;; 	(t variable-pitch light 1.1)
-;; 	(agenda-date . (1.3))
-;; 	(agenda-structure . (variable pitch light 1.8))))
-
-(straight-use-package 'doom-themes)
-(setq doom-rouge-brighter-comments t
-      doom-themes-enable-bold t
-      doom-themes-enable-italic t)
+(when (eq 'doom-themes (car my-theme))
+  (setq doom-rouge-brighter-comments t
+		doom-themes-enable-bold t
+		doom-themes-enable-italic t))
 
 (menu-bar-mode 1)
 
@@ -72,12 +63,16 @@
 
 (add-hook 'after-init-hook
           (lambda ()
-            (let ((size 175))
-              (set-face-attribute 'default nil :font my-font :height size)
-              (set-frame-font my-font nil t)
+            (let ((size (plist-get my-font :size))
+				  (font (plist-get my-font :name))
+				  (theme (cdr my-theme)))
+			  (set-face-attribute 'default nil
+								  :font font
+								  :height size)
+              (set-frame-font font nil t)
               (add-to-list 'default-frame-alist
-                           `(font . ,my-font))
-              (load-theme (cdr my-theme) t))))
+                           `(font . ,font))
+              (load-theme theme t))))
 
 (setq tab-bar-show 1)
 

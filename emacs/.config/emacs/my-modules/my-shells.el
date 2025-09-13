@@ -48,9 +48,7 @@
         "elm"))
 
 (setq eshell-visual-subcommands
-      '(
-        ;; ("jj" "diff")
-        ))
+      '(("jj" "squash" "split")))
 
 (defconst pcmpl-docker-commands
   '("run" "exec" "ps" "build" "pull" "images" "login" "logout"

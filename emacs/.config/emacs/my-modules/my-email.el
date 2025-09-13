@@ -36,13 +36,13 @@
 (setq notmuch-search-oldest-first nil)
 
 (evil-define-key 'normal notmuch-hello-mode-map
-(kbd "TAB") #'widget-forward
-(kbd "RET") #'widget-button-press
-(kbd "m") #'notmuch-mua-mail
-    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-(kbd "/") #'notmuch-search
-(kbd ".") #'notmuch-jump-search
-(kbd "q") #'notmuch-bury-or-kill-this-buffer)
+  (kbd "TAB") #'widget-forward
+  (kbd "RET") #'widget-button-press
+  (kbd "m") #'notmuch-mua-mail
+  (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+  (kbd "/") #'notmuch-search
+  (kbd ".") #'notmuch-jump-search
+  (kbd "q") #'notmuch-bury-or-kill-this-buffer)
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))

@@ -86,38 +86,46 @@
 (setq org-priority-highest ?A
   org-priority-lowest ?D)
 
+;; for handling CSL citation languages in org exporting to latex
+(straight-use-package 'citeproc)
+
+;; use latexmk for generating pdfs from tex files
 (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
+(with-eval-after-load 'org
+  (straight-use-package 'ox-typst))
+
 (setq org-agenda-custom-commands
-		'(("g" "GTD Review"
-		   ((agenda ""
-					((org-agenda-overriding-header "Planned and upcoming")
-					 (org-agenda-span 'week)))
-			(tags "+proj-archive+LEVEL=1"
-				  ((org-agenda-overriding-header "Active Projects")))
-			(tags "-delegate+TODO=\"IN-PROGRESS\""
-				  ((org-agenda-overriding-header "In Progress")))
-			(tags "+delegate-TODO=\"DONE\""
-				  ((org-agenda-overriding-header "Delegated")))
-			(todo "WAIT|REVIEW|BLOCKED"
-				  ((org-agenda-overriding-header "Waiting...")))
-			(tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
-			;; Is this last section really even needed?
-			;; update: yes, this is helpful for the review step.
-			;; and the daily view should be used for the engage step.
-			(tags "-delegate+CATEGORY=\"oneoff\"/TODO"
-				  ((org-agenda-overriding-header "One Off Tasks")
-				   (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
-		  ("d" "GTD Daily View"
-		   ((agenda ""
-					((org-agenda-overriding-header "Today")
-					 (org-agenda-span 1)))
-			(tags "TODO=\"IN-PROGRESS\""
-				  ((org-agenda-overriding-header "In Progress")))
-			(todo "WAIT|REVIEW|BLOCKED"
-				  ((org-agenda-overriding-header "Waiting...")))
-			(tags "-archive+TODO=\"NEXT\""
-				  ((org-agenda-overriding-header "Next Actions")))))))
+	  '(("g" "GTD Review"
+		 ((agenda ""
+				  ((org-agenda-overriding-header "Planned and upcoming")
+				   (org-agenda-span 'week)))
+		  (tags "+proj-archive+LEVEL=1"
+				((org-agenda-overriding-header "Active Projects")))
+		  (tags "-delegate+TODO=\"IN-PROGRESS\""
+				((org-agenda-overriding-header "In Progress")))
+		  (tags "+delegate-TODO=\"DONE\""
+				((org-agenda-overriding-header "Delegated")))
+		  (todo "WAIT|REVIEW|BLOCKED"
+				((org-agenda-overriding-header "Waiting...")))
+		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+		  ;; Is this last section really even needed?
+		  ;; update: yes, this is helpful for the review step.
+		  ;; and the daily view should be used for the engage step.
+		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
+				((org-agenda-overriding-header "One Off Tasks")
+				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
+
+		("d" "GTD Daily View"
+		 ((agenda ""
+				  ((org-agenda-overriding-header "Today")
+				   (org-agenda-span 1)))
+		  (tags "TODO=\"IN-PROGRESS\""
+				((org-agenda-overriding-header "In Progress")))
+		  (todo "WAIT|REVIEW|BLOCKED"
+				((org-agenda-overriding-header "Waiting...")))
+		  (tags "-archive+TODO=\"NEXT\""
+				((org-agenda-overriding-header "Next Actions")))))))
 
 (setq org-agenda-time-grid
 	  '((daily today require-timed remove-match)
