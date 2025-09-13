@@ -1714,35 +1714,36 @@ then into pdfs
     lists of org headings matching a variety of criteria.
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-agenda-custom-commands
-		'(("g" "GTD Review"
-		   ((agenda ""
-					((org-agenda-overriding-header "Planned and upcoming")
-					 (org-agenda-span 'week)))
-			(tags "+proj-archive+LEVEL=1"
-				  ((org-agenda-overriding-header "Active Projects")))
-			(tags "-delegate+TODO=\"IN-PROGRESS\""
-				  ((org-agenda-overriding-header "In Progress")))
-			(tags "+delegate-TODO=\"DONE\""
-				  ((org-agenda-overriding-header "Delegated")))
-			(todo "WAIT|REVIEW|BLOCKED"
-				  ((org-agenda-overriding-header "Waiting...")))
-			(tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
-			;; Is this last section really even needed?
-			;; update: yes, this is helpful for the review step.
-			;; and the daily view should be used for the engage step.
-			(tags "-delegate+CATEGORY=\"oneoff\"/TODO"
-				  ((org-agenda-overriding-header "One Off Tasks")
-				   (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
-		  ("d" "GTD Daily View"
-		   ((agenda ""
-					((org-agenda-overriding-header "Today")
-					 (org-agenda-span 1)))
-			(tags "TODO=\"IN-PROGRESS\""
-				  ((org-agenda-overriding-header "In Progress")))
-			(todo "WAIT|REVIEW|BLOCKED"
-				  ((org-agenda-overriding-header "Waiting...")))
-			(tags "-archive+TODO=\"NEXT\""
-				  ((org-agenda-overriding-header "Next Actions")))))))
+  	  '(("g" "GTD Review"
+  		 ((agenda ""
+  				  ((org-agenda-overriding-header "Planned and upcoming")
+  				   (org-agenda-span 'week)))
+  		  (tags "+proj-archive+LEVEL=1"
+  				((org-agenda-overriding-header "Active Projects")))
+  		  (tags "-delegate+TODO=\"IN-PROGRESS\""
+  				((org-agenda-overriding-header "In Progress")))
+  		  (tags "+delegate-TODO=\"DONE\""
+  				((org-agenda-overriding-header "Delegated")))
+  		  (todo "WAIT|REVIEW|BLOCKED"
+  				((org-agenda-overriding-header "Waiting...")))
+  		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
+  		  ;; Is this last section really even needed?
+  		  ;; update: yes, this is helpful for the review step.
+  		  ;; and the daily view should be used for the engage step.
+  		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
+  				((org-agenda-overriding-header "One Off Tasks")
+  				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
+
+  		("d" "GTD Daily View"
+  		 ((agenda ""
+  				  ((org-agenda-overriding-header "Today")
+  				   (org-agenda-span 1)))
+  		  (tags "TODO=\"IN-PROGRESS\""
+  				((org-agenda-overriding-header "In Progress")))
+  		  (todo "WAIT|REVIEW|BLOCKED"
+  				((org-agenda-overriding-header "Waiting...")))
+  		  (tags "-archive+TODO=\"NEXT\""
+  				((org-agenda-overriding-header "Next Actions")))))))
 #+end_src
 
 *** agenda view settings
@@ -2530,66 +2531,66 @@ command for the key as usual.
   #+end_src
 
 ** mbsync setup
-  At this point you shouldn't be surprised to find that emacs has decent support for sending
-  and receiving emails. It even has a mail retrieval utility built in, rmail.
+At this point you shouldn't be surprised to find that emacs has decent support for sending
+and receiving emails. It even has a mail retrieval utility built in, rmail.
 
-  This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial
-  layer that separates emacs from the motherboard).
+This setup requires ~isync~ to be installed on the host machine (a.k.a. the vestigial
+layer that separates emacs from the motherboard).
 
-  /Google specific configuration/:
-  You will need an application password (create one [[https://myaccount.google.com/apppasswords][here]]). I store
-  For mbsync, I store this file here: [[file:~/gmail_app_pass.gpg]]. This
-  allows us to read mail from gmail for notmuch to index.
-  Save this value into a secure place, ideally encrypted. Emacs
-  supports gpg encryption out of the box, so this is a good option.
+Google specific configuration/:
+You will need an application password (create one [[https://myaccount.google.com/apppasswords][here]]). I store
+For mbsync, I store this file here: [[file:~/gmail_app_pass.gpg]]. This
+allows us to read mail from gmail for notmuch to index.
+Save this value into a secure place, ideally encrypted. Emacs
+supports gpg encryption out of the box, so this is a good option.
 
-  In order to send mail however, we need to have a record in:
-  [[file:~/.authinfo.gpg]] with a record for googles smtp server:
+In order to send mail however, we need to have a record in:
+file:~/.authinfo.gpg]] with a record for googles smtp server:
 
-  #+begin_src 
-    machine smtp.gmail.com login your.email@example.com port 465 password YOUR_PASSWORD
-  #+end_src
+#+begin_src 
+  machine smtp.gmail.com login your.email@example.com port 465 password YOUR_PASSWORD
+#+end_src
 
-  This password must be the same as the app password created above and
-  stored previously.
+This password must be the same as the app password created above and
+stored previously.
 
-  *NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
-  remote inboxes. It runs for a time, then errors out with a socket error complaining about
-  an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
-  from =master=.
+NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
+remote inboxes. It runs for a time, then errors out with a socket error complaining about
+an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
+from =master=.
 
-  ~brew install --HEAD isync~
+brew install --HEAD isync~
 
-  It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
+It also requires a mbsync configuration file to work correctly. [[file:~/.mbsyncrc][~/.mbsyncrc]]
 
 ** Notmuch
 *** Meta: setup
-     from there just configure it
+from there just configure it
 
-     src_sh[]{notmuch setup}
+src_sh[]{notmuch setup}
 
-     and let notmuch index your mail
+and let notmuch index your mail
 
-     src_sh[]{notmuch new}
+src_sh[]{notmuch new}
 *** Require the project
-  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-    (straight-use-package 'notmuch)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (straight-use-package 'notmuch)
+#+end_src
 
 *** Enable org links generated from notmuch
-  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-    ;; (straight-use-package 'ol-notmuch)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  ;; (straight-use-package 'ol-notmuch)
+#+end_src
 
 *** Configuring notmuch
 **** Composing emails
-    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-      (defun my-notmuch-message-mode-hook ()
-        (auto-fill-mode -1)
-        (visual-line-mode 1))
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (defun my-notmuch-message-mode-hook ()
+    (auto-fill-mode -1)
+    (visual-line-mode 1))
 
-        (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
-    #+end_src
+    (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
+#+end_src
 
 **** Hello sections
     The following configures the "hello" (start) page of notmuch. This page is
@@ -2631,91 +2632,90 @@ command for the key as usual.
      (setq notmuch-search-oldest-first nil)
    #+end_src
 *** Bindings
-     Evilified bindings to notmuch
+Evilified bindings to notmuch
 
 **** hello mode
-     #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-
-       (evil-define-key 'normal notmuch-hello-mode-map
-	 (kbd "TAB") #'widget-forward
-	 (kbd "RET") #'widget-button-press
-	 (kbd "m") #'notmuch-mua-mail
-         (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-	 (kbd "/") #'notmuch-search
-	 (kbd ".") #'notmuch-jump-search
-	 (kbd "q") #'notmuch-bury-or-kill-this-buffer)
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (evil-define-key 'normal notmuch-hello-mode-map
+    (kbd "TAB") #'widget-forward
+    (kbd "RET") #'widget-button-press
+    (kbd "m") #'notmuch-mua-mail
+    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+    (kbd "/") #'notmuch-search
+    (kbd ".") #'notmuch-jump-search
+    (kbd "q") #'notmuch-bury-or-kill-this-buffer)
        #+end_src
        
 **** Search mode
-       #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-	 (defun notmuch-search-delete-threads (&optional beg end)
-	   (interactive (notmuch-interactive-region))
-	   (notmuch-search-tag '("+deleted" "-inbox") beg end)
-	   (notmuch-search-next-thread))
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (defun notmuch-search-delete-threads (&optional beg end)
+    (interactive (notmuch-interactive-region))
+    (notmuch-search-tag '("+deleted" "-inbox") beg end)
+    (notmuch-search-next-thread))
 
-	 ;; TODO: this function could be made more generic by checking
-	 ;; to see which notmuch mode we are in and calling the relevant
-	 ;; `notmuch-*-tag' function. e.g. `notmuch-search-tag', `notmuch-show-tag', etc.
-	 (defun notmuch-search-add-todo-tag (&optional beg end)
-	   (interactive (notmuch-interactive-region))
-	   (notmuch-search-tag '("+todo") beg end)
-	   (notmuch-search-next-thread))
+  ;; TODO: this function could be made more generic by checking
+  ;; to see which notmuch mode we are in and calling the relevant
+  ;; `notmuch-*-tag' function. e.g. `notmuch-search-tag', `notmuch-show-tag', etc.
+  (defun notmuch-search-add-todo-tag (&optional beg end)
+    (interactive (notmuch-interactive-region))
+    (notmuch-search-tag '("+todo") beg end)
+    (notmuch-search-next-thread))
 
-	 (evil-define-key 'normal notmuch-search-mode-map
-	   (kbd "d") #'notmuch-search-delete-threads
-	   (kbd "a") #'notmuch-search-archive-thread
-	   (kbd "/") #'notmuch-search
-	   (kbd "s s") #'notmuch-search-filter
-	   (kbd "s j") #'notmuch-jump-search
-	   (kbd "s t") #'notmuch-search-filter-by-tag
-	   (kbd "j") #'notmuch-search-next-thread
-	   (kbd "k") #'notmuch-search-previous-thread
-	   (kbd "g r") #'notmuch-refresh-this-buffer
-	   (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
-	   (kbd "t") #'notmuch-search-add-todo-tag
-	   (kbd "RET") #'notmuch-search-show-thread
-	   (kbd "*") #'notmuch-search-tag-all)
+  (evil-define-key 'normal notmuch-search-mode-map
+    (kbd "d") #'notmuch-search-delete-threads
+    (kbd "a") #'notmuch-search-archive-thread
+    (kbd "/") #'notmuch-search
+    (kbd "s s") #'notmuch-search-filter
+    (kbd "s j") #'notmuch-jump-search
+    (kbd "s t") #'notmuch-search-filter-by-tag
+    (kbd "j") #'notmuch-search-next-thread
+    (kbd "k") #'notmuch-search-previous-thread
+    (kbd "g r") #'notmuch-refresh-this-buffer
+    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+    (kbd "q") #'notmuch-bury-or-kill-this-buffer
+    (kbd "t") #'notmuch-search-add-todo-tag
+    (kbd "RET") #'notmuch-search-show-thread
+    (kbd "*") #'notmuch-search-tag-all)
 
-	 (evil-define-key '(visual normal) notmuch-search-mode-map
-	   (kbd "-") #'notmuch-search-remove-tag
-	   (kbd "+") #'notmuch-search-add-tag
-	   (kbd "t") #'notmuch-search-add-todo-tag)
-       #+end_src
+  (evil-define-key '(visual normal) notmuch-search-mode-map
+    (kbd "-") #'notmuch-search-remove-tag
+    (kbd "+") #'notmuch-search-add-tag
+    (kbd "t") #'notmuch-search-add-todo-tag)
+#+end_src
        
 **** Show mode
-       #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-	 (defun notmuch-show-delete-thread ()
-	   (interactive)
-	   (notmuch-show-tag '("+deleted" "-inbox")))
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (defun notmuch-show-delete-thread ()
+    (interactive)
+    (notmuch-show-tag '("+deleted" "-inbox")))
 
-	 (defun notmuch-show-tag-todo ()
-	   (interactive)
-	   (notmuch-show-tag '("+todo")))
+  (defun notmuch-show-tag-todo ()
+    (interactive)
+    (notmuch-show-tag '("+todo")))
 
-	 (evil-define-key 'normal notmuch-show-mode-map
-	   (kbd "a") #'notmuch-show-archive-thread
-	   (kbd "d") #'notmuch-show-delete-thread
-	   (kbd "t") #'notmuch-add-todo-tag
-	   (kbd "r") #'notmuch-show-reply-sender
-	   (kbd "q") #'notmuch-bury-or-kill-this-buffer
-	   (kbd "g j") #'notmuch-show-next-open-message
-	   (kbd "g k") #'notmuch-show-previous-open-message
-	   (kbd "TAB") #'notmuch-show-next-button
-	   (kbd "RET") #'notmuch-show-toggle-message
-	   (kbd "+") #'notmuch-show-add-tag
-	   (kbd "-") #'notmuch-show-remove-tag
-	   (kbd "t") #'notmuch-show-tag-todo)
-       #+end_src
+  (evil-define-key 'normal notmuch-show-mode-map
+    (kbd "a") #'notmuch-show-archive-thread
+    (kbd "d") #'notmuch-show-delete-thread
+    (kbd "t") #'notmuch-add-todo-tag
+    (kbd "r") #'notmuch-show-reply-sender
+    (kbd "q") #'notmuch-bury-or-kill-this-buffer
+    (kbd "g j") #'notmuch-show-next-open-message
+    (kbd "g k") #'notmuch-show-previous-open-message
+    (kbd "TAB") #'notmuch-show-next-button
+    (kbd "RET") #'notmuch-show-toggle-message
+    (kbd "+") #'notmuch-show-add-tag
+    (kbd "-") #'notmuch-show-remove-tag
+    (kbd "t") #'notmuch-show-tag-todo)
+#+end_src
 
 
 **** Message mode
-      This is the mode which handles actually composing messages.
+This is the mode which handles actually composing messages.
 
-      #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-	(evil-define-key 'normal notmuch-message-mode-map
-	  (kbd "<leader> m a") #'mail-add-attachment)
-      #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (evil-define-key 'normal notmuch-message-mode-map
+    (kbd "<leader> m a") #'mail-add-attachment)
+#+end_src
     
 ** Provide =my-email=
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
@@ -2968,29 +2968,29 @@ command for the key as usual.
     #+end_src
 ** Info
 *** Bindings
-    #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-      (evil-define-key '(normal motion) Info-mode-map
-	(kbd "<tab>") 'Info-next-reference
-	(kbd "S-<tab>") 'Info-prev-reference
-	(kbd "RET") 'Info-follow-nearest-node
-	(kbd "d") 'Info-directory
-	(kbd "u") 'Info-up
-	(kbd "s") 'Info-search
-	(kbd "i") 'Info-index
-	(kbd "a") 'info-apropos
-	(kbd "q") 'quit-window
+#+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
+  (evil-define-key '(normal motion) Info-mode-map
+    (kbd "<tab>") 'Info-next-reference
+    (kbd "S-<tab>") 'Info-prev-reference
+    (kbd "RET") 'Info-follow-nearest-node
+    (kbd "d") 'Info-directory
+    (kbd "u") 'Info-up
+    (kbd "s") 'Info-search
+    (kbd "i") 'Info-index
+    (kbd "a") 'info-apropos
+    (kbd "q") 'quit-window
 
-        (kbd "y y") 'Info-copy-current-node-name
+    (kbd "y y") 'Info-copy-current-node-name
 
-	[mouse-1] 'Info-mouse-follow-nearest-node
-	[follow-link] 'mouse-face
-	;; goto
-	(kbd "g m") 'Info-menu
-	(kbd "g t") 'Info-top-node
-	(kbd "g T") 'Info-toc
-	(kbd "g j") 'Info-next
-	(kbd "g k") 'Info-prev)
-    #+end_src
+    [mouse-1] 'Info-mouse-follow-nearest-node
+    [follow-link] 'mouse-face
+    ;; goto
+    (kbd "g m") 'Info-menu
+    (kbd "g t") 'Info-top-node
+    (kbd "g T") 'Info-toc
+    (kbd "g j") 'Info-next
+    (kbd "g k") 'Info-prev)
+#+end_src
 ** Man
 *** Bindings
      #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes

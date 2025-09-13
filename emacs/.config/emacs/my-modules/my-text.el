@@ -18,14 +18,14 @@
 (interactive)
 (let ((state (capitalize-state)))
   (save-excursion
-	(goto-char (beginning-of-thing 'word))
-	(cond
-	 ((eq 'lower state)
-	  (capitalize-word 1))
-	 ((eq 'capital state)
-	  (upcase-word 1))
-	 ((eq 'all-caps state)
-	  (downcase-word 1))))))
+    (goto-char (beginning-of-thing 'word))
+    (cond
+     ((eq 'lower state)
+      (capitalize-word 1))
+     ((eq 'capital state)
+      (upcase-word 1))
+     ((eq 'all-caps state)
+      (downcase-word 1))))))
 
   (defun capitalize-state ()
 "Return a symbol representing the capitalization state of the previous word.
@@ -37,8 +37,8 @@
 'all-caps All letters of the word are alpha and uppercase."
 (interactive)
 (let* ((word (word-at-point t))
-	   (upper-first-char-p (char-uppercase-p (string-to-char word)))
-	   (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
+       (upper-first-char-p (char-uppercase-p (string-to-char word)))
+       (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
   (cond
    (all-upper-p 'all-caps)
    (upper-first-char-p 'capital)

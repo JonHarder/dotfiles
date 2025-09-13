@@ -30,8 +30,8 @@
   (kbd "z") #'magit-stash)
 
 (evil-define-key '(normal visual) magit-status-mode-map
-  (kbd "s") 'magit-stage
-  (kbd "u") 'magit-unstage)
+	(kbd "s") 'magit-stage
+	(kbd "u") 'magit-unstage)
 
 (evil-define-key '(normal motion) magit-log-mode-map
   (kbd "q") 'magit-log-bury-buffer
