@@ -2086,6 +2086,22 @@ package is disabled.
       '(jj-mode :type git
                 :host github
                 :repo "bolivier/jj-mode.el"))
+     (require 'evil)
+
+     (evil-define-key 'normal jj-mode-map
+       (kbd "TAB") #'magit-section-toggle
+       (kbd "RET") #'jj-enter-dwim
+       (kbd "j") #'magit-section-forward
+       (kbd "k") #'magit-section-backward
+       (kbd "b") #'jj-bookmark-transient
+       (kbd "e") #'jj-edit-changeset
+       (kbd "n") #'jj-new
+       (kbd "c") #'jj-commit
+       (kbd "a") #'jj-abandon
+       (kbd "r") #'jj-rebase-transient
+       (kbd "D") #'jj-diff
+       (kbd "s") #'jj-squash)
+
      (provide 'my-jj)
    #+end_src
 * Search
