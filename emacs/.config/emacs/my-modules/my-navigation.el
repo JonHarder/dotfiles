@@ -8,14 +8,14 @@
                (display-buffer-at-bottom)
                (side . bottom)
                (slot . 0)
-               (window-height . .40)))
+               (window-height . .50)))
 
 (add-to-list 'display-buffer-alist
              '("\\*vterm.*\\*"
                (display-buffer-at-bottom)
                (side . bottom)
                (slot . 0)
-               (window-height . .40)))
+               (window-height . .50)))
 
 (add-to-list 'display-buffer-alist
              '("Calendar"
