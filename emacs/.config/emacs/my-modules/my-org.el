@@ -41,6 +41,7 @@
   (kbd "l") #'org-agenda-later
   (kbd "h") #'org-agenda-earlier
   (kbd "m") #'org-agenda-bulk-mark
+  (kbd "p") #'org-agenda-set-property
   (kbd "u") #'org-agenda-bulk-unmark
   (kbd "B") #'org-agenda-bulk-action
   (kbd "g w") #'org-agenda-week-view
@@ -93,28 +94,25 @@
 (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
 (with-eval-after-load 'org
-  (straight-use-package 'ox-typst))
+  (straight-use-package 'ox-typst)
+  (require 'ox-typst))
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
 		 ((agenda ""
 				  ((org-agenda-overriding-header "Planned and upcoming")
 				   (org-agenda-span 'week)))
-		  (tags "+proj-archive+LEVEL=1"
-				((org-agenda-overriding-header "Active Projects")))
-		  (tags "-delegate+TODO=\"IN-PROGRESS\""
+		  (tags "-archive+LEVEL=1"
+				((org-agenda-overriding-header "Active Projects")
+				 (org-agenda-files '("~/Dropbox/gtd/projects.org"))))
+		  (tags "-delegate+LEVEL>1+TODO=\"IN-PROGRESS\""
 				((org-agenda-overriding-header "In Progress")))
-		  (tags "+delegate-TODO=\"DONE\""
+		  (tags "+delegate+LEVEL>1-TODO=\"DONE\""
 				((org-agenda-overriding-header "Delegated")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
-		  (tags "-archive+LEVEL>1/NEXT" ((org-agenda-overriding-header "Next Actions")))
-		  ;; Is this last section really even needed?
-		  ;; update: yes, this is helpful for the review step.
-		  ;; and the daily view should be used for the engage step.
-		  (tags "-delegate+CATEGORY=\"oneoff\"/TODO"
-				((org-agenda-overriding-header "One Off Tasks")
-				 (org-agenda-files '("~/Dropbox/gtd/oneoff.org"))))))
+		  (tags "-archive+LEVEL>1/NEXT"
+				((org-agenda-overriding-header "Next Actions")))))
 
 		("d" "GTD Daily View"
 		 ((agenda ""
