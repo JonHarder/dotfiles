@@ -87,7 +87,6 @@
   (interactive)
   (if dir (dired dir) (dired ".")))
 
-
 (defun eshell/o (file)
   "Shorthand for `find-file-other-window', opening FILE."
   (interactive)
@@ -96,23 +95,9 @@
 (defun eshell/q ()
   "Kill the `eshell' process and close its window."
   (interactive)
-  (insert "exit")
-  (eshell-send-input)
   (if (one-window-p)
-      (kill-this-buffer)
-    (delete-window)))
-
-(defun eshell/pr (&optional num)
-  "Review a github pull request number NUM."
-  (interactive "n")
-  (if num
-      (shell-command "gh pr status")
-    (progn
-      (shell-command-to-string (concat "gh pr view " num))
-      (read-key)
-      (shell-command-to-string (concat "gh pr diff " num))
-      (read-key)
-      (shell-command-to-string (concat "gh pr review " num)))))
+	  (switch-to-buffer nil)
+	(delete-window)))
 
 (defun eshell-here ()
   "Open an `eshell' window relative to the active buffer's file."
@@ -122,15 +107,14 @@
                    default-directory))
          (name (car (last (split-string parent "/" t))))
          (buffer-name (concat "*eshell: " name "*")))
-    (if-let ((buffer (get-buffer buffer-name)))
+    (if-let* ((buffer (get-buffer buffer-name)))
         (progn
           (display-buffer buffer)
           (switch-to-buffer buffer))
-      (progn
-        (eshell "new")
-        (rename-buffer (concat "*eshell: " name "*"))
-        (insert "ls")
-        (eshell-send-input)))))
+      (eshell "new")
+      (rename-buffer (concat "*eshell: " name "*"))
+      (insert "ls")
+      (eshell-send-input))))
 
 (setq eshell-prompt-function
       (lambda ()
