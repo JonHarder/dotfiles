@@ -5,9 +5,6 @@
 
 (straight-use-package (car my-theme))
 (load-theme (cdr my-theme) t)
-;; (add-hook 'after-init-hook
-;;           (lambda ()
-;;             (load-theme (cdr my-theme) t)))
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t

@@ -199,6 +199,7 @@
       '(("s" . "src")
         ("e" . "src emacs-lisp")
         ("b" . "src bash")
+		("q" . "quote")
         ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
 
 (require 'ox-publish)

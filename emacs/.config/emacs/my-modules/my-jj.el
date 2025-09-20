@@ -3,6 +3,7 @@
            :host github
            :repo "bolivier/jj-mode.el"))
 (require 'evil)
+(require 'magit)
 
 ;; NOTE: as of [2025-09-13], jj-mode does not have support for
 ;; interactive commands like squash, split, resolve, etc.  this would

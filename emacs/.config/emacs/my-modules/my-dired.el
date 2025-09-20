@@ -35,7 +35,7 @@
    'dired-mode)
   (dired-mark-files-regexp (concat "." extension "$")))
 
-(define-key dired-mode-map (kbd "SPC") nil)
+(define-key dired-mode-map (kbd "<leader>") nil)
 (evil-define-key '(normal motion) dired-mode-map
   (kbd "j") #'dired-next-line
   (kbd "k") #'dired-previous-line

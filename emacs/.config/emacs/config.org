@@ -179,9 +179,6 @@ the easiest themes on the eyes in any lighting situation.
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (straight-use-package (car my-theme))
   (load-theme (cdr my-theme) t)
-  ;; (add-hook 'after-init-hook
-  ;;           (lambda ()
-  ;;             (load-theme (cdr my-theme) t)))
 #+end_src
 
 *** Settings
@@ -1084,7 +1081,7 @@ do exactly that.
 ** Bindings
 
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (define-key dired-mode-map (kbd "SPC") nil)
+  (define-key dired-mode-map (kbd "<leader>") nil)
   (evil-define-key '(normal motion) dired-mode-map
     (kbd "j") #'dired-next-line
     (kbd "k") #'dired-previous-line
@@ -1942,6 +1939,7 @@ project is one which has the tag "proj" and a task with the
            '(("s" . "src")
              ("e" . "src emacs-lisp")
              ("b" . "src bash")
+     		("q" . "quote")
              ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
    #+end_src
 ** Org publish
@@ -2134,6 +2132,7 @@ package is disabled.
                 :host github
                 :repo "bolivier/jj-mode.el"))
      (require 'evil)
+     (require 'magit)
 
      ;; NOTE: as of [2025-09-13], jj-mode does not have support for
      ;; interactive commands like squash, split, resolve, etc.  this would
