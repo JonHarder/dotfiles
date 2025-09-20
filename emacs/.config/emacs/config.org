@@ -131,6 +131,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-markup)
   (require 'my-navigation)
   (require 'my-web)
+  (require 'my-neon-mode)
   (require 'my-nushell-mode)
   (require 'my-org)
   (require 'my-howm)
@@ -1554,6 +1555,13 @@ This replaces the venerable, but outdated flymake.
      (add-hook 'before-save-hook #'my-go-mode-hook)
      (provide 'my-go-mode)
    #+end_src
+** Neon mode
+Neon mode is mostly just yaml.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-neon-mode.el" :mkdirp yes
+  (straight-use-package 'neon-mode)
+  (provide 'my-neon-mode)
+#+end_src
 * Org
 
   What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode

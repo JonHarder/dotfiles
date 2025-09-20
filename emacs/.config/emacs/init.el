@@ -53,6 +53,7 @@
 (require 'my-markup)
 (require 'my-navigation)
 (require 'my-web)
+(require 'my-neon-mode)
 (require 'my-nushell-mode)
 (require 'my-org)
 (require 'my-howm)
