@@ -191,9 +191,10 @@
 
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 (setq org-capture-templates
-      `(("i" "Inbox" entry (file org-default-notes-file)
-         ,(concat "* TODO %?\n"
-                  "/Entered on/ %U"))))
+      `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
+         "* %?\n /Entered on/ %U")
+		("j" "Journal - thoughts relevant to today" entry (file+datetree "~/Dropbox/journal.org")
+		 "* %U %?\n%i\nCaptured from: %a")))
 
 (setq org-structure-template-alist
       '(("s" . "src")

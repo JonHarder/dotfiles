@@ -1904,7 +1904,7 @@ project is one which has the tag "proj" and a task with the
 
    Say you were writing a new feature in an application and you realize there's
    a possibility to refactor an adjacent part of the code. Run org capture
-   ~M-x org-capture~, and a temporary buffer opens up where you can take your
+   M-x [[help:org-capture][org-capture]] and a temporary buffer opens up where you can take your
    note. It will automatically embed any contextual information about where
    you took the note from, such as which file you were editing, the time,
    etc. Once you finish the note, close the buffer with ~C-c C-c~ and the note
@@ -1921,10 +1921,10 @@ project is one which has the tag "proj" and a task with the
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (add-hook 'org-capture-mode-hook 'evil-insert-state)
      (setq org-capture-templates
-           `(("i" "Inbox" entry (file org-default-notes-file)
-              ,(concat "* TODO %?\n"
-                       "/Entered on/ %U"))))
-
+           `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
+              "* %?\n /Entered on/ %U")
+     		("j" "Journal - thoughts relevant to today" entry (file+datetree "~/Dropbox/journal.org")
+     		 "* %U %?\n%i\nCaptured from: %a")))
    #+end_src
 
 ** Org structures
