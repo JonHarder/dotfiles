@@ -70,6 +70,10 @@
 (require 'eshell)
 (require 'esh-mode)
 
+(defun eshell/p ()
+  (interactive)
+  (eshell/pwd))
+
 (defun eshell/less (file)
   "Use `view-file' instead of less when viewing FILE."
   (interactive)

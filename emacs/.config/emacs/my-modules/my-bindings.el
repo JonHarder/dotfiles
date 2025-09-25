@@ -99,8 +99,7 @@
   (kbd "<leader> t r") #'tab-rename
   (kbd "<leader> t d") #'tab-close
   ;; windows
-  (kbd "<leader> .") #'evil-window-split
-  (kbd "<leader> /") #'evil-window-vsplit
+  (kbd "<leader> /") #'eww
   (kbd "<leader> w w") #'ace-window
   (kbd "<leader> w h") #'evil-window-left
   (kbd "<leader> w l") #'evil-window-right

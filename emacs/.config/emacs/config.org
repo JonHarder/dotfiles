@@ -2315,6 +2315,10 @@ package is disabled.
       (require 'eshell)
       (require 'esh-mode)
 
+      (defun eshell/p ()
+        (interactive)
+        (eshell/pwd))
+
       (defun eshell/less (file)
         "Use `view-file' instead of less when viewing FILE."
         (interactive)
@@ -3219,8 +3223,7 @@ This is the mode which handles actually composing messages.
        (kbd "<leader> t r") #'tab-rename
        (kbd "<leader> t d") #'tab-close
        ;; windows
-       (kbd "<leader> .") #'evil-window-split
-       (kbd "<leader> /") #'evil-window-vsplit
+       (kbd "<leader> /") #'eww
        (kbd "<leader> w w") #'ace-window
        (kbd "<leader> w h") #'evil-window-left
        (kbd "<leader> w l") #'evil-window-right
