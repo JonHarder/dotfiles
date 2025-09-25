@@ -891,13 +891,18 @@ window at the bottom of the current frame.
                    (shell-command-to-string find-command))))
       (dired (cons default-directory files))))
 
+  ;; NOTE: trying out a simple journal file generated out of an org capture with datetree.
+  (defun find-journal ()
+    (interactive)
+    (find-file "~/Dropbox/journal.org"))
+
   (evil-define-key 'normal 'global
     (kbd "<leader> n /") #'denote-grep
     (kbd "<leader> n J") #'denote-journal-new-entry
     (kbd "<leader> n b") #'denote-backlinks
     (kbd "<leader> n d") #'denote-dired
     (kbd "<leader> n f") #'denote-open-or-create
-    (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
+    (kbd "<leader> n j") #'find-journal
     (kbd "<leader> n l") #'denote-link
     (kbd "<leader> n n") #'consult-notes
     ;; (kbd "<leader> n n") #'denote
