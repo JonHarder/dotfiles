@@ -745,5 +745,6 @@ $env.config = {
 source ~/.cache/starship/init.nu
 source ~/.zoxide.nu
 source ~/.config/nushell/secrets.nu
+source ~/.config/nushell/completions-jj.nu
 
 alias cd = z
