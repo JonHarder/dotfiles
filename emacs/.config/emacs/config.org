@@ -2159,7 +2159,8 @@ package is disabled.
        (kbd "a") #'jj-abandon
        (kbd "r") #'jj-rebase-transient
        (kbd "D") #'jj-diff
-       (kbd "u") #'jj-undo)
+       (kbd "u") #'jj-undo
+       (kbd ".") #'jj-git-transient)
 
      (provide 'my-jj)
    #+end_src
@@ -3189,8 +3190,8 @@ This is the mode which handles actually composing messages.
        (kbd "<leader> h r") #'info-display-manual
        ;; imenu
        (kbd "<leader> i") #'consult-outline
-       ;; jumping (ace)
-       (kbd "<leader> j") #'ace-jump-word-mode
+       ;; jujutsu
+       (kbd "<leader> j") #'jj-log
        ;; org
        (kbd "<leader> o c") #'org-capture
        (kbd "<leader> o s") #'org-store-link

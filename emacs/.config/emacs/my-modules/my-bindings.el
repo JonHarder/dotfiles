@@ -65,8 +65,8 @@
   (kbd "<leader> h r") #'info-display-manual
   ;; imenu
   (kbd "<leader> i") #'consult-outline
-  ;; jumping (ace)
-  (kbd "<leader> j") #'ace-jump-word-mode
+  ;; jujutsu
+  (kbd "<leader> j") #'jj-log
   ;; org
   (kbd "<leader> o c") #'org-capture
   (kbd "<leader> o s") #'org-store-link

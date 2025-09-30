@@ -25,6 +25,7 @@
   (kbd "a") #'jj-abandon
   (kbd "r") #'jj-rebase-transient
   (kbd "D") #'jj-diff
-  (kbd "u") #'jj-undo)
+  (kbd "u") #'jj-undo
+  (kbd ".") #'jj-git-transient)
 
 (provide 'my-jj)
