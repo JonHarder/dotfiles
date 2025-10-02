@@ -1701,7 +1701,8 @@ Neon mode is mostly just yaml.
               "BLOCKED(b)"
               "REVIEW(r)"
               "|"
-              "DONE(d)")))
+              "DONE(d)"
+     		 "CANCELED(c)")))
    #+end_src
    
 *** images

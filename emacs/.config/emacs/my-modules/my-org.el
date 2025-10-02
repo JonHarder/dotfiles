@@ -68,7 +68,8 @@
          "BLOCKED(b)"
          "REVIEW(r)"
          "|"
-         "DONE(d)")))
+         "DONE(d)"
+		 "CANCELED(c)")))
 
 (setq org-image-actual-width nil)
 
