@@ -2435,6 +2435,16 @@ to make eshell as fancy as you can dream up (and program)
  
 * Navigation
 ** Windows
+*** Winner mode
+
+winner mode allows you to move back in time to prior window
+configurations, though it is a mode that must be enabled in order to
+record window configurations.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (winner-mode 1)
+#+end_src
+
 *** ace-window
 
     Ace window is a handy way to supercharge `other-window' by giving

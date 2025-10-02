@@ -1,3 +1,5 @@
+(winner-mode 1)
+
 (straight-use-package 'ace-window)
 (setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
 
