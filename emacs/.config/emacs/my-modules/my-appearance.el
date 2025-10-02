@@ -1,4 +1,4 @@
-(defvar my-theme '(spacemacs-theme . spacemacs-dark)
+(defvar my-theme '(modus-themes . modus-vivendi-tritanopia)
   "Cons of the symbols representing the theme package, and theme name.")
 (defvar my-font '(:name "JetBrains Mono" :size 170)
   "Font (:name string :size integer).")
@@ -9,12 +9,12 @@
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
   (custom-set-faces
-   '(org-level-1 ((t (:height 1.3 :inherit outline-1))))
-   '(org-level-2 ((t (:height 1.2 :inherit outline-2))))
-   '(org-level-3 ((t (:height 1.1 :inherit outline-3))))
-   '(org-level-4 ((t (:height 1.0 :inherit outline-4))))
-   '(org-level-5 ((t (:height 1.0 :inherit outline-5))))
-   '(org-document-title ((t (:height 2.0 :underline t))))))
+   '(org-level-1 ((t (:height 1.5 :inherit outline-1))))
+   '(org-level-2 ((t (:height 1.4 :inherit outline-2))))
+   '(org-level-3 ((t (:height 1.3 :inherit outline-3))))
+   '(org-level-4 ((t (:height 1.2 :inherit outline-4))))
+   '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
+   '(org-document-title ((t (:height 2.5 :underline t))))))
 
 (when (eq 'modus-themes (car my-theme)) ;; Modus configuration
   (require-theme 'modus-themes)
@@ -30,8 +30,10 @@
   (setq modus-themes-org-blocks 'gray-background)
   ;; TODO set this to nil if a non-modus theme is active?
   (setq modus-themes-headings
-		'((1 . (variable-pitch 1.5))
-          (2 . (1.3))
+		'((1 . (1.5))
+          (2 . (1.4))
+		  (3 . (1.3))
+		  (4 . (1.2))
           (agenda-date . (1.3))
           (agenda-structure . (variable-pitch light 1.8))
           (t . (1.1)))))
