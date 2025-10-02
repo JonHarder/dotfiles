@@ -37,7 +37,7 @@ This uses the first element of `denote-directories' to determine where notes are
   (kbd "<leader> n b") #'denote-backlinks
   (kbd "<leader> n d") #'denote-dired
   (kbd "<leader> n f") #'denote-open-or-create
-  (kbd "<leader> n j") #'find-journal
+  (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link
   (kbd "<leader> n n") #'consult-notes
   ;; (kbd "<leader> n n") #'denote
@@ -57,6 +57,10 @@ This uses the first element of `denote-directories' to determine where notes are
 (straight-use-package 'denote-journal)
 (setq denote-journal-directory (concat denote-directory "/journal"))
 (add-to-list 'denote-dired-directories denote-journal-directory)
+;; calendar integration
+(add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
+(evil-define-key '(motion normal) calendar-mode-map
+  (kbd "d") #'denote-journal-calendar-new-or-existing)
 
 (straight-use-package 'denote-silo)
 (setq denote-silo-directories '())
