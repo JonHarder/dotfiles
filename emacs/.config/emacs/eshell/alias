@@ -1,3 +1,4 @@
 alias j jj $@*
 alias c clear nil
 alias ap /Users/jharder/Kipsu/ansible-wrapper/ap
+alias o (delete-other-windows)

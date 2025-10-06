@@ -91,11 +91,6 @@
   (interactive)
   (if dir (dired dir) (dired ".")))
 
-(defun eshell/o (file)
-  "Shorthand for `find-file-other-window', opening FILE."
-  (interactive)
-  (find-file-other-window file))
-
 (defun eshell/q ()
   "Kill the `eshell' process and close its window."
   (interactive)
