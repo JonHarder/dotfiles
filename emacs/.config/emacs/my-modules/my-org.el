@@ -100,20 +100,17 @@
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
-		 ((agenda ""
-				  ((org-agenda-overriding-header "Planned and upcoming")
-				   (org-agenda-span 'week)))
-		  (tags "-archive+LEVEL=1"
+		 ((tags "-archive+LEVEL=1"
 				((org-agenda-overriding-header "Active Projects")
 				 (org-agenda-files '("~/Dropbox/gtd/projects.org"))))
-		  (tags "-delegate+LEVEL>1+TODO=\"IN-PROGRESS\""
+		  (tags "+LEVEL>1+TODO=\"IN-PROGRESS\""
 				((org-agenda-overriding-header "In Progress")))
-		  (tags "+delegate+LEVEL>1-TODO=\"DONE\""
-				((org-agenda-overriding-header "Delegated")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
 		  (tags "-archive+LEVEL>1/NEXT"
-				((org-agenda-overriding-header "Next Actions")))))
+				((org-agenda-overriding-header "Next Actions")))
+		  (tags "+DEADLINE=\"\"+SCHEDULED=\"\"+TODO=\"TODO\"|TODO=\"WAIT\""
+				((org-agenda-overriding-header "Inactive tasks")))))
 
 		("d" "GTD Daily View"
 		 ((agenda ""
@@ -195,7 +192,10 @@
       `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
          "* %?\n /Entered on/ %U")
 		("j" "Journal - thoughts relevant to today" entry (file+datetree "~/Dropbox/journal.org")
-		 "* %U %?\n%i\nCaptured from: %a")))
+		 "* %U %?\n%i\nCaptured from: %a")
+		("p" "Project - new project" entry
+		 (file ,(concat gtd-directory "/projects.org"))
+		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
 
 (setq org-structure-template-alist
       '(("s" . "src")
