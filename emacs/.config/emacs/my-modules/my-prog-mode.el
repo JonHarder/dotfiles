@@ -37,9 +37,9 @@
 (straight-use-package 'flycheck)
 (global-flycheck-mode 1)
 
-(straight-use-package '(flyover
-                        :type git
-                        :host github
-                        :repo "konrad1977/flyover"))
-(add-hook 'flycheck-mode-hook #'flyover-mode)
-(setq flyover-levels '(error warning info))
+;; (straight-use-package '(flyover
+;;                         :type git
+;;                         :host github
+;;                         :repo "konrad1977/flyover"))
+;; (add-hook 'flycheck-mode-hook #'flyover-mode)
+;; (setq flyover-levels '(error warning info))

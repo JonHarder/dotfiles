@@ -48,7 +48,8 @@ This uses the first element of `denote-directories' to determine where notes are
   (kbd "<leader> n t") #'denote-template)
 
 (evil-define-key '(visual insert) text-mode-map
-  (kbd "C-l") #'denote-link-or-create)
+  (kbd "C-l") #'denote-link-or-create
+  (kbd "C-q") #'denote-query-contents-link)
 
 (evil-define-key 'normal denote-backlinks-mode-map
   (kbd "j") #'denote-backlinks-next
@@ -99,9 +100,8 @@ This uses the first element of `denote-directories' to determine where notes are
                                "    - confluence"))
         (journal . ,(concat "* Daily habits\n"
                             "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
-                            "  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
-                            "* Notes\n\n"
-                            "* Meetings\n"))
+                            "  - [[https://github.com/issues/SSC_kgDOABqApA?q=is%3Apr%20org%3AKipsu%20state%3Aopen%20archived%3Afalse%20sort%3Aupdated-desc%20-is%3Adraft%20review-requested%3A%40me][review pull requests]]\n\n"
+                            "* Notes\n"))
         (person . ,(concat "* Relationships\n\n"
                            "* Prayer requests\n\n"
                            "* Meetings\n"))))

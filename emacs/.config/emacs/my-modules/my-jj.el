@@ -27,6 +27,7 @@
   (kbd "D") #'jj-diff
   (kbd "t") #'jj-tug
   (kbd "u") #'jj-undo
-  (kbd ".") #'jj-git-transient)
+  (kbd ".") #'jj-git-transient
+  (kbd "g r") #'jj-log-refresh)
 
 (provide 'my-jj)

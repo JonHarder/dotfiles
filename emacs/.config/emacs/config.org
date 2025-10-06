@@ -919,7 +919,8 @@ binding insert mode so I can link without having to exit.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (evil-define-key '(visual insert) text-mode-map
-    (kbd "C-l") #'denote-link-or-create)
+    (kbd "C-l") #'denote-link-or-create
+    (kbd "C-q") #'denote-query-contents-link)
 #+end_src
 
 
@@ -1024,9 +1025,8 @@ selected template will pre-fill the newly created note.
                                  "    - confluence"))
           (journal . ,(concat "* Daily habits\n"
                               "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
-                              "  - [[https://github.com/pulls/review-requested][review pull requests]]\n\n"
-                              "* Notes\n\n"
-                              "* Meetings\n"))
+                              "  - [[https://github.com/issues/SSC_kgDOABqApA?q=is%3Apr%20org%3AKipsu%20state%3Aopen%20archived%3Afalse%20sort%3Aupdated-desc%20-is%3Adraft%20review-requested%3A%40me][review pull requests]]\n\n"
+                              "* Notes\n"))
           (person . ,(concat "* Relationships\n\n"
                              "* Prayer requests\n\n"
                              "* Meetings\n"))))
@@ -1091,8 +1091,19 @@ do exactly that.
 #+end_src
 ** Bindings
 
+evil-collection rebinds space as next line after evil and dired are
+loaded. To reclaim space I need to disable it after evil-collection
+loads.
+
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (define-key dired-mode-map (kbd "<leader>") nil)
+  (with-eval-after-load 'evil-collection
+    (evil-collection-define-key 'normal 'dired-mode-map
+  	(kbd "SPC") nil))
+#+end_src
+
+With that out of the way, we can set up our bindings as usual.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (evil-define-key '(normal motion) dired-mode-map
     (kbd "j") #'dired-next-line
     (kbd "k") #'dired-previous-line
@@ -1357,12 +1368,12 @@ This replaces the venerable, but outdated flymake.
 
 ** Flyover (inline diagnostics)
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
-  (straight-use-package '(flyover
-                          :type git
-                          :host github
-                          :repo "konrad1977/flyover"))
-  (add-hook 'flycheck-mode-hook #'flyover-mode)
-  (setq flyover-levels '(error warning info))
+  ;; (straight-use-package '(flyover
+  ;;                         :type git
+  ;;                         :host github
+  ;;                         :repo "konrad1977/flyover"))
+  ;; (add-hook 'flycheck-mode-hook #'flyover-mode)
+  ;; (setq flyover-levels '(error warning info))
 #+end_src
 
 ** Tree Sitter
@@ -2168,7 +2179,8 @@ package is disabled.
        (kbd "D") #'jj-diff
        (kbd "t") #'jj-tug
        (kbd "u") #'jj-undo
-       (kbd ".") #'jj-git-transient)
+       (kbd ".") #'jj-git-transient
+       (kbd "g r") #'jj-log-refresh)
 
      (provide 'my-jj)
    #+end_src
@@ -2545,14 +2557,18 @@ command for the key as usual.
 * Web Browsing
 ** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
-     (evil-define-key 'normal eww-mode-map
-       (kbd "q") #'quit-window
-       (kbd "H") #'eww-back-url
-       (kbd "L") #'eww-forward-url
-       (kbd "<leader> m b") #'eww-switch-to-buffer
-       ;; (kbd "g") #'eww
-       )
-     (provide 'my-web)
+     (with-eval-after-load 'evil-collection
+       (evil-collection-define-key 'normal 'eww-mode-map
+     	(kbd "SPC") nil))
+
+      (evil-define-key 'normal eww-mode-map
+        (kbd "q") #'quit-window
+        (kbd "H") #'eww-back-url
+        (kbd "L") #'eww-forward-url
+        (kbd "<leader> m b") #'eww-switch-to-buffer
+        ;; (kbd "g") #'eww
+        )
+      (provide 'my-web)
    #+end_src
 
 ** Convenience functions
