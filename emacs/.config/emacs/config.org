@@ -924,13 +924,13 @@ lives.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   (straight-use-package 'denote-silo)
-  (setq denote-silo-directories '())
-  (let ((my-silo-dirs (mapcar (lambda (file)
-                                (expand-file-name file))
-                              '("~/Dropbox/org/gtd/projects"))))
-    (dolist (dir my-silo-dirs)
-      (add-to-list 'denote-silo-directories dir)
-      (add-to-list 'denote-dired-directories dir)))
+  ;; (setq denote-silo-directories '())
+  ;; (let ((my-silo-dirs (mapcar (lambda (file)
+  ;;                               (expand-file-name file))
+  ;;                             '("~/Dropbox/org/gtd/projects"))))
+  ;;   (dolist (dir my-silo-dirs)
+  ;;     (add-to-list 'denote-silo-directories dir)
+  ;;     (add-to-list 'denote-dired-directories dir)))
 #+end_src
 
 ** Hooks
@@ -1669,7 +1669,7 @@ Neon mode is mostly just yaml.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-directory "~/Dropbox/org/gtd/")
-     (setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
+     (setq org-default-notes-file "~/Dropbox/org/gtd/gtd.org")
    #+end_src
 
 *** todo statuses
@@ -1758,14 +1758,13 @@ With the ~ox-typst~ package, org can export to typst documents.
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-agenda-custom-commands
   	  '(("g" "GTD Review"
-  		 ((tags "-archive+LEVEL=1"
-  				((org-agenda-overriding-header "Active Projects")
-  				 (org-agenda-files '("~/Dropbox/org/gtd/projects.org"))))
-  		  (tags "+LEVEL>1+TODO=\"STRT\""
+  		 ((tags "+proj+LEVEL=2"
+  				((org-agenda-overriding-header "Active Projects")))
+  		  (todo "STRT"
   				((org-agenda-overriding-header "In Progress")))
   		  (todo "WAIT|REVIEW|BLOCKED"
   				((org-agenda-overriding-header "Waiting...")))
-  		  (tags "-archive+LEVEL>1/NEXT"
+  		  (todo "NEXT"
   				((org-agenda-overriding-header "Next Actions")))
   		  (tags "+DEADLINE=\"\"+SCHEDULED=\"\"+TODO=\"TODO\"|TODO=\"WAIT\""
   				((org-agenda-overriding-header "Inactive tasks")))))
@@ -1774,11 +1773,11 @@ With the ~ox-typst~ package, org can export to typst documents.
   		 ((agenda ""
   				  ((org-agenda-overriding-header "Today")
   				   (org-agenda-span 1)))
-  		  (tags "TODO=\"STRT\""
+  		  (todo "STRT"
   				((org-agenda-overriding-header "In Progress")))
   		  (todo "WAIT|REVIEW|BLOCKED"
   				((org-agenda-overriding-header "Waiting...")))
-  		  (tags "-archive+TODO=\"NEXT\""
+  		  (todo "NEXT"
   				((org-agenda-overriding-header "Next Actions")))))))
 #+end_src
 
@@ -1821,45 +1820,46 @@ project is one which has the tag "proj" and a task with the
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-refile-targets
-   '((("~/Dropbox/org/gtd/oneoff.org") . (:level . 1))
-     (("~/Dropbox/org/gtd/someday.org") . (:level . 1))
-     (org-agenda-files . (:tag . "proj"))))
+  	  '((org-agenda-files . (:regexp . "One Off"))
+  		(org-agenda-files . (:regexp . "Events"))
+  		(org-agenda-files . (:regexp . "Someday"))
+  		(org-agenda-files . (:tag . "proj"))))
 #+end_src
 
 *** Tag list
 
-    These tags allow you to select from a list of these predefined
-    tags using single-key shortcuts (if provided) to toggle tags from
-    a heading.
+These tags allow you to select from a list of these predefined tags
+using single-key shortcuts (if provided) to toggle tags from a
+heading.
 
-	  #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-        (setq org-tag-alist
-              '((:startgroup)
-                ("proj" . ?p)
-                ("area" . ?a)
-                (:endgroup)
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-tag-alist
+        '((:startgroup)
+          ("proj" . ?p)
+          ("area" . ?a)
+          (:endgroup)
 
-                ;; mental/emotional level
-                (:startgroup)
-                ("@lowenergy" . ?l)
-                ("@highenergy" . ?h)
-                (:endgroup)
+          ;; mental/emotional level
+          (:startgroup)
+          ("@lowenergy" . ?l)
+          ("@highenergy" . ?h)
+          (:endgroup)
 
-                ;; locations
-                (:startgroup)
-                ("@Church" . ?C)
-                ("@Work" . ?W)
-                ("@Transit" . ?T)
-                ("@Home" . ?H)
-                ("@Anywhere" . ?A)
-                ("@Outsize" . ?O)
-                (:endgroup)
+          ;; locations
+          (:startgroup)
+          ("@Church" . ?C)
+          ("@Work" . ?W)
+          ("@Transit" . ?T)
+          ("@Home" . ?H)
+          ("@Anywhere" . ?A)
+          ("@Outsize" . ?O)
+          (:endgroup)
 
-                ;; devices
-                (:startgroup)
-                ("@Laptop" . ?L)
-                ("@Phone" . ?P)
-                (:endgroup)))
+          ;; devices
+          (:startgroup)
+          ("@Laptop" . ?L)
+          ("@Phone" . ?P)
+          (:endgroup)))
 
         (setq org-agenda-include-diary t)
         (setq org-agenda-restore-windows-after-quit t)
@@ -1915,10 +1915,10 @@ project is one which has the tag "proj" and a task with the
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (add-hook 'org-capture-mode-hook 'evil-insert-state)
      (setq org-capture-templates
-           `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
+           `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
               "* %?\n /Entered on/ %U")
      		("p" "Project - new project" entry
-     		 (file ,(concat gtd-directory "/projects.org"))
+     		 (file+headline org-default-notes-file "Projects")
      		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
    #+end_src
 

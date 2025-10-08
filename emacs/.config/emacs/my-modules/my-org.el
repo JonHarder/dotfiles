@@ -57,7 +57,7 @@
   (require 'org-tempo))
 
 (setq org-directory "~/Dropbox/org/gtd/")
-(setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
+(setq org-default-notes-file "~/Dropbox/org/gtd/gtd.org")
 
 (setq org-todo-keywords
       '((sequence
@@ -100,14 +100,13 @@
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
-		 ((tags "-archive+LEVEL=1"
-				((org-agenda-overriding-header "Active Projects")
-				 (org-agenda-files '("~/Dropbox/org/gtd/projects.org"))))
-		  (tags "+LEVEL>1+TODO=\"STRT\""
+		 ((tags "+proj+LEVEL=2"
+				((org-agenda-overriding-header "Active Projects")))
+		  (todo "STRT"
 				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
-		  (tags "-archive+LEVEL>1/NEXT"
+		  (todo "NEXT"
 				((org-agenda-overriding-header "Next Actions")))
 		  (tags "+DEADLINE=\"\"+SCHEDULED=\"\"+TODO=\"TODO\"|TODO=\"WAIT\""
 				((org-agenda-overriding-header "Inactive tasks")))))
@@ -116,11 +115,11 @@
 		 ((agenda ""
 				  ((org-agenda-overriding-header "Today")
 				   (org-agenda-span 1)))
-		  (tags "TODO=\"STRT\""
+		  (todo "STRT"
 				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
-		  (tags "-archive+TODO=\"NEXT\""
+		  (todo "NEXT"
 				((org-agenda-overriding-header "Next Actions")))))))
 
 (setq org-agenda-time-grid
@@ -135,9 +134,10 @@
 (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
 
 (setq org-refile-targets
- '((("~/Dropbox/org/gtd/oneoff.org") . (:level . 1))
-   (("~/Dropbox/org/gtd/someday.org") . (:level . 1))
-   (org-agenda-files . (:tag . "proj"))))
+	  '((org-agenda-files . (:regexp . "One Off"))
+		(org-agenda-files . (:regexp . "Events"))
+		(org-agenda-files . (:regexp . "Someday"))
+		(org-agenda-files . (:tag . "proj"))))
 
 (setq org-tag-alist
       '((:startgroup)
@@ -189,10 +189,10 @@
 
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 (setq org-capture-templates
-      `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
+      `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
          "* %?\n /Entered on/ %U")
 		("p" "Project - new project" entry
-		 (file ,(concat gtd-directory "/projects.org"))
+		 (file+headline org-default-notes-file "Projects")
 		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
 
 (setq org-structure-template-alist

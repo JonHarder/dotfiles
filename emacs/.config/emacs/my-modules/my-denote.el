@@ -59,13 +59,13 @@ This uses the first element of `denote-directories' to determine where notes are
   (kbd "d") #'denote-journal-calendar-new-or-existing)
 
 (straight-use-package 'denote-silo)
-(setq denote-silo-directories '())
-(let ((my-silo-dirs (mapcar (lambda (file)
-                              (expand-file-name file))
-                            '("~/Dropbox/org/gtd/projects"))))
-  (dolist (dir my-silo-dirs)
-    (add-to-list 'denote-silo-directories dir)
-    (add-to-list 'denote-dired-directories dir)))
+;; (setq denote-silo-directories '())
+;; (let ((my-silo-dirs (mapcar (lambda (file)
+;;                               (expand-file-name file))
+;;                             '("~/Dropbox/org/gtd/projects"))))
+;;   (dolist (dir my-silo-dirs)
+;;     (add-to-list 'denote-silo-directories dir)
+;;     (add-to-list 'denote-dired-directories dir)))
 
 (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
