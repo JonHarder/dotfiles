@@ -86,7 +86,7 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-priority-highest ?A
-	   org-priority-lowest ?D)
+  org-priority-lowest ?D)
 
 ;; for handling CSL citation languages in org exporting to latex
 (straight-use-package 'citeproc)

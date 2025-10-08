@@ -44,15 +44,15 @@
   (kbd "f") #'magit-fetch)
 
 (evil-define-key '(normal) git-rebase-mode-map
-	(kbd "p") #'git-rebase-pick
-	(kbd "b") #'git-rebase-break
-  (kbd "e") #'git-rebase-edit
-	(kbd "dd") #'git-rebase-kill-line
-	(kbd "s") #'git-rebase-squash
-  (kbd "r") #'git-rebase-reword
-	(kbd "f") #'git-rebase-fixup
-	(kbd "J") #'git-rebase-move-line-down
-	(kbd "K") #'git-rebase-move-line-up)
+(kbd "p") #'git-rebase-pick
+(kbd "b") #'git-rebase-break
+    (kbd "e") #'git-rebase-edit
+(kbd "dd") #'git-rebase-kill-line
+(kbd "s") #'git-rebase-squash
+    (kbd "r") #'git-rebase-reword
+(kbd "f") #'git-rebase-fixup
+(kbd "J") #'git-rebase-move-line-down
+(kbd "K") #'git-rebase-move-line-up)
 
 (evil-define-key '(normal motion) magit-revision-mode-map
   (kbd "j") 'magit-next-line
