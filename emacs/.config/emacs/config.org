@@ -521,6 +521,14 @@ behavior
 #+end_src
 
 ** Evil org enhancements
+disabling this for now, the jump of the cursor when attempting to open
+a new line below the cursor when on a header only to have it fly to
+the bottom of the screen and start a new heading is simply too much of
+a jolt to handle.
+
+Perhaps if there were another keybinding to map this to rather than =o=
+I would consider using it again.
+
 #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
   (defun evil-org-dwim-insert-below ()
     "Insert a heading or item below current line.
@@ -536,8 +544,8 @@ behavior
             (org-insert-item))
         (call-interactively #'evil-open-below))))
 
-  (evil-define-key 'normal org-mode-map
-    (kbd "o") #'evil-org-dwim-insert-below)
+  ;; (evil-define-key 'normal org-mode-map
+  ;;   (kbd "o") #'evil-org-dwim-insert-below)
 #+end_src
 ** Provide the module
   

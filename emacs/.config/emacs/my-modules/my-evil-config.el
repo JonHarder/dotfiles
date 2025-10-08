@@ -74,7 +74,7 @@ Replaces the evil 'o' binding `evil-open-below'."
           (org-insert-item))
       (call-interactively #'evil-open-below))))
 
-(evil-define-key 'normal org-mode-map
-  (kbd "o") #'evil-org-dwim-insert-below)
+;; (evil-define-key 'normal org-mode-map
+;;   (kbd "o") #'evil-org-dwim-insert-below)
 
 (provide 'my-evil-config)
