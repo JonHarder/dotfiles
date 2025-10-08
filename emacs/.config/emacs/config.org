@@ -718,24 +718,6 @@ and play nicely with ~eshell-smart~
     (kbd "<leader> c d") #'consult-dir)
 #+end_src
 
-*** consult-notes
-
-This package allows for fancy searching, filtering, and categorization
-of notes from various back-ends. In our case, its integration with
-denote is quite nice.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'consult-notes)
-  (setq consult-notes-file-dir-source
-        '(("Notes" ?n "~/Dropbox/zettelkasten")
-          ("Projects" ?p "~/Dropbox/gtd/projects")))
-
-  (eval-after-load 'denote
-    (progn
-      (consult-notes-denote-mode)
-      (setq consult-notes-denote-display-id nil)
-      (setq consult-notes-denote-dir nil)))
-#+end_src
 
 ** Embark
 
@@ -813,13 +795,8 @@ window at the bottom of the current frame.
   
 * Getting Things Done (GTD)
 #+begin_src emacs-lisp :tangle "my-modules/my-gtd.el" :mkdirp yes
-  (defvar gtd-directory (expand-file-name "~/Dropbox/gtd")
+  (defvar gtd-directory (expand-file-name "~/Dropbox/org/gtd")
     "The directory my 'Getting Things Done' system is stored in")
-
-  (defvar gtd-projects-directory (concat gtd-directory "/projects")
-    "The directory holding gtd project files.
-
-  By default it is based off of the location of `gtd-directory'")
 
   (defun gtd-find-oneoff ()
     "Open GTD one off file."
@@ -866,10 +843,10 @@ window at the bottom of the current frame.
   (denote-rename-buffer-mode 1)
   (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-  (setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
+  (setq denote-directory (expand-file-name "~/Dropbox/org/zettelkasten"))
 
   (setq denote-dired-directories-include-subdirectories t
-        denote-dired-directories (list denote-directory gtd-projects-directory))
+        denote-dired-directories (list denote-directory))
   (setq denote-prompts '(title subdirectory keywords))
 #+end_src
 
@@ -892,11 +869,6 @@ window at the bottom of the current frame.
            (files (split-string
                    (shell-command-to-string find-command))))
       (dired (cons default-directory files))))
-
-  ;; NOTE: trying out a simple journal file generated out of an org capture with datetree.
-  (defun find-journal ()
-    (interactive)
-    (find-file "~/Dropbox/journal.org"))
 
   (evil-define-key 'normal 'global
     (kbd "<leader> n /") #'denote-grep
@@ -954,7 +926,7 @@ lives.
   (setq denote-silo-directories '())
   (let ((my-silo-dirs (mapcar (lambda (file)
                                 (expand-file-name file))
-                              '("~/Dropbox/gtd/projects"))))
+                              '("~/Dropbox/org/gtd/projects"))))
     (dolist (dir my-silo-dirs)
       (add-to-list 'denote-silo-directories dir)
       (add-to-list 'denote-dired-directories dir)))
@@ -1695,8 +1667,8 @@ Neon mode is mostly just yaml.
    act globally, such as [[*Org capture][org-capture]].
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-directory "~/Dropbox/gtd/")
-     (setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
+     (setq org-directory "~/Dropbox/org/gtd/")
+     (setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
    #+end_src
 
 *** todo statuses
@@ -1708,7 +1680,7 @@ Neon mode is mostly just yaml.
               "TODO(t)"
               "NEXT(n)"
               "WAIT(w)"
-              "IN-PROGRESS(i)"
+              "STRT(s)"
               "BLOCKED(b)"
               "REVIEW(r)"
               "|"
@@ -1787,8 +1759,8 @@ With the ~ox-typst~ package, org can export to typst documents.
   	  '(("g" "GTD Review"
   		 ((tags "-archive+LEVEL=1"
   				((org-agenda-overriding-header "Active Projects")
-  				 (org-agenda-files '("~/Dropbox/gtd/projects.org"))))
-  		  (tags "+LEVEL>1+TODO=\"IN-PROGRESS\""
+  				 (org-agenda-files '("~/Dropbox/org/gtd/projects.org"))))
+  		  (tags "+LEVEL>1+TODO=\"STRT\""
   				((org-agenda-overriding-header "In Progress")))
   		  (todo "WAIT|REVIEW|BLOCKED"
   				((org-agenda-overriding-header "Waiting...")))
@@ -1801,7 +1773,7 @@ With the ~ox-typst~ package, org can export to typst documents.
   		 ((agenda ""
   				  ((org-agenda-overriding-header "Today")
   				   (org-agenda-span 1)))
-  		  (tags "TODO=\"IN-PROGRESS\""
+  		  (tags "TODO=\"STRT\""
   				((org-agenda-overriding-header "In Progress")))
   		  (todo "WAIT|REVIEW|BLOCKED"
   				((org-agenda-overriding-header "Waiting...")))
@@ -1819,14 +1791,15 @@ With the ~ox-typst~ package, org can export to typst documents.
 #+end_src
 
 *** Stuck projects
+
 A stuck project is a project which has no identified "next"
 action on it. Using my "getting things done" system, this means a
 project is one which has the tag "proj" and a task with the
-"NEXT" or "IN-PROGRESS" todo state.
+"NEXT" or "STRT" todo state.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-stuck-projects
-		'("+proj-archive+LEVEL=1/-DONE" ("NEXT" "IN-PROGRESS") nil ""))
+		'("+proj-archive+LEVEL=1/-DONE" ("NEXT" "STRT") nil ""))
 #+end_src
 
 *** basic settings
@@ -1845,12 +1818,12 @@ project is one which has the tag "proj" and a task with the
 
 *** Refile targets
 
-	#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-	  (setq org-refile-targets
-			'((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
-			  (("~/Dropbox/gtd/someday.org") . (:level . 1))
-			  (org-agenda-files . (:tag . "proj"))))
-	#+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-refile-targets
+   '((("~/Dropbox/org/gtd/oneoff.org") . (:level . 1))
+     (("~/Dropbox/org/gtd/someday.org") . (:level . 1))
+     (org-agenda-files . (:tag . "proj"))))
+#+end_src
 
 *** Tag list
 
@@ -1943,8 +1916,6 @@ project is one which has the tag "proj" and a task with the
      (setq org-capture-templates
            `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
               "* %?\n /Entered on/ %U")
-     		("j" "Journal - thoughts relevant to today" entry (file+datetree "~/Dropbox/journal.org")
-     		 "* %U %?\n%i\nCaptured from: %a")
      		("p" "Project - new project" entry
      		 (file ,(concat gtd-directory "/projects.org"))
      		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))

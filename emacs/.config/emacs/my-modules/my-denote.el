@@ -3,10 +3,10 @@
 (denote-rename-buffer-mode 1)
 (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-(setq denote-directory (expand-file-name "~/Dropbox/zettelkasten"))
+(setq denote-directory (expand-file-name "~/Dropbox/org/zettelkasten"))
 
 (setq denote-dired-directories-include-subdirectories t
-      denote-dired-directories (list denote-directory gtd-projects-directory))
+      denote-dired-directories (list denote-directory))
 (setq denote-prompts '(title subdirectory keywords))
 
 ;;; Code:
@@ -25,11 +25,6 @@ This uses the first element of `denote-directories' to determine where notes are
          (files (split-string
                  (shell-command-to-string find-command))))
     (dired (cons default-directory files))))
-
-;; NOTE: trying out a simple journal file generated out of an org capture with datetree.
-(defun find-journal ()
-  (interactive)
-  (find-file "~/Dropbox/journal.org"))
 
 (evil-define-key 'normal 'global
   (kbd "<leader> n /") #'denote-grep
@@ -67,7 +62,7 @@ This uses the first element of `denote-directories' to determine where notes are
 (setq denote-silo-directories '())
 (let ((my-silo-dirs (mapcar (lambda (file)
                               (expand-file-name file))
-                            '("~/Dropbox/gtd/projects"))))
+                            '("~/Dropbox/org/gtd/projects"))))
   (dolist (dir my-silo-dirs)
     (add-to-list 'denote-silo-directories dir)
     (add-to-list 'denote-dired-directories dir)))

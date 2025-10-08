@@ -1,10 +1,10 @@
 (straight-use-package 'helpful)
 
-  (evil-define-key '(normal motion) helpful-mode-map
-(kbd "q") #'quit-window)
+(evil-define-key '(normal motion) helpful-mode-map
+	(kbd "q") #'quit-window)
 
-  (evil-define-key '(normal motion) help-mode-map
-(kbd "q") #'quit-window)
+(evil-define-key '(normal motion) help-mode-map
+	(kbd "q") #'quit-window)
 
 (evil-define-key '(normal motion) Info-mode-map
   (kbd "<tab>") 'Info-next-reference
@@ -29,6 +29,6 @@
   (kbd "g k") 'Info-prev)
 
 (evil-define-key 'normal Man-mode-map
-(kbd "q") #'quit-window)
+	 (kbd "q") #'quit-window)
 
 (provide 'my-help)

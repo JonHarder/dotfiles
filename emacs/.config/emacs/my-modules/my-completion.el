@@ -4,7 +4,7 @@
 (savehist-mode)
 
 (setq minibuffer-prompt-properties
-  '(read-only t cursor-intangible t face minibuffer-prompt))
+	   '(read-only t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; (straight-use-package 'capf-autosuggest)
@@ -44,17 +44,6 @@
 (evil-define-key 'norma cdl
   global-map
   (kbd "<leader> c d") #'consult-dir)
-
-(straight-use-package 'consult-notes)
-(setq consult-notes-file-dir-source
-      '(("Notes" ?n "~/Dropbox/zettelkasten")
-        ("Projects" ?p "~/Dropbox/gtd/projects")))
-
-(eval-after-load 'denote
-  (progn
-    (consult-notes-denote-mode)
-    (setq consult-notes-denote-display-id nil)
-    (setq consult-notes-denote-dir nil)))
 
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)

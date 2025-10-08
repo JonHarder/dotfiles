@@ -56,15 +56,15 @@
 (with-eval-after-load 'org
   (require 'org-tempo))
 
-(setq org-directory "~/Dropbox/gtd/")
-(setq org-default-notes-file "~/Dropbox/gtd/inbox.org")
+(setq org-directory "~/Dropbox/org/gtd/")
+(setq org-default-notes-file "~/Dropbox/org/gtd/inbox.org")
 
 (setq org-todo-keywords
       '((sequence
          "TODO(t)"
          "NEXT(n)"
          "WAIT(w)"
-         "IN-PROGRESS(i)"
+         "STRT(s)"
          "BLOCKED(b)"
          "REVIEW(r)"
          "|"
@@ -86,7 +86,7 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-priority-highest ?A
-  org-priority-lowest ?D)
+	   org-priority-lowest ?D)
 
 ;; for handling CSL citation languages in org exporting to latex
 (straight-use-package 'citeproc)
@@ -102,8 +102,8 @@
 	  '(("g" "GTD Review"
 		 ((tags "-archive+LEVEL=1"
 				((org-agenda-overriding-header "Active Projects")
-				 (org-agenda-files '("~/Dropbox/gtd/projects.org"))))
-		  (tags "+LEVEL>1+TODO=\"IN-PROGRESS\""
+				 (org-agenda-files '("~/Dropbox/org/gtd/projects.org"))))
+		  (tags "+LEVEL>1+TODO=\"STRT\""
 				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
@@ -116,7 +116,7 @@
 		 ((agenda ""
 				  ((org-agenda-overriding-header "Today")
 				   (org-agenda-span 1)))
-		  (tags "TODO=\"IN-PROGRESS\""
+		  (tags "TODO=\"STRT\""
 				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
@@ -130,14 +130,14 @@
 		"┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄"))
 
 (setq org-stuck-projects
-		'("+proj-archive+LEVEL=1/-DONE" ("NEXT" "IN-PROGRESS") nil ""))
+		'("+proj-archive+LEVEL=1/-DONE" ("NEXT" "STRT") nil ""))
 
 (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
 
 (setq org-refile-targets
-		'((("~/Dropbox/gtd/oneoff.org") . (:level . 1))
-		  (("~/Dropbox/gtd/someday.org") . (:level . 1))
-		  (org-agenda-files . (:tag . "proj"))))
+ '((("~/Dropbox/org/gtd/oneoff.org") . (:level . 1))
+   (("~/Dropbox/org/gtd/someday.org") . (:level . 1))
+   (org-agenda-files . (:tag . "proj"))))
 
 (setq org-tag-alist
       '((:startgroup)
@@ -191,8 +191,6 @@
 (setq org-capture-templates
       `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Ideas")
          "* %?\n /Entered on/ %U")
-		("j" "Journal - thoughts relevant to today" entry (file+datetree "~/Dropbox/journal.org")
-		 "* %U %?\n%i\nCaptured from: %a")
 		("p" "Project - new project" entry
 		 (file ,(concat gtd-directory "/projects.org"))
 		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
