@@ -3,7 +3,12 @@
       '("https://protesilaos.com/codelog.xml"
         "http://rss.desiringgod.org/"
         "https://www.thegospelcoalition.org/feed/"
-        "https://www.firstthings.com/rss/web-exclusives"))
+        "https://www.firstthings.com/rss/web-exclusives"
+		"https://irreal.org/blog/?feed=rss2"))
+
+(with-eval-after-load 'evil-collection
+  (evil-define-key 'normal 'elfeed-search-mode-map
+	(kbd "SPC") nil))
 
 (evil-define-key 'normal elfeed-search-mode-map
   (kbd "q") #'quit-window
