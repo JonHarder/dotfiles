@@ -887,7 +887,7 @@ window at the bottom of the current frame.
     (kbd "<leader> n f") #'denote-open-or-create
     (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
     (kbd "<leader> n l") #'denote-link
-    (kbd "<leader> n n") #'consult-notes
+    (kbd "<leader> n n") #'denote
     ;; (kbd "<leader> n n") #'denote
     (kbd "<leader> n m") #'denote-recently-modified
     (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
@@ -1874,19 +1874,19 @@ heading.
           ("@Phone" . ?P)
           (:endgroup)))
 
-        (setq org-agenda-include-diary t)
-        (setq org-agenda-restore-windows-after-quit t)
-        (setq org-agenda-skip-deadline-if-done t
-              org-agenda-skip-scheduled-if-done t)
-        (setq org-agenda-category-icon-alist nil)
-        (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
-        (add-to-list 'org-agenda-category-icon-alist
-                     '(".*" '(space . (:width (18)))))
+  (setq org-agenda-include-diary t)
+  (setq org-agenda-restore-windows-after-quit t)
+  (setq org-agenda-skip-deadline-if-done t
+        org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-category-icon-alist nil)
+  (setq org-columns-default-format "%TODO %3PRIORITY %45ITEM %16SCHEDULED %TAGS")
+  (add-to-list 'org-agenda-category-icon-alist
+               '(".*" '(space . (:width (18)))))
 
-        (add-to-list 'org-agenda-files org-directory)
-        ;; (add-to-list 'org-agenda-files gtd-projects-directory)
-        (add-to-list 'org-agenda-files (concat gtd-directory "/projects.org"))
-    #+end_src
+  (add-to-list 'org-agenda-files org-directory)
+  ;; (add-to-list 'org-agenda-files gtd-projects-directory)
+  (add-to-list 'org-agenda-files (concat gtd-directory "/projects.org"))
+#+end_src
 
 *** super agenda
     NOTE: this package recipe appears to be broken
@@ -2543,10 +2543,10 @@ command for the key as usual.
 ** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
      (with-eval-after-load 'evil-collection
-       (evil-collection-define-key 'normal 'eww-mode-map
+       (evil-collection-define-key 'normal eww-mode-map
      	(kbd "SPC") nil))
 
-      (evil-define-key 'normal eww-mode-map
+      (evil-define-key 'normal 'eww-mode-map
         (kbd "q") #'quit-window
         (kbd "H") #'eww-back-url
         (kbd "L") #'eww-forward-url
@@ -3166,7 +3166,7 @@ very easy.
                               (interactive)
                               (switch-to-buffer nil))
        (kbd "g r") #'revert-buffer
-       (kbd "SPC SPC") #'other-window
+       (kbd "SPC SPC") #'avy-goto-char-timer
        ;; App launcher
        (kbd "<leader> a c") #'calendar
        (kbd "<leader> a a") #'org-agenda

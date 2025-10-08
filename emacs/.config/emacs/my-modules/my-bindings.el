@@ -12,7 +12,7 @@
                          (interactive)
                          (switch-to-buffer nil))
   (kbd "g r") #'revert-buffer
-  (kbd "SPC SPC") #'other-window
+  (kbd "SPC SPC") #'avy-goto-char-timer
   ;; App launcher
   (kbd "<leader> a c") #'calendar
   (kbd "<leader> a a") #'org-agenda

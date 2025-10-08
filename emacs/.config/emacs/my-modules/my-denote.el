@@ -34,7 +34,7 @@ This uses the first element of `denote-directories' to determine where notes are
   (kbd "<leader> n f") #'denote-open-or-create
   (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
   (kbd "<leader> n l") #'denote-link
-  (kbd "<leader> n n") #'consult-notes
+  (kbd "<leader> n n") #'denote
   ;; (kbd "<leader> n n") #'denote
   (kbd "<leader> n m") #'denote-recently-modified
   (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)

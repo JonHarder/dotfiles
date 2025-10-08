@@ -1,8 +1,8 @@
 (with-eval-after-load 'evil-collection
-  (evil-collection-define-key 'normal 'eww-mode-map
+  (evil-collection-define-key 'normal eww-mode-map
 	(kbd "SPC") nil))
 
- (evil-define-key 'normal eww-mode-map
+ (evil-define-key 'normal 'eww-mode-map
    (kbd "q") #'quit-window
    (kbd "H") #'eww-back-url
    (kbd "L") #'eww-forward-url
