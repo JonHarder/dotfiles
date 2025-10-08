@@ -141,6 +141,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-rest-mode)
   (require 'my-gleam-mode)
   (require 'my-text)
+  (require 'my-timers)
   (require 'my-just)
   (require 'my-jj)
 
@@ -2855,7 +2856,22 @@ This is the mode which handles actually composing messages.
   #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
     (provide 'my-text)
   #+end_src
-* Miscellanious functions
+* Timers (tmr)
+The famous Prot has created the tmr package which makes setting timers
+very easy.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-timers.el" :mkdirp yes
+  (straight-use-package 'tmr)
+  (with-eval-after-load 'tmr
+    (evil-define-key 'normal 'global
+  	(kbd "<leader> . n") #'tmr-with-details
+  	(kbd "<leader> . .") #'tmr-tabulated-view)
+    (evil-define-key 'normal tmr-tabulated-mode-map
+  	(kbd "g r") #'tmr-tabulated--refresh
+  	(kbd "x") #'tmr-cancel))
+  (provide 'my-timers)
+#+end_src
+* Miscellaneous functions
   This is a collection of random functions I've written to help me run one-off tasks.
   
   #+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes

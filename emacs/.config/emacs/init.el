@@ -63,6 +63,7 @@
 (require 'my-rest-mode)
 (require 'my-gleam-mode)
 (require 'my-text)
+(require 'my-timers)
 (require 'my-just)
 (require 'my-jj)
 
