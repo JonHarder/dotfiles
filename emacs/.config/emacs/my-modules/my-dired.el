@@ -37,6 +37,14 @@
 
 (with-eval-after-load 'evil-collection
   (evil-collection-define-key 'normal 'dired-mode-map
+	(kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'Man-mode-map
+	(kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'dired-mode-map
+	(kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'eww-mode-map
+	(kbd "SPC") nil)
+  (evil-collection-define-key 'normal 'elfeed-search-mode-map
 	(kbd "SPC") nil))
 
 (evil-define-key '(normal motion) dired-mode-map

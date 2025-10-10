@@ -1073,13 +1073,21 @@ do exactly that.
 #+end_src
 ** Bindings
 
-evil-collection rebinds space as next line after evil and dired are
-loaded. To reclaim space I need to disable it after evil-collection
-loads.
+evil-collection space as many things that seem reasonable in a vacuum,
+but completely break practically all of my keybinds which rely on
+space as a leader key to trigger anything and everything.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (with-eval-after-load 'evil-collection
     (evil-collection-define-key 'normal 'dired-mode-map
+  	(kbd "SPC") nil)
+    (evil-collection-define-key 'normal 'Man-mode-map
+  	(kbd "SPC") nil)
+    (evil-collection-define-key 'normal 'dired-mode-map
+  	(kbd "SPC") nil)
+    (evil-collection-define-key 'normal 'eww-mode-map
+  	(kbd "SPC") nil)
+    (evil-collection-define-key 'normal 'elfeed-search-mode-map
   	(kbd "SPC") nil))
 #+end_src
 
@@ -1239,7 +1247,7 @@ We use the wonderful `elfeed` package to track and read feeds.
   		"https://irreal.org/blog/?feed=rss2"))
 
   (with-eval-after-load 'evil-collection
-    (evil-define-key 'normal 'elfeed-search-mode-map
+    (evil-collection-define-key 'normal 'elfeed-search-mode-map
   	(kbd "SPC") nil))
 
   (evil-define-key 'normal elfeed-search-mode-map

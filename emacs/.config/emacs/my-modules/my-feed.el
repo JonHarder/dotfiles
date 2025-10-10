@@ -7,7 +7,7 @@
 		"https://irreal.org/blog/?feed=rss2"))
 
 (with-eval-after-load 'evil-collection
-  (evil-define-key 'normal 'elfeed-search-mode-map
+  (evil-collection-define-key 'normal 'elfeed-search-mode-map
 	(kbd "SPC") nil))
 
 (evil-define-key 'normal elfeed-search-mode-map
