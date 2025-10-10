@@ -36,16 +36,16 @@
   (dired-mark-files-regexp (concat "." extension "$")))
 
 (with-eval-after-load 'evil-collection
-  (evil-collection-define-key 'normal 'dired-mode-map
-	(kbd "SPC") nil)
-  (evil-collection-define-key 'normal 'Man-mode-map
-	(kbd "SPC") nil)
-  (evil-collection-define-key 'normal 'dired-mode-map
-	(kbd "SPC") nil)
-  (evil-collection-define-key 'normal 'eww-mode-map
-	(kbd "SPC") nil)
-  (evil-collection-define-key 'normal 'elfeed-search-mode-map
-	(kbd "SPC") nil))
+  (let ((mode-maps
+		 '(dired-mode-map
+		   Man-mode-map
+		   eww-mode-map
+		   elfeed-search-mode-map
+		   elfeed-show-mode-map)))
+	(mapc (lambda (mode-map)
+			(evil-collection-define-key 'normal mode-map
+			  (kbd "SPC") nil))
+		  mode-maps)))
 
 (evil-define-key '(normal motion) dired-mode-map
   (kbd "j") #'dired-next-line
