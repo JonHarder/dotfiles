@@ -66,6 +66,7 @@
 (require 'my-timers)
 (require 'my-just)
 (require 'my-jj)
+(require 'my-avy)
 
 (require 'my-rust-mode)
 (require 'my-search)

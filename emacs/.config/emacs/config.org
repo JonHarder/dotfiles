@@ -144,6 +144,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-timers)
   (require 'my-just)
   (require 'my-jj)
+  (require 'my-avy)
 
   (require 'my-rust-mode)
   (require 'my-search)
@@ -3143,6 +3144,32 @@ very easy.
       (provide 'my-just)
     #+end_src
 
+* Avy
+Avy is great. It seems like somehow, I have it already, maybe through
+ace-window?
+
+Avy advertises itself as a quick way to jump around the frame...and it
+is, but it has an incredible dispatch system that allows you to
+connect the filter and selection process to one of any number of
+actions.
+
+Tying this up to embark is a natural extension of avy's action
+dispatch system.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-avy.el" :mkdirp yes
+  (defun avy-action-embark (pt)
+    (unwind-protect
+  	  (save-excursion
+  		(goto-char pt)
+  		(embark-act))
+  	(select-window
+  	 (cdr (ring-ref avy-ring 0))))
+    t)
+
+  (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark)
+
+  (provide 'my-avy)
+#+end_src
 * Bindings
 ** Global bindings
    Visual/emacs state commands
