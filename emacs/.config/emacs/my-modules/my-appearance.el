@@ -1,4 +1,4 @@
-(defvar my-theme '(modus-themes . modus-vivendi-tritanopia)
+(defvar my-theme '(ef-themes . ef-autumn)
   "Cons of the symbols representing the theme package, and theme name.")
 (defvar my-font '(:name "JetBrains Mono" :size 170)
   "Font (:name string :size integer).")
