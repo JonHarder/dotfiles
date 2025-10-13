@@ -177,8 +177,6 @@
              '(".*" '(space . (:width (18)))))
 
 (add-to-list 'org-agenda-files org-directory)
-;; (add-to-list 'org-agenda-files gtd-projects-directory)
-(add-to-list 'org-agenda-files (concat gtd-directory "/projects.org"))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
