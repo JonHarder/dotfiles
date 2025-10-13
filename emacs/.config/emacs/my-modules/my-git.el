@@ -65,7 +65,12 @@
 
 (straight-use-package 'forge)
 
-(straight-use-package 'git-gutter)
-(global-git-gutter-mode)
+(straight-use-package 'diff-hl)
+(global-diff-hl-mode 1)
+
+(evil-define-key 'normal 'global
+  (kbd "<leader> v j") #'diff-hl-next-hunk
+  (kbd "<leader> v k") #'diff-hl-previous-hunk
+  (kbd "<leader> v b") #'diff-hl-show-hunk)
 
 (provide 'my-git)
