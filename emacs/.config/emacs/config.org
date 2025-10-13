@@ -2575,10 +2575,6 @@ command for the key as usual.
 * Web Browsing
 ** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
-     (with-eval-after-load 'evil-collection
-       (evil-collection-define-key 'normal eww-mode-map
-     	(kbd "SPC") nil))
-
       (evil-define-key 'normal 'eww-mode-map
         (kbd "q") #'quit-window
         (kbd "H") #'eww-back-url
@@ -3198,7 +3194,8 @@ dispatch system.
   	 (cdr (ring-ref avy-ring 0))))
     t)
 
-  (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark)
+  (with-eval-after-load 'avy
+    (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
 
   (provide 'my-avy)
 #+end_src
