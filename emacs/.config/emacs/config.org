@@ -735,8 +735,6 @@ It's kinda like right click, for your keyboard.
 Activating embark gives you a context-aware menu
 of actions to perform on the target under point.
 
-*NOTE:* disabling embark as an experiment while I try [[Hyperbole]]
-
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'embark)
   (straight-use-package 'embark-consult)
