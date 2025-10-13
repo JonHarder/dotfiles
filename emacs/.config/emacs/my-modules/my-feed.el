@@ -2,6 +2,7 @@
 (setq elfeed-feeds
       '("https://protesilaos.com/codelog.xml"
         "http://rss.desiringgod.org/"
+        "https://karthinks.com/index.xml"
         "https://www.thegospelcoalition.org/feed/"
         "https://www.firstthings.com/rss/web-exclusives"
 		"https://irreal.org/blog/?feed=rss2"))
