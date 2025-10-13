@@ -740,8 +740,28 @@ of actions to perform on the target under point.
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'embark)
   (straight-use-package 'embark-consult)
+
+  ;; This sets embark as the help command when I'm looking for which
+  ;; keybindings are available to complete a given prefix.  The
+  ;; advantage of this is
+  ;;
+  ;; 1.) I only have to see the popup when I want to 
+  ;;
+  ;; 2.) the selection is filterable using the names of the functions
   (setq prefix-help-command #'embark-prefix-help-command)
   (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+
+  (setq embark-indicators
+        '(embark-minimal-indicator  ; default is embark-mixed-indicator
+          embark-highlight-indicator
+          embark-isearch-highlight-indicator))
+
+  ;; This configures vertico to display these embark action tips in a
+  ;; grid-like manner, similar to which-key.
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  (vertico-multiform-mode)
+
+  ;;; bindings
   (evil-define-key '(normal motion visual insert emacs) 'global
     (kbd "s-<return>") #'embark-dwim
     (kbd "C-<return>") #'embark-act)
