@@ -1460,6 +1460,7 @@ This replaces the venerable, but outdated flymake.
 *** Yaml 
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
      (straight-use-package 'yaml-mode)
+     (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
    #+end_src
 *** Json
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
