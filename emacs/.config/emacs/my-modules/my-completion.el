@@ -65,8 +65,12 @@
 
 ;; This configures vertico to display these embark action tips in a
 ;; grid-like manner, similar to which-key.
-(add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
-(vertico-multiform-mode)
+
+;; (setq vertico-multiform-categories nil)
+(with-eval-after-load 'vertico
+  (require 'vertico-multiform)
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  (vertico-multiform-mode))
 
 ;;; bindings
 (evil-define-key '(normal motion visual insert emacs) 'global
