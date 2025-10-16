@@ -28,6 +28,7 @@
 (require 'my-appearance)
 (require 'my-modeline)
 (require 'my-core)
+(require 'my-mouse)
 (require 'my-evil-config)
 (require 'my-bindings)
 

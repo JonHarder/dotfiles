@@ -106,6 +106,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-appearance)
   (require 'my-modeline)
   (require 'my-core)
+  (require 'my-mouse)
   (require 'my-evil-config)
   (require 'my-bindings)
 
@@ -378,6 +379,11 @@ so let's just set it as default.
   (provide 'my-core)
 #+end_src
 
+* Mouse settings
+#+begin_src emacs-lisp :tangle "my-modules/my-mouse.el" :mkdirp yes
+  (setq mouse-autoselect-window t)
+  (provide 'my-mouse)
+#+end_src
 * Evil (vim)
 
 Evil mode is the backbone of this configuration. Coming from years
