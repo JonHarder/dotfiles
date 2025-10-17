@@ -2908,6 +2908,7 @@ very easy.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-timers.el" :mkdirp yes
   (straight-use-package 'tmr)
+  (require 'tmr)
   (with-eval-after-load 'tmr
     (evil-define-key 'normal 'global
   	(kbd "<leader> . n") #'tmr-with-details

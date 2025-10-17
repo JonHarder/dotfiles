@@ -1,4 +1,5 @@
 (straight-use-package 'tmr)
+(require 'tmr)
 (with-eval-after-load 'tmr
   (evil-define-key 'normal 'global
 	(kbd "<leader> . n") #'tmr-with-details
