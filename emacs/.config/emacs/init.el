@@ -29,7 +29,8 @@
 (require 'my-modeline)
 (require 'my-core)
 (require 'my-mouse)
-(require 'my-evil-config)
+(require 'my-meow)
+;; (require 'my-evil-config)
 (require 'my-bindings)
 
 (require 'my-calendar)
