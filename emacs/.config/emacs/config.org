@@ -437,6 +437,7 @@ so let's just set it as default.
   	 '("." . meow-bounds-of-thing)
   	 '("[" . meow-beginning-of-thing)
   	 '("]" . meow-end-of-thing)
+  	 '(">" . meow-indent)
   	 '("a" . meow-append)
   	 '("A" . meow-open-below)
   	 '("b" . meow-back-word)
