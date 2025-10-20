@@ -11,16 +11,17 @@
   (evil-collection-define-key 'normal 'elfeed-search-mode-map
 	(kbd "SPC") nil))
 
-(evil-define-key 'normal elfeed-search-mode-map
-  (kbd "q") #'quit-window
-  (kbd "j") #'next-line
-  (kbd "k") #'previous-line
-  (kbd "u") #'elfeed-update
-  (kbd "+") #'elfeed-search-tag-all
-  (kbd "-") #'elfeed-search-untag-all
-  (kbd "RET") #'elfeed-search-show-entry)
+(when nil
+  (evil-define-key 'normal elfeed-search-mode-map
+    (kbd "q") #'quit-window
+    (kbd "j") #'next-line
+    (kbd "k") #'previous-line
+    (kbd "u") #'elfeed-update
+    (kbd "+") #'elfeed-search-tag-all
+    (kbd "-") #'elfeed-search-untag-all
+    (kbd "RET") #'elfeed-search-show-entry)
 
-(evil-define-key 'normal elfeed-show-mode-map
-  (kbd "q") #'elfeed-kill-buffer)
+  (evil-define-key 'normal elfeed-show-mode-map
+    (kbd "q") #'elfeed-kill-buffer))
 
 (provide 'my-feed)

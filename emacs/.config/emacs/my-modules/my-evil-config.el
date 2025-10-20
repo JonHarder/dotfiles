@@ -5,39 +5,42 @@
 (setq evil-undo-system 'undo-redo)
 (evil-mode 1)
 
-(defvar my-normal-modes
-  '(Info-mode
-    Man-mode
-    magit-log-mode
-    occur-mode
-    magit-revision-mode
-    git-rebase-mode
-    notmuch-hello-mode
-    notmuch-search-mode
-    notmuch-show-mode
-    ibuffer-mode
-    calendar-mode
-    org-agenda-mode
-    grep-mode)
-  "Modes for which evil should begin in normal mode.")
+(when nil
+  (defvar my-normal-modes
+    '(Info-mode
+      Man-mode
+      magit-log-mode
+      occur-mode
+      magit-revision-mode
+      git-rebase-mode
+      notmuch-hello-mode
+      notmuch-search-mode
+      notmuch-show-mode
+      ibuffer-mode
+      calendar-mode
+      org-agenda-mode
+      grep-mode)
+    "Modes for which evil should begin in normal mode.")
 
-(dolist (mode my-normal-modes)
-  (evil-set-initial-state mode 'normal))
+  (dolist (mode my-normal-modes)
+    (evil-set-initial-state mode 'normal)))
 
-(defvar my-insert-modes
-  '(vterm-mode
-    eshell-mode
-    eat-mode)
-  "Modes for which evil should begin in insert mode.")
+(when nil
+  (defvar my-insert-modes
+    '(vterm-mode
+      eshell-mode
+      eat-mode)
+    "Modes for which evil should begin in insert mode.")
 
-(dolist (mode my-insert-modes)
-  (evil-set-initial-state mode 'insert))
+  (dolist (mode my-insert-modes)
+    (evil-set-initial-state mode 'insert)))
 
-(defvar my-emacs-modes '()
-  "Modes to start in native emacs mode.")
+(when nil
+  (defvar my-emacs-modes '()
+    "Modes to start in native emacs mode.")
 
-(dolist (mode my-emacs-modes)
-  (evil-set-initial-state mode 'emacs))
+  (dolist (mode my-emacs-modes)
+    (evil-set-initial-state mode 'emacs)))
 
 (setq evil-normal-state-cursor '(box "light blue")
       evil-insert-state-cursor '(bar "medium sea green")
@@ -55,10 +58,11 @@
 (define-key evil-normal-state-map (kbd "C-a") #'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
 
-(straight-use-package 'evil-commentary)
-(evil-commentary-mode)
-(evil-define-key '(insert normal visual) evil-commentary-mode-map
-  (kbd "s-;") #'evil-commentary-line)
+(when nil
+  (straight-use-package 'evil-commentary)
+  (evil-commentary-mode)
+  (evil-define-key '(insert normal visual) evil-commentary-mode-map
+    (kbd "s-;") #'evil-commentary-line))
 
 (defun evil-org-dwim-insert-below ()
   "Insert a heading or item below current line.

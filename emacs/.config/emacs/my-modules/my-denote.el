@@ -10,8 +10,6 @@
 (setq denote-prompts '(title subdirectory keywords))
 
 ;;; Code:
-(require 'evil)
-
 (defun denote-recently-modified (&optional last-days)
   "View a `dired' buffer containing notes modified in the last LAST-DAYS days.
 
@@ -26,37 +24,43 @@ This uses the first element of `denote-directories' to determine where notes are
                  (shell-command-to-string find-command))))
     (dired (cons default-directory files))))
 
-(evil-define-key 'normal 'global
-  (kbd "<leader> n /") #'denote-grep
-  (kbd "<leader> n J") #'denote-journal-new-entry
-  (kbd "<leader> n b") #'denote-backlinks
-  (kbd "<leader> n d") #'denote-dired
-  (kbd "<leader> n f") #'denote-open-or-create
-  (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
-  (kbd "<leader> n l") #'denote-link
-  (kbd "<leader> n n") #'denote
-  ;; (kbd "<leader> n n") #'denote
-  (kbd "<leader> n m") #'denote-recently-modified
-  (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
-  (kbd "<leader> n r") #'denote-rename-file-using-front-matter
-  (kbd "<leader> n s") #'denote-signature
-  (kbd "<leader> n t") #'denote-template)
+(when nil
+  (require 'evil)
 
-(evil-define-key '(visual insert) text-mode-map
-  (kbd "C-l") #'denote-link-or-create
-  (kbd "C-q") #'denote-query-contents-link)
+  (evil-define-key 'normal 'global
+    (kbd "<leader> n /") #'denote-grep
+    (kbd "<leader> n J") #'denote-journal-new-entry
+    (kbd "<leader> n b") #'denote-backlinks
+    (kbd "<leader> n d") #'denote-dired
+    (kbd "<leader> n f") #'denote-open-or-create
+    (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
+    (kbd "<leader> n l") #'denote-link
+    (kbd "<leader> n n") #'denote
+    ;; (kbd "<leader> n n") #'denote
+    (kbd "<leader> n m") #'denote-recently-modified
+    (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
+    (kbd "<leader> n r") #'denote-rename-file-using-front-matter
+    (kbd "<leader> n s") #'denote-signature
+    (kbd "<leader> n t") #'denote-template))
 
-(evil-define-key 'normal denote-backlinks-mode-map
-  (kbd "j") #'denote-backlinks-next
-  (kbd "k") #'denote-backlinks-prev)
+(when nil
+  (evil-define-key '(visual insert) text-mode-map
+    (kbd "C-l") #'denote-link-or-create
+    (kbd "C-q") #'denote-query-contents-link))
+
+(when nil
+  (evil-define-key 'normal denote-backlinks-mode-map
+    (kbd "j") #'denote-backlinks-next
+    (kbd "k") #'denote-backlinks-prev))
 
 (straight-use-package 'denote-journal)
 (setq denote-journal-directory (concat denote-directory "/journal"))
 (add-to-list 'denote-dired-directories denote-journal-directory)
 ;; calendar integration
 (add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
-(evil-define-key '(motion normal) calendar-mode-map
-  (kbd "d") #'denote-journal-calendar-new-or-existing)
+(when nil
+  (evil-define-key '(motion normal) calendar-mode-map
+		   (kbd "d") #'denote-journal-calendar-new-or-existing))
 
 (straight-use-package 'denote-silo)
 ;; (setq denote-silo-directories '())

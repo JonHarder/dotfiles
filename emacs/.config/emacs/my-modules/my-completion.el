@@ -4,7 +4,7 @@
 (savehist-mode)
 
 (setq minibuffer-prompt-properties
-  '(read-only t cursor-intangible t face minibuffer-prompt))
+	   '(read-only t cursor-intangible t face minibuffer-prompt))
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; (straight-use-package 'capf-autosuggest)
@@ -41,9 +41,10 @@
 (straight-use-package 'consult-dir)
 (define-key vertico-map
             (kbd "M-c") #'consult-dir)
-(evil-define-key 'norma cdl
-  global-map
-  (kbd "<leader> c d") #'consult-dir)
+(when nil
+    (evil-define-key 'normal
+		     global-map
+		     (kbd "<leader> c d") #'consult-dir))
 
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)
@@ -73,10 +74,11 @@
   (vertico-multiform-mode))
 
 ;;; bindings
-(evil-define-key '(normal motion visual insert emacs) 'global
-  (kbd "s-<return>") #'embark-dwim
-  (kbd "C-<return>") #'embark-act)
-(define-key minibuffer-local-map
-            (kbd "C-<return>") #'embark-act)
+(when nil
+  (evil-define-key '(normal motion visual insert emacs) 'global
+		   (kbd "s-<return>") #'embark-dwim
+		   (kbd "C-<return>") #'embark-act)
+  (define-key minibuffer-local-map
+              (kbd "C-<return>") #'embark-act))
 
 (provide 'my-completion)

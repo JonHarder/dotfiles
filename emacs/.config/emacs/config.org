@@ -514,45 +514,48 @@ Regardless, configure thes modes with the desired initial state.
 
 *** Normal modes
 #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (defvar my-normal-modes
-    '(Info-mode
-      Man-mode
-      magit-log-mode
-      occur-mode
-      magit-revision-mode
-      git-rebase-mode
-      notmuch-hello-mode
-      notmuch-search-mode
-      notmuch-show-mode
-      ibuffer-mode
-      calendar-mode
-      org-agenda-mode
-      grep-mode)
-    "Modes for which evil should begin in normal mode.")
+  (when nil
+    (defvar my-normal-modes
+      '(Info-mode
+        Man-mode
+        magit-log-mode
+        occur-mode
+        magit-revision-mode
+        git-rebase-mode
+        notmuch-hello-mode
+        notmuch-search-mode
+        notmuch-show-mode
+        ibuffer-mode
+        calendar-mode
+        org-agenda-mode
+        grep-mode)
+      "Modes for which evil should begin in normal mode.")
 
-  (dolist (mode my-normal-modes)
-    (evil-set-initial-state mode 'normal))
+    (dolist (mode my-normal-modes)
+      (evil-set-initial-state mode 'normal)))
 #+end_src
 
 *** Insert modes
 #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (defvar my-insert-modes
-    '(vterm-mode
-      eshell-mode
-      eat-mode)
-    "Modes for which evil should begin in insert mode.")
+  (when nil
+    (defvar my-insert-modes
+      '(vterm-mode
+        eshell-mode
+        eat-mode)
+      "Modes for which evil should begin in insert mode.")
 
-  (dolist (mode my-insert-modes)
-    (evil-set-initial-state mode 'insert))
+    (dolist (mode my-insert-modes)
+      (evil-set-initial-state mode 'insert)))
 #+end_src
 
 *** Emacs modes
 #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (defvar my-emacs-modes '()
-    "Modes to start in native emacs mode.")
+  (when nil
+    (defvar my-emacs-modes '()
+      "Modes to start in native emacs mode.")
 
-  (dolist (mode my-emacs-modes)
-    (evil-set-initial-state mode 'emacs))
+    (dolist (mode my-emacs-modes)
+      (evil-set-initial-state mode 'emacs)))
 #+end_src
 
 ** Cursor shape/color
@@ -624,10 +627,11 @@ behavior
 
 ** Evil comments
 #+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (straight-use-package 'evil-commentary)
-  (evil-commentary-mode)
-  (evil-define-key '(insert normal visual) evil-commentary-mode-map
-    (kbd "s-;") #'evil-commentary-line)
+  (when nil
+    (straight-use-package 'evil-commentary)
+    (evil-commentary-mode)
+    (evil-define-key '(insert normal visual) evil-commentary-mode-map
+      (kbd "s-;") #'evil-commentary-line))
 #+end_src
 
 ** Evil org enhancements
@@ -674,33 +678,35 @@ Set the date style to iso (day month year).
 ** Bindings
 #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp
   ;; movement commands
-  (evil-define-key '(normal visual) calendar-mode-map
-    (kbd "l") #'calendar-forward-day
-    (kbd "h") #'calendar-backward-day
-    (kbd "k") #'calendar-backward-week
-    (kbd "j") #'calendar-forward-week
-    (kbd "b") #'calendar-backward-week
-    (kbd "w") #'calendar-forward-week
-    (kbd "<") #'calendar-scroll-left
-    (kbd ">") #'calendar-scroll-right
-    (kbd "0") #'calendar-beginning-of-week
-    (kbd "$") #'calendar-end-of-week
-    (kbd ".") #'calendar-goto-today)
+  (when nil
+    (evil-define-key '(normal visual) calendar-mode-map
+      (kbd "l") #'calendar-forward-day
+      (kbd "h") #'calendar-backward-day
+      (kbd "k") #'calendar-backward-week
+      (kbd "j") #'calendar-forward-week
+      (kbd "b") #'calendar-backward-week
+      (kbd "w") #'calendar-forward-week
+      (kbd "<") #'calendar-scroll-left
+      (kbd ">") #'calendar-scroll-right
+      (kbd "0") #'calendar-beginning-of-week
+      (kbd "$") #'calendar-end-of-week
+      (kbd ".") #'calendar-goto-today)
 
-  (evil-define-key 'normal calendar-mode-map
-    (kbd "q") #'calendar-exit
-    (kbd "d d") #'diary-view-entries
-    (kbd "d i") #'diary-insert-entry)
+    (evil-define-key 'normal calendar-mode-map
+      (kbd "q") #'calendar-exit
+      (kbd "d d") #'diary-view-entries
+      (kbd "d i") #'diary-insert-entry))
 #+end_src
 ** Diary
 
 The diary is (for me) mostly a way to jot down an appointment or reminder.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-  (appt-activate 1)
+    (appt-activate 1)
 
-  (evil-define-key 'normal diary-fancy-display-mode-map
-    (kbd "q") 'quit-window)
+    (when nil
+      (evil-define-key 'normal diary-fancy-display-mode-map
+      (kbd "q") 'quit-window))
 #+end_src
 
 ** Provide the module
@@ -832,9 +838,10 @@ and play nicely with ~eshell-smart~
   (straight-use-package 'consult-dir)
   (define-key vertico-map
               (kbd "M-c") #'consult-dir)
-  (evil-define-key 'norma cdl
-    global-map
-    (kbd "<leader> c d") #'consult-dir)
+  (when nil
+      (evil-define-key 'normal
+  		     global-map
+  		     (kbd "<leader> c d") #'consult-dir))
 #+end_src
 
 
@@ -873,11 +880,12 @@ of actions to perform on the target under point.
     (vertico-multiform-mode))
 
   ;;; bindings
-  (evil-define-key '(normal motion visual insert emacs) 'global
-    (kbd "s-<return>") #'embark-dwim
-    (kbd "C-<return>") #'embark-act)
-  (define-key minibuffer-local-map
-              (kbd "C-<return>") #'embark-act)
+  (when nil
+    (evil-define-key '(normal motion visual insert emacs) 'global
+  		   (kbd "s-<return>") #'embark-dwim
+  		   (kbd "C-<return>") #'embark-act)
+    (define-key minibuffer-local-map
+                (kbd "C-<return>") #'embark-act))
 #+end_src
    
 ** Provide the module
@@ -924,9 +932,10 @@ window at the bottom of the current frame.
 
 ** Bindings
 #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-  (evil-define-key 'normal ediff-mode-map
-    (kbd "j") #'ediff-next-difference
-    (kbd "k") #'ediff-previous-difference)
+  (when nil
+    (evil-define-key 'normal ediff-mode-map
+  		   (kbd "j") #'ediff-next-difference
+  		   (kbd "k") #'ediff-previous-difference))
 #+end_src
 
 ** Provide =my-ediff=
@@ -995,8 +1004,6 @@ window at the bottom of the current frame.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   ;;; Code:
-  (require 'evil)
-
   (defun denote-recently-modified (&optional last-days)
     "View a `dired' buffer containing notes modified in the last LAST-DAYS days.
 
@@ -1011,29 +1018,33 @@ window at the bottom of the current frame.
                    (shell-command-to-string find-command))))
       (dired (cons default-directory files))))
 
-  (evil-define-key 'normal 'global
-    (kbd "<leader> n /") #'denote-grep
-    (kbd "<leader> n J") #'denote-journal-new-entry
-    (kbd "<leader> n b") #'denote-backlinks
-    (kbd "<leader> n d") #'denote-dired
-    (kbd "<leader> n f") #'denote-open-or-create
-    (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
-    (kbd "<leader> n l") #'denote-link
-    (kbd "<leader> n n") #'denote
-    ;; (kbd "<leader> n n") #'denote
-    (kbd "<leader> n m") #'denote-recently-modified
-    (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
-    (kbd "<leader> n r") #'denote-rename-file-using-front-matter
-    (kbd "<leader> n s") #'denote-signature
-    (kbd "<leader> n t") #'denote-template)
+  (when nil
+    (require 'evil)
+
+    (evil-define-key 'normal 'global
+      (kbd "<leader> n /") #'denote-grep
+      (kbd "<leader> n J") #'denote-journal-new-entry
+      (kbd "<leader> n b") #'denote-backlinks
+      (kbd "<leader> n d") #'denote-dired
+      (kbd "<leader> n f") #'denote-open-or-create
+      (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
+      (kbd "<leader> n l") #'denote-link
+      (kbd "<leader> n n") #'denote
+      ;; (kbd "<leader> n n") #'denote
+      (kbd "<leader> n m") #'denote-recently-modified
+      (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
+      (kbd "<leader> n r") #'denote-rename-file-using-front-matter
+      (kbd "<leader> n s") #'denote-signature
+      (kbd "<leader> n t") #'denote-template))
 #+end_src
 
 binding insert mode so I can link without having to exit.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (evil-define-key '(visual insert) text-mode-map
-    (kbd "C-l") #'denote-link-or-create
-    (kbd "C-q") #'denote-query-contents-link)
+  (when nil
+    (evil-define-key '(visual insert) text-mode-map
+      (kbd "C-l") #'denote-link-or-create
+      (kbd "C-q") #'denote-query-contents-link))
 #+end_src
 
 
@@ -1041,9 +1052,10 @@ binding insert mode so I can link without having to exit.
   denote buffer.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (evil-define-key 'normal denote-backlinks-mode-map
-    (kbd "j") #'denote-backlinks-next
-    (kbd "k") #'denote-backlinks-prev)
+  (when nil
+    (evil-define-key 'normal denote-backlinks-mode-map
+      (kbd "j") #'denote-backlinks-next
+      (kbd "k") #'denote-backlinks-prev))
 #+end_src
 
 ** Journaling
@@ -1053,8 +1065,9 @@ binding insert mode so I can link without having to exit.
   (add-to-list 'denote-dired-directories denote-journal-directory)
   ;; calendar integration
   (add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
-  (evil-define-key '(motion normal) calendar-mode-map
-    (kbd "d") #'denote-journal-calendar-new-or-existing)
+  (when nil
+    (evil-define-key '(motion normal) calendar-mode-map
+  		   (kbd "d") #'denote-journal-calendar-new-or-existing))
 #+end_src
 
 ** Silos
@@ -1225,33 +1238,34 @@ space as a leader key to trigger anything and everything.
 With that out of the way, we can set up our bindings as usual.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (evil-define-key '(normal motion) dired-mode-map
-    (kbd "j") #'dired-next-line
-    (kbd "k") #'dired-previous-line
-    (kbd "J") nil
-    (kbd "K") #'dired-do-kill-lines
-    (kbd "h") #'dired-up-directory
-    (kbd "l") #'dired-find-file
-    (kbd "n") #'evil-search-next
-    (kbd "e") #'dired-mark-files-extension
-    (kbd "r") #'revert-buffer
-    (kbd "N") #'evil-search-previous
-    (kbd "s") #'eshell
-    (kbd "g o") #'dired-insert-subdir
-    (kbd "g d") #'dired-kill-subdir
-    (kbd "g j") #'dired-next-subdir
-    (kbd "g k") #'dired-prev-subdir
-    (kbd ".") #'dired-dotfiles-toggle
-    (kbd "g g") #'dired-first-file
-    (kbd "G") #'dired-last-file
-    (kbd "<left>") #'dired-up-directory
-    (kbd "<right>") #'dired-find-file
-    (kbd "<up>") #'dired-previous-line
-    (kbd "<down>") #'dired-next-line
-    ;; "find" prefix functions
-    (kbd "<leader> m f f") #'dired-mark-files-regexp
-    (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
-    (kbd "<leader> m f d") #'dired-mark-directories)
+  (when nil
+    (evil-define-key '(normal motion) dired-mode-map
+      (kbd "j") #'dired-next-line
+      (kbd "k") #'dired-previous-line
+      (kbd "J") nil
+      (kbd "K") #'dired-do-kill-lines
+      (kbd "h") #'dired-up-directory
+      (kbd "l") #'dired-find-file
+      (kbd "n") #'evil-search-next
+      (kbd "e") #'dired-mark-files-extension
+      (kbd "r") #'revert-buffer
+      (kbd "N") #'evil-search-previous
+      (kbd "s") #'eshell
+      (kbd "g o") #'dired-insert-subdir
+      (kbd "g d") #'dired-kill-subdir
+      (kbd "g j") #'dired-next-subdir
+      (kbd "g k") #'dired-prev-subdir
+      (kbd ".") #'dired-dotfiles-toggle
+      (kbd "g g") #'dired-first-file
+      (kbd "G") #'dired-last-file
+      (kbd "<left>") #'dired-up-directory
+      (kbd "<right>") #'dired-find-file
+      (kbd "<up>") #'dired-previous-line
+      (kbd "<down>") #'dired-next-line
+      ;; "find" prefix functions
+      (kbd "<leader> m f f") #'dired-mark-files-regexp
+      (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
+      (kbd "<leader> m f d") #'dired-mark-directories))
 #+end_src
 ** Helper functions
   
@@ -1278,8 +1292,9 @@ a directory. dired-preview allows for exactly this behavior.
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (straight-use-package 'dired-preview)
   (setq dired-preview-delay 0.2)
-  (evil-define-key 'normal dired-mode-map
-    (kbd "P") #'dired-preview-global-mode)
+  (when nil
+    (evil-define-key 'normal dired-mode-map
+      (kbd "P") #'dired-preview-global-mode))
 #+end_src
 
 ** Icons
@@ -1326,10 +1341,11 @@ emacs, let's make emacs do it.
 
 ** Bindings
 #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-   (evil-define-key 'normal epa-key-list-mode-map
-     (kbd "TAB") #'forward-button
-     (kbd "m") #'epa-mark-key
-     (kbd "u") #'epa-unmark-key)
+  (when nil
+    (evil-define-key 'normal epa-key-list-mode-map
+      (kbd "TAB") #'forward-button
+      (kbd "m") #'epa-mark-key
+      (kbd "u") #'epa-unmark-key))
 #+end_src
 
 ** Provide the module
@@ -1382,17 +1398,18 @@ We use the wonderful `elfeed` package to track and read feeds.
     (evil-collection-define-key 'normal 'elfeed-search-mode-map
   	(kbd "SPC") nil))
 
-  (evil-define-key 'normal elfeed-search-mode-map
-    (kbd "q") #'quit-window
-    (kbd "j") #'next-line
-    (kbd "k") #'previous-line
-    (kbd "u") #'elfeed-update
-    (kbd "+") #'elfeed-search-tag-all
-    (kbd "-") #'elfeed-search-untag-all
-    (kbd "RET") #'elfeed-search-show-entry)
-
-  (evil-define-key 'normal elfeed-show-mode-map
-    (kbd "q") #'elfeed-kill-buffer)
+  (when nil
+    (evil-define-key 'normal elfeed-search-mode-map
+      (kbd "q") #'quit-window
+      (kbd "j") #'next-line
+      (kbd "k") #'previous-line
+      (kbd "u") #'elfeed-update
+      (kbd "+") #'elfeed-search-tag-all
+      (kbd "-") #'elfeed-search-untag-all
+      (kbd "RET") #'elfeed-search-show-entry)
+  
+    (evil-define-key 'normal elfeed-show-mode-map
+      (kbd "q") #'elfeed-kill-buffer))
 
   (provide 'my-feed)
 #+end_src
@@ -1459,10 +1476,11 @@ at a glance how deep you are.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
      (with-eval-after-load 'eglot
-       (evil-define-key 'normal prog-mode-map
-     	 (kbd "<leader> r d") #'eglot-find-declaration
-     	 ;; #'eglot-find-implementation is already handled by embark
-     	 (kbd "<leader> r r") #'xref-find-references))
+       (when nil
+         (evil-define-key 'normal prog-mode-map
+       		     (kbd "<leader> r d") #'eglot-find-declaration
+     		     ;; #'eglot-find-implementation is already handled by embark
+       		     (kbd "<leader> r r") #'xref-find-references)))
    #+end_src
 
 *** Highlight TODO statements
@@ -1609,10 +1627,11 @@ This replaces the venerable, but outdated flymake.
        (interactive)
        (compile "terraform apply"))
 
-     (evil-define-key 'normal terraform-mode-map
-       (kbd "<leader> m i") #'terraform-init
-       (kbd "<leader> m p") #'terraform-plan
-       (kbd "<leader> m a") #'terraform-apply)
+     (when nil
+       (evil-define-key 'normal terraform-mode-map
+         (kbd "<leader> m i") #'terraform-init
+         (kbd "<leader> m p") #'terraform-plan
+         (kbd "<leader> m a") #'terraform-apply))
    #+end_src
 
 *** Provide my-terraform
@@ -1748,12 +1767,13 @@ Neon mode is mostly just yaml.
     or replace base functionality with new features, or ~evil~-ified versions.
     
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (evil-define-key 'normal org-mode-map
-        (kbd "<tab>") 'org-cycle
-        (kbd "s-j") 'org-metadown
-        (kbd "s-k") 'org-metaup
-        (kbd "> >") 'org-shiftmetaright
-        (kbd "< <") 'org-shiftmetaleft)
+      (when nil
+        (evil-define-key 'normal org-mode-map
+          (kbd "<tab>") 'org-cycle
+          (kbd "s-j") 'org-metadown
+          (kbd "s-k") 'org-metaup
+          (kbd "> >") 'org-shiftmetaright
+          (kbd "< <") 'org-shiftmetaleft))
     #+end_src
 
 *** meta mappings
@@ -1762,48 +1782,50 @@ Neon mode is mostly just yaml.
     contextual functionality.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (evil-define-key 'normal org-mode-map
-        (kbd "<leader> m a") #'org-archive-subtree
-        (kbd "<leader> m e") #'org-export-dispatch
-        (kbd "<leader> m p") #'org-publish-project
-        (kbd "<leader> m r") #'org-refile
-        (kbd "<leader> m l") #'org-insert-link
-        (kbd "<leader> m f") #'org-footnote-action
-        (kbd "<leader> m i") #'org-toggle-inline-images
-        (kbd "<leader> m t") #'org-babel-tangle
-        (kbd "<leader> m n") #'org-narrow-to-subtree
-        (kbd "<leader> m d") #'org-babel-demarcate-block
-        (kbd "<leader> m s s") #'org-schedule
-        (kbd "<leader> m s d") #'org-deadline
-        (kbd "<leader> m ,") #'org-priority
-        (kbd "<leader> m c i") #'org-clock-in
-        (kbd "<leader> m c o") #'org-clock-out)
+      (when nil
+        (evil-define-key 'normal org-mode-map
+          (kbd "<leader> m a") #'org-archive-subtree
+          (kbd "<leader> m e") #'org-export-dispatch
+          (kbd "<leader> m p") #'org-publish-project
+          (kbd "<leader> m r") #'org-refile
+          (kbd "<leader> m l") #'org-insert-link
+          (kbd "<leader> m f") #'org-footnote-action
+          (kbd "<leader> m i") #'org-toggle-inline-images
+          (kbd "<leader> m t") #'org-babel-tangle
+          (kbd "<leader> m n") #'org-narrow-to-subtree
+          (kbd "<leader> m d") #'org-babel-demarcate-block
+          (kbd "<leader> m s s") #'org-schedule
+          (kbd "<leader> m s d") #'org-deadline
+          (kbd "<leader> m ,") #'org-priority
+          (kbd "<leader> m c i") #'org-clock-in
+          (kbd "<leader> m c o") #'org-clock-out))
     #+end_src
 
 *** Agenda mappings
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (evil-define-key 'normal org-agenda-mode-map
-        (kbd "<leader> m c") #'org-agenda-columns
-        (kbd "j") #'org-agenda-next-line
-        (kbd "k") #'org-agenda-previous-line
-        (kbd "RET") #'org-agenda-switch-to
-        (kbd "q") #'org-agenda-quit
-        (kbd ".") #'org-agenda-goto-today
-        (kbd ",") #'org-agenda-priority
-        (kbd "l") #'org-agenda-later
-        (kbd "h") #'org-agenda-earlier
-        (kbd "m") #'org-agenda-bulk-mark
-        (kbd "p") #'org-agenda-set-property
-        (kbd "u") #'org-agenda-bulk-unmark
-        (kbd "B") #'org-agenda-bulk-action
-        (kbd "g w") #'org-agenda-week-view
-        (kbd "g d") #'org-agenda-day-view
-        (kbd "t") #'org-agenda-todo
-        (kbd "r") #'org-agenda-redo
-        (kbd "s") #'org-agenda-schedule
-        (kbd "d") #'org-agenda-deadline
-        (kbd "/") #'org-agenda-filter
-        (kbd "<") #'org-agenda-filter-by-category)
+      (when nil
+        (evil-define-key 'normal org-agenda-mode-map
+          (kbd "<leader> m c") #'org-agenda-columns
+          (kbd "j") #'org-agenda-next-line
+          (kbd "k") #'org-agenda-previous-line
+          (kbd "RET") #'org-agenda-switch-to
+          (kbd "q") #'org-agenda-quit
+          (kbd ".") #'org-agenda-goto-today
+          (kbd ",") #'org-agenda-priority
+          (kbd "l") #'org-agenda-later
+          (kbd "h") #'org-agenda-earlier
+          (kbd "m") #'org-agenda-bulk-mark
+          (kbd "p") #'org-agenda-set-property
+          (kbd "u") #'org-agenda-bulk-unmark
+          (kbd "B") #'org-agenda-bulk-action
+          (kbd "g w") #'org-agenda-week-view
+          (kbd "g d") #'org-agenda-day-view
+          (kbd "t") #'org-agenda-todo
+          (kbd "r") #'org-agenda-redo
+          (kbd "s") #'org-agenda-schedule
+          (kbd "d") #'org-agenda-deadline
+          (kbd "/") #'org-agenda-filter
+          (kbd "<") #'org-agenda-filter-by-category))
     #+end_src
 
 ** Settings
@@ -2245,25 +2267,26 @@ package is disabled.
     (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
     (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
 
-    ;; Bindings
-    (evil-define-key 'normal howm-mode-map
-      (kbd "RET") #'action-lock-magic-return)
-
     (define-key howm-menu-mode-map (kbd "j") #'next-line)
     (define-key howm-menu-mode-map (kbd "k") #'previous-line)
 
-    (evil-define-key 'normal howm-view-summary-mode-map
-      (kbd "j") #'next-line
-      (kbd "k") #'previous-line
-      (kbd "r") #'howm-view-sort-reverse
-      (kbd "J") #'riffle-scroll-other-window
-      (kbd "K") #'riffle-scroll-other-window-down
-      (kbd "s") #'howm-list-grep-fixed
-      (kbd "S") #'howm-view-sort
-      (kbd "/") #'howm-list-grep
-      (kbd "RET") #'howm-view-summary-open
-      (kbd "q") #'howm-view-kill-buffer)
+    ;; Bindings
+    (when nil
+      (evil-define-key 'normal howm-mode-map
+    		   (kbd "RET") #'action-lock-magic-return)
 
+      (evil-define-key 'normal howm-view-summary-mode-map
+        (kbd "j") #'next-line
+        (kbd "k") #'previous-line
+        (kbd "r") #'howm-view-sort-reverse
+        (kbd "J") #'riffle-scroll-other-window
+        (kbd "K") #'riffle-scroll-other-window-down
+        (kbd "s") #'howm-list-grep-fixed
+        (kbd "S") #'howm-view-sort
+        (kbd "/") #'howm-list-grep
+        (kbd "RET") #'howm-view-summary-open
+        (kbd "q") #'howm-view-kill-buffer))
+      
     (provide 'my-howm)
   #+end_src
 
@@ -2279,7 +2302,6 @@ package is disabled.
       '(jj-mode :type git
                 :host github
                 :repo "bolivier/jj-mode.el"))
-     (require 'evil)
      (require 'magit)
 
      ;; NOTE: as of [2025-09-13], jj-mode does not have support for
@@ -2289,23 +2311,25 @@ package is disabled.
      ;; consideration.  Mainly, how would you interactively add up hunks
      ;; for a command like ~squash -i~ without implicitly bringing
      ;; something like git's staging area back?
-     (evil-define-key 'normal jj-mode-map
-       (kbd "TAB") #'magit-section-toggle
-       (kbd "RET") #'jj-enter-dwim
-       (kbd "j") #'magit-section-forward
-       (kbd "k") #'magit-section-backward
-       (kbd "b") #'jj-bookmark-transient
-       (kbd "c") #'jj-commit
-       (kbd "d") #'jj-describe
-       (kbd "e") #'jj-edit-changeset
-       (kbd "n") #'jj-new
-       (kbd "a") #'jj-abandon
-       (kbd "r") #'jj-rebase-transient
-       (kbd "D") #'jj-diff
-       (kbd "t") #'jj-tug
-       (kbd "u") #'jj-undo
-       (kbd ".") #'jj-git-transient
-       (kbd "g r") #'jj-log-refresh)
+     (when nil
+       (require 'evil)
+       (evil-define-key 'normal jj-mode-map
+         (kbd "TAB") #'magit-section-toggle
+         (kbd "RET") #'jj-enter-dwim
+         (kbd "j") #'magit-section-forward
+         (kbd "k") #'magit-section-backward
+         (kbd "b") #'jj-bookmark-transient
+         (kbd "c") #'jj-commit
+         (kbd "d") #'jj-describe
+         (kbd "e") #'jj-edit-changeset
+         (kbd "n") #'jj-new
+         (kbd "a") #'jj-abandon
+         (kbd "r") #'jj-rebase-transient
+         (kbd "D") #'jj-diff
+         (kbd "t") #'jj-tug
+         (kbd "u") #'jj-undo
+         (kbd ".") #'jj-git-transient
+         (kbd "g r") #'jj-log-refresh))
 
      (provide 'my-jj)
    #+end_src
@@ -2332,11 +2356,12 @@ package is disabled.
 *** Bindings
 
    #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-     (evil-define-key 'normal occur-mode-map
-       (kbd "j") #'next-error-no-select
-       (kbd "k") #'previous-error-no-select
-       (kbd "RET") #'occur-mode-goto-occurrence
-       (kbd "q") #'quit-window)
+     (when nil
+       (evil-define-key 'normal occur-mode-map
+         (kbd "j") #'next-error-no-select
+         (kbd "k") #'previous-error-no-select
+         (kbd "RET") #'occur-mode-goto-occurrence
+         (kbd "q") #'quit-window))
    #+end_src
 
 ** Grep
@@ -2344,10 +2369,11 @@ package is disabled.
 *** Bindings
 
    #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-     (evil-define-key 'normal grep-mode-map
-       (kbd "j") #'next-error-no-select
-       (kbd "k") #'previous-error-no-select
-       (kbd "q") #'quit-window)
+     (when nil
+       (evil-define-key 'normal grep-mode-map
+     		   (kbd "j") #'next-error-no-select
+     		   (kbd "k") #'previous-error-no-select
+     		   (kbd "q") #'quit-window))
    #+end_src
 
 ** Provide =my-search= module
@@ -2630,7 +2656,8 @@ map is pressed, it exits the transient map and fires off the normal
 command for the key as usual.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-  (require 'evil)
+  (when nil
+    (require 'evil))
 
   (defun window-management-mode ()
     "Manipulate windows (size, location, number, etc)."
@@ -2660,8 +2687,9 @@ command for the key as usual.
   [c]close-window [o]close-others")
       (message "Window management transient keymap activated.")))
 
-  (evil-define-key 'normal 'global
-    (kbd "<leader> w m") #'window-management-mode)
+  (when nil
+    (evil-define-key 'normal 'global
+  		   (kbd "<leader> w m") #'window-management-mode))
 #+end_src
 
 ** Ace jump
@@ -2682,14 +2710,15 @@ command for the key as usual.
 * Web Browsing
 ** EWW settings/bindings/etc
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
-      (evil-define-key 'normal 'eww-mode-map
-        (kbd "q") #'quit-window
-        (kbd "H") #'eww-back-url
-        (kbd "L") #'eww-forward-url
-        (kbd "<leader> m b") #'eww-switch-to-buffer
-        ;; (kbd "g") #'eww
-        )
-      (provide 'my-web)
+     (when nil
+       (evil-define-key 'normal 'eww-mode-map
+         (kbd "q") #'quit-window
+         (kbd "H") #'eww-back-url
+         (kbd "L") #'eww-forward-url
+         (kbd "<leader> m b") #'eww-switch-to-buffer
+         ;; (kbd "g") #'eww
+         ))
+     (provide 'my-web)
    #+end_src
 
 ** Convenience functions
@@ -2831,14 +2860,15 @@ Evilified bindings to notmuch
 
 **** hello mode
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-  (evil-define-key 'normal notmuch-hello-mode-map
-    (kbd "TAB") #'widget-forward
-    (kbd "RET") #'widget-button-press
-    (kbd "m") #'notmuch-mua-mail
-    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-    (kbd "/") #'notmuch-search
-    (kbd ".") #'notmuch-jump-search
-    (kbd "q") #'notmuch-bury-or-kill-this-buffer)
+  (when nil
+    (evil-define-key 'normal notmuch-hello-mode-map
+      (kbd "TAB") #'widget-forward
+      (kbd "RET") #'widget-button-press
+      (kbd "m") #'notmuch-mua-mail
+      (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+      (kbd "/") #'notmuch-search
+      (kbd ".") #'notmuch-jump-search
+      (kbd "q") #'notmuch-bury-or-kill-this-buffer))
        #+end_src
        
 **** Search mode
@@ -2856,26 +2886,27 @@ Evilified bindings to notmuch
     (notmuch-search-tag '("+todo") beg end)
     (notmuch-search-next-thread))
 
-  (evil-define-key 'normal notmuch-search-mode-map
-    (kbd "d") #'notmuch-search-delete-threads
-    (kbd "a") #'notmuch-search-archive-thread
-    (kbd "/") #'notmuch-search
-    (kbd "s s") #'notmuch-search-filter
-    (kbd "s j") #'notmuch-jump-search
-    (kbd "s t") #'notmuch-search-filter-by-tag
-    (kbd "j") #'notmuch-search-next-thread
-    (kbd "k") #'notmuch-search-previous-thread
-    (kbd "g r") #'notmuch-refresh-this-buffer
-    (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-    (kbd "q") #'notmuch-bury-or-kill-this-buffer
-    (kbd "t") #'notmuch-search-add-todo-tag
-    (kbd "RET") #'notmuch-search-show-thread
-    (kbd "*") #'notmuch-search-tag-all)
-
-  (evil-define-key '(visual normal) notmuch-search-mode-map
-    (kbd "-") #'notmuch-search-remove-tag
-    (kbd "+") #'notmuch-search-add-tag
-    (kbd "t") #'notmuch-search-add-todo-tag)
+  (when nil
+    (evil-define-key 'normal notmuch-search-mode-map
+      (kbd "d") #'notmuch-search-delete-threads
+      (kbd "a") #'notmuch-search-archive-thread
+      (kbd "/") #'notmuch-search
+      (kbd "s s") #'notmuch-search-filter
+      (kbd "s j") #'notmuch-jump-search
+      (kbd "s t") #'notmuch-search-filter-by-tag
+      (kbd "j") #'notmuch-search-next-thread
+      (kbd "k") #'notmuch-search-previous-thread
+      (kbd "g r") #'notmuch-refresh-this-buffer
+      (kbd "p") #'notmuch-poll-and-refresh-this-buffer
+      (kbd "q") #'notmuch-bury-or-kill-this-buffer
+      (kbd "t") #'notmuch-search-add-todo-tag
+      (kbd "RET") #'notmuch-search-show-thread
+      (kbd "*") #'notmuch-search-tag-all)
+  
+    (evil-define-key '(visual normal) notmuch-search-mode-map
+      (kbd "-") #'notmuch-search-remove-tag
+      (kbd "+") #'notmuch-search-add-tag
+      (kbd "t") #'notmuch-search-add-todo-tag))
 #+end_src
        
 **** Show mode
@@ -2888,19 +2919,20 @@ Evilified bindings to notmuch
     (interactive)
     (notmuch-show-tag '("+todo")))
 
-  (evil-define-key 'normal notmuch-show-mode-map
-    (kbd "a") #'notmuch-show-archive-thread
-    (kbd "d") #'notmuch-show-delete-thread
-    (kbd "t") #'notmuch-add-todo-tag
-    (kbd "r") #'notmuch-show-reply-sender
-    (kbd "q") #'notmuch-bury-or-kill-this-buffer
-    (kbd "g j") #'notmuch-show-next-open-message
-    (kbd "g k") #'notmuch-show-previous-open-message
-    (kbd "TAB") #'notmuch-show-next-button
-    (kbd "RET") #'notmuch-show-toggle-message
-    (kbd "+") #'notmuch-show-add-tag
-    (kbd "-") #'notmuch-show-remove-tag
-    (kbd "t") #'notmuch-show-tag-todo)
+  (when nil
+    (evil-define-key 'normal notmuch-show-mode-map
+      (kbd "a") #'notmuch-show-archive-thread
+      (kbd "d") #'notmuch-show-delete-thread
+      (kbd "t") #'notmuch-add-todo-tag
+      (kbd "r") #'notmuch-show-reply-sender
+      (kbd "q") #'notmuch-bury-or-kill-this-buffer
+      (kbd "g j") #'notmuch-show-next-open-message
+      (kbd "g k") #'notmuch-show-previous-open-message
+      (kbd "TAB") #'notmuch-show-next-button
+      (kbd "RET") #'notmuch-show-toggle-message
+      (kbd "+") #'notmuch-show-add-tag
+      (kbd "-") #'notmuch-show-remove-tag
+      (kbd "t") #'notmuch-show-tag-todo))
 #+end_src
 
 
@@ -2908,8 +2940,9 @@ Evilified bindings to notmuch
 This is the mode which handles actually composing messages.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-  (evil-define-key 'normal notmuch-message-mode-map
-    (kbd "<leader> m a") #'mail-add-attachment)
+  (when nil
+    (evil-define-key 'normal notmuch-message-mode-map
+      (kbd "<leader> m a") #'mail-add-attachment))
 #+end_src
     
 ** Provide =my-email=
@@ -2961,43 +2994,44 @@ This is the mode which handles actually composing messages.
 *** Cycle capitalize word
     #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
       (defun cycle-capitalization ()
-	"Cycle capitalization of previous word.
+      	"Cycle capitalization of previous word.
 
       Capitalization schemes are:
-	- Regular capitalization: ensure only the first letter is capitalized
-	- All caps: Capitalize all letters of the word
-	- No caps: No Letters of the word are capitalized"
-	(interactive)
-	(let ((state (capitalize-state)))
-	  (save-excursion
-	    (goto-char (beginning-of-thing 'word))
-	    (cond
-	     ((eq 'lower state)
-	      (capitalize-word 1))
-	     ((eq 'capital state)
-	      (upcase-word 1))
-	     ((eq 'all-caps state)
-	      (downcase-word 1))))))
+      	- Regular capitalization: ensure only the first letter is capitalized
+      	- All caps: Capitalize all letters of the word
+      	- No caps: No Letters of the word are capitalized"
+      	(interactive)
+      	(let ((state (capitalize-state)))
+      	  (save-excursion
+      	    (goto-char (beginning-of-thing 'word))
+      	    (cond
+      	     ((eq 'lower state)
+      	      (capitalize-word 1))
+      	     ((eq 'capital state)
+      	      (upcase-word 1))
+      	     ((eq 'all-caps state)
+      	      (downcase-word 1))))))
 
       (defun capitalize-state ()
-	"Return a symbol representing the capitalization state of the previous word.
+      	"Return a symbol representing the capitalization state of the previous word.
 
       Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
 
-	'lower    The first character of the word is alpha and lowercase.
-	'capital  The first character of the word is alpha and uppercase (but not every character in the word is uppercase.)
-	'all-caps All letters of the word are alpha and uppercase."
-	(interactive)
-	(let* ((word (word-at-point t))
-	       (upper-first-char-p (char-uppercase-p (string-to-char word)))
-	       (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
-	  (cond
-	   (all-upper-p 'all-caps)
-	   (upper-first-char-p 'capital)
-	   (t 'lower))))
+      	'lower    The first character of the word is alpha and lowercase.
+      	'capital  The first character of the word is alpha and uppercase (but not every character in the word is uppercase.)
+      	'all-caps All letters of the word are alpha and uppercase."
+      	(interactive)
+      	(let* ((word (word-at-point t))
+      	       (upper-first-char-p (char-uppercase-p (string-to-char word)))
+      	       (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
+      	  (cond
+      	   (all-upper-p 'all-caps)
+      	   (upper-first-char-p 'capital)
+      	   (t 'lower))))
 
-      (evil-define-key '(insert normal) global-map
-	(kbd "M-c") #'cycle-capitalization)
+      (when nil
+        (evil-define-key '(insert normal) global-map
+        		   (kbd "M-c") #'cycle-capitalization))
     #+end_src
      
 
@@ -3012,13 +3046,14 @@ very easy.
 #+begin_src emacs-lisp :tangle "my-modules/my-timers.el" :mkdirp yes
   (straight-use-package 'tmr)
   (require 'tmr)
-  (with-eval-after-load 'tmr
-    (evil-define-key 'normal 'global
-  	(kbd "<leader> . n") #'tmr-with-details
-  	(kbd "<leader> . .") #'tmr-tabulated-view)
-    (evil-define-key 'normal tmr-tabulated-mode-map
-  	(kbd "g r") #'tmr-tabulated--refresh
-  	(kbd "x") #'tmr-cancel))
+  ;; (with-eval-after-load 'tmr
+  ;;   (evil-define-key 'normal 'global
+  ;; 	(kbd "<leader> . n") #'tmr-with-details
+  ;; 	(kbd "<leader> . .") #'tmr-tabulated-view)
+  ;;   (evil-define-key 'normal tmr-tabulated-mode-map
+  ;; 	(kbd "g r") #'tmr-tabulated--refresh
+  ;; 	(kbd "x") #'tmr-cancel))
+  
   (provide 'my-timers)
 #+end_src
 * Miscellaneous functions
@@ -3059,7 +3094,8 @@ very easy.
   #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
     (straight-use-package
      '(magit :type git :host github :repo "magit/magit"))
-    (evil-set-initial-state 'magit-status-mode 'normal)
+    (when nil
+      (evil-set-initial-state 'magit-status-mode 'normal))
   #+end_src
 
 **** Set up bindings for the various magit modes
@@ -3067,83 +3103,88 @@ very easy.
     Normal mode bindings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (evil-define-key '(normal motion) magit-status-mode-map
-        (kbd "?") #'magit-dispatch
-        (kbd "b") #'magit-branch
-        (kbd "q") #'magit-mode-bury-buffer
-        (kbd "c") #'magit-commit
-        (kbd "e") #'magit-ediff-dwim
-        (kbd "f") #'magit-fetch
-        (kbd "j") #'magit-next-line
-        (kbd "k") #'magit-previous-line
-        (kbd "}") #'magit-section-forward
-        (kbd "{") #'magit-section-backward
-        (kbd "TAB") #'magit-section-toggle
-        (kbd "RET") #'magit-visit-thing
-        (kbd "i") #'magit-gitignore
-        (kbd "l") #'magit-log
-        (kbd "m") #'magit-merge
-        (kbd "P") #'magit-push
-        (kbd "p") #'magit-pull
-        (kbd "M") #'magit-remote
-        (kbd "r") #'magit-rebase
-        (kbd "t") #'magit-tag
-        (kbd "R") #'magit-reset
-        (kbd "$") #'magit-process-buffer
-        ;; delete
-        (kbd "d d") 'magit-discard
-        (kbd "z") #'magit-stash)
+      (when nil
+        (evil-define-key '(normal motion) magit-status-mode-map
+          (kbd "?") #'magit-dispatch
+          (kbd "b") #'magit-branch
+          (kbd "q") #'magit-mode-bury-buffer
+          (kbd "c") #'magit-commit
+          (kbd "e") #'magit-ediff-dwim
+          (kbd "f") #'magit-fetch
+          (kbd "j") #'magit-next-line
+          (kbd "k") #'magit-previous-line
+          (kbd "}") #'magit-section-forward
+          (kbd "{") #'magit-section-backward
+          (kbd "TAB") #'magit-section-toggle
+          (kbd "RET") #'magit-visit-thing
+          (kbd "i") #'magit-gitignore
+          (kbd "l") #'magit-log
+          (kbd "m") #'magit-merge
+          (kbd "P") #'magit-push
+          (kbd "p") #'magit-pull
+          (kbd "M") #'magit-remote
+          (kbd "r") #'magit-rebase
+          (kbd "t") #'magit-tag
+          (kbd "R") #'magit-reset
+          (kbd "$") #'magit-process-buffer
+          ;; delete
+          (kbd "d d") 'magit-discard
+          (kbd "z") #'magit-stash))
     #+end_src
 
     Visual mode bindings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (evil-define-key '(normal visual) magit-status-mode-map
-    	(kbd "s") 'magit-stage
-    	(kbd "u") 'magit-unstage)
+      (when nil
+        (evil-define-key '(normal visual) magit-status-mode-map
+        	(kbd "s") 'magit-stage
+        	(kbd "u") 'magit-unstage))
     #+end_src
 
 ***** Log mode
     Normal mode bindings
 
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (evil-define-key '(normal motion) magit-log-mode-map
-        (kbd "q") 'magit-log-bury-buffer
-        (kbd "r") 'magit-rebase
-        (kbd "j") 'magit-next-line
-        (kbd "k") 'magit-previous-line
-        (kbd "}") 'magit-section-forward
-        (kbd "{") 'magit-section-backward
-        (kbd "RET") 'magit-show-commit
-        (kbd "f") #'magit-fetch)
+      (when nil
+        (evil-define-key '(normal motion) magit-log-mode-map
+          (kbd "q") 'magit-log-bury-buffer
+          (kbd "r") 'magit-rebase
+          (kbd "j") 'magit-next-line
+          (kbd "k") 'magit-previous-line
+          (kbd "}") 'magit-section-forward
+          (kbd "{") 'magit-section-backward
+          (kbd "RET") 'magit-show-commit
+          (kbd "f") #'magit-fetch))
     #+end_src
 
 ***** Rebase mode
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (evil-define-key '(normal) git-rebase-mode-map
-	(kbd "p") #'git-rebase-pick
-	(kbd "b") #'git-rebase-break
-        (kbd "e") #'git-rebase-edit
-	(kbd "dd") #'git-rebase-kill-line
-	(kbd "s") #'git-rebase-squash
-        (kbd "r") #'git-rebase-reword
-	(kbd "f") #'git-rebase-fixup
-	(kbd "J") #'git-rebase-move-line-down
-	(kbd "K") #'git-rebase-move-line-up)
+      (when nil
+        (evil-define-key '(normal) git-rebase-mode-map
+      		   (kbd "p") #'git-rebase-pick
+      		   (kbd "b") #'git-rebase-break
+      		   (kbd "e") #'git-rebase-edit
+      		   (kbd "dd") #'git-rebase-kill-line
+      		   (kbd "s") #'git-rebase-squash
+      		   (kbd "r") #'git-rebase-reword
+      		   (kbd "f") #'git-rebase-fixup
+      		   (kbd "J") #'git-rebase-move-line-down
+      		   (kbd "K") #'git-rebase-move-line-up))
     #+end_src
 
 ***** Revision mode
     The revision mode im magit is TODO (what actual part of magit does this even relate to?)
     
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (evil-define-key '(normal motion) magit-revision-mode-map
-        (kbd "j") 'magit-next-line
-        (kbd "k") 'magit-previous-line
-        (kbd "}") 'magit-section-forward
-        (kbd "{") 'magit-section-backward
-        (kbd "TAB") 'magit-section-toggle
-        (kbd "RET") 'magit-visit-thing
-        (kbd "q") 'magit-mode-bury-buffer)
+      (when nil
+        (evil-define-key '(normal motion) magit-revision-mode-map
+          (kbd "j") 'magit-next-line
+          (kbd "k") 'magit-previous-line
+          (kbd "}") 'magit-section-forward
+          (kbd "{") 'magit-section-backward
+          (kbd "TAB") 'magit-section-toggle
+          (kbd "RET") 'magit-visit-thing
+          (kbd "q") 'magit-mode-bury-buffer))
     #+end_src
 
 ** Forge
@@ -3160,10 +3201,11 @@ very easy.
       (straight-use-package 'diff-hl)
       (global-diff-hl-mode 1)
 
-      (evil-define-key 'normal 'global
-        (kbd "<leader> v j") #'diff-hl-next-hunk
-        (kbd "<leader> v k") #'diff-hl-previous-hunk
-        (kbd "<leader> v b") #'diff-hl-show-hunk)
+      (when nil
+        (evil-define-key 'normal 'global
+          (kbd "<leader> v j") #'diff-hl-next-hunk
+          (kbd "<leader> v k") #'diff-hl-previous-hunk
+          (kbd "<leader> v b") #'diff-hl-show-hunk))
     #+end_src
 ** Provide =my-git=
    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
@@ -3176,42 +3218,45 @@ very easy.
     #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp
       (straight-use-package 'helpful)
 
-      (evil-define-key '(normal motion) helpful-mode-map
-	(kbd "q") #'quit-window)
-
-      (evil-define-key '(normal motion) help-mode-map
-	(kbd "q") #'quit-window)
+      (when nil
+        (evil-define-key '(normal motion) helpful-mode-map
+        	(kbd "q") #'quit-window)
+        
+        (evil-define-key '(normal motion) help-mode-map
+        	(kbd "q") #'quit-window))
     #+end_src
 ** Info
 *** Bindings
 #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-  (evil-define-key '(normal motion) Info-mode-map
-    (kbd "<tab>") 'Info-next-reference
-    (kbd "S-<tab>") 'Info-prev-reference
-    (kbd "RET") 'Info-follow-nearest-node
-    (kbd "d") 'Info-directory
-    (kbd "u") 'Info-up
-    (kbd "s") 'Info-search
-    (kbd "i") 'Info-index
-    (kbd "a") 'info-apropos
-    (kbd "q") 'quit-window
-
-    (kbd "y y") 'Info-copy-current-node-name
-
-    [mouse-1] 'Info-mouse-follow-nearest-node
-    [follow-link] 'mouse-face
-    ;; goto
-    (kbd "g m") 'Info-menu
-    (kbd "g t") 'Info-top-node
-    (kbd "g T") 'Info-toc
-    (kbd "g j") 'Info-next
-    (kbd "g k") 'Info-prev)
+  (when nil
+    (evil-define-key '(normal motion) Info-mode-map
+      (kbd "<tab>") 'Info-next-reference
+      (kbd "S-<tab>") 'Info-prev-reference
+      (kbd "RET") 'Info-follow-nearest-node
+      (kbd "d") 'Info-directory
+      (kbd "u") 'Info-up
+      (kbd "s") 'Info-search
+      (kbd "i") 'Info-index
+      (kbd "a") 'info-apropos
+      (kbd "q") 'quit-window
+    
+      (kbd "y y") 'Info-copy-current-node-name
+    
+      [mouse-1] 'Info-mouse-follow-nearest-node
+      [follow-link] 'mouse-face
+      ;; goto
+      (kbd "g m") 'Info-menu
+      (kbd "g t") 'Info-top-node
+      (kbd "g T") 'Info-toc
+      (kbd "g j") 'Info-next
+      (kbd "g k") 'Info-prev))
 #+end_src
 ** Man
 *** Bindings
      #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-       (evil-define-key 'normal Man-mode-map
-	 (kbd "q") #'quit-window)
+       (when nil
+         (evil-define-key 'normal Man-mode-map
+         	 (kbd "q") #'quit-window))
      #+end_src
 
 ** Provide =my-help=
@@ -3225,46 +3270,47 @@ very easy.
 
 ** Bindings
   #+begin_src emacs-lisp :tangle "my-modules/my-ibuffer.el" :mkdirp yes
-    (evil-define-key '(normal motion) ibuffer-mode-map
-      (kbd "<leader> x") 'execute-extended-command
-      ;; navigation
-      (kbd "{") 'ibuffer-backwards-next-marked
-      (kbd "}") 'ibuffer-forward-next-marked
-
-      ;; mark commands
-      (kbd "J") 'ibuffer-jump-to-buffer
-      (kbd "m") 'ibuffer-mark-forward
-      (kbd "~") 'ibuffer-toggle-marks
-      (kbd "u") 'ibuffer-unmark-forward
-      (kbd "DEL") 'ibuffer-unmark-backward
-      (kbd "U") 'ibuffer-unmark-all-marks
-      (kbd "* *") 'ibuffer-mark-special-buffers
-      (kbd "* m") 'ibuffer-mark-by-mode
-      (kbd "* i") 'ibuffer-mark-unsaved-buffers
-      (kbd "* n") #'ibuffer-mark-by-name-regexp
-      (kbd "* r") 'ibuffer-mark-read-only-buffers
-      (kbd "* /") 'ibuffer-mark-dired-buffers
-      (kbd "* h") 'ibuffer-mark-help-buffers
-      (kbd "d") 'ibuffer-mark-for-delete
-
-      ;; filtering
-      (kbd "/ m") #'ibuffer-filter-by-mode
-      (kbd "/ i") #'ibuffer-filter-by-modified
-      (kbd "/ n") #'ibuffer-filter-by-name
-      (kbd "/ f") #'ibuffer-filter-by-filename
-      (kbd "/ .") #'ibuffer-filter-by-file-extension
-      (kbd "/ s") #'ibuffer-save-filters
-      (kbd "/ /") #'ibuffer-filter-disable
-
-
-      ;; actions
-      (kbd "x") 'ibuffer-do-kill-on-deletion-marks
-      (kbd "gr") 'ibuffer-update
-
-      ;; immediate actions
-      (kbd "A") 'ibuffer-do-view
-      (kbd "D") 'ibuffer-do-delete
-      (kbd "K") 'ibuffer-do-kill-lines)
+    (when nil
+      (evil-define-key '(normal motion) ibuffer-mode-map
+        (kbd "<leader> x") 'execute-extended-command
+        ;; navigation
+        (kbd "{") 'ibuffer-backwards-next-marked
+        (kbd "}") 'ibuffer-forward-next-marked
+  
+        ;; mark commands
+        (kbd "J") 'ibuffer-jump-to-buffer
+        (kbd "m") 'ibuffer-mark-forward
+        (kbd "~") 'ibuffer-toggle-marks
+        (kbd "u") 'ibuffer-unmark-forward
+        (kbd "DEL") 'ibuffer-unmark-backward
+        (kbd "U") 'ibuffer-unmark-all-marks
+        (kbd "* *") 'ibuffer-mark-special-buffers
+        (kbd "* m") 'ibuffer-mark-by-mode
+        (kbd "* i") 'ibuffer-mark-unsaved-buffers
+        (kbd "* n") #'ibuffer-mark-by-name-regexp
+        (kbd "* r") 'ibuffer-mark-read-only-buffers
+        (kbd "* /") 'ibuffer-mark-dired-buffers
+        (kbd "* h") 'ibuffer-mark-help-buffers
+        (kbd "d") 'ibuffer-mark-for-delete
+  
+        ;; filtering
+        (kbd "/ m") #'ibuffer-filter-by-mode
+        (kbd "/ i") #'ibuffer-filter-by-modified
+        (kbd "/ n") #'ibuffer-filter-by-name
+        (kbd "/ f") #'ibuffer-filter-by-filename
+        (kbd "/ .") #'ibuffer-filter-by-file-extension
+        (kbd "/ s") #'ibuffer-save-filters
+        (kbd "/ /") #'ibuffer-filter-disable
+  
+  
+        ;; actions
+        (kbd "x") 'ibuffer-do-kill-on-deletion-marks
+        (kbd "gr") 'ibuffer-update
+  
+        ;; immediate actions
+        (kbd "A") 'ibuffer-do-view
+        (kbd "D") 'ibuffer-do-delete
+        (kbd "K") 'ibuffer-do-kill-lines))
   #+end_src
 
 ** Provide =my-ibuffer=
@@ -3317,146 +3363,150 @@ dispatch system.
    Visual/emacs state commands
 
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (evil-define-key '(insert emacs visual) 'global
-       (kbd "s-x") #'execute-extended-command)
+     (when nil
+       (evil-define-key '(insert emacs visual) 'global
+         (kbd "s-x") #'execute-extended-command))
    #+end_src
 
    Normal state commands
    
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (require 'evil)
+     ;; (require 'evil)
 
-     (evil-define-key 'normal 'global
-       (kbd "<leader> ;") #'eval-expression
-       (kbd "<leader> q") #'save-buffers-kill-terminal
-       (kbd "<leader> x") #'execute-extended-command
-       (kbd "<leader> z") #'ispell-word
-       (kbd "<leader> TAB") (lambda ()
-                              (interactive)
-                              (switch-to-buffer nil))
-       (kbd "g r") #'revert-buffer
-       (kbd "SPC SPC") #'avy-goto-char-timer
-       ;; App launcher
-       (kbd "<leader> a c") #'calendar
-       (kbd "<leader> a a") #'org-agenda
-       (kbd "<leader> a n") #'notmuch
-       (kbd "<leader> a =") #'calc
-       ;; buffers
-       (kbd "<leader> b b") #'consult-buffer
-       (kbd "<leader> b n") #'next-buffer
-       (kbd "<leader> b p") #'previous-buffer
-       (kbd "<leader> b s") #'save-buffer
-       (kbd "<leader> b i") #'ibuffer
-       (kbd "<leader> b d") #'evil-delete-buffer
-       (kbd "<leader> b c") #'kill-current-buffer
-       (kbd "<leader> b r") #'rename-buffer
-       ;; config related commands
-       (kbd "<leader> c .") #'find-config
-       (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
-       (kbd "<leader> c t") #'consult-theme
-       ;; dired
-       (kbd "<leader> d d") #'dired-jump
-       (kbd "<leader> d j") #'dired
-       ;; evaluation
-       (kbd "<leader> e e") #'eval-last-sexp
-       (kbd "<leader> e d") #'eval-defun
-       (kbd "<leader> e b") #'eval-buffer
-       
-       ;; files
-       (kbd "<leader> f b") #'bookmark-jump
-       (kbd "<leader> f d") #'diff-buffer-with-file
-       (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
-       (kbd "<leader> f B") #'bookmark-set
-       (kbd "<leader> f c") #'find-config
-       (kbd "<leader> f f") #'find-file
-       (kbd "<leader> f r") #'rename-visited-file
-       ;; getting things done (gtd)
-       (kbd "<leader> g s") #'gtd-find-schedule
-       (kbd "<leader> g o") #'gtd-find-oneoff
-       (kbd "<leader> g i") #'gtd-find-inbox
-       (kbd "<leader> g c") #'gtd-capture
-       (kbd "<leader> g e") #'gtd-engage
-       (kbd "<leader> g r") #'gtd-review
-       ;; help(ful) commands
-       (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
-                              (info (format "(%s)Top" node)))
-       (kbd "<leader> h M") #'info-emacs-manual
-       (kbd "<leader> h v") #'helpful-variable
-       (kbd "<leader> h f") #'helpful-function
-       (kbd "<leader> h k") #'helpful-key
-       (kbd "<leader> h m") #'describe-mode
-       (kbd "<leader> h r") #'info-display-manual
-       ;; imenu
-       (kbd "<leader> i") #'consult-outline
-       ;; jujutsu
-       (kbd "<leader> j") #'jj-log
-       ;; org
-       (kbd "<leader> o c") #'org-capture
-       (kbd "<leader> o s") #'org-store-link
-       ;; occur
-       (kbd "<leader> o o") #'occur
-       ;; project
-       (kbd "<leader> p !") #'project-shell-command
-       (kbd "<leader> p &") #'project-async-shell-command
-       (kbd "<leader> p D") #'project-dired
-       (kbd "<leader> p b") #'project-switch-to-buffer
-       (kbd "<leader> p c") #'compile
-       (kbd "<leader> p d") #'project-find-dir
-       (kbd "<leader> p e") #'project-eshell
-       (kbd "<leader> p f") #'project-find-file
-       (kbd "<leader> p m") #'magit-project-status
-       (kbd "<leader> p k") #'project-kill-buffers
-       (kbd "<leader> p p") #'project-switch-project
-       (kbd "<leader> p /") #'project-find-regexp
-       ;; shells
-       (kbd "<leader> s e") #'eshell-here
-       ;;; (kbd "<leader> s t") #'eat
-       (kbd "<leader> s t") #'multi-vterm
-       ;; tab commands
-       (kbd "<leader> t t") #'tab-switch
-       (kbd "<leader> t n") #'tab-new
-       (kbd "<leader> t j") #'tab-next
-       (kbd "<leader> t k") #'tab-previous
-       (kbd "<leader> t f") #'find-file-other-tab
-       (kbd "<leader> t b") #'switch-to-buffer-other-tab
-       (kbd "<leader> t r") #'tab-rename
-       (kbd "<leader> t d") #'tab-close
-       ;; windows
-       (kbd "<leader> /") #'eww
-       (kbd "<leader> w w") #'ace-window
-       (kbd "<leader> w h") #'evil-window-left
-       (kbd "<leader> w l") #'evil-window-right
-       (kbd "<leader> w j") #'evil-window-down
-       (kbd "<leader> w k") #'evil-window-up
-       (kbd "<leader> w H") #'evil-window-move-far-left
-       (kbd "<leader> w L") #'evil-window-move-far-right
-       (kbd "<leader> w K") #'evil-window-move-very-top
-       (kbd "<leader> w J") #'evil-window-move-very-bottom
-       (kbd "<leader> w c") #'evil-window-delete
-       (kbd "<leader> w v") #'evil-window-vsplit
-       (kbd "<leader> w s") #'evil-window-split
-       (kbd "<leader> w o") #'delete-other-windows
-       (kbd "<leader> w =") #'balance-windows
-       ;; toggles
-       (kbd "<leader> T t") #'modus-themes-toggle
-       (kbd "<leader> T n") #'display-line-numbers-mode
-       (kbd "<leader> T s") #'spacious-padding-mode
-       (kbd "<leader> T w") #'whitespace-mode)
+     (when nil
+       (evil-define-key 'normal 'global
+         (kbd "<leader> ;") #'eval-expression
+         (kbd "<leader> q") #'save-buffers-kill-terminal
+         (kbd "<leader> x") #'execute-extended-command
+         (kbd "<leader> z") #'ispell-word
+         (kbd "<leader> TAB") (lambda ()
+                                (interactive)
+                                (switch-to-buffer nil))
+         (kbd "g r") #'revert-buffer
+         (kbd "SPC SPC") #'avy-goto-char-timer
+         ;; App launcher
+         (kbd "<leader> a c") #'calendar
+         (kbd "<leader> a a") #'org-agenda
+         (kbd "<leader> a n") #'notmuch
+         (kbd "<leader> a =") #'calc
+         ;; buffers
+         (kbd "<leader> b b") #'consult-buffer
+         (kbd "<leader> b n") #'next-buffer
+         (kbd "<leader> b p") #'previous-buffer
+         (kbd "<leader> b s") #'save-buffer
+         (kbd "<leader> b i") #'ibuffer
+         (kbd "<leader> b d") #'evil-delete-buffer
+         (kbd "<leader> b c") #'kill-current-buffer
+         (kbd "<leader> b r") #'rename-buffer
+         ;; config related commands
+         (kbd "<leader> c .") #'find-config
+         (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
+         (kbd "<leader> c t") #'consult-theme
+         ;; dired
+         (kbd "<leader> d d") #'dired-jump
+         (kbd "<leader> d j") #'dired
+         ;; evaluation
+         (kbd "<leader> e e") #'eval-last-sexp
+         (kbd "<leader> e d") #'eval-defun
+         (kbd "<leader> e b") #'eval-buffer
+         
+         ;; files
+         (kbd "<leader> f b") #'bookmark-jump
+         (kbd "<leader> f d") #'diff-buffer-with-file
+         (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
+         (kbd "<leader> f B") #'bookmark-set
+         (kbd "<leader> f c") #'find-config
+         (kbd "<leader> f f") #'find-file
+         (kbd "<leader> f r") #'rename-visited-file
+         ;; getting things done (gtd)
+         (kbd "<leader> g s") #'gtd-find-schedule
+         (kbd "<leader> g o") #'gtd-find-oneoff
+         (kbd "<leader> g i") #'gtd-find-inbox
+         (kbd "<leader> g c") #'gtd-capture
+         (kbd "<leader> g e") #'gtd-engage
+         (kbd "<leader> g r") #'gtd-review
+         ;; help(ful) commands
+         (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
+                                (info (format "(%s)Top" node)))
+         (kbd "<leader> h M") #'info-emacs-manual
+         (kbd "<leader> h v") #'helpful-variable
+         (kbd "<leader> h f") #'helpful-function
+         (kbd "<leader> h k") #'helpful-key
+         (kbd "<leader> h m") #'describe-mode
+         (kbd "<leader> h r") #'info-display-manual
+         ;; imenu
+         (kbd "<leader> i") #'consult-outline
+         ;; jujutsu
+         (kbd "<leader> j") #'jj-log
+         ;; org
+         (kbd "<leader> o c") #'org-capture
+         (kbd "<leader> o s") #'org-store-link
+         ;; occur
+         (kbd "<leader> o o") #'occur
+         ;; project
+         (kbd "<leader> p !") #'project-shell-command
+         (kbd "<leader> p &") #'project-async-shell-command
+         (kbd "<leader> p D") #'project-dired
+         (kbd "<leader> p b") #'project-switch-to-buffer
+         (kbd "<leader> p c") #'compile
+         (kbd "<leader> p d") #'project-find-dir
+         (kbd "<leader> p e") #'project-eshell
+         (kbd "<leader> p f") #'project-find-file
+         (kbd "<leader> p m") #'magit-project-status
+         (kbd "<leader> p k") #'project-kill-buffers
+         (kbd "<leader> p p") #'project-switch-project
+         (kbd "<leader> p /") #'project-find-regexp
+         ;; shells
+         (kbd "<leader> s e") #'eshell-here
+         ;;; (kbd "<leader> s t") #'eat
+         (kbd "<leader> s t") #'multi-vterm
+         ;; tab commands
+         (kbd "<leader> t t") #'tab-switch
+         (kbd "<leader> t n") #'tab-new
+         (kbd "<leader> t j") #'tab-next
+         (kbd "<leader> t k") #'tab-previous
+         (kbd "<leader> t f") #'find-file-other-tab
+         (kbd "<leader> t b") #'switch-to-buffer-other-tab
+         (kbd "<leader> t r") #'tab-rename
+         (kbd "<leader> t d") #'tab-close
+         ;; windows
+         (kbd "<leader> /") #'eww
+         (kbd "<leader> w w") #'ace-window
+         (kbd "<leader> w h") #'evil-window-left
+         (kbd "<leader> w l") #'evil-window-right
+         (kbd "<leader> w j") #'evil-window-down
+         (kbd "<leader> w k") #'evil-window-up
+         (kbd "<leader> w H") #'evil-window-move-far-left
+         (kbd "<leader> w L") #'evil-window-move-far-right
+         (kbd "<leader> w K") #'evil-window-move-very-top
+         (kbd "<leader> w J") #'evil-window-move-very-bottom
+         (kbd "<leader> w c") #'evil-window-delete
+         (kbd "<leader> w v") #'evil-window-vsplit
+         (kbd "<leader> w s") #'evil-window-split
+         (kbd "<leader> w o") #'delete-other-windows
+         (kbd "<leader> w =") #'balance-windows
+         ;; toggles
+         (kbd "<leader> T t") #'modus-themes-toggle
+         (kbd "<leader> T n") #'display-line-numbers-mode
+         (kbd "<leader> T s") #'spacious-padding-mode
+         (kbd "<leader> T w") #'whitespace-mode))
    #+end_src
 
 *** S-expression navigation
 
    #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (evil-define-key 'normal 'global
-       "s" nil)
-     (evil-define-key 'normal 'global
-       ;; (kbd "s l") #'forward-sexp
-       (kbd "s h") #'backward-sexp
-       (kbd "s j") #'down-list
-       (kbd "s k") #'backward-up-list
-       (kbd "s d") #'kill-sexp
-       (kbd "s $") #'forward-sentence
-       (kbd "s 0") #'backward-sentence)
+     (when nil
+       (evil-define-key 'normal 'global
+         "s" nil)
+       (evil-define-key 'normal 'global
+         ;; (kbd "s l") #'forward-sexp
+         (kbd "s h") #'backward-sexp
+         (kbd "s j") #'down-list
+         (kbd "s k") #'backward-up-list
+         (kbd "s d") #'kill-sexp
+         (kbd "s $") #'forward-sentence
+         (kbd "s 0") #'backward-sentence))
+       
    #+end_src
 
 
@@ -3482,11 +3532,12 @@ dispatch system.
 	
    #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
      ;; -*- lexical-binding: t -*-
-     (evil-define-key 'normal xref--xref-buffer-mode-map
-       (kbd "j") #'xref-next-line
-       (kbd "k") #'xref-prev-line
-       (kbd "RET") #'xref-goto-xref
-       (kbd "q") #'quit-window)
+     (when nil
+       (evil-define-key 'normal xref--xref-buffer-mode-map
+         (kbd "j") #'xref-next-line
+         (kbd "k") #'xref-prev-line
+         (kbd "RET") #'xref-goto-xref
+         (kbd "q") #'quit-window))
    #+end_src
 
 *** entry points to xref

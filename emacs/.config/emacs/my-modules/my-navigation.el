@@ -24,7 +24,8 @@
                (display-buffer-below-selected)
                (window-height . .20)))
 
-(require 'evil)
+(when nil
+  (require 'evil))
 
 (defun window-management-mode ()
   "Manipulate windows (size, location, number, etc)."
@@ -54,8 +55,9 @@
 [c]close-window [o]close-others")
     (message "Window management transient keymap activated.")))
 
-(evil-define-key 'normal 'global
-  (kbd "<leader> w m") #'window-management-mode)
+(when nil
+  (evil-define-key 'normal 'global
+		   (kbd "<leader> w m") #'window-management-mode))
 
 (straight-use-package 'ace-jump-mode)
 
