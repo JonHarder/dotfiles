@@ -17,7 +17,7 @@
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-		    `(terraform-mode . ("terraform-ls" "serve"))))
+	    `(terraform-mode . ("terraform-ls" "serve"))))
 
 (with-eval-after-load 'eglot
   (when nil

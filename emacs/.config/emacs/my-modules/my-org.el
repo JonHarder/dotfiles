@@ -89,7 +89,7 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-priority-highest ?A
-	   org-priority-lowest ?D)
+  org-priority-lowest ?D)
 
 ;; for handling CSL citation languages in org exporting to latex
 (straight-use-package 'citeproc)
@@ -188,9 +188,10 @@
 ;; 	       :time-grid t
 ;; 	       :todo '("TODO" "WORKING"))))
 
-(add-hook 'org-capture-mode-hook 'evil-insert-state)
+(when nil
+  (add-hook 'org-capture-mode-hook 'evil-insert-state))
 (setq org-capture-templates
-      `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
+	  `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
          "* %?\n /Entered on/ %U")
 		("p" "Project - new project" entry
 		 (file+headline org-default-notes-file "Projects")

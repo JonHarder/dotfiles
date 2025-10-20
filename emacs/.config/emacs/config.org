@@ -416,6 +416,7 @@ so let's just set it as default.
   	 '("ww" . ace-window)
   	 '("wv" . split-window-right)
   	 '("ws" . split-window-below)
+  	 '("v" . vterm)
   	 ;; Use SPC (0-9) for digit arguments.
   	 '("1" . meow-digit-argument)
   	 '("2" . meow-digit-argument)
@@ -2098,9 +2099,10 @@ heading.
    the variable ~org-capture-templates~.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (add-hook 'org-capture-mode-hook 'evil-insert-state)
+     (when nil
+       (add-hook 'org-capture-mode-hook 'evil-insert-state))
      (setq org-capture-templates
-           `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
+     	  `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
               "* %?\n /Entered on/ %U")
      		("p" "Project - new project" entry
      		 (file+headline org-default-notes-file "Projects")

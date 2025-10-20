@@ -27,6 +27,7 @@
 	 '("ww" . ace-window)
 	 '("wv" . split-window-right)
 	 '("ws" . split-window-below)
+	 '("v" . vterm)
 	 ;; Use SPC (0-9) for digit arguments.
 	 '("1" . meow-digit-argument)
 	 '("2" . meow-digit-argument)
@@ -57,6 +58,7 @@
 	 '("." . meow-bounds-of-thing)
 	 '("[" . meow-beginning-of-thing)
 	 '("]" . meow-end-of-thing)
+	 '(">" . meow-indent)
 	 '("a" . meow-append)
 	 '("A" . meow-open-below)
 	 '("b" . meow-back-word)
