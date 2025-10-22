@@ -60,18 +60,19 @@
 
 (display-time)
 
-(add-hook 'after-init-hook
-          (lambda ()
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
             (let ((size (plist-get my-font :size))
 				  (font (plist-get my-font :name))
 				  (theme (cdr my-theme)))
-			  (set-face-attribute 'default nil
-								  :font font
-								  :height size)
-              (set-frame-font font nil t)
-              (add-to-list 'default-frame-alist
-                           `(font . ,font))
-              (load-theme theme t))))
+			  (with-selected-frame frame
+				(set-face-attribute 'default nil
+									:font font
+									:height size)
+				(set-frame-font font nil t)
+				(add-to-list 'default-frame-alist
+							 `(font . ,font))
+				(load-theme theme t)))))
 
 (setq tab-bar-show 1)
 
