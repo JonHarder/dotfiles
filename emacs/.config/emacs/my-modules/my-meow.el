@@ -14,6 +14,7 @@
   	 '("e" . eshell)
   	 '("a" . avy-goto-char-timer)
   	 '("j" . jj-log)
+	 '("oa" . org-agenda)
   	 '("l" . recenter-top-bottom)
   	 ;; buffer commands
   	 '("bb" . switch-to-buffer)

@@ -1,3 +1,4 @@
+
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
 #+STARTUP: fold
@@ -403,6 +404,7 @@ so let's just set it as default.
     	 '("e" . eshell)
     	 '("a" . avy-goto-char-timer)
     	 '("j" . jj-log)
+  	 '("oa" . org-agenda)
     	 '("l" . recenter-top-bottom)
     	 ;; buffer commands
     	 '("bb" . switch-to-buffer)
