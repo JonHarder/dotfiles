@@ -58,7 +58,6 @@
 (require 'my-neon-mode)
 (require 'my-nushell-mode)
 (require 'my-org)
-(require 'my-howm)
 (require 'my-php-mode)
 (require 'my-prog-mode)
 (require 'my-python-mode)
