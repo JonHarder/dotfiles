@@ -1588,11 +1588,27 @@ This replaces the venerable, but outdated flymake.
      (provide 'my-rest-mode)
    #+end_src
  
-** Dockerfile support
-   #+begin_src emacs-lisp :tangle "my-modules/my-docker-mode.el" :mkdirp yes
-     (straight-use-package 'dockerfile-mode)
-     (provide 'my-docker-mode)
-   #+end_src
+** Docker support
+*** Dockerfile mode
+
+#+begin_src emacs-lisp :tangle "my-modules/my-docker-mode.el" :mkdirp yes
+  (straight-use-package 'dockerfile-mode)
+#+end_src
+*** docker integration
+
+This package allows for intuitive, magit-like interaction with docker:
+images, containers, compose, and more.
+
+ #+begin_src emacs-lisp :tangle "my-modules/my-docker-mode.el" :mkdirp yes
+   (straight-use-package 'docker)
+   (keymap-global-set "C-c d" #'docker)
+ #+end_src
+
+*** Provide the module
+ #+begin_src emacs-lisp :tangle "my-modules/my-docker-mode.el" :mkdirp yes
+   (provide 'my-docker-mode)
+ #+end_src
+
 ** Lisp modes
 *** Indentation
    #+begin_src emacs-lisp :tangle "my-modules/my-lisp-mode.el" :mkdirp yes
