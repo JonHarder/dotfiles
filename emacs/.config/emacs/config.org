@@ -1241,6 +1241,10 @@ do exactly that.
 #+end_src
 ** Bindings
 
+#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
+  (keymap-set dired-mode-map "K" #'dired-do-kill-lines)
+#+end_src
+
 evil-collection space as many things that seem reasonable in a vacuum,
 but completely break practically all of my keybinds which rely on
 space as a leader key to trigger anything and everything.

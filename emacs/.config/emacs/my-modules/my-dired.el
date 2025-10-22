@@ -35,6 +35,8 @@
    'dired-mode)
   (dired-mark-files-regexp (concat "." extension "$")))
 
+(keymap-set dired-mode-map "K" #'dired-do-kill-lines)
+
 (with-eval-after-load 'evil-collection
   (let ((mode-maps
 		 '(dired-mode-map
