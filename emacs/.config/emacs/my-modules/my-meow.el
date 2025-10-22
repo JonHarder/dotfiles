@@ -114,9 +114,10 @@
   (meow-setup)
   (meow-global-mode 1))
 
-(keymap-global-set "C-c RET" #'embark-act)
+(keymap-global-set "C-<return>" #'embark-act)
+(keymap-global-set "s-<return>" #'embark-dwim)
 ;; adding a specific keybinding for org mode since it already binds this binding
 (with-eval-after-load 'org
-  (keymap-set org-mode-map "C-c RET" #'embark-act))
+  (keymap-set org-mode-map "C-<return>" #'embark-act))
 
 (provide 'my-meow)
