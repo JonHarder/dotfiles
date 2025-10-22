@@ -368,7 +368,7 @@ worry about it.
 
 Emacs has built in dictionary support (because of course it does). By dafault, it
 expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
-it falls back to [[dict.org]]. I'm fine with going over the wire for my definitions,
+it falls back to dict.org. I'm fine with going over the wire for my definitions,
 so let's just set it as default.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
@@ -700,7 +700,7 @@ Set the date style to iso (day month year).
   (setq calendar-date-style 'iso)
 #+end_src
 ** Bindings
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
   ;; movement commands
   (when nil
     (evil-define-key '(normal visual) calendar-mode-map
@@ -1532,7 +1532,7 @@ at a glance how deep you are.
 ** Flycheck (error checking)
 This replaces the venerable, but outdated flymake.
 
-#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   ;; need to set some flymake variable that aparently needs to be in scope
   (setq flymake-allowed-file-name-masks nil)
   (straight-use-package 'flycheck)
@@ -1540,7 +1540,7 @@ This replaces the venerable, but outdated flymake.
 #+end_src
 
 ** Flyover (inline diagnostics)
-#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdir yes
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   ;; (straight-use-package '(flyover
   ;;                         :type git
   ;;                         :host github
@@ -1822,7 +1822,7 @@ Neon mode is mostly just yaml.
 
 *** meta mappings
 
-    These are [[*Meta-mode prefix][meta]] leader prefixed keybindings to add additional mode-aware
+    These are meta map leader prefixed keybindings to add additional mode-aware
     contextual functionality.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
@@ -2717,7 +2717,7 @@ command for the key as usual.
 
 * Web Browsing
 ** EWW settings/bindings/etc
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
      (when nil
        (evil-define-key 'normal 'eww-mode-map
          (kbd "q") #'quit-window
@@ -2731,7 +2731,7 @@ command for the key as usual.
 
 ** Convenience functions
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
      (defun google-this (start end)
        "google-this googles either the selected region or the symbol at point.
 
@@ -2747,7 +2747,7 @@ command for the key as usual.
    
 ** Provide my-web
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp ye
+   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
      (provide 'my-web)
    #+end_src
 
@@ -2777,16 +2777,16 @@ Save this value into a secure place, ideally encrypted. Emacs
 supports gpg encryption out of the box, so this is a good option.
 
 In order to send mail however, we need to have a record in:
-file:~/.authinfo.gpg]] with a record for googles smtp server:
+[[file:~/.authinfo.gpg]] with a record for googles smtp server:
 
-#+begin_src 
+#+begin_src text
   machine smtp.gmail.com login your.email@example.com port 465 password YOUR_PASSWORD
 #+end_src
 
 This password must be the same as the app password created above and
 stored previously.
 
-NOTE*: as of [2023-10-16], there is a known issue with mbsync pulling from (at least for gmail)
+NOTE*: as of [2023-10-16 Mon], there is a known issue with mbsync pulling from (at least for gmail)
 remote inboxes. It runs for a time, then errors out with a socket error complaining about
 an unexpected EOF. This has been patched, but is not yet in the homebrew formula, so we install
 from =master=.
@@ -3223,7 +3223,7 @@ very easy.
 * Help utilities
   This encompasses man pages, info pages, describe-* windows, etc.
 ** Helpful package
-    #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp
+    #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
       (straight-use-package 'helpful)
 
       (when nil
@@ -3330,12 +3330,12 @@ very easy.
     Just is a command line tool that seeks to simplify [[man:make]]
 ** Use package
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp
+    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
       (straight-use-package 'just-mode)
     #+end_src
 
 ** Provide package
-    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp
+    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
       (provide 'my-just)
     #+end_src
 
