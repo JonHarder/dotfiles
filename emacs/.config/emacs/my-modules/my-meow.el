@@ -109,6 +109,7 @@
   	 '("Y" . meow-sync-grab)
   	 '("z" . meow-pop-selection)
   	 '("'" . repeat)
+	 '("/" . consult-line)
   	 '("<escape>" . ignore)))
   (meow-setup)
   (meow-global-mode 1))
