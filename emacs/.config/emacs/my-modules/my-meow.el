@@ -17,7 +17,7 @@
 	 '("oa" . org-agenda)
   	 '("l" . recenter-top-bottom)
   	 ;; buffer commands
-  	 '("bb" . switch-to-buffer)
+  	 '("bb" . consult-buffer)
   	 '("bi" . ibuffer)
   	 '("i" . imenu)
   	 '("nb" . denote-backlinks)
