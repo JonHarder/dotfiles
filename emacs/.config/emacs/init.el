@@ -30,8 +30,6 @@
 (require 'my-core)
 (require 'my-mouse)
 (require 'my-meow)
-;; (require 'my-evil-config)
-(require 'my-bindings)
 
 (require 'my-calendar)
 (require 'my-completion)
@@ -48,7 +46,6 @@
 (require 'my-go-mode)
 (require 'my-help)
 (require 'my-http)
-(require 'my-ibuffer)
 (require 'my-icons)
 (require 'my-lisp-mode)
 (require 'my-git)
@@ -62,7 +59,6 @@
 (require 'my-prog-mode)
 (require 'my-python-mode)
 (require 'my-rest-mode)
-(require 'my-gleam-mode)
 (require 'my-text)
 (require 'my-timers)
 (require 'my-just)
@@ -76,7 +72,6 @@
 (require 'my-terraform-mode)
 (require 'my-util)
 (require 'my-vim-mode)
-(require 'my-xref)
 
 (provide 'init)
 ;;; init.el ends here

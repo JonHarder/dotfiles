@@ -1,7 +1,7 @@
 (winner-mode 1)
 
 (straight-use-package 'ace-window)
-(setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
+(setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
 
 (setq switch-to-buffer-obey-display-actions t)
 
@@ -23,9 +23,6 @@
              '("Calendar"
                (display-buffer-below-selected)
                (window-height . .20)))
-
-(when nil
-  (require 'evil))
 
 (defun window-management-mode ()
   "Manipulate windows (size, location, number, etc)."
@@ -54,10 +51,6 @@
 [v]vertical-split [s]split
 [c]close-window [o]close-others")
     (message "Window management transient keymap activated.")))
-
-(when nil
-  (evil-define-key 'normal 'global
-		   (kbd "<leader> w m") #'window-management-mode))
 
 (straight-use-package 'ace-jump-mode)
 

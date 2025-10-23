@@ -6,56 +6,6 @@
   (add-to-list 'org-modules 'ol-man t)
   (add-to-list 'org-modules 'org-habit t))
 
-(when nil
-  (evil-define-key 'normal org-mode-map
-    (kbd "<tab>") 'org-cycle
-    (kbd "s-j") 'org-metadown
-    (kbd "s-k") 'org-metaup
-    (kbd "> >") 'org-shiftmetaright
-    (kbd "< <") 'org-shiftmetaleft))
-
-(when nil
-  (evil-define-key 'normal org-mode-map
-    (kbd "<leader> m a") #'org-archive-subtree
-    (kbd "<leader> m e") #'org-export-dispatch
-    (kbd "<leader> m p") #'org-publish-project
-    (kbd "<leader> m r") #'org-refile
-    (kbd "<leader> m l") #'org-insert-link
-    (kbd "<leader> m f") #'org-footnote-action
-    (kbd "<leader> m i") #'org-toggle-inline-images
-    (kbd "<leader> m t") #'org-babel-tangle
-    (kbd "<leader> m n") #'org-narrow-to-subtree
-    (kbd "<leader> m d") #'org-babel-demarcate-block
-    (kbd "<leader> m s s") #'org-schedule
-    (kbd "<leader> m s d") #'org-deadline
-    (kbd "<leader> m ,") #'org-priority
-    (kbd "<leader> m c i") #'org-clock-in
-    (kbd "<leader> m c o") #'org-clock-out))
-
-(when nil
-  (evil-define-key 'normal org-agenda-mode-map
-    (kbd "<leader> m c") #'org-agenda-columns
-    (kbd "j") #'org-agenda-next-line
-    (kbd "k") #'org-agenda-previous-line
-    (kbd "RET") #'org-agenda-switch-to
-    (kbd "q") #'org-agenda-quit
-    (kbd ".") #'org-agenda-goto-today
-    (kbd ",") #'org-agenda-priority
-    (kbd "l") #'org-agenda-later
-    (kbd "h") #'org-agenda-earlier
-    (kbd "m") #'org-agenda-bulk-mark
-    (kbd "p") #'org-agenda-set-property
-    (kbd "u") #'org-agenda-bulk-unmark
-    (kbd "B") #'org-agenda-bulk-action
-    (kbd "g w") #'org-agenda-week-view
-    (kbd "g d") #'org-agenda-day-view
-    (kbd "t") #'org-agenda-todo
-    (kbd "r") #'org-agenda-redo
-    (kbd "s") #'org-agenda-schedule
-    (kbd "d") #'org-agenda-deadline
-    (kbd "/") #'org-agenda-filter
-    (kbd "<") #'org-agenda-filter-by-category))
-
 (with-eval-after-load 'org
   (require 'org-tempo))
 
@@ -89,7 +39,7 @@
 (setq org-hide-emphasis-markers t)
 
 (setq org-priority-highest ?A
-  org-priority-lowest ?D)
+	  org-priority-lowest ?D)
 
 ;; for handling CSL citation languages in org exporting to latex
 (straight-use-package 'citeproc)
@@ -188,8 +138,6 @@
 ;; 	       :time-grid t
 ;; 	       :todo '("TODO" "WORKING"))))
 
-(when nil
-  (add-hook 'org-capture-mode-hook 'evil-insert-state))
 (setq org-capture-templates
 	  `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
          "* %?\n /Entered on/ %U")

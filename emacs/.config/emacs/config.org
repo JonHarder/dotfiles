@@ -109,8 +109,6 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-core)
   (require 'my-mouse)
   (require 'my-meow)
-  ;; (require 'my-evil-config)
-  (require 'my-bindings)
 
   (require 'my-calendar)
   (require 'my-completion)
@@ -127,7 +125,6 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-go-mode)
   (require 'my-help)
   (require 'my-http)
-  (require 'my-ibuffer)
   (require 'my-icons)
   (require 'my-lisp-mode)
   (require 'my-git)
@@ -141,7 +138,6 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-prog-mode)
   (require 'my-python-mode)
   (require 'my-rest-mode)
-  (require 'my-gleam-mode)
   (require 'my-text)
   (require 'my-timers)
   (require 'my-just)
@@ -155,7 +151,6 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-terraform-mode)
   (require 'my-util)
   (require 'my-vim-mode)
-  (require 'my-xref)
 
   (provide 'init)
   ;;; init.el ends here
@@ -512,185 +507,6 @@ so let's just set it as default.
 
   (provide 'my-meow)
 #+end_src
-* Evil (vim)
-
-Evil mode is the backbone of this configuration. Coming from years
-of vim use, modal editing is burned into my brain stem.
-
-Fortunately, emacs has some of the best vim emulation of any editor
-or environment around in the way of ~evil-mode~.
-
-** Install the package and enable it
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (setq evil-want-keybinding nil)
-  (straight-use-package 'evil)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t)
-  (setq evil-undo-system 'undo-redo)
-  (evil-mode 1)
-#+end_src
-
-** Starting state for major modes
-
-Sometimes I want to have some evil state other than =normal= for a particular
-major mode, or the mode might not start in =normal= mode for some reason.
-Regardless, configure thes modes with the desired initial state.
-
-*** Normal modes
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (when nil
-    (defvar my-normal-modes
-      '(Info-mode
-        Man-mode
-        magit-log-mode
-        occur-mode
-        magit-revision-mode
-        git-rebase-mode
-        notmuch-hello-mode
-        notmuch-search-mode
-        notmuch-show-mode
-        ibuffer-mode
-        calendar-mode
-        org-agenda-mode
-        grep-mode)
-      "Modes for which evil should begin in normal mode.")
-
-    (dolist (mode my-normal-modes)
-      (evil-set-initial-state mode 'normal)))
-#+end_src
-
-*** Insert modes
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (when nil
-    (defvar my-insert-modes
-      '(vterm-mode
-        eshell-mode
-        eat-mode)
-      "Modes for which evil should begin in insert mode.")
-
-    (dolist (mode my-insert-modes)
-      (evil-set-initial-state mode 'insert)))
-#+end_src
-
-*** Emacs modes
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (when nil
-    (defvar my-emacs-modes '()
-      "Modes to start in native emacs mode.")
-
-    (dolist (mode my-emacs-modes)
-      (evil-set-initial-state mode 'emacs)))
-#+end_src
-
-** Cursor shape/color
-
-It's helpful to set the cursor to different colors and shapes to help remind
-me what evil state I'm currently in.
-
-NOTE:/ is there a way to set these colors to something theme compatible?
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (setq evil-normal-state-cursor '(box "light blue")
-        evil-insert-state-cursor '(bar "medium sea green")
-        evil-visual-state-cursor '(hollow "orange"))
-#+end_src
-
-** Leader key
-
-The leader key is a super handy global prefix for keybindings.
-It's used in this configuration as the entrypoint for most bindings.
-
-After entering the leader key =SPC=, bindings are further subdivided
-by the logical operations or object those bindings act on.
-
-| _binding_ | _action_                           |
-|---------+----------------------------------|
-| SPC a   | application launcher             |
-| SPC b   | buffer actions                   |
-| SPC c   | config actions                   |
-| SPC d   | dired actions                    |
-| SPC e   | evaluation actions               |
-| SPC f   | file based actions               |
-| SPC g   | magit                            |
-| SPC h   | help actions                     |
-| SPC m   | [reserved] mode specific actions |
-| SPC o   | org actions                      |
-| SPC t   | tab actions                      |
-| SPC w   | window based actions             |
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (evil-set-leader 'normal (kbd "<SPC>"))
-#+end_src
-
-** Evil collection
-This enables evil bindings for many, many modes. Many more than
-what the default evil installation includes support for.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (straight-use-package 'evil-collection)
-  (evil-collection-init)
-#+end_src
-
-** Evil surround
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (straight-use-package 'evil-surround)
-  (global-evil-surround-mode 1)
-#+end_src
-
-** Evil numbers
-
-For some reason, vim's increment and decrement number functionality
-is not replicated by evil. This package just re-introduces that
-behavior
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (straight-use-package 'evil-numbers)
-  (define-key evil-normal-state-map (kbd "C-a") #'evil-numbers/inc-at-pt)
-  (define-key evil-normal-state-map (kbd "C-x") #'evil-numbers/dec-at-pt)
-#+end_src
-
-** Evil comments
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (when nil
-    (straight-use-package 'evil-commentary)
-    (evil-commentary-mode)
-    (evil-define-key '(insert normal visual) evil-commentary-mode-map
-      (kbd "s-;") #'evil-commentary-line))
-#+end_src
-
-** Evil org enhancements
-disabling this for now, the jump of the cursor when attempting to open
-a new line below the cursor when on a header only to have it fly to
-the bottom of the screen and start a new heading is simply too much of
-a jolt to handle.
-
-Perhaps if there were another keybinding to map this to rather than =o=
-I would consider using it again.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (defun evil-org-dwim-insert-below ()
-    "Insert a heading or item below current line.
-
-  Replaces the evil 'o' binding `evil-open-below'."
-    (interactive)
-    (if (org-at-heading-p)
-        (progn (org-insert-heading-after-current)
-               (call-interactively #'evil-insert))
-      (if (org-at-heading-or-item-p)
-          (progn
-            (evil-append-line 1)
-            (org-insert-item))
-        (call-interactively #'evil-open-below))))
-
-  ;; (evil-define-key 'normal org-mode-map
-  ;;   (kbd "o") #'evil-org-dwim-insert-below)
-#+end_src
-** Provide the module
-  
-#+begin_src emacs-lisp :tangle "my-modules/my-evil-config.el" :mkdirp yes
-  (provide 'my-evil-config)
-#+end_src
 
 * Calendar
 ** Base settings
@@ -700,38 +516,12 @@ Set the date style to iso (day month year).
 #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
   (setq calendar-date-style 'iso)
 #+end_src
-** Bindings
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-  ;; movement commands
-  (when nil
-    (evil-define-key '(normal visual) calendar-mode-map
-      (kbd "l") #'calendar-forward-day
-      (kbd "h") #'calendar-backward-day
-      (kbd "k") #'calendar-backward-week
-      (kbd "j") #'calendar-forward-week
-      (kbd "b") #'calendar-backward-week
-      (kbd "w") #'calendar-forward-week
-      (kbd "<") #'calendar-scroll-left
-      (kbd ">") #'calendar-scroll-right
-      (kbd "0") #'calendar-beginning-of-week
-      (kbd "$") #'calendar-end-of-week
-      (kbd ".") #'calendar-goto-today)
-
-    (evil-define-key 'normal calendar-mode-map
-      (kbd "q") #'calendar-exit
-      (kbd "d d") #'diary-view-entries
-      (kbd "d i") #'diary-insert-entry))
-#+end_src
 ** Diary
 
 The diary is (for me) mostly a way to jot down an appointment or reminder.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
     (appt-activate 1)
-
-    (when nil
-      (evil-define-key 'normal diary-fancy-display-mode-map
-      (kbd "q") 'quit-window))
 #+end_src
 
 ** Provide the module
@@ -764,7 +554,7 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
      (setq minibuffer-prompt-properties
-	   '(read-only t cursor-intangible t face minibuffer-prompt))
+     	  '(read-only t cursor-intangible t face minibuffer-prompt))
      (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
    #+end_src
    
@@ -905,12 +695,8 @@ of actions to perform on the target under point.
     (vertico-multiform-mode))
 
   ;;; bindings
-  (when nil
-    (evil-define-key '(normal motion visual insert emacs) 'global
-  		   (kbd "s-<return>") #'embark-dwim
-  		   (kbd "C-<return>") #'embark-act)
-    (define-key minibuffer-local-map
-                (kbd "C-<return>") #'embark-act))
+  (define-key minibuffer-local-map
+              (kbd "C-<return>") #'embark-act)
 #+end_src
    
 ** Provide the module
@@ -931,10 +717,10 @@ of actions to perform on the target under point.
 ** And completion support for all the icons
 
 #+begin_src emacs-lisp :tangle "my-modules/my-icons.el" :mkdirp yes
-    (straight-use-package 'all-the-icons-completion)
-    (all-the-icons-completion-mode)
-    (if (require 'marginalia nil nil)
-	(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+  (straight-use-package 'all-the-icons-completion)
+  (all-the-icons-completion-mode)
+  (if (require 'marginalia nil nil)
+  	(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 #+end_src
 
 ** Provide the module
@@ -953,14 +739,6 @@ window at the bottom of the current frame.
   (require 'ediff)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   (setq ediff-split-window-function 'split-window-horizontally)
-#+end_src
-
-** Bindings
-#+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-  (when nil
-    (evil-define-key 'normal ediff-mode-map
-  		   (kbd "j") #'ediff-next-difference
-  		   (kbd "k") #'ediff-previous-difference))
 #+end_src
 
 ** Provide =my-ediff=
@@ -1042,45 +820,6 @@ window at the bottom of the current frame.
            (files (split-string
                    (shell-command-to-string find-command))))
       (dired (cons default-directory files))))
-
-  (when nil
-    (require 'evil)
-
-    (evil-define-key 'normal 'global
-      (kbd "<leader> n /") #'denote-grep
-      (kbd "<leader> n J") #'denote-journal-new-entry
-      (kbd "<leader> n b") #'denote-backlinks
-      (kbd "<leader> n d") #'denote-dired
-      (kbd "<leader> n f") #'denote-open-or-create
-      (kbd "<leader> n j") #'denote-journal-new-or-existing-entry
-      (kbd "<leader> n l") #'denote-link
-      (kbd "<leader> n n") #'denote
-      ;; (kbd "<leader> n n") #'denote
-      (kbd "<leader> n m") #'denote-recently-modified
-      (kbd "<leader> n i") #'denote-rename-file ;; for "importing" the file (converting it to denote's naming scheme)
-      (kbd "<leader> n r") #'denote-rename-file-using-front-matter
-      (kbd "<leader> n s") #'denote-signature
-      (kbd "<leader> n t") #'denote-template))
-#+end_src
-
-binding insert mode so I can link without having to exit.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (when nil
-    (evil-define-key '(visual insert) text-mode-map
-      (kbd "C-l") #'denote-link-or-create
-      (kbd "C-q") #'denote-query-contents-link))
-#+end_src
-
-
-  And for the specialized ~backlinks-mode~ to display all links to the current
-  denote buffer.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (when nil
-    (evil-define-key 'normal denote-backlinks-mode-map
-      (kbd "j") #'denote-backlinks-next
-      (kbd "k") #'denote-backlinks-prev))
 #+end_src
 
 ** Journaling
@@ -1090,9 +829,6 @@ binding insert mode so I can link without having to exit.
   (add-to-list 'denote-dired-directories denote-journal-directory)
   ;; calendar integration
   (add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
-  (when nil
-    (evil-define-key '(motion normal) calendar-mode-map
-  		   (kbd "d") #'denote-journal-calendar-new-or-existing))
 #+end_src
 
 ** Silos
@@ -1227,6 +963,8 @@ do exactly that.
         (progn (revert-buffer)
                (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
+  (keymap-set dired-mode-map "." #'dired-dotfiles-toggle)
+
   (defun dired-mark-files-extension (extension)
     "Mark all files with the given file EXTENSION.
 
@@ -1244,58 +982,14 @@ do exactly that.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (keymap-set dired-mode-map "K" #'dired-do-kill-lines)
+  (keymap-set dired-mode-map "h" #'dired-up-directory)
+  (keymap-set dired-mode-map "l" #'dired-find-file)
+  (defun dired-go-home ()
+    (interactive)
+    (dired-jump nil "~/"))
+  (keymap-set dired-mode-map "~" #'dired-go-home)
 #+end_src
 
-evil-collection space as many things that seem reasonable in a vacuum,
-but completely break practically all of my keybinds which rely on
-space as a leader key to trigger anything and everything.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (with-eval-after-load 'evil-collection
-    (let ((mode-maps
-  		 '(dired-mode-map
-  		   Man-mode-map
-  		   eww-mode-map
-  		   elfeed-search-mode-map
-  		   elfeed-show-mode-map)))
-  	(mapc (lambda (mode-map)
-  			(evil-collection-define-key 'normal mode-map
-  			  (kbd "SPC") nil))
-  		  mode-maps)))
-#+end_src
-
-With that out of the way, we can set up our bindings as usual.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (when nil
-    (evil-define-key '(normal motion) dired-mode-map
-      (kbd "j") #'dired-next-line
-      (kbd "k") #'dired-previous-line
-      (kbd "J") nil
-      (kbd "K") #'dired-do-kill-lines
-      (kbd "h") #'dired-up-directory
-      (kbd "l") #'dired-find-file
-      (kbd "n") #'evil-search-next
-      (kbd "e") #'dired-mark-files-extension
-      (kbd "r") #'revert-buffer
-      (kbd "N") #'evil-search-previous
-      (kbd "s") #'eshell
-      (kbd "g o") #'dired-insert-subdir
-      (kbd "g d") #'dired-kill-subdir
-      (kbd "g j") #'dired-next-subdir
-      (kbd "g k") #'dired-prev-subdir
-      (kbd ".") #'dired-dotfiles-toggle
-      (kbd "g g") #'dired-first-file
-      (kbd "G") #'dired-last-file
-      (kbd "<left>") #'dired-up-directory
-      (kbd "<right>") #'dired-find-file
-      (kbd "<up>") #'dired-previous-line
-      (kbd "<down>") #'dired-next-line
-      ;; "find" prefix functions
-      (kbd "<leader> m f f") #'dired-mark-files-regexp
-      (kbd "<leader> m f g") #'dired-mark-files-containing-regexp
-      (kbd "<leader> m f d") #'dired-mark-directories))
-#+end_src
 ** Helper functions
   
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
@@ -1321,10 +1015,7 @@ a directory. dired-preview allows for exactly this behavior.
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (straight-use-package 'dired-preview)
   (setq dired-preview-delay 0.2)
-  (when nil
-    (evil-define-key 'normal dired-mode-map
-      (kbd "P") #'dired-preview-global-mode))
-#+end_src
+  #+end_src
 
 ** Icons
 
@@ -1366,15 +1057,6 @@ emacs, let's make emacs do it.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
   (setq epg-pinentry-mode 'loopback)
-#+end_src
-
-** Bindings
-#+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
-  (when nil
-    (evil-define-key 'normal epa-key-list-mode-map
-      (kbd "TAB") #'forward-button
-      (kbd "m") #'epa-mark-key
-      (kbd "u") #'epa-unmark-key))
 #+end_src
 
 ** Provide the module
@@ -1422,23 +1104,6 @@ We use the wonderful `elfeed` package to track and read feeds.
           ("https://www.thegospelcoalition.org/feed/" christianity)
           ("https://www.firstthings.com/rss/web-exclusives" christianity)
   		("https://irreal.org/blog/?feed=rss2" emacs)))
-
-  (with-eval-after-load 'evil-collection
-    (evil-collection-define-key 'normal 'elfeed-search-mode-map
-  							  (kbd "SPC") nil))
-
-  (when nil
-    (evil-define-key 'normal elfeed-search-mode-map
-  				   (kbd "q") #'quit-window
-  				   (kbd "j") #'next-line
-  				   (kbd "k") #'previous-line
-  				   (kbd "u") #'elfeed-update
-  				   (kbd "+") #'elfeed-search-tag-all
-  				   (kbd "-") #'elfeed-search-untag-all
-  				   (kbd "RET") #'elfeed-search-show-entry)
-
-    (evil-define-key 'normal elfeed-show-mode-map
-  				   (kbd "q") #'elfeed-kill-buffer))
 
   (provide 'my-feed)
 #+end_src
@@ -1671,12 +1336,6 @@ images, containers, compose, and more.
      (defun terraform-apply ()
        (interactive)
        (compile "terraform apply"))
-
-     (when nil
-       (evil-define-key 'normal terraform-mode-map
-         (kbd "<leader> m i") #'terraform-init
-         (kbd "<leader> m p") #'terraform-plan
-         (kbd "<leader> m a") #'terraform-apply))
    #+end_src
 
 *** Provide my-terraform
@@ -1733,23 +1392,6 @@ images, containers, compose, and more.
      (straight-use-package 'nushell-mode)
      (provide 'my-nushell-mode)
    #+end_src
-** Gleam
-   Gleam is a statically typed, functional language built on top of
-   the Erlang Beam vm.
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-gleam-mode.el" :mkdirp yes
-     (straight-use-package
-      '(gleam-mode
-        :type git
-        :host github
-        :branch "gleam-ts-mode"
-        :repo "gleam-lang/gleam-mode"))
-     ;; Note, this doesn't seem to work by itself just yet. I may need to add some additional code to help it out.
-     ;; I'm not totally sure that it picks up the gleam-ts-mode correctly
-     ;; running `(load-library "gleam-ts-mode")` afterwords picks up tne new #'gleam-ts-install-grammar
-     ;; but that results in an error, saying it can't find the installed grammar
-     (provide 'my-gleam-mode)
-   #+end_src
 ** Golang
    #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
      (straight-use-package 'go-mode)
@@ -1804,74 +1446,6 @@ Neon mode is mostly just yaml.
        (add-to-list 'org-modules 'ol-man t)
        (add-to-list 'org-modules 'org-habit t))
    #+end_src
-
-** Bindings
-*** major mode mappings
-
-    These bindings apply to regular commands in org mode. They either add
-    or replace base functionality with new features, or ~evil~-ified versions.
-    
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (when nil
-        (evil-define-key 'normal org-mode-map
-          (kbd "<tab>") 'org-cycle
-          (kbd "s-j") 'org-metadown
-          (kbd "s-k") 'org-metaup
-          (kbd "> >") 'org-shiftmetaright
-          (kbd "< <") 'org-shiftmetaleft))
-    #+end_src
-
-*** meta mappings
-
-    These are meta map leader prefixed keybindings to add additional mode-aware
-    contextual functionality.
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (when nil
-        (evil-define-key 'normal org-mode-map
-          (kbd "<leader> m a") #'org-archive-subtree
-          (kbd "<leader> m e") #'org-export-dispatch
-          (kbd "<leader> m p") #'org-publish-project
-          (kbd "<leader> m r") #'org-refile
-          (kbd "<leader> m l") #'org-insert-link
-          (kbd "<leader> m f") #'org-footnote-action
-          (kbd "<leader> m i") #'org-toggle-inline-images
-          (kbd "<leader> m t") #'org-babel-tangle
-          (kbd "<leader> m n") #'org-narrow-to-subtree
-          (kbd "<leader> m d") #'org-babel-demarcate-block
-          (kbd "<leader> m s s") #'org-schedule
-          (kbd "<leader> m s d") #'org-deadline
-          (kbd "<leader> m ,") #'org-priority
-          (kbd "<leader> m c i") #'org-clock-in
-          (kbd "<leader> m c o") #'org-clock-out))
-    #+end_src
-
-*** Agenda mappings
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (when nil
-        (evil-define-key 'normal org-agenda-mode-map
-          (kbd "<leader> m c") #'org-agenda-columns
-          (kbd "j") #'org-agenda-next-line
-          (kbd "k") #'org-agenda-previous-line
-          (kbd "RET") #'org-agenda-switch-to
-          (kbd "q") #'org-agenda-quit
-          (kbd ".") #'org-agenda-goto-today
-          (kbd ",") #'org-agenda-priority
-          (kbd "l") #'org-agenda-later
-          (kbd "h") #'org-agenda-earlier
-          (kbd "m") #'org-agenda-bulk-mark
-          (kbd "p") #'org-agenda-set-property
-          (kbd "u") #'org-agenda-bulk-unmark
-          (kbd "B") #'org-agenda-bulk-action
-          (kbd "g w") #'org-agenda-week-view
-          (kbd "g d") #'org-agenda-day-view
-          (kbd "t") #'org-agenda-todo
-          (kbd "r") #'org-agenda-redo
-          (kbd "s") #'org-agenda-schedule
-          (kbd "d") #'org-agenda-deadline
-          (kbd "/") #'org-agenda-filter
-          (kbd "<") #'org-agenda-filter-by-category))
-    #+end_src
 
 ** Settings
 *** org tempo
@@ -1947,7 +1521,7 @@ Neon mode is mostly just yaml.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (setq org-priority-highest ?A
-	   org-priority-lowest ?D)
+     	  org-priority-lowest ?D)
    #+end_src
 
 *** export
@@ -2133,8 +1707,6 @@ heading.
    the variable ~org-capture-templates~.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (when nil
-       (add-hook 'org-capture-mode-hook 'evil-insert-state))
      (setq org-capture-templates
      	  `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
               "* %?\n /Entered on/ %U")
@@ -2312,34 +1884,6 @@ package is disabled.
                 :host github
                 :repo "bolivier/jj-mode.el"))
      (require 'magit)
-
-     ;; NOTE: as of [2025-09-13], jj-mode does not have support for
-     ;; interactive commands like squash, split, resolve, etc.  this would
-     ;; require more extensive UI editing features, and how they would
-     ;; integrate with the philosophy of Jujutsu is still under
-     ;; consideration.  Mainly, how would you interactively add up hunks
-     ;; for a command like ~squash -i~ without implicitly bringing
-     ;; something like git's staging area back?
-     (when nil
-       (require 'evil)
-       (evil-define-key 'normal jj-mode-map
-         (kbd "TAB") #'magit-section-toggle
-         (kbd "RET") #'jj-enter-dwim
-         (kbd "j") #'magit-section-forward
-         (kbd "k") #'magit-section-backward
-         (kbd "b") #'jj-bookmark-transient
-         (kbd "c") #'jj-commit
-         (kbd "d") #'jj-describe
-         (kbd "e") #'jj-edit-changeset
-         (kbd "n") #'jj-new
-         (kbd "a") #'jj-abandon
-         (kbd "r") #'jj-rebase-transient
-         (kbd "D") #'jj-diff
-         (kbd "t") #'jj-tug
-         (kbd "u") #'jj-undo
-         (kbd ".") #'jj-git-transient
-         (kbd "g r") #'jj-log-refresh))
-
      (provide 'my-jj)
    #+end_src
 * Search
@@ -2356,35 +1900,6 @@ package is disabled.
              lazy-count-prefix-format "(%s/%s) "
              lazy-count-suffix-format nil)
      #+end_src
-** Occur
-   Occur is a handy search functionality which collects all matches of a search
-   term found in the current buffer and presents them in a new buffer. From here
-   you can quickly see the contents of each matched line, and navigate through
-   the source buffer quickly by moving up and down in the occur results buffer.
-
-*** Bindings
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-     (when nil
-       (evil-define-key 'normal occur-mode-map
-         (kbd "j") #'next-error-no-select
-         (kbd "k") #'previous-error-no-select
-         (kbd "RET") #'occur-mode-goto-occurrence
-         (kbd "q") #'quit-window))
-   #+end_src
-
-** Grep
-
-*** Bindings
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-     (when nil
-       (evil-define-key 'normal grep-mode-map
-     		   (kbd "j") #'next-error-no-select
-     		   (kbd "k") #'previous-error-no-select
-     		   (kbd "q") #'quit-window))
-   #+end_src
-
 ** Provide =my-search= module
    #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
      (provide 'my-search)
@@ -2623,7 +2138,7 @@ record window configurations.
 
     #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
       (straight-use-package 'ace-window)
-      (setq aw-keys '(?d ?a ?n ?e ?s ?i ?r ?h ?t))
+      (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     #+end_src
 
 *** Window management
@@ -2665,9 +2180,6 @@ map is pressed, it exits the transient map and fires off the normal
 command for the key as usual.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-  (when nil
-    (require 'evil))
-
   (defun window-management-mode ()
     "Manipulate windows (size, location, number, etc)."
     (interactive)
@@ -2695,10 +2207,6 @@ command for the key as usual.
   [v]vertical-split [s]split
   [c]close-window [o]close-others")
       (message "Window management transient keymap activated.")))
-
-  (when nil
-    (evil-define-key 'normal 'global
-  		   (kbd "<leader> w m") #'window-management-mode))
 #+end_src
 
 ** Ace jump
@@ -2717,19 +2225,6 @@ command for the key as usual.
   #+end_src
 
 * Web Browsing
-** EWW settings/bindings/etc
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
-     (when nil
-       (evil-define-key 'normal 'eww-mode-map
-         (kbd "q") #'quit-window
-         (kbd "H") #'eww-back-url
-         (kbd "L") #'eww-forward-url
-         (kbd "<leader> m b") #'eww-switch-to-buffer
-         ;; (kbd "g") #'eww
-         ))
-     (provide 'my-web)
-   #+end_src
-
 ** Convenience functions
 
    #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
@@ -2867,19 +2362,6 @@ src_sh[]{notmuch new}
 *** Bindings
 Evilified bindings to notmuch
 
-**** hello mode
-#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-  (when nil
-    (evil-define-key 'normal notmuch-hello-mode-map
-      (kbd "TAB") #'widget-forward
-      (kbd "RET") #'widget-button-press
-      (kbd "m") #'notmuch-mua-mail
-      (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-      (kbd "/") #'notmuch-search
-      (kbd ".") #'notmuch-jump-search
-      (kbd "q") #'notmuch-bury-or-kill-this-buffer))
-       #+end_src
-       
 **** Search mode
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
   (defun notmuch-search-delete-threads (&optional beg end)
@@ -2894,28 +2376,6 @@ Evilified bindings to notmuch
     (interactive (notmuch-interactive-region))
     (notmuch-search-tag '("+todo") beg end)
     (notmuch-search-next-thread))
-
-  (when nil
-    (evil-define-key 'normal notmuch-search-mode-map
-      (kbd "d") #'notmuch-search-delete-threads
-      (kbd "a") #'notmuch-search-archive-thread
-      (kbd "/") #'notmuch-search
-      (kbd "s s") #'notmuch-search-filter
-      (kbd "s j") #'notmuch-jump-search
-      (kbd "s t") #'notmuch-search-filter-by-tag
-      (kbd "j") #'notmuch-search-next-thread
-      (kbd "k") #'notmuch-search-previous-thread
-      (kbd "g r") #'notmuch-refresh-this-buffer
-      (kbd "p") #'notmuch-poll-and-refresh-this-buffer
-      (kbd "q") #'notmuch-bury-or-kill-this-buffer
-      (kbd "t") #'notmuch-search-add-todo-tag
-      (kbd "RET") #'notmuch-search-show-thread
-      (kbd "*") #'notmuch-search-tag-all)
-  
-    (evil-define-key '(visual normal) notmuch-search-mode-map
-      (kbd "-") #'notmuch-search-remove-tag
-      (kbd "+") #'notmuch-search-add-tag
-      (kbd "t") #'notmuch-search-add-todo-tag))
 #+end_src
        
 **** Show mode
@@ -2927,33 +2387,8 @@ Evilified bindings to notmuch
   (defun notmuch-show-tag-todo ()
     (interactive)
     (notmuch-show-tag '("+todo")))
-
-  (when nil
-    (evil-define-key 'normal notmuch-show-mode-map
-      (kbd "a") #'notmuch-show-archive-thread
-      (kbd "d") #'notmuch-show-delete-thread
-      (kbd "t") #'notmuch-add-todo-tag
-      (kbd "r") #'notmuch-show-reply-sender
-      (kbd "q") #'notmuch-bury-or-kill-this-buffer
-      (kbd "g j") #'notmuch-show-next-open-message
-      (kbd "g k") #'notmuch-show-previous-open-message
-      (kbd "TAB") #'notmuch-show-next-button
-      (kbd "RET") #'notmuch-show-toggle-message
-      (kbd "+") #'notmuch-show-add-tag
-      (kbd "-") #'notmuch-show-remove-tag
-      (kbd "t") #'notmuch-show-tag-todo))
 #+end_src
-
-
-**** Message mode
-This is the mode which handles actually composing messages.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-  (when nil
-    (evil-define-key 'normal notmuch-message-mode-map
-      (kbd "<leader> m a") #'mail-add-attachment))
-#+end_src
-    
+   
 ** Provide =my-email=
   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
     (provide 'my-email)
@@ -3037,10 +2472,6 @@ This is the mode which handles actually composing messages.
       	   (all-upper-p 'all-caps)
       	   (upper-first-char-p 'capital)
       	   (t 'lower))))
-
-      (when nil
-        (evil-define-key '(insert normal) global-map
-        		   (kbd "M-c") #'cycle-capitalization))
     #+end_src
      
 
@@ -3055,14 +2486,6 @@ very easy.
 #+begin_src emacs-lisp :tangle "my-modules/my-timers.el" :mkdirp yes
   (straight-use-package 'tmr)
   (require 'tmr)
-  ;; (with-eval-after-load 'tmr
-  ;;   (evil-define-key 'normal 'global
-  ;; 	(kbd "<leader> . n") #'tmr-with-details
-  ;; 	(kbd "<leader> . .") #'tmr-tabulated-view)
-  ;;   (evil-define-key 'normal tmr-tabulated-mode-map
-  ;; 	(kbd "g r") #'tmr-tabulated--refresh
-  ;; 	(kbd "x") #'tmr-cancel))
-  
   (provide 'my-timers)
 #+end_src
 * Miscellaneous functions
@@ -3103,98 +2526,7 @@ very easy.
   #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
     (straight-use-package
      '(magit :type git :host github :repo "magit/magit"))
-    (when nil
-      (evil-set-initial-state 'magit-status-mode 'normal))
   #+end_src
-
-**** Set up bindings for the various magit modes
-***** Status mode
-    Normal mode bindings
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (when nil
-        (evil-define-key '(normal motion) magit-status-mode-map
-          (kbd "?") #'magit-dispatch
-          (kbd "b") #'magit-branch
-          (kbd "q") #'magit-mode-bury-buffer
-          (kbd "c") #'magit-commit
-          (kbd "e") #'magit-ediff-dwim
-          (kbd "f") #'magit-fetch
-          (kbd "j") #'magit-next-line
-          (kbd "k") #'magit-previous-line
-          (kbd "}") #'magit-section-forward
-          (kbd "{") #'magit-section-backward
-          (kbd "TAB") #'magit-section-toggle
-          (kbd "RET") #'magit-visit-thing
-          (kbd "i") #'magit-gitignore
-          (kbd "l") #'magit-log
-          (kbd "m") #'magit-merge
-          (kbd "P") #'magit-push
-          (kbd "p") #'magit-pull
-          (kbd "M") #'magit-remote
-          (kbd "r") #'magit-rebase
-          (kbd "t") #'magit-tag
-          (kbd "R") #'magit-reset
-          (kbd "$") #'magit-process-buffer
-          ;; delete
-          (kbd "d d") 'magit-discard
-          (kbd "z") #'magit-stash))
-    #+end_src
-
-    Visual mode bindings
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (when nil
-        (evil-define-key '(normal visual) magit-status-mode-map
-        	(kbd "s") 'magit-stage
-        	(kbd "u") 'magit-unstage))
-    #+end_src
-
-***** Log mode
-    Normal mode bindings
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (when nil
-        (evil-define-key '(normal motion) magit-log-mode-map
-          (kbd "q") 'magit-log-bury-buffer
-          (kbd "r") 'magit-rebase
-          (kbd "j") 'magit-next-line
-          (kbd "k") 'magit-previous-line
-          (kbd "}") 'magit-section-forward
-          (kbd "{") 'magit-section-backward
-          (kbd "RET") 'magit-show-commit
-          (kbd "f") #'magit-fetch))
-    #+end_src
-
-***** Rebase mode
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (when nil
-        (evil-define-key '(normal) git-rebase-mode-map
-      		   (kbd "p") #'git-rebase-pick
-      		   (kbd "b") #'git-rebase-break
-      		   (kbd "e") #'git-rebase-edit
-      		   (kbd "dd") #'git-rebase-kill-line
-      		   (kbd "s") #'git-rebase-squash
-      		   (kbd "r") #'git-rebase-reword
-      		   (kbd "f") #'git-rebase-fixup
-      		   (kbd "J") #'git-rebase-move-line-down
-      		   (kbd "K") #'git-rebase-move-line-up))
-    #+end_src
-
-***** Revision mode
-    The revision mode im magit is TODO (what actual part of magit does this even relate to?)
-    
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (when nil
-        (evil-define-key '(normal motion) magit-revision-mode-map
-          (kbd "j") 'magit-next-line
-          (kbd "k") 'magit-previous-line
-          (kbd "}") 'magit-section-forward
-          (kbd "{") 'magit-section-backward
-          (kbd "TAB") 'magit-section-toggle
-          (kbd "RET") 'magit-visit-thing
-          (kbd "q") 'magit-mode-bury-buffer))
-    #+end_src
 
 ** Forge
     Forges are a term representing a centralized version control
@@ -3209,12 +2541,6 @@ very easy.
     #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
       (straight-use-package 'diff-hl)
       (global-diff-hl-mode 1)
-
-      (when nil
-        (evil-define-key 'normal 'global
-          (kbd "<leader> v j") #'diff-hl-next-hunk
-          (kbd "<leader> v k") #'diff-hl-previous-hunk
-          (kbd "<leader> v b") #'diff-hl-show-hunk))
     #+end_src
 ** Provide =my-git=
    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
@@ -3226,107 +2552,11 @@ very easy.
 ** Helpful package
     #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
       (straight-use-package 'helpful)
-
-      (when nil
-        (evil-define-key '(normal motion) helpful-mode-map
-        	(kbd "q") #'quit-window)
-        
-        (evil-define-key '(normal motion) help-mode-map
-        	(kbd "q") #'quit-window))
     #+end_src
-** Info
-*** Bindings
-#+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-  (when nil
-    (evil-define-key '(normal motion) Info-mode-map
-      (kbd "<tab>") 'Info-next-reference
-      (kbd "S-<tab>") 'Info-prev-reference
-      (kbd "RET") 'Info-follow-nearest-node
-      (kbd "d") 'Info-directory
-      (kbd "u") 'Info-up
-      (kbd "s") 'Info-search
-      (kbd "i") 'Info-index
-      (kbd "a") 'info-apropos
-      (kbd "q") 'quit-window
-    
-      (kbd "y y") 'Info-copy-current-node-name
-    
-      [mouse-1] 'Info-mouse-follow-nearest-node
-      [follow-link] 'mouse-face
-      ;; goto
-      (kbd "g m") 'Info-menu
-      (kbd "g t") 'Info-top-node
-      (kbd "g T") 'Info-toc
-      (kbd "g j") 'Info-next
-      (kbd "g k") 'Info-prev))
-#+end_src
-** Man
-*** Bindings
-     #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-       (when nil
-         (evil-define-key 'normal Man-mode-map
-         	 (kbd "q") #'quit-window))
-     #+end_src
-
 ** Provide =my-help=
    #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
      (provide 'my-help)
    #+end_src
-
-* Ibuffer
-  Ibuffer is an interactive buffer viewer which allows for searching, filtering
-  and acting on all of the open buffers in your session.
-
-** Bindings
-  #+begin_src emacs-lisp :tangle "my-modules/my-ibuffer.el" :mkdirp yes
-    (when nil
-      (evil-define-key '(normal motion) ibuffer-mode-map
-        (kbd "<leader> x") 'execute-extended-command
-        ;; navigation
-        (kbd "{") 'ibuffer-backwards-next-marked
-        (kbd "}") 'ibuffer-forward-next-marked
-  
-        ;; mark commands
-        (kbd "J") 'ibuffer-jump-to-buffer
-        (kbd "m") 'ibuffer-mark-forward
-        (kbd "~") 'ibuffer-toggle-marks
-        (kbd "u") 'ibuffer-unmark-forward
-        (kbd "DEL") 'ibuffer-unmark-backward
-        (kbd "U") 'ibuffer-unmark-all-marks
-        (kbd "* *") 'ibuffer-mark-special-buffers
-        (kbd "* m") 'ibuffer-mark-by-mode
-        (kbd "* i") 'ibuffer-mark-unsaved-buffers
-        (kbd "* n") #'ibuffer-mark-by-name-regexp
-        (kbd "* r") 'ibuffer-mark-read-only-buffers
-        (kbd "* /") 'ibuffer-mark-dired-buffers
-        (kbd "* h") 'ibuffer-mark-help-buffers
-        (kbd "d") 'ibuffer-mark-for-delete
-  
-        ;; filtering
-        (kbd "/ m") #'ibuffer-filter-by-mode
-        (kbd "/ i") #'ibuffer-filter-by-modified
-        (kbd "/ n") #'ibuffer-filter-by-name
-        (kbd "/ f") #'ibuffer-filter-by-filename
-        (kbd "/ .") #'ibuffer-filter-by-file-extension
-        (kbd "/ s") #'ibuffer-save-filters
-        (kbd "/ /") #'ibuffer-filter-disable
-  
-  
-        ;; actions
-        (kbd "x") 'ibuffer-do-kill-on-deletion-marks
-        (kbd "gr") 'ibuffer-update
-  
-        ;; immediate actions
-        (kbd "A") 'ibuffer-do-view
-        (kbd "D") 'ibuffer-do-delete
-        (kbd "K") 'ibuffer-do-kill-lines))
-  #+end_src
-
-** Provide =my-ibuffer=
-  #+begin_src emacs-lisp :tangle "my-modules/my-ibuffer.el" :mkdirp yes
-    (provide 'my-ibuffer)
-  #+end_src
-
 * Just mode
     Just is a command line tool that seeks to simplify [[man:make]]
 ** Use package
@@ -3367,194 +2597,3 @@ dispatch system.
 
   (provide 'my-avy)
 #+end_src
-* Bindings
-** Global bindings
-   Visual/emacs state commands
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (when nil
-       (evil-define-key '(insert emacs visual) 'global
-         (kbd "s-x") #'execute-extended-command))
-   #+end_src
-
-   Normal state commands
-   
-   #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     ;; (require 'evil)
-
-     (when nil
-       (evil-define-key 'normal 'global
-         (kbd "<leader> ;") #'eval-expression
-         (kbd "<leader> q") #'save-buffers-kill-terminal
-         (kbd "<leader> x") #'execute-extended-command
-         (kbd "<leader> z") #'ispell-word
-         (kbd "<leader> TAB") (lambda ()
-                                (interactive)
-                                (switch-to-buffer nil))
-         (kbd "g r") #'revert-buffer
-         (kbd "SPC SPC") #'avy-goto-char-timer
-         ;; App launcher
-         (kbd "<leader> a c") #'calendar
-         (kbd "<leader> a a") #'org-agenda
-         (kbd "<leader> a n") #'notmuch
-         (kbd "<leader> a =") #'calc
-         ;; buffers
-         (kbd "<leader> b b") #'consult-buffer
-         (kbd "<leader> b n") #'next-buffer
-         (kbd "<leader> b p") #'previous-buffer
-         (kbd "<leader> b s") #'save-buffer
-         (kbd "<leader> b i") #'ibuffer
-         (kbd "<leader> b d") #'evil-delete-buffer
-         (kbd "<leader> b c") #'kill-current-buffer
-         (kbd "<leader> b r") #'rename-buffer
-         ;; config related commands
-         (kbd "<leader> c .") #'find-config
-         (kbd "<leader> c r") (lambda () (interactive) (load-file user-init-file))
-         (kbd "<leader> c t") #'consult-theme
-         ;; dired
-         (kbd "<leader> d d") #'dired-jump
-         (kbd "<leader> d j") #'dired
-         ;; evaluation
-         (kbd "<leader> e e") #'eval-last-sexp
-         (kbd "<leader> e d") #'eval-defun
-         (kbd "<leader> e b") #'eval-buffer
-         
-         ;; files
-         (kbd "<leader> f b") #'bookmark-jump
-         (kbd "<leader> f d") #'diff-buffer-with-file
-         (kbd "<leader> f i") (lambda () (interactive) (find-file org-default-notes-file))
-         (kbd "<leader> f B") #'bookmark-set
-         (kbd "<leader> f c") #'find-config
-         (kbd "<leader> f f") #'find-file
-         (kbd "<leader> f r") #'rename-visited-file
-         ;; getting things done (gtd)
-         (kbd "<leader> g s") #'gtd-find-schedule
-         (kbd "<leader> g o") #'gtd-find-oneoff
-         (kbd "<leader> g i") #'gtd-find-inbox
-         (kbd "<leader> g c") #'gtd-capture
-         (kbd "<leader> g e") #'gtd-engage
-         (kbd "<leader> g r") #'gtd-review
-         ;; help(ful) commands
-         (kbd "<leader> h i") (lambda (node) (interactive "MNode: ")
-                                (info (format "(%s)Top" node)))
-         (kbd "<leader> h M") #'info-emacs-manual
-         (kbd "<leader> h v") #'helpful-variable
-         (kbd "<leader> h f") #'helpful-function
-         (kbd "<leader> h k") #'helpful-key
-         (kbd "<leader> h m") #'describe-mode
-         (kbd "<leader> h r") #'info-display-manual
-         ;; imenu
-         (kbd "<leader> i") #'consult-outline
-         ;; jujutsu
-         (kbd "<leader> j") #'jj-log
-         ;; org
-         (kbd "<leader> o c") #'org-capture
-         (kbd "<leader> o s") #'org-store-link
-         ;; occur
-         (kbd "<leader> o o") #'occur
-         ;; project
-         (kbd "<leader> p !") #'project-shell-command
-         (kbd "<leader> p &") #'project-async-shell-command
-         (kbd "<leader> p D") #'project-dired
-         (kbd "<leader> p b") #'project-switch-to-buffer
-         (kbd "<leader> p c") #'compile
-         (kbd "<leader> p d") #'project-find-dir
-         (kbd "<leader> p e") #'project-eshell
-         (kbd "<leader> p f") #'project-find-file
-         (kbd "<leader> p m") #'magit-project-status
-         (kbd "<leader> p k") #'project-kill-buffers
-         (kbd "<leader> p p") #'project-switch-project
-         (kbd "<leader> p /") #'project-find-regexp
-         ;; shells
-         (kbd "<leader> s e") #'eshell-here
-         ;;; (kbd "<leader> s t") #'eat
-         (kbd "<leader> s t") #'multi-vterm
-         ;; tab commands
-         (kbd "<leader> t t") #'tab-switch
-         (kbd "<leader> t n") #'tab-new
-         (kbd "<leader> t j") #'tab-next
-         (kbd "<leader> t k") #'tab-previous
-         (kbd "<leader> t f") #'find-file-other-tab
-         (kbd "<leader> t b") #'switch-to-buffer-other-tab
-         (kbd "<leader> t r") #'tab-rename
-         (kbd "<leader> t d") #'tab-close
-         ;; windows
-         (kbd "<leader> /") #'eww
-         (kbd "<leader> w w") #'ace-window
-         (kbd "<leader> w h") #'evil-window-left
-         (kbd "<leader> w l") #'evil-window-right
-         (kbd "<leader> w j") #'evil-window-down
-         (kbd "<leader> w k") #'evil-window-up
-         (kbd "<leader> w H") #'evil-window-move-far-left
-         (kbd "<leader> w L") #'evil-window-move-far-right
-         (kbd "<leader> w K") #'evil-window-move-very-top
-         (kbd "<leader> w J") #'evil-window-move-very-bottom
-         (kbd "<leader> w c") #'evil-window-delete
-         (kbd "<leader> w v") #'evil-window-vsplit
-         (kbd "<leader> w s") #'evil-window-split
-         (kbd "<leader> w o") #'delete-other-windows
-         (kbd "<leader> w =") #'balance-windows
-         ;; toggles
-         (kbd "<leader> T t") #'modus-themes-toggle
-         (kbd "<leader> T n") #'display-line-numbers-mode
-         (kbd "<leader> T s") #'spacious-padding-mode
-         (kbd "<leader> T w") #'whitespace-mode))
-   #+end_src
-
-*** S-expression navigation
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (when nil
-       (evil-define-key 'normal 'global
-         "s" nil)
-       (evil-define-key 'normal 'global
-         ;; (kbd "s l") #'forward-sexp
-         (kbd "s h") #'backward-sexp
-         (kbd "s j") #'down-list
-         (kbd "s k") #'backward-up-list
-         (kbd "s d") #'kill-sexp
-         (kbd "s $") #'forward-sentence
-         (kbd "s 0") #'backward-sentence))
-       
-   #+end_src
-
-
-** Mode specific bindings
-
-   I use ~<leader> m~ as a prefix for any keybindings specific to the active major mode.
-   These bindings are found in the mode specific configuration heading.
-   These are bound per major mode so that they are context sensitive. This allows me
-   to keep the global keybindings relatively uncluttered since I don't need a separate
-   prefix for org actions in org buffers, Terraform actions in Terraform buffers, etc.
-
-** Provide =my-bindings=
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-bindings.el" :mkdirp yes
-     (provide 'my-bindings)
-   #+end_src
-   
-* Xref
-** Bindings
-*** xref mode map
-    these bindings are for when I'm actually in an xref buffer,
-    viewing results.
-	
-   #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
-     ;; -*- lexical-binding: t -*-
-     (when nil
-       (evil-define-key 'normal xref--xref-buffer-mode-map
-         (kbd "j") #'xref-next-line
-         (kbd "k") #'xref-prev-line
-         (kbd "RET") #'xref-goto-xref
-         (kbd "q") #'quit-window))
-   #+end_src
-
-*** entry points to xref
-    These are used for kicking off xref queries such as, go to
-    definition, go to references, etc.
-
-** Provide =my-xref=
-   #+begin_src emacs-lisp :tangle "my-modules/my-xref.el" :mkdirp yes
-     (provide 'my-xref)
-   #+end_src
-t

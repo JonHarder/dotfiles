@@ -15,10 +15,4 @@
   (interactive)
   (compile "terraform apply"))
 
-(when nil
-  (evil-define-key 'normal terraform-mode-map
-    (kbd "<leader> m i") #'terraform-init
-    (kbd "<leader> m p") #'terraform-plan
-    (kbd "<leader> m a") #'terraform-apply))
-
 (provide 'my-terraform-mode)

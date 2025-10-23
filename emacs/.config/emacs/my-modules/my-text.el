@@ -44,8 +44,4 @@ Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
 	   (upper-first-char-p 'capital)
 	   (t 'lower))))
 
-(when nil
-  (evil-define-key '(insert normal) global-map
-  		   (kbd "M-c") #'cycle-capitalization))
-
 (provide 'my-text)
