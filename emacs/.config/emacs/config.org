@@ -1393,6 +1393,7 @@ images, containers, compose, and more.
 ** Terraform 
 *** Install the package
    #+begin_src emacs-lisp :tangle "my-modules/my-terraform-mode.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
      (straight-use-package 'terraform-mode)
      (provide 'my-terraform-mode)
    #+end_src
@@ -1460,6 +1461,8 @@ images, containers, compose, and more.
   a vimrc-esque file from emacs.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-vim-mode.el" :mkdirp yes
+    ;; -*- lexical-binding: t; -*-
+
     (straight-use-package 'vimrc-mode)
     (provide 'my-vim-mode)
   #+end_src
@@ -1975,6 +1978,7 @@ package is disabled.
 
 *** Settings
      #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
+       ;; -*- lexical-binding: t; -*-
        (setq isearch-lazy-count t
              lazy-count-prefix-format "(%s/%s) "
              lazy-count-suffix-format nil)
@@ -1994,6 +1998,7 @@ package is disabled.
    like dired assume the posix implementation.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
      (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
            shell-file-name "/bin/zsh")
    #+end_src
@@ -2182,6 +2187,7 @@ to make eshell as fancy as you can dream up (and program)
 
 ** Install package
     #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
+      ;; -*- lexical-binding: t; -*-
       (straight-use-package
        '(typst-ts-mode
          :type git
@@ -2571,6 +2577,7 @@ very easy.
   This is a collection of random functions I've written to help me run one-off tasks.
   
   #+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes
+    ;; -*- lexical-binding: t; -*-
     (defun find-config ()
       "Open the user's config file."
       (interactive)

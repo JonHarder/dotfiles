@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
       shell-file-name "/bin/zsh")
 

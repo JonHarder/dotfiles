@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (defun find-config ()
   "Open the user's config file."
   (interactive)
