@@ -139,8 +139,8 @@
 ;; 	       :todo '("TODO" "WORKING"))))
 
 (setq org-capture-templates
-	  `(("i" "Inbox   - things that may need attention later" entry (file+headline org-default-notes-file "Inbox")
-         "* %?\n /Entered on/ %U")
+	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
+         "* %?\n/Entered on/ %U")
 		("p" "Project - new project" entry
 		 (file+headline org-default-notes-file "Projects")
 		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
