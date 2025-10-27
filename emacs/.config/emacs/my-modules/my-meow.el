@@ -166,6 +166,10 @@
    '("/" . consult-line)
    '("<escape>" . ignore)))
 
+(add-hook 'vterm-mode-hook #'meow-insert)
+(add-hook 'eshell-mode-hook #'meow-insert)
+(add-hook 'org-capture-mode-hook #'meow-insert)
+
 (meow-setup-core)
 (meow-setup-motion)
 (meow-setup-leader)

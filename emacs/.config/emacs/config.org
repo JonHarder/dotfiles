@@ -571,7 +571,12 @@ documents easier.  In meow, this is extremely easy.  Compliments to
      '("/" . consult-line)
      '("<escape>" . ignore)))
 #+end_src
-
+** Setting initial state for some major modes
+#+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdir yes
+  (add-hook 'vterm-mode-hook #'meow-insert)
+  (add-hook 'eshell-mode-hook #'meow-insert)
+  (add-hook 'org-capture-mode-hook #'meow-insert)
+#+end_src
 ** Load setup functions and enable meow
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
   (meow-setup-core)
