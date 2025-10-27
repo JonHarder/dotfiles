@@ -30,6 +30,7 @@
    '("l" . recenter-top-bottom)
    ;; apps (org agenda, etc)
    '("oa" . org-agenda)
+   '("oc" . org-capture)
    ;; denote bindings
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
