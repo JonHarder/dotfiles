@@ -279,6 +279,10 @@ I like 24 hour time; one time being ambiguous is unnecessarily cumbersome.
 I use [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]]
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (set-face-attribute 'default nil
+  					:family (plist-get my-font :name)
+  					:height (plist-get my-font :size))
+
   (add-hook 'after-make-frame-functions
             (lambda (frame)
               (let ((size (plist-get my-font :size))

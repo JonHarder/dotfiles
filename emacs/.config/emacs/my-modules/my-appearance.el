@@ -60,6 +60,10 @@
 
 (display-time)
 
+(set-face-attribute 'default nil
+					:family (plist-get my-font :name)
+					:height (plist-get my-font :size))
+
 (add-hook 'after-make-frame-functions
           (lambda (frame)
             (let ((size (plist-get my-font :size))
