@@ -14,18 +14,22 @@
 (defun meow-setup-leader ()
   (meow-leader-define-key
    '("RET" . embark-act)
+   ;; file/buffer commands
    '("f" . find-file)
    '("s" . save-buffer)
-   '("e" . eshell)
-   '("a" . avy-goto-char-timer)
-   '("j" . jj-log)
-   '("oa" . org-agenda)
-   '("oo" . occur)
-   '("l" . recenter-top-bottom)
-   ;; buffer commands
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
    '("i" . consult-imenu)
+   ;; terminals/vc
+   '("v" . vterm)
+   '("e" . eshell)
+   '("j" . jj-log)
+   ;; navigation
+   '("a" . avy-goto-char-timer)
+   '("oo" . occur)
+   '("l" . recenter-top-bottom)
+   ;; apps (org agenda, etc)
+   '("oa" . org-agenda)
    ;; denote bindings
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
@@ -42,7 +46,6 @@
    '("ww" . ace-window)
    '("wv" . split-window-right)
    '("ws" . split-window-below)
-   '("v" . vterm)
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
