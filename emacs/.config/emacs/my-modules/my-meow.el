@@ -26,15 +26,19 @@
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
    '("i" . consult-imenu)
+   ;; denote bindings
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
    '("nj" . denote-journal-new-or-existing-entry)
+   '("ng" . consult-denote-grep)
+   ;; tab bindings
    '("tt" . tab-switch)
    '("tr" . tab-rename)
    '("tn" . tab-new)
    '("tj" . tab-next)
    '("tk" . tab-previous)
    '("td" . tab-close)
+   ;; window management
    '("ww" . ace-window)
    '("wv" . split-window-right)
    '("ws" . split-window-below)
