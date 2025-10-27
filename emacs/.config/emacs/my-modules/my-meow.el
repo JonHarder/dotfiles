@@ -85,6 +85,8 @@
 	;; subtree de/promotion
 	'("L" . org-demote-subtree)
 	'("H" . org-promote-subtree)
+	'(">" . org-demote-subtree)
+	'("<" . org-promote-subtree)
 	;; Completion-style search of headings
 	'("v" . consult-org-heading)
 	;; setting subtree metadata
