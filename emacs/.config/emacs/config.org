@@ -12,6 +12,20 @@ writes the contents to the specified file. In order to keep this up to
 date, the emacs command, ~M-x org-babel-tangle~ must be ran after
 modifying this file.
 
+* Base Settings
+
+Sets things like the theme and font.  Actually using and loading
+themes, setting font configuration, etc. is handled later in the
+configuration.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (defvar my-theme '(ef-themes . ef-night)
+    "Cons of the symbols representing the theme package, and theme name.")
+  
+  (defvar my-font '(:name "JetBrains Mono" :size 170)
+    "Font (:name string :size integer).")
+#+end_src
+
 * Early init optimizations
 ** Disable built-in package.el
  #+begin_src emacs-lisp :tangle "early-init.el"
@@ -159,17 +173,6 @@ This gets loaded first so that any later configuration can utilize it.
 #+end_src
 
 * Appearance
-** Base Settings
-Sets things like the theme and font.  Actually using and loading
-themes, setting font configuration, etc. is handled later in the
-configuration.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (defvar my-theme '(ef-themes . ef-night)
-    "Cons of the symbols representing the theme package, and theme name.")
-  (defvar my-font '(:name "JetBrains Mono" :size 170)
-    "Font (:name string :size integer).")
-#+end_src
 ** Color theme
 
 The modus theme set is the most complete and polished emacs color

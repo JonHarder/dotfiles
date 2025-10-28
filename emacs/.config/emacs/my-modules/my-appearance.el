@@ -1,5 +1,6 @@
 (defvar my-theme '(ef-themes . ef-night)
   "Cons of the symbols representing the theme package, and theme name.")
+
 (defvar my-font '(:name "JetBrains Mono" :size 170)
   "Font (:name string :size integer).")
 
