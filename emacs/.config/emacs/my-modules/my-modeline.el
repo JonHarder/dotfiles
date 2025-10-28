@@ -5,4 +5,5 @@
 (setq doom-modeline-major-mode-color-icon t)
 (setq doom-modeline-enable-word-count t)
 (doom-modeline-mode 1)
+
 (provide 'my-modeline)

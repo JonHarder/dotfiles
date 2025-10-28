@@ -79,12 +79,14 @@ helpful nonetheless.
          (bootstrap-verision 6))
      (unless (file-exists-p bootstrap-file)
        (with-current-buffer
-    (url-retrieve-synchronously
-     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-     'silent 'inhibit-cookies)
+   		(url-retrieve-synchronously
+   		 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+   		 'silent 'inhibit-cookies)
          (goto-char (point-max))
          (eval-print-last-sexp)))
      (load bootstrap-file nil 'nomessage))
+   (setq straight-built-in-pseudo-packages
+   	  '(emacs nadvice python image-mode project flymake))
  #+end_src
 ** Local lisp loading
 *** Load local-config
@@ -105,10 +107,10 @@ This gets loaded first so that any later configuration can utilize it.
 ** Require all my modules
 #+begin_src emacs-lisp :tangle "init.el"
   (require 'my-appearance)
-  (require 'my-modeline)
   (require 'my-core)
   (require 'my-mouse)
   (require 'my-meow)
+  (require 'my-modeline)
 
   (require 'my-calendar)
   (require 'my-completion)
@@ -163,7 +165,7 @@ themes, setting font configuration, etc. is handled later in the
 configuration.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (defvar my-theme '(ef-themes . ef-autumn)
+  (defvar my-theme '(ef-themes . ef-night)
     "Cons of the symbols representing the theme package, and theme name.")
   (defvar my-font '(:name "JetBrains Mono" :size 170)
     "Font (:name string :size integer).")
@@ -315,75 +317,6 @@ on different tabs to help with different types of work within the same project.
 ** provide the module
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (provide 'my-appearance)
-#+end_src
-* mode line
-** Provide =my-modeline=
-#+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
-  (straight-use-package 'doom-modeline) 
-  (setq doom-modeline-height 35)
-  (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-hud t)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-enable-word-count t)
-  (doom-modeline-mode 1)
-  (provide 'my-modeline)
-#+end_src
-
-* Base settings
-** Customization file
-
-Here's just a holding ground for general emacs settings that
-don't seem to fit in any more specific location.
-
-When emacs makes customizations on my behalf, it throws the
-resultant elist code into my init file. It's great that it
-produces visible, editable, version controllable config, but
-I don't like it in my init file. Let's move it somewhere else.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-  (setq custom-file (concat user-emacs-directory "custom.el"))
-#+end_src
-
-** Backups
-
-Emacs helpfully creates local backups of any files you're editing so that
-if something happens to your session before saving the file, you'll have
-a backup of the local changes.
-
-It *un*-helpfully defaults to placing them in the same directory as the file
-you are editing. This clutters things up immensely, particularily when you
-are working in a version-controlled project and have to tell your VC tool
-to ignore them.
-
-Much better to just place them in a dedicated directory and forget about them.
-Emacs will still save the day if something happens, but you don't have to
-worry about it.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-  (setq backup-directory-alist '(("." . "~/.backups")))
-#+end_src
-
-** Dictionary
-
-Emacs has built in dictionary support (because of course it does). By dafault, it
-expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
-it falls back to dict.org. I'm fine with going over the wire for my definitions,
-so let's just set it as default.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-  (setq dictionary-server "dict.org")
-#+end_src
-
-** Provide the module
-
-#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
-  (provide 'my-core)
-#+end_src
-
-* Mouse settings
-#+begin_src emacs-lisp :tangle "my-modules/my-mouse.el" :mkdirp yes
-  (setq mouse-autoselect-window t)
-  (provide 'my-mouse)
 #+end_src
 * Meow mode (modal emacs)
 ** Install and require package
@@ -595,6 +528,79 @@ documents easier.  In meow, this is extremely easy.  Compliments to
   (provide 'my-meow)
 #+end_src
 
+* mode line
+** Doom modeline
+#+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+  (straight-use-package 'doom-modeline) 
+  (setq doom-modeline-height 35)
+  (setq doom-modeline-bar-width 4)
+  (setq doom-modeline-hud t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-enable-word-count t)
+  (doom-modeline-mode 1)
+  #+end_src
+  
+** require the mode line
+#+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+  (provide 'my-modeline)
+#+end_src
+
+* Base settings
+** Customization file
+
+Here's just a holding ground for general emacs settings that
+don't seem to fit in any more specific location.
+
+When emacs makes customizations on my behalf, it throws the
+resultant elist code into my init file. It's great that it
+produces visible, editable, version controllable config, but
+I don't like it in my init file. Let's move it somewhere else.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq custom-file (concat user-emacs-directory "custom.el"))
+#+end_src
+
+** Backups
+
+Emacs helpfully creates local backups of any files you're editing so that
+if something happens to your session before saving the file, you'll have
+a backup of the local changes.
+
+It *un*-helpfully defaults to placing them in the same directory as the file
+you are editing. This clutters things up immensely, particularily when you
+are working in a version-controlled project and have to tell your VC tool
+to ignore them.
+
+Much better to just place them in a dedicated directory and forget about them.
+Emacs will still save the day if something happens, but you don't have to
+worry about it.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq backup-directory-alist '(("." . "~/.backups")))
+#+end_src
+
+** Dictionary
+
+Emacs has built in dictionary support (because of course it does). By dafault, it
+expects you to be running a dictionary server ~dictd~ locally. If it can't be found,
+it falls back to dict.org. I'm fine with going over the wire for my definitions,
+so let's just set it as default.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (setq dictionary-server "dict.org")
+#+end_src
+
+** Provide the module
+
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  (provide 'my-core)
+#+end_src
+
+* Mouse settings
+#+begin_src emacs-lisp :tangle "my-modules/my-mouse.el" :mkdirp yes
+  (setq mouse-autoselect-window t)
+  (provide 'my-mouse)
+#+end_src
 * Calendar
 ** Base settings
 

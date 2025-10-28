@@ -14,22 +14,24 @@
       (bootstrap-verision 6))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
- (url-retrieve-synchronously
-  "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-  'silent 'inhibit-cookies)
+		(url-retrieve-synchronously
+		 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+		 'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+(setq straight-built-in-pseudo-packages
+	  '(emacs nadvice python image-mode project flymake))
 
 (load-file (expand-file-name "local-config.el" user-emacs-directory))
 
 (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
 
 (require 'my-appearance)
-(require 'my-modeline)
 (require 'my-core)
 (require 'my-mouse)
 (require 'my-meow)
+(require 'my-modeline)
 
 (require 'my-calendar)
 (require 'my-completion)
