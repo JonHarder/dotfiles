@@ -1499,7 +1499,7 @@ images, containers, compose, and more.
      (straight-use-package 'rust-mode)
      (setq rust-format-on-save t)
      (add-hook 'rust-mode-hook
-	       (lambda () (prettify-symbols-mode)))
+     		  (lambda () (prettify-symbols-mode)))
      (provide 'my-rust-mode)
    #+end_src
 
@@ -2058,6 +2058,7 @@ package is disabled.
       (add-to-list 'exec-path "/usr/local/go/bin")
       (add-to-list 'exec-path "/opt/homebrew/bin")
       (add-to-list 'exec-path "/Library/TeX/texbin")
+      (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
     #+end_src
 
 *** hook

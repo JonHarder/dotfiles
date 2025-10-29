@@ -6,6 +6,7 @@
 (add-to-list 'exec-path "/usr/local/go/bin")
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (add-to-list 'exec-path "/Library/TeX/texbin")
+(add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
 
 (add-hook 'eshell-mode-hook
           (lambda ()
