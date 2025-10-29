@@ -25,7 +25,6 @@ configuration.
   (defvar my-font '(:name "JetBrains Mono" :size 170)
     "Font (:name string :size integer).")
 #+end_src
-
 * Early init optimizations
 ** Disable built-in package.el
  #+begin_src emacs-lisp :tangle "early-init.el"
@@ -121,6 +120,7 @@ This gets loaded first so that any later configuration can utilize it.
 ** Require all my modules
 #+begin_src emacs-lisp :tangle "init.el"
   (require 'my-appearance)
+  (require 'my-util)
   (require 'my-core)
   (require 'my-mouse)
   (require 'my-meow)
@@ -165,13 +165,44 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-shells)
   (require 'my-typst)
   (require 'my-terraform-mode)
-  (require 'my-util)
   (require 'my-vim-mode)
 
   (provide 'init)
   ;;; init.el ends here
 #+end_src
 
+* Utility functions
+  This is a collection of random functions I've written to help me run one-off tasks.
+  
+#+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+  (defun find-config ()
+    "Open the user's config file."
+    (interactive)
+    (find-file (concat user-emacs-directory "config.org")))
+
+  (defun masteringemacs ()
+    "Open the masteringemacs epub manual."
+    (interactive)
+    ;; ensure the nov package is installed
+    (require 'nov)
+    (find-file "~/Dropbox/Emacs/mastering-emacs-v4.epub"))
+
+  (defun add-to-path (value &optional prepend)
+    "Add VALUE to the PATH environment variable.
+
+  This handles reading the current value of PATH and appends the given
+  value to the end of it, or to the beginning if PREPEND is non nil.
+
+  VALUE should be the raw string to add, `add-to-path' will handle
+  ensuring the final value contains the necessary ':'."
+    (interactive "DPath: ")
+    (let ((path (getenv "PATH")))
+  	(setenv "PATH"
+  			(concat path value ":"))))
+
+  (provide 'my-util)
+#+end_src
 * Appearance
 ** Color theme
 
@@ -2590,36 +2621,6 @@ very easy.
   (require 'tmr)
   (provide 'my-timers)
 #+end_src
-* Miscellaneous functions
-  This is a collection of random functions I've written to help me run one-off tasks.
-  
-  #+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes
-    ;; -*- lexical-binding: t; -*-
-    (defun find-config ()
-      "Open the user's config file."
-      (interactive)
-      (find-file (concat user-emacs-directory "config.org")))
-
-  #+end_src
-
-  This is a small convenience method to load the mastering emacs epub:
-
-  #+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes
-    (defun masteringemacs ()
-      "Open the masteringemacs epub manual."
-      (interactive)
-      ;; ensure the nov package is installed
-      (require 'nov)
-      (find-file "~/Dropbox/Emacs/mastering-emacs-v4.epub"))
-  #+end_src
-
-  And provide the module
-
-  
-  #+begin_src emacs-lisp :tangle "my-modules/my-util.el" :mkdirp yes
-    (provide 'my-util)
-  #+end_src
-
 * Git
 ** Magit
   Magit is amazing

@@ -28,6 +28,7 @@
 (add-to-list 'load-path (locate-user-emacs-file "my-modules"))
 
 (require 'my-appearance)
+(require 'my-util)
 (require 'my-core)
 (require 'my-mouse)
 (require 'my-meow)
@@ -72,7 +73,6 @@
 (require 'my-shells)
 (require 'my-typst)
 (require 'my-terraform-mode)
-(require 'my-util)
 (require 'my-vim-mode)
 
 (provide 'init)
