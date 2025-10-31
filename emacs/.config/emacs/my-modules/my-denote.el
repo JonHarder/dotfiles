@@ -28,6 +28,7 @@ This uses the first element of `denote-directories' to determine where notes are
 (setq denote-journal-directory (concat denote-directory "/journal"))
 (add-to-list 'denote-dired-directories denote-journal-directory)
 ;; calendar integration
+(require 'denote-journal)
 (add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
 
 (straight-use-package 'denote-silo)

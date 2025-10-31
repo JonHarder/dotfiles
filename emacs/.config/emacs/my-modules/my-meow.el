@@ -9,25 +9,37 @@
  '("k" . meow-prev)
  '("<escape>" . ignore))
 
+(defun gtd-find-file ()
+  (interactive)
+  (find-file (concat gtd-directory "/gtd.org")))
+
 (meow-leader-define-key
  '("RET" . embark-act)
  ;; file/buffer commands
- '("f" . find-file)
- '("s" . save-buffer)
+ '("ff" . find-file)
+ '("fg" . gtd-find-file)
+ '("fi" . gtd-find-inbox)
+ '("fc" . find-config)
+ '("bs" . save-buffer)
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
  '("i" . consult-imenu)
+ ;; programming keymap
+ ;; currently just maps to `eglot-mode-map'
  ;; terminals/vc
- '("v" . vterm)
- '("e" . eshell)
- '("j" . jj-log)
- ;; navigation
+ '("sv" . vterm)
+ '("se" . eshell)
+ ;; code things
+ '("ed" . eldoc)
+ '("ee" . eglot)
+ 
  '("a" . avy-goto-char-timer)
  '("oo" . occur)
  '("l" . recenter-top-bottom)
  ;; apps (org agenda, etc)
  '("oa" . org-agenda)
  '("oc" . org-capture)
+ '("j" . jj-log)
  ;; denote bindings
  '("nb" . denote-backlinks)
  '("nn" . denote-open-or-create)

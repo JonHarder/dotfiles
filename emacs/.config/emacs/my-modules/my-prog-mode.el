@@ -17,14 +17,7 @@
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-	    `(terraform-mode . ("terraform-ls" "serve"))))
-
-(with-eval-after-load 'eglot
-  (when nil
-    (evil-define-key 'normal prog-mode-map
-  		     (kbd "<leader> r d") #'eglot-find-declaration
-		     ;; #'eglot-find-implementation is already handled by embark
-  		     (kbd "<leader> r r") #'xref-find-references)))
+		    `(terraform-mode . ("terraform-ls" "serve"))))
 
 (straight-use-package 'hl-todo)
 (global-hl-todo-mode 1)
