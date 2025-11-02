@@ -28,20 +28,22 @@ Capitalization schemes are:
 	      (downcase-word 1))))))
 
 (defun capitalize-state ()
-	"Return a symbol representing the capitalization state of the previous word.
+  "Return a symbol representing the capitalization state of the previous word.
 
 Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
 
 	'lower    The first character of the word is alpha and lowercase.
 	'capital  The first character of the word is alpha and uppercase (but not every character in the word is uppercase.)
 	'all-caps All letters of the word are alpha and uppercase."
-	(interactive)
-	(let* ((word (word-at-point t))
-	       (upper-first-char-p (char-uppercase-p (string-to-char word)))
-	       (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
-	  (cond
-	   (all-upper-p 'all-caps)
-	   (upper-first-char-p 'capital)
-	   (t 'lower))))
+  (interactive)
+  (let* ((word (word-at-point t))
+	     (upper-first-char-p (char-uppercase-p (string-to-char word)))
+	     (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
+	(cond
+	 (all-upper-p 'all-caps)
+	 (upper-first-char-p 'capital)
+	 (t 'lower))))
+
+(define-key global-map [remap capitalize-word] #'cycle-capitalization)
 
 (provide 'my-text)
