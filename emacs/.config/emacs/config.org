@@ -352,7 +352,7 @@ on different tabs to help with different types of work within the same project.
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (provide 'my-appearance)
 #+end_src
-* Meow mode (modal emacs)
+* Meow mode
 ** Install and require package
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
   (straight-use-package 'meow)
@@ -654,6 +654,15 @@ so let's just set it as default.
   (provide 'my-mouse)
 #+end_src
 * Calendar
+** Bindings
+
+I really want hjkl for day navigation in calendar. [[Meow mode]] already
+supplies j and k, so we just need to set l and h
+
+#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+  (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
+  (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day)
+#+end_src
 ** Base settings
 
 Set the date style to iso (day month year).
