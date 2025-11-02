@@ -174,6 +174,7 @@
  '("z" . meow-pop-selection)
  '("'" . repeat)
  '("/" . consult-line)
+ '(":" . execute-extended-command)
  '("<escape>" . ignore))
 
 (add-hook 'vterm-mode-hook #'meow-insert)

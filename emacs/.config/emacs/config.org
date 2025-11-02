@@ -550,6 +550,7 @@ documents easier.  In meow, this is extremely easy.  Compliments to
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("/" . consult-line)
+   '(":" . execute-extended-command)
    '("<escape>" . ignore))
 #+end_src
 ** Setting initial state for some major modes
