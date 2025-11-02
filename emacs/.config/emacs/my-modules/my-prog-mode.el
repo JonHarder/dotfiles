@@ -17,7 +17,7 @@
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-		    `(terraform-mode . ("terraform-ls" "serve"))))
+	    `(terraform-mode . ("terraform-ls" "serve"))))
 
 (straight-use-package 'hl-todo)
 (global-hl-todo-mode 1)

@@ -2601,7 +2601,7 @@ Evilified bindings to notmuch
       	      (downcase-word 1))))))
 
       (defun capitalize-state ()
-      	"Return a symbol representing the capitalization state of the previous word.
+        "Return a symbol representing the capitalization state of the previous word.
 
       Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
 
