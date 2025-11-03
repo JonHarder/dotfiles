@@ -1,8 +1,0 @@
-(plist-get my-font :name)
-(assoc :name plist-get)
-(assoc :name my-font)
-(plist-get '(:name "bob") :name)
-(getenv "PATH")
-(setq tmp-path (getenv "PATH"))
-(setenv "PATH" "/usr/local/go/bin:/Library/TeX/texbin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.rustup/toolchains/stable-aarch64-apple-darwin/bin/")
-(getenv "PATH")

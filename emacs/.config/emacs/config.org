@@ -159,6 +159,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-just)
   (require 'my-jj)
   (require 'my-avy)
+  (require 'my-registers)
 
   (require 'my-rust-mode)
   (require 'my-search)
@@ -2722,4 +2723,11 @@ dispatch system.
     (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
 
   (provide 'my-avy)
+#+end_src
+
+* Registers
+
+#+begin_src emacs-lisp :tangle "my-modules/my-registers.el" :mkdirp yes
+  (setq register-use-preview 'insist)
+  (provide 'my-registers)
 #+end_src

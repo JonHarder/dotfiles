@@ -3,3 +3,4 @@ lsp-cache/
 custom.el
 eln-cache/
 .cache/lsp
+ielm-history.eld
