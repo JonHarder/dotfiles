@@ -61,7 +61,7 @@
 				((org-agenda-overriding-header "Waiting...")))
 		  (todo "NEXT"
 				((org-agenda-overriding-header "Next Actions")))
-		  (tags "+DEADLINE=\"\"+SCHEDULED=\"\"+TODO=\"TODO\"|TODO=\"WAIT\""
+		  (tags "+DEADLINE=\"\"+SCHEDULED=\"\"+TODO=\"TODO\""
 				((org-agenda-overriding-header "Inactive tasks")))))
 
 		("d" "GTD Daily View"
