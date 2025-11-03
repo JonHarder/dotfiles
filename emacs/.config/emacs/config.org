@@ -376,6 +376,8 @@ on different tabs to help with different types of work within the same project.
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
   (defun meow-setup-core ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
+
+  (setq meow-use-clipboard t)
 #+end_src
 
 ** Set up motion state bindings

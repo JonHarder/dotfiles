@@ -4,6 +4,8 @@
 (defun meow-setup-core ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty))
 
+(setq meow-use-clipboard t)
+
 (meow-motion-define-key
  '("j" . meow-next)
  '("k" . meow-prev)
