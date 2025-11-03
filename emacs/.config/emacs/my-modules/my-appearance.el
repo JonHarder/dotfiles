@@ -1,4 +1,4 @@
-(defvar my-theme '(doom-themes . doom-material-dark)
+(defvar my-theme '(doom-themes . doom-challenger-deep)
   "Cons of the symbols representing the theme package, and theme name.")
 
 (defvar my-font '(:name "JetBrains Mono" :size 170)
