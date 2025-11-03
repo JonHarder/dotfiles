@@ -21,7 +21,7 @@ configuration.
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (defvar my-theme '(doom-themes . doom-palenight)
     "Cons of the symbols representing the theme package, and theme name.")
-  
+
   (defvar my-font '(:name "JetBrains Mono" :size 170)
     "Font (:name string :size integer).")
 #+end_src
@@ -675,8 +675,9 @@ I really want hjkl for day navigation in calendar. [[Meow mode]] already
 supplies j and k, so we just need to set l and h
 
 #+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-  (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
-  (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day)
+  (with-eval-after-load 'calendar
+    (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
+    (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day))
 #+end_src
 ** Base settings
 
