@@ -19,11 +19,7 @@ themes, setting font configuration, etc. is handled later in the
 configuration.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (defvar my-theme '(doom-themes . doom-palenight)
-    "Cons of the symbols representing the theme package, and theme name.")
-
-  (defvar my-font '(:name "JetBrains Mono" :size 170)
-    "Font (:name string :size integer).")
+   (require 'local-config)
 #+end_src
 * Early init optimizations
 ** Disable built-in package.el
