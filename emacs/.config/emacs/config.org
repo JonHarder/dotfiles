@@ -361,6 +361,15 @@ on different tabs to help with different types of work within the same project.
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (provide 'my-appearance)
 #+end_src
+* Scrolling
+Use the delightful ultra-scroll
+
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (straight-use-package 'ultra-scroll)
+  (setq scroll-conservatively 3
+  	  scroll-margin 0)
+  (ultra-scroll-mode 1)
+#+end_src
 * Meow mode
 ** Install and require package
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes

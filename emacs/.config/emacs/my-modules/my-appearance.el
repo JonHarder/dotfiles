@@ -92,3 +92,8 @@
 (straight-use-package 'spacious-padding)
 
 (provide 'my-appearance)
+
+(straight-use-package 'ultra-scroll)
+(setq scroll-conservatively 3
+	  scroll-margin 0)
+(ultra-scroll-mode 1)
