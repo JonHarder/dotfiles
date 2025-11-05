@@ -53,6 +53,7 @@
 (require 'my-lisp-mode)
 (require 'my-git)
 (require 'my-markup)
+(require 'my-k8s)
 (require 'my-navigation)
 (require 'my-web)
 (require 'my-neon-mode)

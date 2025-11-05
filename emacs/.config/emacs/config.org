@@ -141,6 +141,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-lisp-mode)
   (require 'my-git)
   (require 'my-markup)
+  (require 'my-k8s)
   (require 'my-navigation)
   (require 'my-web)
   (require 'my-neon-mode)
@@ -1573,12 +1574,20 @@ images, containers, compose, and more.
   #+end_src
 
 ** Nushell
-   This adds support for nushell files
+This adds support for nushell files
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-nushell-mode.el" :mkdirp yes
-     (straight-use-package 'nushell-mode)
-     (provide 'my-nushell-mode)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-nushell-mode.el" :mkdirp yes
+  (straight-use-package 'nushell-mode)
+  (provide 'my-nushell-mode)
+#+end_src
+** Kubernetes
+
+#+begin_src emacs-lisp :tangle "my-modules/my-k8s.el"
+  (straight-use-package 'kubed)
+  (keymap-global-set (kbd "C-c k") 'kubed-prefix-map)
+
+  (provide 'my-k8s)
+#+end_src
 ** Golang
    #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
      (straight-use-package 'go-mode)
