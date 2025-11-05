@@ -1589,21 +1589,21 @@ This adds support for nushell files
   (provide 'my-k8s)
 #+end_src
 ** Golang
-   #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
-     (straight-use-package 'go-mode)
-     (setq gofmt-command "/usr/local/go/bin/gofmt")
-     (setenv "PATH"
-             (concat
-              "/usr/local/go/bin:"
-              "/Library/TeX/texbin:"
-              "/opt/homebrew/bin:"
-              (getenv "PATH")))
-     (defun my-go-mode-hook ()
-       (when (eq major-mode 'go-mode)
-         (gofmt-before-save)))
-     (add-hook 'before-save-hook #'my-go-mode-hook)
-     (provide 'my-go-mode)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
+  (straight-use-package 'go-mode)
+  (setq gofmt-command "/usr/local/go/bin/gofmt")
+  (setenv "PATH"
+          (concat
+           "/usr/local/go/bin:"
+           "/Library/TeX/texbin:"
+           "/opt/homebrew/bin:"
+           (getenv "PATH")))
+  (defun my-go-mode-hook ()
+    (when (eq major-mode 'go-mode)
+      (gofmt-before-save)))
+  (add-hook 'before-save-hook #'my-go-mode-hook)
+  (provide 'my-go-mode)
+#+end_src
 ** Neon mode
 Neon mode is mostly just yaml.
 
@@ -1613,112 +1613,113 @@ Neon mode is mostly just yaml.
 #+end_src
 * Org
 
-  What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
-  poorly documented extras, but all baked in and then some) It can make headings, lists,
-  emphasize text, store links to other headings in the same or different files and so
-  much more.
+What is org mode? What /isn't/ org mode? Built on top of emacs' outline-mode, org mode
+poorly documented extras, but all baked in and then some) It can make headings, lists,
+emphasize text, store links to other headings in the same or different files and so
+much more.
 
-  In addition to note taking, it handles thinks like task tracking, scheduling, effortless
-  ascii table editing, embedded runnable code snippets (think Jupyter notebooks).
+In addition to note taking, it handles thinks like task tracking, scheduling, effortless
+ascii table editing, embedded runnable code snippets (think Jupyter notebooks).
 
-  In fact, this emacs configuration is written in org mode, and the embedded emacs lisp
-  is extracted and ran to formulate the actual config.
+In fact, this emacs configuration is written in org mode, and the embedded emacs lisp
+is extracted and ran to formulate the actual config.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-    (straight-use-package '(org :type built-in))
-    (require 'org)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (straight-use-package '(org :type built-in))
+  (require 'org)
+#+end_src
 
 ** modules
-   As if org wasn't useful enough as it was, it also ships with a bunch of
-   additional modules that add additional features. Check it out by looking
-   at the customize-option for [[elisp:(customize-option 'org-modules)][org-modules]]. One useful one added here is
-   the ~man~ module, which provides support for linking to man pages (opened
-   in emacs' built in man page viewer, obviously)
+As if org wasn't useful enough as it was, it also ships with a bunch of
+additional modules that add additional features. Check it out by looking
+at the customize-option for [[elisp:(customize-option 'org-modules)][org-modules]]. One useful one added here is
+the ~man~ module, which provides support for linking to man pages (opened
+in emacs' built in man page viewer, obviously)
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (with-eval-after-load 'org
-       (require 'ol-man)
-       (add-to-list 'org-modules 'ol-man t)
-       (add-to-list 'org-modules 'org-habit t))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (with-eval-after-load 'org
+    (require 'ol-man)
+    (add-to-list 'org-modules 'ol-man t)
+    (add-to-list 'org-modules 'org-habit t))
+#+end_src
 
 ** Settings
 *** org tempo
-    Org tempo does a lot, I should really look into more of what it has to offer.
-    At the very least, I use it for really handy expansion for scr blocks.
-    I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
+Org tempo does a lot, I should really look into more of what it has to offer.
+At the very least, I use it for really handy expansion for scr blocks.
+I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (with-eval-after-load 'org
-       (require 'org-tempo))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (with-eval-after-load 'org
+    (require 'org-tempo))
+#+end_src
 
 *** default files and directories
 
-   These are a handful of settings that set up default destinations for actions that
-   act globally, such as [[*Org capture][org-capture]].
+These are a handful of settings that set up default destinations for actions that
+act globally, such as [[*Org capture][org-capture]].
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-directory "~/Dropbox/org/gtd/")
-     (setq org-default-notes-file "~/Dropbox/org/gtd/gtd.org")
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-directory "~/Dropbox/org/gtd/")
+  (setq org-default-notes-file "~/Dropbox/org/gtd/gtd.org")
+#+end_src
 
 *** todo statuses
 
-   Setting todo states
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-todo-keywords
-           '((sequence
-              "TODO(t)"
-              "NEXT(n)"
-              "WAIT(w)"
-              "STRT(s)"
-              "BLOCKED(b)"
-              "REVIEW(r)"
-              "|"
-              "DONE(d)"
-     		 "CANCELED(c)")))
-   #+end_src
+Setting todo states
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"
+           "NEXT(n)"
+           "WAIT(w)"
+           "STRT(s)"
+           "BLOCKED(b)"
+           "REVIEW(r)"
+           "|"
+           "DONE(d)"
+  		 "CANCELED(c)")))
+#+end_src
    
 *** images
 
-   When inserting images in org files, often they will be way to large to fit into
-   the general flow of the document. Through the use of ~#+attr_html: :width NNpx~,
-   you cen set how large the image should be displayed as. To enable this, we will
-   need to turn off the following setting.
+When inserting images in org files, often they will be way to large to fit into
+the general flow of the document. Through the use of ~#+attr_html: :width NNpx~,
+you cen set how large the image should be displayed as. To enable this, we will
+need to turn off the following setting.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-image-actual-width nil)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-image-actual-width nil)
+#+end_src
 
 *** indentation
 
-   messing with org src block indentation
+messing with org src block indentation
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-src-preserve-indentation nil)
-     (setq org-startup-indented t)
-     (straight-use-package
-      '(org-modern-indent
-        :type git
-        :host github
-        :repo "jdtsmith/org-modern-indent"))
-     (require 'org-modern-indent)
-     (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-src-preserve-indentation nil)
+  (setq org-startup-indented t)
+  (straight-use-package
+   '(org-modern-indent
+     :type git
+     :host github
+     :repo "jdtsmith/org-modern-indent"))
+  (require 'org-modern-indent)
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
+#+end_src
 
 *** display settings
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-hide-emphasis-markers t)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-hide-emphasis-markers t)
+#+end_src
 
 *** Priority
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-priority-highest ?A
-     	  org-priority-lowest ?D)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-priority-highest ?A
+  	  org-priority-lowest ?D)
+#+end_src
 
 *** export
 Org can export content into a variety of formats.  Most relevant to my
@@ -1742,11 +1743,11 @@ With the ~ox-typst~ package, org can export to typst documents.
     (require 'ox-typst))
 #+end_src
 
-
 ** Org agenda
 *** Custom commands
-    These commands show up in the org-agenda view and will produce
-    lists of org headings matching a variety of criteria.
+These commands show up in the org-agenda view and will produce
+lists of org headings matching a variety of criteria.
+
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (setq org-agenda-custom-commands
   	  '(("g" "GTD Review"
@@ -1795,18 +1796,18 @@ project is one which has the tag "proj" and a task with the
 #+end_src
 
 *** basic settings
-    Org agenda is cool. It tries to create a day/week/month planner out of any tasks
-    or scheduled events it can find in `org-agenda-files'.
+Org agenda is cool. It tries to create a day/week/month planner out of any tasks
+or scheduled events it can find in `org-agenda-files'.
 
-    I want it to pull in appointments or reminders from the diary as well since
-    those sorts of events don't really make sense to track in org.
+I want it to pull in appointments or reminders from the diary as well since
+those sorts of events don't really make sense to track in org.
 
-    This will cause emacs to save all the associated buffers attached
-    to the headings shown in the agenda buffer.
+This will cause emacs to save all the associated buffers attached
+to the headings shown in the agenda buffer.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
+#+end_src
 
 *** Refile targets
 
@@ -1866,80 +1867,81 @@ heading.
 #+end_src
 
 *** super agenda
-    NOTE: this package recipe appears to be broken
-    currently. Something about the version of org is wrong.
+NOTE: this package recipe appears to be broken
+currently. Something about the version of org is wrong.
 
-	*NOTE*: Maybe since I pinned the org version to the local one this
-     should work better?
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      ;; (straight-use-package 'org-super-agenda)
-      ;; (setq org-super-agenda-groups
-      ;; '(
-      ;; 	(:name "Today"
-      ;; 	       :time-grid t
-      ;; 	       :todo '("TODO" "WORKING"))))
-    #+end_src
+*NOTE*: Maybe since I pinned the org version to the local one this
+should work better?
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  ;; (straight-use-package 'org-super-agenda)
+  ;; (setq org-super-agenda-groups
+  ;; '(
+  ;; 	(:name "Today"
+  ;; 	       :time-grid t
+  ;; 	       :todo '("TODO" "WORKING"))))
+#+end_src
 
 ** Org capture
 
-   Org capture aids you in jotting down a quick note when you think of somethimg
-   you want to remember but don't want to lose momentum in whatever task you
-   were in the middle of.
+Org capture aids you in jotting down a quick note when you think of somethimg
+you want to remember but don't want to lose momentum in whatever task you
+were in the middle of.
 
-   Say you were writing a new feature in an application and you realize there's
-   a possibility to refactor an adjacent part of the code. Run org capture
-   M-x [[help:org-capture][org-capture]] and a temporary buffer opens up where you can take your
-   note. It will automatically embed any contextual information about where
-   you took the note from, such as which file you were editing, the time,
-   etc. Once you finish the note, close the buffer with ~C-c C-c~ and the note
-   is gone, the window closes and you're back to doing what you were doing
-   before.
+Say you were writing a new feature in an application and you realize there's
+a possibility to refactor an adjacent part of the code. Run org capture
+M-x [[help:org-capture][org-capture]] and a temporary buffer opens up where you can take your
+note. It will automatically embed any contextual information about where
+you took the note from, such as which file you were editing, the time,
+etc. Once you finish the note, close the buffer with ~C-c C-c~ and the note
+is gone, the window closes and you're back to doing what you were doing
+before.
 
-   Behind the scenes ~org-capture~ stored your note in the file of your choosing
-   for you to review on your own time when convenient.
+Behind the scenes ~org-capture~ stored your note in the file of your choosing
+for you to review on your own time when convenient.
 
-   You can customize what types of notes ~org-capture~ can take, so that you can
-   capture any any data you want, place it into any file you want. Just customize
-   the variable ~org-capture-templates~.
+You can customize what types of notes ~org-capture~ can take, so that you can
+capture any any data you want, place it into any file you want. Just customize
+the variable ~org-capture-templates~.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-capture-templates
-     	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
-              "* %?\n/Entered on/ %U")
-     		("p" "Project - new project" entry
-     		 (file+headline org-default-notes-file "Projects")
-     		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-capture-templates
+  	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
+           "* %?\n/Entered on/ %U")
+  		("p" "Project - new project" entry
+  		 (file+headline org-default-notes-file "Projects")
+  		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
+#+end_src
 
 ** Org structures
-   Org supports a variety of /structures/. In context, a structure is a block of
-   content. Structures can contain source code, comments, quotes, examples, and
-   more.
+Org supports a variety of /structures/. In context, a structure is a block of
+content. Structures can contain source code, comments, quotes, examples, and
+more.
 
-   This can be extended through ~org-structure-template-alist~.
+This can be extended through ~org-structure-template-alist~.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (setq org-structure-template-alist
-           '(("s" . "src")
-             ("e" . "src emacs-lisp")
-             ("b" . "src bash")
-     		("q" . "quote")
-             ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-structure-template-alist
+        '(("s" . "src")
+          ("e" . "src emacs-lisp")
+          ("b" . "src bash")
+  		("q" . "quote")
+          ("t" . "src emacs-lisp :tangle FILENAME :mkdirp yes")))
+#+end_src
 ** Org publish
 
-   Org allows you to export any org file to a variety of formats:
-     - markdown
-     - iCalendar (for scheduled/deadline events)
-     - ODT (or word if configured) documents
-     - plain text (using unicode or ascii elemets)
-     - html
+Org allows you to export any org file to a variety of formats:
+- markdown
+- iCalendar (for scheduled/deadline events)
+- ODT (or word if configured) documents
+- plain text (using unicode or ascii elemets)
+- html
 
-   Beyond this however, you can configure org to publish a whole collection
-   of org files into a viewable site. It will configure links, css, and more
-   for you. You just need to configure the projects variable
+  Beyond this however, you can configure org to publish a whole collection
+  of org files into a viewable site. It will configure links, css, and more
+  for you. You just need to configure the projects variable
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
      (require 'ox-publish)
 
      (setq org-publish-use-timestamps-flag nil)
@@ -1980,17 +1982,17 @@ heading.
                :publishing-directory "~/blog/public/"
                :recursive t
                :publishing-function #'org-publish-attachment)))
-   #+end_src
+  #+end_src
 
 ** Visual enhancements
 
 *** Emphasis markers
 
-    Hide the markers which annotate different emphasis indicators in text.
+Hide the markers which annotate different emphasis indicators in text.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-      (setq org-hide-emphasis-markers t)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-hide-emphasis-markers t)
+#+end_src
 
 *** Org Modern
 
@@ -1998,266 +2000,268 @@ heading.
 in a beautiful way. It incapsulates ~org-bullets~ and thus that
 package is disabled.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (straight-use-package 'org-modern)
-     (with-eval-after-load 'org (global-org-modern-mode))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (straight-use-package 'org-modern)
+  (with-eval-after-load 'org (global-org-modern-mode))
+#+end_src
 
 ** Babel
 
-   Org babel is a code embedding feature. It comes included in the default
-   install of Org (which itself comes with emacs core).
+Org babel is a code embedding feature. It comes included in the default
+install of Org (which itself comes with emacs core).
 
-   Every emacs-lisp block in this file is written in a source block that
-   babel will evaluate to form the actual, runnable config.
+Every emacs-lisp block in this file is written in a source block that
+babel will evaluate to form the actual, runnable config.
 
-   This is how [[file:init.el][init.el]] can be just one sexp; telling babel to untangle
-   this file in order to extract all the elisp.
+This is how [[file:init.el][init.el]] can be just one sexp; telling babel to untangle
+this file in order to extract all the elisp.
 
-   It's far more powerfull than that though, as it allows for [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]]
-   in the style of Jupyter notebooks. You can execute a bash script, record the
-   results, then feed that data into a python script and export that into an org
-   table. This is a huge boon to reproducible research, and documenting processes.
+It's far more powerfull than that though, as it allows for [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]]
+in the style of Jupyter notebooks. You can execute a bash script, record the
+results, then feed that data into a python script and export that into an org
+table. This is a huge boon to reproducible research, and documenting processes.
 
-   In order to execute code snippets in an org buffer, that language must be supported
-   and enabled. By default, org only authorizes emacs-lisp, but this can be easily
-   changed using ~org-bable-do-load-languages~. Your language of choice might not be
-   supported out of the box, even if you add it using ~org-babel-do-load-languages~;
-   if this is the case, you'll need to load a third-party package to support it.
-   These are typically called =ob-$LANG=. For example, to support executing haskell,
-   you must install the package =ob-haskell=.
+In order to execute code snippets in an org buffer, that language must be supported
+and enabled. By default, org only authorizes emacs-lisp, but this can be easily
+changed using ~org-bable-do-load-languages~. Your language of choice might not be
+supported out of the box, even if you add it using ~org-babel-do-load-languages~;
+if this is the case, you'll need to load a third-party package to support it.
+These are typically called =ob-$LANG=. For example, to support executing haskell,
+you must install the package =ob-haskell=.
 
 *** Enabling more languages
 
-     #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-       (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
-          (python . t)
-          (calc . t)
-          (shell . t)))
-     #+end_src
-
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (calc . t)
+     (shell . t)))
+#+end_src
+     
 ** toc-org
 
-   Toc org is a package that dynamically generates and maintains a table
-   of contents within org documents.
+Toc org is a package that dynamically generates and maintains a table
+of contents within org documents.
 
-   All you need to do is annotate any heading with ~:TOC:~ and the plugin
-   will highjack that heading for use on save.
+All you need to do is annotate any heading with ~:TOC:~ and the plugin
+will highjack that heading for use on save.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (straight-use-package 'toc-org)
-     (add-hook 'org-mode-hook 'toc-org-mode)
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (straight-use-package 'toc-org)
+  (add-hook 'org-mode-hook 'toc-org-mode)
 #+end_src
 
 ** Literate calc mode
-   Literate calc mode evaluations equations inline in your buffer and
-   prints the results as overlays in the file.
+Literate calc mode evaluations equations inline in your buffer and
+prints the results as overlays in the file.
 
-   Using its minor mode in org results in a really ergonomic
-   experience with hashing out quick equations.
+Using its minor mode in org results in a really ergonomic
+experience with hashing out quick equations.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (straight-use-package 'literate-calc-mode)
-     (add-hook 'org-mode-hook #'literate-calc-minor-mode)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (straight-use-package 'literate-calc-mode)
+  (add-hook 'org-mode-hook #'literate-calc-minor-mode)
+#+end_src
    
 ** Provide =my-org=
-   #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-     (provide 'my-org)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (provide 'my-org)
+#+end_src
 * Jujutsu (jj)
-   Jujutsu in a simple, but powerful version control system. It's
-   great. It uses git as the backing change database (though a native,
-   novel storage backend is in the works) so it can be seamlessly used
-   in a git based project and even used alongside with other
-   contributors who are still using git directly.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
-     (straight-use-package
-      '(jj-mode :type git
-                :host github
-                :repo "bolivier/jj-mode.el"))
-     (require 'magit)
-     (provide 'my-jj)
-   #+end_src
+Jujutsu in a simple, but powerful version control system. It's
+great. It uses git as the backing change database (though a native,
+novel storage backend is in the works) so it can be seamlessly used
+in a git based project and even used alongside with other
+contributors who are still using git directly.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
+  (straight-use-package
+   '(jj-mode :type git
+             :host github
+             :repo "bolivier/jj-mode.el"))
+  (require 'magit)
+  (provide 'my-jj)
+#+end_src
 * Search
 ** Isearch
-    There are a variety of entrypoints into emacs' built in searching
-    facilities.
+There are a variety of entrypoints into emacs' built in searching
+facilities.
 
-    The most basic and straightforward is ~isearch-forward~, bound to
-    =C-s= by default.
+The most basic and straightforward is ~isearch-forward~, bound to
+=C-s= by default.
 
 *** Settings
-     #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-       ;; -*- lexical-binding: t; -*-
-       (setq isearch-lazy-count t
-             lazy-count-prefix-format "(%s/%s) "
-             lazy-count-suffix-format nil)
-     #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+  (setq isearch-lazy-count t
+        lazy-count-prefix-format "(%s/%s) "
+        lazy-count-suffix-format nil)
+#+end_src
+
 ** Provide =my-search= module
-   #+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
-     (provide 'my-search)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-search.el" :mkdirp yes
+  (provide 'my-search)
+#+end_src
 
 * Shells
 ** Basic config
 
-   This sets which shell to use when executing commands from dired or compile and friends
-   This is different from the shell to use in interactive sessions.
+This sets which shell to use when executing commands from dired or compile and friends
+This is different from the shell to use in interactive sessions.
 
-   Because I use [[https://www.nushell.sh][nushell]] for my shell, regular commands like [[man:find][find]] often choke when tools
-   like dired assume the posix implementation.
+Because I use [[https://www.nushell.sh][nushell]] for my shell, regular commands like [[man:find][find]] often choke when tools
+like dired assume the posix implementation.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-     ;; -*- lexical-binding: t; -*-
-     (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
-     	  explicit-shell-file-name "/bin/zsh"
-     	  explicit-zsh-args '("--login" "--interactive"
-           shell-file-name "/bin/zsh")
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+  (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
+  	  explicit-shell-file-name "/bin/zsh"
+  	  explicit-zsh-args '("--login" "--interactive"
+  						  shell-file-name "/bin/zsh")
+#+end_src
 
 ** Eshell
 *** Environment variables
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
-      (add-to-list 'exec-path "/usr/local/go/bin")
-      (add-to-list 'exec-path "/opt/homebrew/bin")
-      (add-to-list 'exec-path "/Library/TeX/texbin")
-      (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+  (add-to-list 'exec-path "/usr/local/go/bin")
+  (add-to-list 'exec-path "/opt/homebrew/bin")
+  (add-to-list 'exec-path "/Library/TeX/texbin")
+  (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
+#+end_src
 
 *** hook
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (add-hook 'eshell-mode-hook
-                (lambda ()
-                  (setenv "TERM" "eterm")
-                  (setenv "PAGER" "cat")))
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (setenv "TERM" "eterm")
+              (setenv "PAGER" "cat")))
 
-    #+end_src
+#+end_src
 *** Settings
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (require 'eshell)
-      (add-to-list 'eshell-modules-list 'eshell-smart)
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (require 'eshell)
+  (add-to-list 'eshell-modules-list 'eshell-smart)
 
-      (straight-use-package 'eshell-syntax-highlighting)
-      (require 'eshell-syntax-highlighting)
-      (eshell-syntax-highlighting-global-mode +1)
+  (straight-use-package 'eshell-syntax-highlighting)
+  (require 'eshell-syntax-highlighting)
+  (eshell-syntax-highlighting-global-mode +1)
 
-      ;; (require 'em-smart)
-      ;; (setq eshell-where-to-jump 'begin)
-      ;; (setq eshell-smart-space-goes-to-end nil)
+  ;; (require 'em-smart)
+  ;; (setq eshell-where-to-jump 'begin)
+  ;; (setq eshell-smart-space-goes-to-end nil)
 
-      ;; (setq eshell-review-quick-commands nil)
-      (require 'em-term)
+  ;; (setq eshell-review-quick-commands nil)
+  (require 'em-term)
 
-      (setq eshell-visual-commands
-            '("vi"
-              "vim"
-              "hx"
-              "screen"
-              "nvim"
-              "bacon"
-              ;; "gh"
-              "tmux"
-              "top"
-              "htop"
-              "less"
-              "more"
-              "lynx"
-              "links"
-              "ncftp"
-              "mutt"
-              "pine"
-              "tin"
-              "trn"
-              "elm"))
+  (setq eshell-visual-commands
+        '("vi"
+          "vim"
+          "hx"
+          "screen"
+          "nvim"
+          "bacon"
+          ;; "gh"
+          "tmux"
+          "top"
+          "htop"
+          "less"
+          "more"
+          "lynx"
+          "links"
+          "ncftp"
+          "mutt"
+          "pine"
+          "tin"
+          "trn"
+          "elm"))
 
-      (setq eshell-visual-subcommands
-            '(("jj" "squash" "split")))
-    #+end_src
+  (setq eshell-visual-subcommands
+        '(("jj" "squash" "split")))
+#+end_src
 
 *** Completion
 
-    I want more intelligent completion in eshell.
+I want more intelligent completion in eshell.
 
-    This provides smart docker completion, not only for available
-    subcommands, but also for realtime completion of available
-    images in particular for commands like `run'. 
+This provides smart docker completion, not only for available
+subcommands, but also for realtime completion of available
+images in particular for commands like `run'. 
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (defconst pcmpl-docker-commands
-        '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
-          "search" "version" "info"
-          "compose"))
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (defconst pcmpl-docker-commands
+    '("run" "exec" "ps" "build" "pull" "images" "login" "logout"
+      "search" "version" "info"
+      "compose"))
 
-      (defvar docker-images-command "docker image ls | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
-      (defun pcmpl-docker-images ()
-        (let ((results (shell-command-to-string docker-images-command)))
-          (string-split results "\n")))
+  (defvar docker-images-command "docker image ls | tail -n +2 | awk '{ if($1 != \"<none>\") { if($2 == \"<none>\") { print $1 } else { printf(\"%s:%s\\n\", $1, $2) } } }'")
+  (defun pcmpl-docker-images ()
+    (let ((results (shell-command-to-string docker-images-command)))
+      (string-split results "\n")))
 
-      (defun pcomplete/docker ()
-        "Completion for `docker'."
-        (pcomplete-here* pcmpl-docker-commands)
-        (cond
-         ((pcomplete-match (regexp-opt '("run")) 1)
-          (pcomplete-here* (pcmpl-docker-images)))))
+  (defun pcomplete/docker ()
+    "Completion for `docker'."
+    (pcomplete-here* pcmpl-docker-commands)
+    (cond
+     ((pcomplete-match (regexp-opt '("run")) 1)
+      (pcomplete-here* (pcmpl-docker-images)))))
 
-    #+end_src
+#+end_src
 *** Custom functions
-    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-      (require 'eshell)
-      (require 'esh-mode)
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (require 'eshell)
+  (require 'esh-mode)
 
-      (defun eshell/p ()
-        (interactive)
-        (eshell/pwd))
+  (defun eshell/p ()
+    (interactive)
+    (eshell/pwd))
 
-      (defun eshell/less (file)
-        "Use `view-file' instead of less when viewing FILE."
-        (interactive)
-        (view-file file))
+  (defun eshell/less (file)
+    "Use `view-file' instead of less when viewing FILE."
+    (interactive)
+    (view-file file))
 
-      (defun eshell/f (&optional file)
-        "Shorthand for `find-file', opening FILE."
-        (interactive)
-        (if file
-            (find-file file)
-          (call-interactively #'find-file)))
+  (defun eshell/f (&optional file)
+    "Shorthand for `find-file', opening FILE."
+    (interactive)
+    (if file
+        (find-file file)
+      (call-interactively #'find-file)))
 
-      (defun eshell/d (&optional dir)
-        "Run `dired' for directory DIR, or current dir if not given."
-        (interactive)
-        (if dir (dired dir) (dired ".")))
+  (defun eshell/d (&optional dir)
+    "Run `dired' for directory DIR, or current dir if not given."
+    (interactive)
+    (if dir (dired dir) (dired ".")))
 
-      (defun eshell/q ()
-        "Kill the `eshell' process and close its window."
-        (interactive)
-        (if (one-window-p)
-      	  (switch-to-buffer nil)
-      	(delete-window)))
+  (defun eshell/q ()
+    "Kill the `eshell' process and close its window."
+    (interactive)
+    (if (one-window-p)
+  	  (switch-to-buffer nil)
+  	(delete-window)))
 
-      (defun eshell-here ()
-        "Open an `eshell' window relative to the active buffer's file."
-        (interactive)
-        (let* ((parent (if (buffer-file-name)
-                           (file-name-directory (buffer-file-name))
-                         default-directory))
-               (name (car (last (split-string parent "/" t))))
-               (buffer-name (concat "*eshell: " name "*")))
-          (if-let* ((buffer (get-buffer buffer-name)))
-              (progn
-                (display-buffer buffer)
-                (switch-to-buffer buffer))
-            (eshell "new")
-            (rename-buffer (concat "*eshell: " name "*"))
-            (insert "ls")
-            (eshell-send-input))))
+  (defun eshell-here ()
+    "Open an `eshell' window relative to the active buffer's file."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+                       (file-name-directory (buffer-file-name))
+                     default-directory))
+           (name (car (last (split-string parent "/" t))))
+           (buffer-name (concat "*eshell: " name "*")))
+      (if-let* ((buffer (get-buffer buffer-name)))
+          (progn
+            (display-buffer buffer)
+            (switch-to-buffer buffer))
+        (eshell "new")
+        (rename-buffer (concat "*eshell: " name "*"))
+        (insert "ls")
+        (eshell-send-input))))
 
-    #+end_src
+#+end_src
 *** Prompt
 Because eshell is just elisp, the prompt can be set using elisp as well.
 This unlocks the full power of emacs as an environment and can be harnesed
@@ -2280,44 +2284,44 @@ to make eshell as fancy as you can dream up (and program)
   (setq eshell-prompt-regexp ".*$ ")
 #+end_src
 ** Eat
-  [[https://codeberg.org/akib/emacs-eat][Eat]] is a new kind of shell for emacs, handling fully interactive, fullscreen terminal apps
-  cleanly. I think it can replace vterm, and has the benefit of not needing system
-  dependencies nor a compilation step.
+[[https://codeberg.org/akib/emacs-eat][Eat]] is a new kind of shell for emacs, handling fully interactive, fullscreen terminal apps
+cleanly. I think it can replace vterm, and has the benefit of not needing system
+dependencies nor a compilation step.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-    (straight-use-package 'eat)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (straight-use-package 'eat)
+#+end_src
 ** Vterm
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-     (straight-use-package 'vterm)
-     (straight-use-package 'multi-vterm)
-     (setq vterm-shell "/opt/homebrew/bin/nu")
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (straight-use-package 'vterm)
+  (straight-use-package 'multi-vterm)
+  (setq vterm-shell "/opt/homebrew/bin/nu")
+#+end_src
 ** Provide =my-shells=
-   #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
-     (provide 'my-shells)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
+  (provide 'my-shells)
+#+end_src
 
 * Typst
-    Typst is great. It's a modern and easy to use reimagining of LaTeX.
+Typst is great. It's a modern and easy to use reimagining of LaTeX.
 
 ** Install package
-    #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
-      ;; -*- lexical-binding: t; -*-
-      (straight-use-package
-       '(typst-ts-mode
-         :type git
-         :host sourcehut
-         :repo "meow_king/typst-ts-mode"
-         :custom
-         (typst-ts-mode-watch-options "--open")))
-    #+end_src
-
+#+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+  (straight-use-package
+   '(typst-ts-mode
+     :type git
+     :host sourcehut
+     :repo "meow_king/typst-ts-mode"
+     :custom
+     (typst-ts-mode-watch-options "--open")))
+#+end_src
+    
 ** Provide feature =my-typst=
-    #+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
-      (provide 'my-typst)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-typst.el" :mkdirp yes
+  (provide 'my-typst)
+#+end_src
  
 * Navigation
 ** Windows
@@ -2333,44 +2337,44 @@ record window configurations.
 
 *** ace-window
 
-    Ace window is a handy way to supercharge `other-window' by giving
-    each option a lettered target. Simply pressing that letter jumps
-    straight to the targeted window, without having to cycle through
-    any intermediate windows in the cycle.
+Ace window is a handy way to supercharge `other-window' by giving
+each option a lettered target. Simply pressing that letter jumps
+straight to the targeted window, without having to cycle through
+any intermediate windows in the cycle.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-      (straight-use-package 'ace-window)
-      (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (straight-use-package 'ace-window)
+  (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+#+end_src
 
 *** Window management
 
-    Window management in emacs is very powerful, but oft misunderstood.
-    Here are some rules to inform emacs of where I want particular windows
-    to go.
+Window management in emacs is very powerful, but oft misunderstood.
+Here are some rules to inform emacs of where I want particular windows
+to go.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-      (setq switch-to-buffer-obey-display-actions t)
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (setq switch-to-buffer-obey-display-actions t)
 
-      ;; (add-to-list 'display-buffer-alist
-      ;;              '("\\*eshell.*\\*"
-      ;;                (display-buffer-at-bottom)
-      ;;                (side . bottom)
-      ;;                (slot . 0)
-      ;;                (window-height . .50)))
+  ;; (add-to-list 'display-buffer-alist
+  ;;              '("\\*eshell.*\\*"
+  ;;                (display-buffer-at-bottom)
+  ;;                (side . bottom)
+  ;;                (slot . 0)
+  ;;                (window-height . .50)))
 
-      ;; (add-to-list 'display-buffer-alist
-      ;;              '("\\*vterm.*\\*"
-      ;;                (display-buffer-at-bottom)
-      ;;                (side . bottom)
-      ;;                (slot . 0)
-      ;; (window-height . .50)))
+  ;; (add-to-list 'display-buffer-alist
+  ;;              '("\\*vterm.*\\*"
+  ;;                (display-buffer-at-bottom)
+  ;;                (side . bottom)
+  ;;                (slot . 0)
+  ;; (window-height . .50)))
 
-      (add-to-list 'display-buffer-alist
-                   '("Calendar"
-                     (display-buffer-below-selected)
-                     (window-height . .20)))
-    #+end_src
+  (add-to-list 'display-buffer-alist
+               '("Calendar"
+                 (display-buffer-below-selected)
+                 (window-height . .20)))
+#+end_src
 
 Growing, shrinking, and moving windows is a fairly common task, yet
 usually involves resorting to the mouse, or performing a long series
@@ -2413,52 +2417,52 @@ command for the key as usual.
 
 ** Ace jump
 
-  Ace jump is a fantastic package that allows you to jump to any point on the screen with 3
-  key presses or less. It's like using your mouse to go wherever you need, but without
-  moving your hands off the keyboard.
+Ace jump is a fantastic package that allows you to jump to any point on the screen with 3
+key presses or less. It's like using your mouse to go wherever you need, but without
+moving your hands off the keyboard.
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-    (straight-use-package 'ace-jump-mode)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (straight-use-package 'ace-jump-mode)
+#+end_src
 
 ** Provide =my-navigation=
-  #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-    (provide 'my-navigation)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (provide 'my-navigation)
+#+end_src
 
 * Web Browsing
 ** Convenience functions
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
-     (defun google-this (start end)
-       "google-this googles either the selected region or the symbol at point.
+#+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
+  (defun google-this (start end)
+    "google-this googles either the selected region or the symbol at point.
 
-     It makes use of the `browse-url' method which can be configured
-     to query using a variety of tools.  By default, it will search
-     using an external browser configured via the operating system."
-       (interactive "rGoogle: ")
-       (let ((query (if (region-active-p)
-                        (buffer-substring start end)
-                      (thing-at-point 'symbol t))))
-         (browse-url (format "https://google.com/search?q=%s" query))))
-   #+end_src
+  It makes use of the `browse-url' method which can be configured
+  to query using a variety of tools.  By default, it will search
+  using an external browser configured via the operating system."
+    (interactive "rGoogle: ")
+    (let ((query (if (region-active-p)
+                     (buffer-substring start end)
+                   (thing-at-point 'symbol t))))
+      (browse-url (format "https://google.com/search?q=%s" query))))
+#+end_src
    
 ** Provide my-web
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
-     (provide 'my-web)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
+  (provide 'my-web)
+#+end_src
 
 * Email
 ** Mail server/client setup
-  #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-    (setq send-mail-function 'smtpmail-send-it)
-    (setq smtpmail-default-smtp-server "smtp.gmail.com"
-          smtpmail-smtp-server "smtp.gmail.com"
-          smtpmail-stream-type 'tls
-          smtpmail-smtp-service 465
-          user-mail-address "jharder@kipsu.com")
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-stream-type 'tls
+        smtpmail-smtp-service 465
+        user-mail-address "jharder@kipsu.com")
+#+end_src
 
 ** mbsync setup
 At this point you shouldn't be surprised to find that emacs has decent support for sending
@@ -2597,92 +2601,92 @@ Evilified bindings to notmuch
   #+end_src
 * Text
 ** Mixed pitch mode
-    Variable pitch (or proportional) fonts are those fonts which have
-    different widths on a per-character basis. These are typically
-    better for prose.
+Variable pitch (or proportional) fonts are those fonts which have
+different widths on a per-character basis. These are typically
+better for prose.
 
-    Fixed pitch fonts are those which have the same width for each
-    character. This means code formatting is preserved relative to
-    each line, and does not vary on which letters are typed. This
-    tends to be preferred for code.
+Fixed pitch fonts are those which have the same width for each
+character. This means code formatting is preserved relative to
+each line, and does not vary on which letters are typed. This
+tends to be preferred for code.
 
-    Using variable pitch fonts in text-inheriting modes is nice, but
-    results in things like org source blocks using the same variable
-    pitch as your prose.
+Using variable pitch fonts in text-inheriting modes is nice, but
+results in things like org source blocks using the same variable
+pitch as your prose.
 
-    Fortunately, the ~mixed-pitch~ package is aware of the different
-    font requirements of such modes and will use both variable and
-    fixed pitch fonts in the same buffer according to use.
+Fortunately, the ~mixed-pitch~ package is aware of the different
+font requirements of such modes and will use both variable and
+fixed pitch fonts in the same buffer according to use.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
-      (straight-use-package 'mixed-pitch)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (straight-use-package 'mixed-pitch)
+#+end_src
 
 ** Fill column
-   Auto-fill mode uses a fixed column number to inform when emacs will
-   insert a newline.
+Auto-fill mode uses a fixed column number to inform when emacs will
+insert a newline.
 
-   Lets set it to something reasonable.
+Lets set it to something reasonable.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
-     (set-fill-column 80)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (set-fill-column 80)
+#+end_src
 ** Text-mode hook
-  #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
-    (defun my-text-mode-hook ()
-      (auto-fill-mode 1)
-      (flyspell-mode 1))
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (defun my-text-mode-hook ()
+    (auto-fill-mode 1)
+    (flyspell-mode 1))
 
-    (add-hook 'text-mode-hook #'my-text-mode-hook)
-  #+end_src
+  (add-hook 'text-mode-hook #'my-text-mode-hook)
+#+end_src
 
 ** Functions
 *** Cycle capitalize word
-    #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
-      (defun cycle-capitalization ()
-      	"Cycle capitalization of previous word.
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (defun cycle-capitalization ()
+    "Cycle capitalization of previous word.
 
-      Capitalization schemes are:
-      	- Regular capitalization: ensure only the first letter is capitalized
-      	- All caps: Capitalize all letters of the word
-      	- No caps: No Letters of the word are capitalized"
-      	(interactive)
-      	(let ((state (capitalize-state)))
-      	  (save-excursion
-      	    (goto-char (beginning-of-thing 'word))
-      	    (cond
-      	     ((eq 'lower state)
-      	      (capitalize-word 1))
-      	     ((eq 'capital state)
-      	      (upcase-word 1))
-      	     ((eq 'all-caps state)
-      	      (downcase-word 1))))))
+  Capitalization schemes are:
+  	- Regular capitalization: ensure only the first letter is capitalized
+  	- All caps: Capitalize all letters of the word
+  	- No caps: No Letters of the word are capitalized"
+    (interactive)
+    (let ((state (capitalize-state)))
+  	(save-excursion
+  	  (goto-char (beginning-of-thing 'word))
+  	  (cond
+  	   ((eq 'lower state)
+  	    (capitalize-word 1))
+  	   ((eq 'capital state)
+  	    (upcase-word 1))
+  	   ((eq 'all-caps state)
+  	    (downcase-word 1))))))
 
-      (defun capitalize-state ()
-        "Return a symbol representing the capitalization state of the previous word.
+  (defun capitalize-state ()
+    "Return a symbol representing the capitalization state of the previous word.
 
-      Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
+  Returns one of: 'lower, 'capital, or 'all-caps under the following senarios:
 
-      	'lower    The first character of the word is alpha and lowercase.
-      	'capital  The first character of the word is alpha and uppercase (but not every character in the word is uppercase.)
-      	'all-caps All letters of the word are alpha and uppercase."
-        (interactive)
-        (let* ((word (word-at-point t))
-      	     (upper-first-char-p (char-uppercase-p (string-to-char word)))
-      	     (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
-      	(cond
-      	 (all-upper-p 'all-caps)
-      	 (upper-first-char-p 'capital)
-      	 (t 'lower))))
+  	'lower    The first character of the word is alpha and lowercase.
+  	'capital  The first character of the word is alpha and uppercase (but not every character in the word is uppercase.)
+  	'all-caps All letters of the word are alpha and uppercase."
+    (interactive)
+    (let* ((word (word-at-point t))
+  	     (upper-first-char-p (char-uppercase-p (string-to-char word)))
+  	     (all-upper-p (map-every-p (lambda (i val) (char-uppercase-p val)) word)))
+  	(cond
+  	 (all-upper-p 'all-caps)
+  	 (upper-first-char-p 'capital)
+  	 (t 'lower))))
 
-      (define-key global-map [remap capitalize-word] #'cycle-capitalization)
-    #+end_src
+  (define-key global-map [remap capitalize-word] #'cycle-capitalization)
+#+end_src
      
 
 ** Provide =my-text=
-  #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
-    (provide 'my-text)
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (provide 'my-text)
+#+end_src
 * Timers (tmr)
 The famous Prot has created the tmr package which makes setting timers
 very easy.
@@ -2694,56 +2698,57 @@ very easy.
 #+end_src
 * Git
 ** Magit
-  Magit is amazing
+Magit is amazing
   
-**** Install the package
+*** Install the package
 
-  #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-    (straight-use-package
-     '(magit :type git :host github :repo "magit/magit"))
-  #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+  (straight-use-package
+   '(magit :type git :host github :repo "magit/magit"))
+#+end_src
 
 ** Forge
-    Forges are a term representing a centralized version control
-    location, like github. Magit bundles support for viewing content
-    from forges (like pull requests), when required.
+Forges are a term representing a centralized version control
+location, like github. Magit bundles support for viewing content
+from forges (like pull requests), when required.
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (straight-use-package 'forge)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+  (straight-use-package 'forge)
+#+end_src
     
 ** Git gutters
-    #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-      (straight-use-package 'diff-hl)
-      (global-diff-hl-mode 1)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+  (straight-use-package 'diff-hl)
+  (global-diff-hl-mode 1)
+#+end_src
 ** Provide =my-git=
-   #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-     (provide 'my-git)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+  (provide 'my-git)
+#+end_src
 
 * Help utilities
   This encompasses man pages, info pages, describe-* windows, etc.
 ** Helpful package
-    #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-      (straight-use-package 'helpful)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
+  (straight-use-package 'helpful)
+#+end_src
 ** Provide =my-help=
-   #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-     (provide 'my-help)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
+  (provide 'my-help)
+#+end_src
 * Just mode
-    Just is a command line tool that seeks to simplify [[man:make]]
+Just is a command line tool that seeks to simplify [[man:make]]
+
 ** Use package
 
-    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
-      (straight-use-package 'just-mode)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
+  (straight-use-package 'just-mode)
+#+end_src
 
 ** Provide package
-    #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
-      (provide 'my-just)
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
+  (provide 'my-just)
+#+end_src
 
 * Avy
 Avy is great. It seems like somehow, I have it already, maybe through
