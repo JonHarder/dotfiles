@@ -1522,9 +1522,9 @@ images, containers, compose, and more.
 
    *This doesn't work currently. not sure what's wrong with intelephense*
    #+begin_src emacs-lisp :tangle "my-modules/my-php-mode.el" :mkdirp yes
-     ;; (with-eval-after-load 'eglot
-     ;;   (add-to-list 'eglot-server-programs
-     ;;	    '(php-mode . ("intelephense" "--stdio"))))
+     (with-eval-after-load 'eglot
+       (add-to-list 'eglot-server-programs
+     			   '(php-mode . ("intelephense" "--stdio"))))
      (straight-use-package 'php-mode)
      (provide 'my-php-mode)
    #+end_src
