@@ -5,12 +5,12 @@
 
 (setq switch-to-buffer-obey-display-actions t)
 
-(add-to-list 'display-buffer-alist
-             '("\\*eshell.*\\*"
-               (display-buffer-at-bottom)
-               (side . bottom)
-               (slot . 0)
-               (window-height . .50)))
+;; (add-to-list 'display-buffer-alist
+;;              '("\\*eshell.*\\*"
+;;                (display-buffer-at-bottom)
+;;                (side . bottom)
+;;                (slot . 0)
+;;                (window-height . .50)))
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '("\\*vterm.*\\*"
