@@ -413,6 +413,7 @@ Use the delightful ultra-scroll
    ;; (re)compilation (prefir, "p")
    '("pp" . project-compile)
    '("pr" . recompile)
+   '("pf" . project-find-file)
    ;; currently just maps to `eglot-mode-map'
    ;; terminals/vc
    '("sv" . vterm)
@@ -2104,6 +2105,8 @@ package is disabled.
    #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
      ;; -*- lexical-binding: t; -*-
      (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
+     	  explicit-shell-file-name "/bin/zsh"
+     	  explicit-zsh-args '("--login" "--interactive"
            shell-file-name "/bin/zsh")
    #+end_src
 

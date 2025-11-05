@@ -29,6 +29,7 @@
  ;; (re)compilation (prefir, "p")
  '("pp" . project-compile)
  '("pr" . recompile)
+ '("pf" . project-find-file)
  ;; currently just maps to `eglot-mode-map'
  ;; terminals/vc
  '("sv" . vterm)
