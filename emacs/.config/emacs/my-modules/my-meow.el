@@ -26,7 +26,9 @@
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
  '("i" . consult-imenu)
- ;; programming keymap
+ ;; (re)compilation (prefir, "p")
+ '("pp" . project-compile)
+ '("pr" . recompile)
  ;; currently just maps to `eglot-mode-map'
  ;; terminals/vc
  '("sv" . vterm)
