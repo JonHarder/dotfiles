@@ -34,7 +34,7 @@
 (require 'my-meow)
 (require 'my-modeline)
 
-(require 'my-calendar)
+(require 'my-time)
 (require 'my-completion)
 (require 'my-tree-sitter)
 (require 'my-gtd)

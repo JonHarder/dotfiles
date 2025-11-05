@@ -122,7 +122,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-meow)
   (require 'my-modeline)
 
-  (require 'my-calendar)
+  (require 'my-time)
   (require 'my-completion)
   (require 'my-tree-sitter)
   (require 'my-gtd)
@@ -664,36 +664,43 @@ so let's just set it as default.
   (setq mouse-autoselect-window t)
   (provide 'my-mouse)
 #+end_src
-* Calendar
-** Bindings
+* Time related functionality
+** Calendar
+*** Bindings
 
 I really want hjkl for day navigation in calendar. [[Meow mode]] already
 supplies j and k, so we just need to set l and h
 
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
   (with-eval-after-load 'calendar
     (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
     (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day))
 #+end_src
-** Base settings
+*** Base settings
 
 Set the date style to iso (day month year).
 
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
   (setq calendar-date-style 'iso)
 #+end_src
-** Diary
+*** Diary
 
 The diary is (for me) mostly a way to jot down an appointment or reminder.
 
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
     (appt-activate 1)
+#+end_src
+
+** Time zones
+
+#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
+  (straight-use-package 'time-zones)
 #+end_src
 
 ** Provide the module
 
-#+begin_src emacs-lisp :tangle "my-modules/my-calendar.el" :mkdirp yes
-  (provide 'my-calendar)
+#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
+  (provide 'my-time)
 #+end_src
 * Completion
 
