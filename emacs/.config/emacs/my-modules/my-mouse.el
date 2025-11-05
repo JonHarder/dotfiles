@@ -1,2 +1,2 @@
-(setq mouse-autoselect-window t)
+(setq mouse-autoselect-window nil)
 (provide 'my-mouse)

@@ -662,7 +662,7 @@ so let's just set it as default.
 
 * Mouse settings
 #+begin_src emacs-lisp :tangle "my-modules/my-mouse.el" :mkdirp yes
-  (setq mouse-autoselect-window t)
+  (setq mouse-autoselect-window nil)
   (provide 'my-mouse)
 #+end_src
 * Time related functionality
