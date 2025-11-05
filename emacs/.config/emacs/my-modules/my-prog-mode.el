@@ -10,7 +10,7 @@
 
 (add-hook 'eglot-managed-mode-hook
           (lambda ()
-            (setq eldoc-documentation-strategy #'eldoc-documentation-compose)
+            (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
             (setq eldoc-documentation-functions
                   '(eglot-signature-eldoc-function
                     eglot-hover-eldoc-function))))
