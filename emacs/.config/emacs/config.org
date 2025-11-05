@@ -409,6 +409,7 @@ on different tabs to help with different types of work within the same project.
    ;; code things
    '("ed" . eldoc)
    '("ee" . eglot)
+   '("ek" . eldoc-box-help-at-point)
    
    '("a" . avy-goto-char-timer)
    '("oo" . occur)
@@ -703,6 +704,12 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
   (provide 'my-time)
 #+end_src
 * Completion
+** Eldoc
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (straight-use-package 'eldoc-box)
+  (require 'eldoc-box)
+#+end_src
 
 ** General minibuffer settings
 

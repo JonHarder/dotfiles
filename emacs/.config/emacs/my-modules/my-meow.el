@@ -34,6 +34,7 @@
  ;; code things
  '("ed" . eldoc)
  '("ee" . eglot)
+ '("ek" . eldoc-box-help-at-point)
  
  '("a" . avy-goto-char-timer)
  '("oo" . occur)
