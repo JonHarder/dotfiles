@@ -141,6 +141,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-lisp-mode)
   (require 'my-git)
   (require 'my-markup)
+  (require 'my-starlark-mode)
   (require 'my-k8s)
   (require 'my-navigation)
   (require 'my-web)
@@ -1443,7 +1444,14 @@ This replaces the venerable, but outdated flymake.
      (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
      (provide 'my-rest-mode)
    #+end_src
- 
+** Starlark mode
+Note, this package is archived and unmaintained.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-starlark-mode.el" :mkdirp yes
+  (straight-use-package 'bazel)
+  (add-to-list 'auto-mode-alist '("Tiltfile" . bazel-starlark-mode))
+  (provide 'my-starlark-mode)
+#+end_src
 ** Docker support
 *** Dockerfile mode
 

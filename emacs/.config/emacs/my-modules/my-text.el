@@ -9,23 +9,23 @@
 (add-hook 'text-mode-hook #'my-text-mode-hook)
 
 (defun cycle-capitalization ()
-	"Cycle capitalization of previous word.
+  "Cycle capitalization of previous word.
 
 Capitalization schemes are:
 	- Regular capitalization: ensure only the first letter is capitalized
 	- All caps: Capitalize all letters of the word
 	- No caps: No Letters of the word are capitalized"
-	(interactive)
-	(let ((state (capitalize-state)))
-	  (save-excursion
-	    (goto-char (beginning-of-thing 'word))
-	    (cond
-	     ((eq 'lower state)
-	      (capitalize-word 1))
-	     ((eq 'capital state)
-	      (upcase-word 1))
-	     ((eq 'all-caps state)
-	      (downcase-word 1))))))
+  (interactive)
+  (let ((state (capitalize-state)))
+	(save-excursion
+	  (goto-char (beginning-of-thing 'word))
+	  (cond
+	   ((eq 'lower state)
+	    (capitalize-word 1))
+	   ((eq 'capital state)
+	    (upcase-word 1))
+	   ((eq 'all-caps state)
+	    (downcase-word 1))))))
 
 (defun capitalize-state ()
   "Return a symbol representing the capitalization state of the previous word.
