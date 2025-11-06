@@ -185,9 +185,9 @@
  '(":" . execute-extended-command)
  '("<escape>" . ignore))
 
-(add-hook 'vterm-mode-hook #'meow-insert)
-(add-hook 'eshell-mode-hook #'meow-insert)
-(add-hook 'org-capture-mode-hook #'meow-insert)
+(mapc (lambda (mode)
+		(add-to-list 'meow-mode-state-list `(,mode . insert)))
+	  '(vterm-mode eshell-mode org-capture-mode))
 
 (meow-global-mode 1)
 

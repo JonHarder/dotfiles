@@ -583,9 +583,9 @@ documents easier.  In meow, this is extremely easy.  Compliments to
 #+end_src
 ** Setting initial state for some major modes
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdir yes
-  (add-hook 'vterm-mode-hook #'meow-insert)
-  (add-hook 'eshell-mode-hook #'meow-insert)
-  (add-hook 'org-capture-mode-hook #'meow-insert)
+  (mapc (lambda (mode)
+  		(add-to-list 'meow-mode-state-list `(,mode . insert)))
+  	  '(vterm-mode eshell-mode org-capture-mode))
 #+end_src
 ** Load setup functions and enable meow
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
@@ -891,8 +891,8 @@ of actions to perform on the target under point.
     (vertico-multiform-mode))
 
   ;;; bindings
-  (define-key minibuffer-local-map
-              (kbd "C-<return>") #'embark-act)
+  (global-set-key (kbd "C-.") #'embark-act)
+  (global-set-key (kbd "M-.") #'embark-dwim)
 #+end_src
    
 ** Provide the module
@@ -1594,7 +1594,7 @@ This adds support for nushell files
 
 #+begin_src emacs-lisp :tangle "my-modules/my-k8s.el"
   (straight-use-package 'kubed)
-  (keymap-global-set (kbd "C-c k") 'kubed-prefix-map)
+  (keymap-global-set "C-c k" 'kubed-prefix-map)
 
   (provide 'my-k8s)
 #+end_src
@@ -2130,7 +2130,7 @@ like dired assume the posix implementation.
   (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
   	  explicit-shell-file-name "/bin/zsh"
   	  explicit-zsh-args '("--login" "--interactive"
-  						  shell-file-name "/bin/zsh")
+  						  shell-file-name "/bin/zsh"))
 #+end_src
 
 ** Eshell

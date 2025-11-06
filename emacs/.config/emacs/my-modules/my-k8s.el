@@ -1,4 +1,4 @@
 (straight-use-package 'kubed)
-(keymap-global-set (kbd "C-c k") 'kubed-prefix-map)
+(keymap-global-set "C-c k" 'kubed-prefix-map)
 
 (provide 'my-k8s)

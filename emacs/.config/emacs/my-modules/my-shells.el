@@ -2,7 +2,7 @@
 (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
 	  explicit-shell-file-name "/bin/zsh"
 	  explicit-zsh-args '("--login" "--interactive"
-						  shell-file-name "/bin/zsh")
+						  shell-file-name "/bin/zsh"))
 
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
 (add-to-list 'exec-path "/usr/local/go/bin")

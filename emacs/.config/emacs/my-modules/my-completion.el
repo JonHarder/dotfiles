@@ -77,7 +77,7 @@
   (vertico-multiform-mode))
 
 ;;; bindings
-(define-key minibuffer-local-map
-            (kbd "C-<return>") #'embark-act)
+(global-set-key (kbd "C-.") #'embark-act)
+(global-set-key (kbd "M-.") #'embark-dwim)
 
 (provide 'my-completion)
