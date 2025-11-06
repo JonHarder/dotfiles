@@ -22,6 +22,7 @@
  '("fg" . gtd-find-file)
  '("fi" . gtd-find-inbox)
  '("fc" . find-config)
+ '("fe" . ediff-current-file)
  '("bs" . save-buffer)
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
@@ -60,8 +61,9 @@
  '("td" . tab-close)
  ;; window management
  '("ww" . ace-window)
- '("wv" . split-window-right)
- '("ws" . split-window-below)
+ '("w/" . split-window-right)
+ '("w." . split-window-below)
+ '("wo" . delete-other-windows)
  ;; Use SPC (0-9) for digit arguments.
  '("1" . meow-digit-argument)
  '("2" . meow-digit-argument)
