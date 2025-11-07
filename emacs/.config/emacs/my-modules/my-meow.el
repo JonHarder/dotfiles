@@ -64,6 +64,7 @@
  '("w/" . split-window-right)
  '("w." . split-window-below)
  '("wo" . delete-other-windows)
+ '("wk" . delete-window)
  ;; Use SPC (0-9) for digit arguments.
  '("1" . meow-digit-argument)
  '("2" . meow-digit-argument)
