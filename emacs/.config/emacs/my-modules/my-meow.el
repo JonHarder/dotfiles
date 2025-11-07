@@ -15,6 +15,15 @@
   (interactive)
   (find-file (concat gtd-directory "/gtd.org")))
 
+(defun delete-this-file ()
+  "Delete the current buffer's file, if visiting one."
+  (interactive)
+  (when-let* ((buffer (current-buffer))
+			  (file (buffer-file-name)))
+	(when (y-or-n-p (format "Delete file '%s'?" file))
+	  (delete-file file)
+	  (kill-buffer buffer))))
+
 (meow-leader-define-key
  '("RET" . embark-act)
  ;; file/buffer commands
@@ -22,6 +31,7 @@
  '("fg" . gtd-find-file)
  '("fi" . gtd-find-inbox)
  '("fc" . find-config)
+ '("fd" . delete-this-file)
  '("fe" . ediff-current-file)
  '("bs" . save-buffer)
  '("bb" . consult-buffer)
