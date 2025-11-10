@@ -1,3 +1,5 @@
+(recentf-mode +1)
+
 (straight-use-package 'eldoc-box)
 (require 'eldoc-box)
 

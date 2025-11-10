@@ -740,6 +740,15 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
   (provide 'my-time)
 #+end_src
 * Completion
+** General (built in) completion help
+*** Recentf mode
+recentf mode keeps a history of files recently visited.  Pair this
+with consult-buffer's file section and we can switch to recently
+opened files via [[help:consult-buffer]]
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (recentf-mode +1)
+#+end_src
 ** Eldoc
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
@@ -1317,10 +1326,10 @@ We use the wonderful `elfeed` package to track and read feeds.
   (setq elfeed-feeds
         '(("https://protesilaos.com/codelog.xml" code emacs)
           ("http://rss.desiringgod.org/" christianity)
-          ("https://karthinks.com/index.xml" emacs)
+          ("https://karthinks.com/index.xml" code emacs)
           ("https://www.thegospelcoalition.org/feed/" christianity)
           ("https://www.firstthings.com/rss/web-exclusives" christianity)
-  		("https://irreal.org/blog/?feed=rss2" emacs)))
+  		("https://irreal.org/blog/?feed=rss2" code emacs)))
 
   (provide 'my-feed)
 #+end_src
