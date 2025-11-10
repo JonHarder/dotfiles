@@ -36,7 +36,7 @@
  '("bs" . save-buffer)
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
- '("i" . consult-imenu)
+ '("i" . consult-outline)
  ;; (re)compilation (prefir, "p")
  '("pp" . project-compile)
  '("pr" . recompile)

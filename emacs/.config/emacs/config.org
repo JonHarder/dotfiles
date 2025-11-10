@@ -422,7 +422,7 @@ Use the delightful ultra-scroll
    '("bs" . save-buffer)
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
-   '("i" . consult-imenu)
+   '("i" . consult-outline)
    ;; (re)compilation (prefir, "p")
    '("pp" . project-compile)
    '("pr" . recompile)
@@ -1505,7 +1505,7 @@ images, containers, compose, and more.
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
      (straight-use-package 'json-mode)
    #+end_src
-
+   
 *** Yaml 
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
      (straight-use-package 'yaml-mode)
@@ -2794,6 +2794,8 @@ dispatch system.
   	(select-window
   	 (cdr (ring-ref avy-ring 0))))
     t)
+
+  (setq avy-timeout-seconds 0.4)
 
   (with-eval-after-load 'avy
     (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
