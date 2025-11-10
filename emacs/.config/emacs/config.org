@@ -707,7 +707,11 @@ supplies j and k, so we just need to set l and h
 #+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
   (with-eval-after-load 'calendar
     (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
-    (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day))
+    (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day)
+    (keymap-set calendar-mode-map (kbd "J") #'calendar-forward-month)
+    (keymap-set calendar-mode-map (kbd "K") #'calendar-backward-month)
+    (keymap-set calendar-mode-map (kbd "H") #'calendar-scroll-left)
+    (keymap-set calendar-mode-map (kbd "L") #'calendar-scroll-right))
 #+end_src
 *** Base settings
 
