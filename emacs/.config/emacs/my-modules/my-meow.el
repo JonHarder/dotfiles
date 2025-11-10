@@ -71,8 +71,10 @@
  '("td" . tab-close)
  ;; window management
  '("ww" . ace-window)
- '("w/" . split-window-right)
- '("w." . split-window-below)
+ '("w/" . split-window-horizontally)
+ '("w." . split-window-vertically)
+ '("wv" . split-window-horizontally)
+ '("ws" . split-window-vertically)
  '("wo" . delete-other-windows)
  '("wk" . delete-window)
  ;; Use SPC (0-9) for digit arguments.
