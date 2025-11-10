@@ -117,7 +117,7 @@
   '(">" . org-demote-subtree)
   '("<" . org-promote-subtree)
   ;; Completion-style search of headings
-  '("v" . consult-org-heading)
+  '("v" . consult-outline)
   ;; setting subtree metadata
   '("l" . org-set-property)
   '("t" . org-todo)
@@ -127,6 +127,9 @@
   ;; Block navigation
   '("b" . org-previous-block)
   '("f" . org-next-block)
+  ;; destructive actions
+  '("a" . org-archive-subtree)
+  '("d" . org-cut-subtree)
   ;; Narrowing/widening
   '("N" . org-narrow-to-subtree)
   '("W" . widen))
