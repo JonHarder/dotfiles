@@ -1,7 +1,11 @@
 (require 'local-config)
 
-(straight-use-package (car my-theme))
-(load-theme (cdr my-theme) t)
+(straight-use-package 'modus-themes)
+(add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
+(load-theme 'catppuccin-mocha t)
+
+;; (straight-use-package (car my-theme))
+;; (load-theme (cdr my-theme) t)
 
 ;; I would love to get this going, but I can't seem to get emacs to understand
 ;; this theme, it's variables, or anything.  It depends on version 5.0.0 of
