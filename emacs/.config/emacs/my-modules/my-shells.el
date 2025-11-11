@@ -1,8 +1,8 @@
 ;; -*- lexical-binding: t; -*-
-(setq explicit-shell-file-name "/opt/homebrew/bin/nu"
-	  explicit-shell-file-name "/bin/zsh"
-	  explicit-zsh-args '("--login" "--interactive"
-						  shell-file-name "/bin/zsh"))
+(setq ;; explicit-shell-file-name "/opt/homebrew/bin/nu"
+ explicit-shell-file-name "/bin/zsh"
+ explicit-zsh-args '("--login" "--interactive")
+ shell-file-name "/bin/zsh")
 
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
 (add-to-list 'exec-path "/usr/local/go/bin")
@@ -138,6 +138,7 @@
 
 (straight-use-package 'vterm)
 (straight-use-package 'multi-vterm)
-(setq vterm-shell "/opt/homebrew/bin/nu")
+;; (setq vterm-shell "/opt/homebrew/bin/nu")
+(setq vterm-shell "/bin/zsh")
 
 (provide 'my-shells)

@@ -66,6 +66,8 @@ $env.GIT_EDITOR = $env.VISUAL
 
 # $env.PAGER = "less"
 
+
+$env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/opt/gnu-getopt/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.cargo/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.local/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin/')

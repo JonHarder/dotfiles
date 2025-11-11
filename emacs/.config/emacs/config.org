@@ -2164,10 +2164,10 @@ like dired assume the posix implementation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   ;; -*- lexical-binding: t; -*-
-  (setq explicit-shell-file-name "/opt/homebrew/bin/nu"
-  	  explicit-shell-file-name "/bin/zsh"
-  	  explicit-zsh-args '("--login" "--interactive"
-  						  shell-file-name "/bin/zsh"))
+  (setq ;; explicit-shell-file-name "/opt/homebrew/bin/nu"
+   explicit-shell-file-name "/bin/zsh"
+   explicit-zsh-args '("--login" "--interactive")
+   shell-file-name "/bin/zsh")
 #+end_src
 
 ** Eshell
@@ -2343,7 +2343,8 @@ dependencies nor a compilation step.
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   (straight-use-package 'vterm)
   (straight-use-package 'multi-vterm)
-  (setq vterm-shell "/opt/homebrew/bin/nu")
+  ;; (setq vterm-shell "/opt/homebrew/bin/nu")
+  (setq vterm-shell "/bin/zsh")
 #+end_src
 ** Provide =my-shells=
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
