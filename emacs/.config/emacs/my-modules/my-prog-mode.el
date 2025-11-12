@@ -3,13 +3,10 @@
 (straight-use-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-(straight-use-package 'lsp-mode)
-(straight-use-package 'lsp-ui)
-
 (defvar menu-bar-project-menu '())
 
 (add-hook 'eglot-managed-mode-hook
-          (lambda ()
+		  (lambda ()
             (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
             (setq eldoc-documentation-functions
                   '(eglot-signature-eldoc-function
@@ -17,7 +14,7 @@
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
-	    `(terraform-mode . ("terraform-ls" "serve"))))
+			   `(terraform-mode . ("terraform-ls" "serve"))))
 
 (straight-use-package 'hl-todo)
 (global-hl-todo-mode 1)

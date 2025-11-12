@@ -4,6 +4,21 @@
  explicit-zsh-args '("--login" "--interactive")
  shell-file-name "/bin/zsh")
 
+(defun zsh-shell-mode-setup ()
+  "Make comint procces the echo so it doesn't get displayed."
+  (setq-local comint-process-echoes t))
+(add-hook 'shell-mode-hook #'zsh-shell-mode-setup)
+
+;; NOTE: this relies on a custom term-info definition.
+;; That definition is defined in this repo in the file "dumb-emacs-ansi.ti"
+;; You must compile this file to make the term info available
+;; to shells to use:
+;; > tic dumb-emacs-ansi.ti
+;; TODO: write some elisp to compile this for me
+;;   1. check if this term definition already exists
+;;   2. if it doesn't, run shell-command "tic dumb-emacs-ansi.ti"
+(setq comint-terminfo-terminal "dumb-emacs-ansi")
+
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
 (add-to-list 'exec-path "/usr/local/go/bin")
 (add-to-list 'exec-path "/opt/homebrew/bin")

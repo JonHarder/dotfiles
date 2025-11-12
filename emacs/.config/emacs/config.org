@@ -180,6 +180,14 @@ This gets loaded first so that any later configuration can utilize it.
     (interactive)
     (find-file (concat user-emacs-directory "config.org")))
 
+  (defun gh-get-pr-title (url)
+    "Retrieve pull request title from the URL."
+    (interactive)
+    (let* ((command (format "gh pr view %s --json title" url))
+  		 (json (json-parse-string
+  				(shell-command-to-string command))))
+  	(gethash "title" json)))
+
   (defun masteringemacs ()
     "Open the masteringemacs epub manual."
     (interactive)
@@ -190,17 +198,17 @@ This gets loaded first so that any later configuration can utilize it.
   (defun add-to-path (value &optional prepend)
     "Add VALUE to the PATH environment variable.
 
-  This handles reading the current value of PATH and appends the given
-  value to the end of it, or to the beginning if PREPEND is non nil.
+    This handles reading the current value of PATH and appends the given
+    value to the end of it, or to the beginning if PREPEND is non nil.
 
-  VALUE should be the raw string to add, `add-to-path' will handle
-  ensuring the final value contains the necessary ':'."
+    VALUE should be the raw string to add, `add-to-path' will handle
+    ensuring the final value contains the necessary ':'."
     (interactive "DPath: ")
     (let ((path (getenv "PATH")))
-  	(setenv "PATH"
-  			(concat path value ":"))))
+    	(setenv "PATH"
+    			(concat path value ":"))))
 
-  (provide 'my-util)
+    (provide 'my-util)
 #+end_src
 * Appearance
 ** Settings
@@ -218,13 +226,14 @@ This gets loaded first so that any later configuration can utilize it.
 #+end_src
 *** Modus themes settings
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (straight-use-package 'modus-themes)
+  (require 'modus-themes)
   (setq modus-themes-completions
   	  '((matches . (extrabold underline))
           (selection . (semibold italic)))
   	  modus-themes-prompts '(bold)
   	  modus-themes-bold-constructs t
-  	  modus-themes-common-palette-overrides
-  	  modus-themes-preset-overrides-intense
+  	  modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
   	  modus-themes-variable-pitch-ui nil
   	  modus-themes-italic-constructs t
   	  modus-themes-org-blocks 'gray-background
@@ -424,6 +433,7 @@ Use the delightful ultra-scroll
    ;; terminals/vc
    '("sv" . vterm)
    '("se" . eshell)
+   '("ss" . shell)
    ;; code things
    '("ed" . eldoc)
    '("ee" . eglot)
@@ -915,6 +925,10 @@ of actions to perform on the target under point.
   ;;; bindings
   (global-set-key (kbd "C-.") #'embark-act)
   (global-set-key (kbd "M-.") #'embark-dwim)
+  ;; this is not a valid key definition for some reason, even though it is
+  ;; for `global-set-key'
+  (keymap-set org-mode-map "C-." #'embark-act)
+  (keymap-set org-mode-map "M-." #'embark-dwim)
 #+end_src
    
 ** Provide the module
@@ -1347,63 +1361,55 @@ at a glance how deep you are.
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 #+end_src
 
-*** LSP (Language Server Protocol)
-#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-  (straight-use-package 'lsp-mode)
-  (straight-use-package 'lsp-ui)
-#+end_src
 *** Eglot
 
-   Language server client implimentation. Comes baked into emacs starting
-   at version 29.
+Language server client implimentation. Comes baked into emacs starting
+at version 2 There seems to be a bug with the latest version of
+`menu-bar' (maybe?  or perhaps in `project' Eglot attempts to insert
+itself info the menu bar, but the project entry in the menu bar is not
+defined. Setting this variable to ~nil~ resolves the immediate issue
+causing ~eglot~ to crash. It is unknown what downstream ramifications
+this actually causes.
 
-   There seems to be a bug with the latest version of `menu-bar' (maybe?
-   or perhaps in `project'?)
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (defvar menu-bar-project-menu '())
+#+end_src
 
-   Eglot attempts to insert itself info the menu bar, but the project
-   entry in the menu bar is not defined. Setting this variable to ~nil~
-   resolves the immediate issue causing ~eglot~ to crash. It is unknown
-   what downstream ramifications this actually causes.
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (add-hook 'eglot-managed-mode-hook
+  		  (lambda ()
+              (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+              (setq eldoc-documentation-functions
+                    '(eglot-signature-eldoc-function
+                      eglot-hover-eldoc-function))))
+#+end_src
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (defvar menu-bar-project-menu '())
-   #+end_src
+And for support for languages that aren't pre-configured out of
+the box by eglot:
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (add-hook 'eglot-managed-mode-hook
-               (lambda ()
-                 (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-                 (setq eldoc-documentation-functions
-                       '(eglot-signature-eldoc-function
-                         eglot-hover-eldoc-function))))
-   #+end_src
-
-   And for support for languages that aren't pre-configured out of
-   the box by eglot:
-
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (with-eval-after-load 'eglot
-       (add-to-list 'eglot-server-programs
-		    `(terraform-mode . ("terraform-ls" "serve"))))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+  			   `(terraform-mode . ("terraform-ls" "serve"))))
+#+end_src
 
 *** Highlight TODO statements
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (straight-use-package 'hl-todo)
-     (global-hl-todo-mode 1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (straight-use-package 'hl-todo)
+  (global-hl-todo-mode 1)
+#+end_src
 *** Electric pair mode
-   This is a fairly simple mode that automatically inserts the matching symbol. =)= after typing =(=
-   for instance.
+This is a fairly simple mode that automatically inserts the matching symbol. =)= after typing =(=
+for instance.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (electric-pair-mode 1)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+   (electric-pair-mode 1)
+#+end_src
 *** Provide =my-prog-mode=
-   #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-     (provide 'my-prog-mode)
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+   (provide 'my-prog-mode)
+#+end_src
     
 ** Flycheck (error checking)
 This replaces the venerable, but outdated flymake.
@@ -1940,6 +1946,10 @@ the variable ~org-capture-templates~.
   (setq org-capture-templates
   	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
            "* %?\n/Entered on/ %U")
+  		("r" "Pull request review" entry
+  		 (file+headline "~/Dropbox/org/gtd/pull_requests.org" "Pull requests")
+  		 "* NEXT [[%c][%(gh-get-pr-title (current-kill 0))]]"
+  		 :immediate-finish t)
   		("p" "Project - new project" entry
   		 (file+headline org-default-notes-file "Projects")
   		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
@@ -2153,6 +2163,21 @@ like dired assume the posix implementation.
    explicit-shell-file-name "/bin/zsh"
    explicit-zsh-args '("--login" "--interactive")
    shell-file-name "/bin/zsh")
+
+  (defun zsh-shell-mode-setup ()
+    "Make comint procces the echo so it doesn't get displayed."
+    (setq-local comint-process-echoes t))
+  (add-hook 'shell-mode-hook #'zsh-shell-mode-setup)
+
+  ;; NOTE: this relies on a custom term-info definition.
+  ;; That definition is defined in this repo in the file "dumb-emacs-ansi.ti"
+  ;; You must compile this file to make the term info available
+  ;; to shells to use:
+  ;; > tic dumb-emacs-ansi.ti
+  ;; TODO: write some elisp to compile this for me
+  ;;   1. check if this term definition already exists
+  ;;   2. if it doesn't, run shell-command "tic dumb-emacs-ansi.ti"
+  (setq comint-terminfo-terminal "dumb-emacs-ansi")
 #+end_src
 
 ** Eshell

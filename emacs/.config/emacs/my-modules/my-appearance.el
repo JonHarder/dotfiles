@@ -10,13 +10,14 @@
    '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
    '(org-document-title ((t (:height 2.5 :underline t))))))
 
+(straight-use-package 'modus-themes)
+(require 'modus-themes)
 (setq modus-themes-completions
 	  '((matches . (extrabold underline))
         (selection . (semibold italic)))
 	  modus-themes-prompts '(bold)
 	  modus-themes-bold-constructs t
-	  modus-themes-common-palette-overrides
-	  modus-themes-preset-overrides-intense
+	  modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
 	  modus-themes-variable-pitch-ui nil
 	  modus-themes-italic-constructs t
 	  modus-themes-org-blocks 'gray-background

@@ -141,6 +141,10 @@
 (setq org-capture-templates
 	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
          "* %?\n/Entered on/ %U")
+		("r" "Pull request review" entry
+		 (file+headline "~/Dropbox/org/gtd/pull_requests.org" "Pull requests")
+		 "* NEXT [[%c][%(gh-get-pr-title (current-kill 0))]]"
+		 :immediate-finish t)
 		("p" "Project - new project" entry
 		 (file+headline org-default-notes-file "Projects")
 		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))

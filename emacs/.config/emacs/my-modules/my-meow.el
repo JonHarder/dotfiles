@@ -45,6 +45,7 @@
  ;; terminals/vc
  '("sv" . vterm)
  '("se" . eshell)
+ '("ss" . shell)
  ;; code things
  '("ed" . eldoc)
  '("ee" . eglot)
