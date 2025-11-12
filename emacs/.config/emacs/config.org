@@ -208,9 +208,9 @@ This gets loaded first so that any later configuration can utilize it.
 load my custom themes
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (straight-use-package 'modus-themes)
-  (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
-  (load-theme 'catppuccin-mocha t)
+  ;; (straight-use-package 'modus-themes)
+  ;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
+  ;; (load-theme 'catppuccin-mocha t)
 #+end_src
 
 The modus theme set is the most complete and polished emacs color
@@ -219,20 +219,8 @@ always have high color contrast between UI elements, making it one of
 the easiest themes on the eyes in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  ;; (straight-use-package (car my-theme))
-  ;; (load-theme (cdr my-theme) t)
-
-  ;; I would love to get this going, but I can't seem to get emacs to understand
-  ;; this theme, it's variables, or anything.  It depends on version 5.0.0 of
-  ;; the modus-themes, which I think I have, though there's a chance it's not
-  ;; quite right.
-  ;; (straight-use-package 'modus-themes)
-  ;; (require 'modus-themes)
-  ;; (straight-use-package '(modus-catppuccin
-  ;; 						:type git
-  ;; 						:host gitlab
-  ;; 						:repo "magus/modus-catppuccin"
-  ;; 						:branch "main"))
+  (straight-use-package (car my-theme))
+  (load-theme (cdr my-theme) t)
 #+end_src
 
 *** Settings

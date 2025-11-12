@@ -1,23 +1,11 @@
 (require 'local-config)
 
-(straight-use-package 'modus-themes)
-(add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
-(load-theme 'catppuccin-mocha t)
-
-;; (straight-use-package (car my-theme))
-;; (load-theme (cdr my-theme) t)
-
-;; I would love to get this going, but I can't seem to get emacs to understand
-;; this theme, it's variables, or anything.  It depends on version 5.0.0 of
-;; the modus-themes, which I think I have, though there's a chance it's not
-;; quite right.
 ;; (straight-use-package 'modus-themes)
-;; (require 'modus-themes)
-;; (straight-use-package '(modus-catppuccin
-;; 						:type git
-;; 						:host gitlab
-;; 						:repo "magus/modus-catppuccin"
-;; 						:branch "main"))
+;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
+;; (load-theme 'catppuccin-mocha t)
+
+(straight-use-package (car my-theme))
+(load-theme (cdr my-theme) t)
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
