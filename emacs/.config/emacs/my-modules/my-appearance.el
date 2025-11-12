@@ -1,12 +1,5 @@
 (require 'local-config)
 
-;; (straight-use-package 'modus-themes)
-;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
-;; (load-theme 'catppuccin-mocha t)
-
-(straight-use-package (car my-theme))
-(load-theme (cdr my-theme) t)
-
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
   (custom-set-faces
@@ -17,32 +10,36 @@
    '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
    '(org-document-title ((t (:height 2.5 :underline t))))))
 
-(when (eq 'modus-themes (car my-theme)) ;; Modus configuration
-  (require-theme 'modus-themes)
-  (setq modus-themes-completions
-		'((matches . (extrabold underline))
-          (selection . (semibold italic))))
-  (setq modus-themes-prompts '(bold))
-  (setq modus-themes-bold-constructs t)
-  (setq modus-themes-common-palette-overrides
-		modus-themes-preset-overrides-intense)
-  (setq modus-themes-variable-pitch-ui nil)
-  (setq modus-themes-italic-constructs t)
-  (setq modus-themes-org-blocks 'gray-background)
-  ;; TODO set this to nil if a non-modus theme is active?
-  (setq modus-themes-headings
-		'((1 . (1.3))
-          (2 . (1.2))
-		  (3 . (1.2))
-		  (4 . (1.2))
-          (agenda-date . (1.3))
-          (agenda-structure . (variable-pitch light 1.8))
-          (t . (1.1)))))
+(setq modus-themes-completions
+	  '((matches . (extrabold underline))
+        (selection . (semibold italic)))
+	  modus-themes-prompts '(bold)
+	  modus-themes-bold-constructs t
+	  modus-themes-common-palette-overrides
+	  modus-themes-preset-overrides-intense
+	  modus-themes-variable-pitch-ui nil
+	  modus-themes-italic-constructs t
+	  modus-themes-org-blocks 'gray-background
+	  modus-themes-headings
+	  '((1 . (1.3))
+		(2 . (1.2))
+		(3 . (1.2))
+		(4 . (1.2))
+		(agenda-date . (1.3))
+		(agenda-structure . (variable-pitch light 1.8))
+		(t . (1.1))))
 
 (when (eq 'doom-themes (car my-theme))
   (setq doom-rouge-brighter-comments t
 		doom-themes-enable-bold t
 		doom-themes-enable-italic t))
+
+;; (straight-use-package 'modus-themes)
+;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
+;; (load-theme 'catppuccin-mocha t)
+
+(straight-use-package (car my-theme))
+(load-theme (cdr my-theme) t)
 
 (menu-bar-mode 1)
 
