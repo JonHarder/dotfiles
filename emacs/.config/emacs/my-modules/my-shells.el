@@ -98,8 +98,8 @@
 (defun eshell/q ()
   "Kill the `eshell' process and close its window."
   (interactive)
-  (if (one-window-p)
-	  (switch-to-buffer nil)
+  (kill-current-buffer)
+  (unless (one-window-p)
 	(delete-window)))
 
 (defun eshell-here ()
