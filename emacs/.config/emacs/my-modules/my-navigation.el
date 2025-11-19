@@ -2,6 +2,10 @@
 
 (straight-use-package 'ace-window)
 (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+;; This adds the window identifier to the mode line for each window
+;; makes it easier to know what the identifier will be for the window
+;; I want to jump to even before I've hit the binding to jump
+(ace-window-display-mode 1)
 
 (setq switch-to-buffer-obey-display-actions t)
 

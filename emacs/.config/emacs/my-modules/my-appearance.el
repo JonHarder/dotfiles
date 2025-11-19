@@ -24,8 +24,8 @@
 	  modus-themes-headings
 	  '((1 . (1.3))
 		(2 . (1.2))
-		(3 . (1.2))
-		(4 . (1.2))
+		(3 . (1.1))
+		(4 . (1.1))
 		(agenda-date . (1.3))
 		(agenda-structure . (variable-pitch light 1.8))
 		(t . (1.1))))

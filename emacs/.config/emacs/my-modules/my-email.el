@@ -15,23 +15,23 @@
 
   (add-hook 'notmuch-message-mode-hook #'my-notmuch-message-mode-hook)
 
-(setq notmuch-hello-sections
-	    '(notmuch-hello-insert-saved-searches
-	      notmuch-hello-insert-search
-	      notmuch-hello-insert-alltags
-	      notmuch-hello-insert-footer))
+(setq notmuch-hello-section
+	  '(notmuch-hello-insert-saved-searches
+		notmuch-hello-insert-search
+		notmuch-hello-insert-alltags
+		notmuch-hello-insert-footer))
 
 (setq notmuch-saved-searches
-	   '((:name "attachments" :query "tag:attachment" :key "a")
-	     (:name "inbox" :query "tag:inbox" :key "i")
-	     (:name "unread" :query "tag:unread" :key "u")
-	     (:name "flagged" :query "tag:flagged" :key "f")
-	     (:name "drafts" :query "tag:draft" :key "d")
-	     (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
-	     (:name "Todo" :query "tag:todo" :key "t")
-	     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
-	     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
-	     (:name "Sent" :query "is:sent" :key "s")))
+  '((:name "attachments" :query "tag:attachment" :key "a")
+    (:name "inbox" :query "tag:inbox" :key "i")
+    (:name "unread" :query "tag:unread" :key "u")
+    (:name "flagged" :query "tag:flagged" :key "f")
+    (:name "drafts" :query "tag:draft" :key "d")
+    (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
+    (:name "Todo" :query "tag:todo" :key "t")
+    (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
+    (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
+    (:name "Sent" :query "is:sent" :key "s")))
 
 (setq notmuch-search-oldest-first nil)
 

@@ -129,7 +129,12 @@
 (add-to-list 'org-agenda-category-icon-alist
              '(".*" '(space . (:width (18)))))
 
-(add-to-list 'org-agenda-files org-directory)
+(add-to-list 'org-agenda-files (concat
+								org-directory
+								"gtd.org"))
+(add-to-list 'org-agenda-files (concat
+								org-directory
+								"pull_requests.org"))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
