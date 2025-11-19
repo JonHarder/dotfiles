@@ -83,7 +83,8 @@
 (global-set-key (kbd "M-.") #'embark-dwim)
 ;; this is not a valid key definition for some reason, even though it is
 ;; for `global-set-key'
-(keymap-set org-mode-map "C-." #'embark-act)
-(keymap-set org-mode-map "M-." #'embark-dwim)
+(with-eval-after-load 'org
+  (keymap-set org-mode-map "C-." #'embark-act)
+  (keymap-set org-mode-map "M-." #'embark-dwim))
 
 (provide 'my-completion)
