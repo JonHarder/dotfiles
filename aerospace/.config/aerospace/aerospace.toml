@@ -18,7 +18,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
-accordion-padding = 30
+accordion-padding = 45
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -86,6 +86,8 @@ outer.right =      0
 
 # This binding interferes with emacs org binding to create a new heading/list item
 # alt-enter = 'exec-and-forget open -a Alacritty'
+
+alt-shift-c = 'exec-and-forget emacsclient -c -e "(full-calc)"'
 
 # these shortcuts have endlessly confused me. This removes them (effectively)
 cmd-h = [] # Disable "hide application"
