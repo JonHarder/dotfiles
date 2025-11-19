@@ -5,3 +5,4 @@ custom.el
 eln-cache/
 .cache/lsp
 ielm-history.eld
+recentf.eld
