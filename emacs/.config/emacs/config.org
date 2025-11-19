@@ -2585,38 +2585,36 @@ src_sh[]{notmuch new}
 #+end_src
 
 **** Hello sections
-    The following configures the "hello" (start) page of notmuch. This page is
-    the default view when running the command ~notmuch~.
+The following configures the "hello" (start) page of notmuch. This
+page is the default view when running the command ~notmuch~ This
+configures the sections on the hello page of notmuch. I don't like the
+header because it doesn't provide any useful information for I also
+remove the "recent searches" because these can be easily retrieved in
+buffer history when executing a search with =
 
-    This configures the sections on the hello page of notmuch. I don't like the
-    header because it doesn't provide any useful information for me.
-
-    I also remove the "recent searches" because these can be easily retrieved
-    in buffer history when executing a search with =s=.
-
-    #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-      (setq notmuch-hello-sections
-	    '(notmuch-hello-insert-saved-searches
-	      notmuch-hello-insert-search
-	      notmuch-hello-insert-alltags
-	      notmuch-hello-insert-footer))
-    #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (setq notmuch-hello-section
+  	  '(notmuch-hello-insert-saved-searches
+  		notmuch-hello-insert-search
+  		notmuch-hello-insert-alltags
+  		notmuch-hello-insert-footer))
+#+end_src
 
 **** Saved searches
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-     (setq notmuch-saved-searches
-	   '((:name "attachments" :query "tag:attachment" :key "a")
-	     (:name "inbox" :query "tag:inbox" :key "i")
-	     (:name "unread" :query "tag:unread" :key "u")
-	     (:name "flagged" :query "tag:flagged" :key "f")
-	     (:name "drafts" :query "tag:draft" :key "d")
-	     (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
-	     (:name "Todo" :query "tag:todo" :key "t")
-	     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
-	     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
-	     (:name "Sent" :query "is:sent" :key "s")))
-   #+end_src
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  (setq notmuch-saved-searches
+    '((:name "attachments" :query "tag:attachment" :key "a")
+      (:name "inbox" :query "tag:inbox" :key "i")
+      (:name "unread" :query "tag:unread" :key "u")
+      (:name "flagged" :query "tag:flagged" :key "f")
+      (:name "drafts" :query "tag:draft" :key "d")
+      (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
+      (:name "Todo" :query "tag:todo" :key "t")
+      (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
+      (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
+      (:name "Sent" :query "is:sent" :key "s")))
+#+end_src
 
 **** Sorting
 
