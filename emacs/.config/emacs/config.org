@@ -2715,6 +2715,15 @@ Lets set it to something reasonable.
   (add-hook 'text-mode-hook #'my-text-mode-hook)
 #+end_src
 
+** Spell check
+Jinx is a spell checker
+
+#+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  (straight-use-package 'jinx)
+  (global-jinx-mode +1)
+  (keymap-global-set "M-$" #'jinx-correct)
+#+end_src
+
 ** Functions
 *** Cycle capitalize word
 #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes

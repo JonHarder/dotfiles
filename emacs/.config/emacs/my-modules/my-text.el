@@ -8,6 +8,10 @@
 
 (add-hook 'text-mode-hook #'my-text-mode-hook)
 
+(straight-use-package 'jinx)
+(global-jinx-mode +1)
+(keymap-global-set "M-$" #'jinx-correct)
+
 (defun cycle-capitalization ()
   "Cycle capitalization of previous word.
 
