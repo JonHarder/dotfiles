@@ -42,6 +42,7 @@
       completion-category-overrides '((file (styles partial-completion))))
 
 (straight-use-package 'consult)
+(setq xref-show-xrefs-function #'consult-xref)
 
 (straight-use-package 'consult-dir)
 (define-key vertico-map

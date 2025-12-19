@@ -26,16 +26,18 @@
 
 (meow-leader-define-key
  '("RET" . embark-act)
- ;; file/buffer commands
+ ;; file commands
  '("ff" . find-file)
  '("fg" . gtd-find-file)
  '("fi" . gtd-find-inbox)
  '("fc" . find-config)
  '("fd" . delete-this-file)
  '("fe" . ediff-current-file)
+ ;; buffer commands
  '("bs" . save-buffer)
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
+ '("bk" . kill-current-buffer)
  '("i" . consult-outline)
  ;; (re)compilation (prefir, "p")
  '("pp" . project-compile)
@@ -62,7 +64,9 @@
  '("nb" . denote-backlinks)
  '("nn" . denote-open-or-create)
  '("nj" . denote-journal-new-or-existing-entry)
+ '("nl" . denote-find-link)
  '("ng" . consult-denote-grep)
+ '("nr" . denote-rename-file-using-front-matter)
  ;; tab bindings
  '("tt" . tab-switch)
  '("tr" . tab-rename)

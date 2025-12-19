@@ -414,16 +414,18 @@ Use the delightful ultra-scroll
 
   (meow-leader-define-key
    '("RET" . embark-act)
-   ;; file/buffer commands
+   ;; file commands
    '("ff" . find-file)
    '("fg" . gtd-find-file)
    '("fi" . gtd-find-inbox)
    '("fc" . find-config)
    '("fd" . delete-this-file)
    '("fe" . ediff-current-file)
+   ;; buffer commands
    '("bs" . save-buffer)
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
+   '("bk" . kill-current-buffer)
    '("i" . consult-outline)
    ;; (re)compilation (prefir, "p")
    '("pp" . project-compile)
@@ -450,7 +452,9 @@ Use the delightful ultra-scroll
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
    '("nj" . denote-journal-new-or-existing-entry)
+   '("nl" . denote-find-link)
    '("ng" . consult-denote-grep)
+   '("nr" . denote-rename-file-using-front-matter)
    ;; tab bindings
    '("tt" . tab-switch)
    '("tr" . tab-rename)
@@ -874,11 +878,12 @@ and play nicely with ~eshell-smart~
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (straight-use-package 'consult)
+  (setq xref-show-xrefs-function #'consult-xref)
 #+end_src
 
 *** consult dir
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'consult-dir)
+    (straight-use-package 'consult-dir)
   (define-key vertico-map
               (kbd "M-c") #'consult-dir)
   (when nil
@@ -1036,7 +1041,7 @@ window at the bottom of the current frame.
   (setq denote-prompts '(title subdirectory keywords))
 #+end_src
 
-** Bindings
+** Helper functions
 
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
   ;;; Code:
@@ -2194,6 +2199,7 @@ like dired assume the posix implementation.
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
   (add-to-list 'exec-path "/usr/local/go/bin")
+  (add-to-list 'exec-path "/Users/jharder/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path "/Library/TeX/texbin")
   (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
