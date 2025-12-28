@@ -26,6 +26,7 @@
 
 (meow-leader-define-key
  '("RET" . embark-act)
+ '(";" . comment-line)
  ;; file commands
  '("ff" . find-file)
  '("fg" . gtd-find-file)
