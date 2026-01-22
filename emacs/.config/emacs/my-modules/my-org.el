@@ -9,8 +9,8 @@
 (with-eval-after-load 'org
   (require 'org-tempo))
 
-(setq org-directory "~/Dropbox/org/gtd/")
-(setq org-default-notes-file "~/Dropbox/org/gtd/gtd.org")
+(setq org-directory "~/Library/CLoudStorage/Dropbox/org/gtd/")
+(setq org-default-notes-file "~/Library/CloudStorage/Dropbox/org/gtd/gtd.org")
 
 (setq org-todo-keywords
       '((sequence
@@ -144,10 +144,10 @@
 ;; 	       :todo '("TODO" "WORKING"))))
 
 (setq org-capture-templates
-	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Dropbox/org/gtd/inbox.org")
+	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Library/CloudStorage/Dropbox/org/gtd/inbox.org")
          "* %?\n/Entered on/ %U")
 		("r" "Pull request review" entry
-		 (file+headline "~/Dropbox/org/gtd/pull_requests.org" "Pull requests")
+		 (file+headline "~/Library/CloudStorage/Dropbox/org/gtd/pull_requests.org" "Pull requests")
 		 "* NEXT [[%c][%(gh-get-pr-title (current-kill 0))]]"
 		 :immediate-finish t)
 		("p" "Project - new project" entry

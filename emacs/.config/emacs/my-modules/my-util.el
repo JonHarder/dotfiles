@@ -17,7 +17,7 @@
   (interactive)
   ;; ensure the nov package is installed
   (require 'nov)
-  (find-file "~/Dropbox/Emacs/mastering-emacs-v4.epub"))
+  (find-file "~/Library/CloudStorage/Dropbox/Emacs/mastering-emacs-v4.epub"))
 
 (defun add-to-path (value &optional prepend)
   "Add VALUE to the PATH environment variable.

@@ -3,7 +3,7 @@
 (denote-rename-buffer-mode 1)
 (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-(setq denote-directory (expand-file-name "~/Dropbox/org/zettelkasten"))
+(setq denote-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/zettelkasten"))
 
 (setq denote-dired-directories-include-subdirectories t
       denote-dired-directories (list denote-directory))

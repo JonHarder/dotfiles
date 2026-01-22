@@ -1,4 +1,4 @@
-(defvar gtd-directory (expand-file-name "~/Dropbox/org/gtd")
+(defvar gtd-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/gtd")
   "The directory my 'Getting Things Done' system is stored in")
 
 (defun gtd-find-oneoff ()
