@@ -120,6 +120,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-core)
   (require 'my-mouse)
   (require 'my-meow)
+  ;; (require 'my-boon)
   (require 'my-modeline)
 
   (require 'my-time)
@@ -375,6 +376,34 @@ Use the delightful ultra-scroll
   	  scroll-margin 0)
   (ultra-scroll-mode 1)
 #+end_src
+* Boon mode
+Another modal editing framework for emacs
+
+** install boon
+#+begin_src emacs-lisp :tangle "my-modules/my-boon.el" :mkdirp yes
+  (straight-use-package 'boon)
+  ;; TODO: implement boon-hd-gold
+  ;; (require 'boon-qwerty)
+#+end_src
+
+** Require custom "hands down gold" keymap
+
+hd gold layout:
+
+j g m p v   ; . / " '
+r s n d b   , a e i h
+x f l c w   _ u o y k
+        t   
+#+begin_src emacs-lisp :tangle "my-modules/my-boon.el" :mkdirp yes
+  (require 'my-boon-hd-gold)
+#+end_src
+
+** start boon
+
+#+begin_src emacs-lisp :tangle "my-modules/my-boon.el" :mkdirp yes
+  (boon-mode)
+#+end_src
+
 * Meow mode
 ** Install and require package
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
@@ -614,7 +643,7 @@ documents easier.  In meow, this is extremely easy.  Compliments to
 #+end_src
 ** Load setup functions and enable meow
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
-    (meow-global-mode 1)
+  (meow-global-mode 1)
 
   (keymap-global-set "C-<return>" #'embark-act)
   (keymap-global-set "s-<return>" #'embark-dwim)

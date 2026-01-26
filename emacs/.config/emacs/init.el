@@ -32,6 +32,7 @@
 (require 'my-core)
 (require 'my-mouse)
 (require 'my-meow)
+;; (require 'my-boon)
 (require 'my-modeline)
 
 (require 'my-time)
