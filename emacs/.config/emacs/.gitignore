@@ -6,3 +6,5 @@ eln-cache/
 .cache/lsp
 ielm-history.eld
 recentf.eld
+org-persist/
+recentf
