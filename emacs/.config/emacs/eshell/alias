@@ -2,3 +2,6 @@ alias j jj $@*
 alias c clear nil
 alias ap /Users/jharder/Kipsu/ansible-wrapper/ap
 alias o (delete-other-windows)
+alias plan terraform plan
+alias apply terraform apply
+alias init terraform init
