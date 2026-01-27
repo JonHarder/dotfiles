@@ -60,22 +60,17 @@
 
 (display-time)
 
-(set-face-attribute 'default nil
-					:family (plist-get my-font :name)
-					:height (plist-get my-font :size))
-
-(add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (let ((size (plist-get my-font :size))
-				  (font (plist-get my-font :name))
-				  (theme (cdr my-theme)))
+(let ((family (plist-get my-font :name))
+	  (height (plist-get my-font :size))
+	  (theme (cdr my-theme)))
+  (set-frame-font
+   (format "%s-%d" family height)
+   t t t)
+  (add-hook 'after-make-frame-functions
+			(lambda (frame)
 			  (with-selected-frame frame
-				(set-face-attribute 'default nil
-									:font font
-									:height size)
-				(set-frame-font font nil t)
-				(add-to-list 'default-frame-alist
-							 `(font . ,font))
+				(set-frame-font
+				 (format "%s-%d" family height))
 				(load-theme theme t)))))
 
 (setq tab-bar-show 1)
