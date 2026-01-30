@@ -6,3 +6,6 @@ email = "jharder@kipsu.com"
 
 [ui]
 default-command = "log"
+
+[remotes.origin]
+auto-track-bookmarks = "glob:*"
