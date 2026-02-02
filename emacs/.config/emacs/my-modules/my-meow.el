@@ -251,13 +251,7 @@
 	("l" . meow-append)
 	("L" . meow-open-below)
 	("c" . meow-change)
-	("ww" . ace-window)
-	("w/" . split-window-horizontally)
-	("w." . split-window-vertically)
-	("wv" . split-window-horizontally)
-	("ws" . split-window-vertically)
-	("wo" . delete-other-windows)
-	("wk" . delete-window)
+	("w" . ace-window)
 
 	("t" . meow-save)
 	("T" . meow-sync-grab)))
@@ -288,6 +282,17 @@ found in `meow-layout-qwerty' and `meow-layout-hd-gold' respectively.")
  
  '("-" . negative-argument)
  '(";" . meow-reverse))
+
+(defun meow-switch-layout (layout)
+  (interactive (list
+				(completing-read "Layout: "
+								 '("qwerty" "HD Gold"))))
+  (cond
+   ((string= "qwerty" layout)
+	(setq meow-layout meow-layout-qwerty))
+   ((string= "HD Gold" layout)
+	(setq meow-layout meow-layout-hd-gold)))
+  (apply 'meow-normal-define-key meow-layout))
 
 (mapc (lambda (mode)
 		(add-to-list 'meow-mode-state-list `(,mode . insert)))

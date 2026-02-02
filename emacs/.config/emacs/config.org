@@ -674,13 +674,7 @@ documents easier.  In meow, this is extremely easy.  Compliments to
   	("l" . meow-append)
   	("L" . meow-open-below)
   	("c" . meow-change)
-  	("ww" . ace-window)
-  	("w/" . split-window-horizontally)
-  	("w." . split-window-vertically)
-  	("wv" . split-window-horizontally)
-  	("ws" . split-window-vertically)
-  	("wo" . delete-other-windows)
-  	("wk" . delete-window)
+  	("w" . ace-window)
 
   	("t" . meow-save)
   	("T" . meow-sync-grab)))
@@ -711,6 +705,17 @@ documents easier.  In meow, this is extremely easy.  Compliments to
    
    '("-" . negative-argument)
    '(";" . meow-reverse))
+
+  (defun meow-switch-layout (layout)
+    (interactive (list
+  				(completing-read "Layout: "
+  								 '("qwerty" "HD Gold"))))
+    (cond
+     ((string= "qwerty" layout)
+  	(setq meow-layout meow-layout-qwerty))
+     ((string= "HD Gold" layout)
+  	(setq meow-layout meow-layout-hd-gold)))
+    (apply 'meow-normal-define-key meow-layout))
 #+end_src
 ** Setting initial state for some major modes
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdir yes
