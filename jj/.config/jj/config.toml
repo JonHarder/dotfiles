@@ -6,6 +6,11 @@ email = "jharder@kipsu.com"
 
 [ui]
 default-command = "log"
+editor = "emacsclient -a ''"
 
 [remotes.origin]
 auto-track-bookmarks = "glob:*"
+
+[aliases]
+tug = ["bookmark", "move", "--from", "heads(::@ & bookmarks())", "--to", "@"]
+push = ["git", "push", "-r", "@"]
