@@ -78,6 +78,7 @@
 (require 'my-typst)
 (require 'my-terraform-mode)
 (require 'my-vim-mode)
+(require 'my-server)
 
 (provide 'init)
 ;;; init.el ends here

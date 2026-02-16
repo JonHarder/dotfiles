@@ -166,6 +166,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-typst)
   (require 'my-terraform-mode)
   (require 'my-vim-mode)
+  (require 'my-server)
 
   (provide 'init)
   ;;; init.el ends here
@@ -1139,6 +1140,42 @@ window at the bottom of the current frame.
 
   (provide 'my-gtd)
 #+end_src
+* Server mode
+I run emacs in a server mode so that clients can connect to the
+running emacs instance for short editing commands. An example of this
+is ~git commit~ or ~jj describe~. I just want to open a buffer in emacs,
+do my editing there, then exit.
+
+To do this, I want to ensure emacs is running in server mode. That can
+be accomplished via =server-start=
+
+#+begin_src emacs-lisp :tangle "my-modules/my-server.el" :mkdirp yes
+  (server-start)
+#+end_src
+
+I also want to have a nicer binding to save and close server buffers
+to return control back to whatever program created the buffer.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-server.el" :mkdirp yes
+  (defun my/server-edit-save ()
+    "Save buffer without prompting, then finish server edit."
+    (interactive)
+    (when (buffer-modified-p)
+      (save-buffer))
+    (server-edit))
+
+  (add-hook 'server-switch-hook
+  		  (lambda ()
+  			(local-set-key (kbd "C-x #") #'my/server-edit-save)))
+
+#+end_src
+
+And provide the module
+
+#+begin_src emacs-lisp :tangle "my-modules/my-server.el" :mkdirp yes
+  (provide 'my-server)
+#+end_src
+
 * Denote
 ** Basic settings
 #+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
