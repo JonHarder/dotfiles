@@ -25,6 +25,7 @@
 	  (kill-buffer buffer))))
 
 (meow-leader-define-key
+ '("SPC" . execute-extended-command)
  '("RET" . embark-act)
  '(";" . comment-line)
  ;; file commands

@@ -1,3 +1,5 @@
+(require 'server)
+
 (server-start)
 
 (defun my/server-edit-save ()
@@ -9,6 +11,6 @@
 
 (add-hook 'server-switch-hook
 		  (lambda ()
-			(local-set-key (kbd "C-x #") #'my/server-edit-save)))
+			(local-set-key (kbd "C-c C-c") #'my/server-edit-save)))
 
 (provide 'my-server)

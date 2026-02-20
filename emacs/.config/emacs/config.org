@@ -439,6 +439,7 @@ x f l c w   _ u o y k
   	  (kill-buffer buffer))))
 
   (meow-leader-define-key
+   '("SPC" . execute-extended-command)
    '("RET" . embark-act)
    '(";" . comment-line)
    ;; file commands
@@ -1150,6 +1151,8 @@ To do this, I want to ensure emacs is running in server mode. That can
 be accomplished via =server-start=
 
 #+begin_src emacs-lisp :tangle "my-modules/my-server.el" :mkdirp yes
+  (require 'server)
+  
   (server-start)
 #+end_src
 
@@ -1166,7 +1169,7 @@ to return control back to whatever program created the buffer.
 
   (add-hook 'server-switch-hook
   		  (lambda ()
-  			(local-set-key (kbd "C-x #") #'my/server-edit-save)))
+  			(local-set-key (kbd "C-c C-c") #'my/server-edit-save)))
 
 #+end_src
 
