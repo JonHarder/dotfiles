@@ -13,4 +13,5 @@ auto-track-bookmarks = "glob:*"
 
 [aliases]
 tug = ["bookmark", "move", "--from", "heads(::@ & bookmarks())", "--to", "@"]
-push = ["git", "push", "-r", "@"]
+p = ["git", "push", "-r", "@"]
+f = ["git", "fetch"]
