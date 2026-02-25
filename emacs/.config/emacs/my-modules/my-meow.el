@@ -202,6 +202,7 @@
 	;;   ;./'=
 	;;   ,aeih
 	;;   _uoyk
+	("," . negative-argument)
 	("a" . meow-back-word)
 	("A" . meow-back-symbol)
 	("e" . meow-left)
@@ -237,7 +238,7 @@
 	("g" . xref-find-definitions)
 	("G" . meow-grab)
 	("m" . meow-find)
-	("M" . meow-til)
+	("M" . meow-till)
 	("p" . meow-yank)
 	("v" . consult-line)
 	("r" . meow-replace)
