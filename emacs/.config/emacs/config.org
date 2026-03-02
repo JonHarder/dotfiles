@@ -127,6 +127,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-completion)
   (require 'my-tree-sitter)
   (require 'my-gtd)
+  (require 'my-nginx)
   (require 'my-denote)
   (require 'my-dired)
   (require 'my-docker-mode)
@@ -1141,6 +1142,11 @@ window at the bottom of the current frame.
     (org-capture nil "i"))
 
   (provide 'my-gtd)
+#+end_src
+* Nginx mode
+#+begin_src emacs-lisp :tangle "my-modules/my-nginx.el" :mkdirp yes
+  (straight-use-package 'nginx-mode)
+  (provide 'my-nginx)
 #+end_src
 * Server mode
 I run emacs in a server mode so that clients can connect to the

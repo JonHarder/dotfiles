@@ -39,6 +39,7 @@
 (require 'my-completion)
 (require 'my-tree-sitter)
 (require 'my-gtd)
+(require 'my-nginx)
 (require 'my-denote)
 (require 'my-dired)
 (require 'my-docker-mode)
