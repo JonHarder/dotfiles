@@ -134,6 +134,9 @@
 								"gtd.org"))
 (add-to-list 'org-agenda-files (concat
 								org-directory
+								"events.org"))
+(add-to-list 'org-agenda-files (concat
+								org-directory
 								"pull_requests.org"))
 
 ;; (straight-use-package 'org-super-agenda)

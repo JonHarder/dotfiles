@@ -26,6 +26,8 @@
 (add-to-list 'exec-path "/opt/homebrew/bin")
 (add-to-list 'exec-path "/Library/TeX/texbin")
 (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
+(add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/bin")
+(add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/sbin")
 
 (add-hook 'eshell-mode-hook
           (lambda ()
@@ -106,6 +108,13 @@
   (if file
       (find-file file)
     (call-interactively #'find-file)))
+
+(defun eshell/ff (&optional file)
+  "Shorthand for `find-file-other-window', opening FILE."
+  (interactive)
+  (if file
+	  (find-file-other-window file)
+	(call-interactively #'find-file-other-window)))
 
 (defun eshell/d (&optional dir)
   "Run `dired' for directory DIR, or current dir if not given."

@@ -5,4 +5,4 @@ alias plan terraform plan
 alias o (delete-other-windows)
 alias ap /Users/jharder/Kipsu/ansible-wrapper/ap
 alias c clear nil
-alias j jj $@*
+alias j jj --config 'ui.paginate="never"' $@*

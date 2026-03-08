@@ -84,6 +84,7 @@
  '("ws" . split-window-vertically)
  '("wo" . delete-other-windows)
  '("wk" . delete-window)
+ '("z" . jinx-correct)
  ;; Use SPC (0-9) for digit arguments.
  '("1" . meow-digit-argument)
  '("2" . meow-digit-argument)
