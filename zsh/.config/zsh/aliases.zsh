@@ -7,3 +7,7 @@ alias init="terraform init"
 alias apply="terraform apply"
 
 alias k="kubectl"
+
+# kipsu aliases
+## ansible
+alias ap="docker compose run --rm ansible ap"

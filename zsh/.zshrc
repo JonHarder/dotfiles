@@ -115,3 +115,10 @@ export PATH="/Users/jharder/.rd/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+eval "$(fnm env --use-on-cd --shell zsh)"
+export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
+export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
+
+# Note, this fixes errors in ansible when fork() is called
+export "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES"
