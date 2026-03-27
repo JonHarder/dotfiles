@@ -1,8 +1,9 @@
-alias k kubectl $@*
-alias init terraform init
-alias apply terraform apply
-alias plan terraform plan
-alias o (delete-other-windows)
-alias ap /Users/jharder/Kipsu/ansible-wrapper/ap
-alias c clear nil
+alias flash qmk flash
 alias j jj --config 'ui.paginate="never"' $@*
+alias c clear nil
+alias ap docker compose run --rm ansible ap
+alias o (delete-other-windows)
+alias plan terraform plan
+alias apply terraform apply
+alias init terraform init
+alias k kubectl $@*

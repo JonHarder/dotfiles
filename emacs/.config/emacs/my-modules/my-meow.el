@@ -66,7 +66,8 @@
  '("nb" . denote-backlinks)
  '("nn" . denote-open-or-create)
  '("nj" . denote-journal-new-or-existing-entry)
- '("nl" . denote-find-link)
+ '("nl" . denote-link)
+ '("nf" . denote-find-link)
  '("ng" . consult-denote-grep)
  '("nr" . denote-rename-file-using-front-matter)
  ;; tab bindings

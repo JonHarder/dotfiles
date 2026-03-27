@@ -208,6 +208,17 @@
 (setq org-hide-emphasis-markers t)
 
 (straight-use-package 'org-modern)
+(setq org-modern-fold-stars
+      '(("▶" . "▼")
+        ("▷" . "▽")
+		;; this symbol is not present in many fonts, including mine
+		;; the author proposes that the fonts should include the symbol
+		;; here is my workaround
+		;; courtesy of https://github.com/minad/org-modern/issues/232
+        ;; ("⯈" . "⯆")
+        ("▷" . "▽")
+        ("▹" . "▿")
+        ("▸" . "▾"))) 
 (with-eval-after-load 'org (global-org-modern-mode))
 
 (org-babel-do-load-languages

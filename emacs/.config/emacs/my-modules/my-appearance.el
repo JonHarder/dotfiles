@@ -41,6 +41,7 @@
 ;; (load-theme 'catppuccin-mocha t)
 
 (straight-use-package (car my-theme))
+(pre-theme-load-hook)
 (load-theme (cdr my-theme) t)
 
 (menu-bar-mode 1)

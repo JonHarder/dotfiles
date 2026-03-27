@@ -20,6 +20,7 @@
 (setq comint-terminfo-terminal "dumb-emacs-ansi")
 
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+(setenv "HOMEBREW_NO_ENV_HINTS" "1")
 (add-to-list 'exec-path "/usr/local/go/bin")
 (add-to-list 'exec-path "/Users/jharder/bin")
 (add-to-list 'exec-path "/Users/jharder/.local/bin")
@@ -35,7 +36,8 @@
             (setenv "PAGER" "cat")))
 
 (require 'eshell)
-(add-to-list 'eshell-modules-list 'eshell-smart)
+;; Removing this for now as there's too many times when I don't want it to stay at the top
+;; (add-to-list 'eshell-modules-list 'eshell-smart)
 
 (straight-use-package 'eshell-syntax-highlighting)
 (require 'eshell-syntax-highlighting)

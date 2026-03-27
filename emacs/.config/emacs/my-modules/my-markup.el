@@ -1,4 +1,5 @@
 (straight-use-package 'markdown-mode)
+(setq markdown-header-scaling t)
 
 (straight-use-package 'json-mode)
 

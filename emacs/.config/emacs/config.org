@@ -275,6 +275,7 @@ the easiest themes on the eyes in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (straight-use-package (car my-theme))
+  (pre-theme-load-hook)
   (load-theme (cdr my-theme) t)
 #+end_src
 
@@ -452,7 +453,8 @@ Use the delightful ultra-scroll
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
    '("nj" . denote-journal-new-or-existing-entry)
-   '("nl" . denote-find-link)
+   '("nl" . denote-link)
+   '("nf" . denote-find-link)
    '("ng" . consult-denote-grep)
    '("nr" . denote-rename-file-using-front-matter)
    ;; tab bindings
@@ -1654,6 +1656,7 @@ images, containers, compose, and more.
 *** Markdown
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
      (straight-use-package 'markdown-mode)
+     (setq markdown-header-scaling t)
    #+end_src
 
 *** Json
@@ -2196,6 +2199,17 @@ package is disabled.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (straight-use-package 'org-modern)
+  (setq org-modern-fold-stars
+        '(("▶" . "▼")
+          ("▷" . "▽")
+  		;; this symbol is not present in many fonts, including mine
+  		;; the author proposes that the fonts should include the symbol
+  		;; here is my workaround
+  		;; courtesy of https://github.com/minad/org-modern/issues/232
+          ;; ("⯈" . "⯆")
+          ("▷" . "▽")
+          ("▹" . "▿")
+          ("▸" . "▾"))) 
   (with-eval-after-load 'org (global-org-modern-mode))
 #+end_src
 
@@ -2336,6 +2350,7 @@ like dired assume the posix implementation.
 *** Environment variables
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
+  (setenv "HOMEBREW_NO_ENV_HINTS" "1")
   (add-to-list 'exec-path "/usr/local/go/bin")
   (add-to-list 'exec-path "/Users/jharder/bin")
   (add-to-list 'exec-path "/Users/jharder/.local/bin")
@@ -2358,7 +2373,8 @@ like dired assume the posix implementation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   (require 'eshell)
-  (add-to-list 'eshell-modules-list 'eshell-smart)
+  ;; Removing this for now as there's too many times when I don't want it to stay at the top
+  ;; (add-to-list 'eshell-modules-list 'eshell-smart)
 
   (straight-use-package 'eshell-syntax-highlighting)
   (require 'eshell-syntax-highlighting)
