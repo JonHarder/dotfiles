@@ -122,3 +122,9 @@ export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
 
 # Note, this fixes errors in ansible when fork() is called
 export "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES"
+
+# add my local bin scripts folder to path
+export PATH="/Users/jharder/bin:$PATH"
+
+# initialize zoxide
+eval "$(zoxide init zsh)"
