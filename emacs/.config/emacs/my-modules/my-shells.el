@@ -21,7 +21,10 @@
 
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
 (setenv "HOMEBREW_NO_ENV_HINTS" "1")
+(setenv "GOPATH" "/Users/jharder/go")
 (add-to-list 'exec-path "/usr/local/go/bin")
+(add-to-list 'exec-path "/Users/jharder/.rd/bin")
+(add-to-list 'exec-path "/Users/jharder/go/bin")
 (add-to-list 'exec-path "/Users/jharder/bin")
 (add-to-list 'exec-path "/Users/jharder/.local/bin")
 (add-to-list 'exec-path "/opt/homebrew/bin")

@@ -40,7 +40,7 @@
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
  '("bk" . kill-current-buffer)
- '("i" . consult-outline)
+ '("i" . consult-imenu)
  ;; (re)compilation (prefir, "p")
  '("pp" . project-compile)
  '("pr" . recompile)
@@ -70,6 +70,7 @@
  '("nf" . denote-find-link)
  '("ng" . consult-denote-grep)
  '("nr" . denote-rename-file-using-front-matter)
+ '("ns" . denote-sequence-find)
  ;; tab bindings
  '("tt" . tab-switch)
  '("tr" . tab-rename)
@@ -83,7 +84,7 @@
  '("w." . split-window-vertically)
  '("wv" . split-window-horizontally)
  '("ws" . split-window-vertically)
- '("wo" . delete-other-windows)
+ '("wo" . toggle-delete-other-windows)
  '("wk" . delete-window)
  '("z" . jinx-correct)
  ;; Use SPC (0-9) for digit arguments.

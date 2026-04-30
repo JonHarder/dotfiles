@@ -67,8 +67,7 @@ This uses the first element of `denote-directories' to determine where notes are
                                "    - jira\n"
                                "    - confluence"))
         (journal . ,(concat "* Daily habits\n"
-                            "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
-                            "  - [[https://github.com/issues/SSC_kgDOABqApA?q=is%3Apr%20org%3AKipsu%20state%3Aopen%20archived%3Afalse%20sort%3Aupdated-desc%20-is%3Adraft%20review-requested%3A%40me][review pull requests]]\n\n"
+							"- [ ] Review [[file:~/Library/CloudStorage/Dropbox/org/gtd/inbox.org][Inbox]]"
                             "* Notes\n"))
         (person . ,(concat "* Relationships\n\n"
                            "* Prayer requests\n\n"

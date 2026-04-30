@@ -427,7 +427,7 @@ Use the delightful ultra-scroll
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
    '("bk" . kill-current-buffer)
-   '("i" . consult-outline)
+   '("i" . consult-imenu)
    ;; (re)compilation (prefir, "p")
    '("pp" . project-compile)
    '("pr" . recompile)
@@ -457,6 +457,7 @@ Use the delightful ultra-scroll
    '("nf" . denote-find-link)
    '("ng" . consult-denote-grep)
    '("nr" . denote-rename-file-using-front-matter)
+   '("ns" . denote-sequence-find)
    ;; tab bindings
    '("tt" . tab-switch)
    '("tr" . tab-rename)
@@ -470,7 +471,7 @@ Use the delightful ultra-scroll
    '("w." . split-window-vertically)
    '("wv" . split-window-horizontally)
    '("ws" . split-window-vertically)
-   '("wo" . delete-other-windows)
+   '("wo" . toggle-delete-other-windows)
    '("wk" . delete-window)
    '("z" . jinx-correct)
    ;; Use SPC (0-9) for digit arguments.
@@ -752,6 +753,47 @@ I don't like it in my init file. Let's move it somewhere else.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
   (setq custom-file (concat user-emacs-directory "custom.el"))
+#+end_src
+
+** Performance optimizations
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  ;; Assume left to right text direction all the time
+  (setq-default bidi-display-reordering 'left-to-right
+  			  bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t)
+
+  ;; skip fontification during input
+  (setq redisplay-skip-fontification-on-input t)
+
+  ;; increase process output buffer for lsp
+  (setq read-process-output-max (* 4 1024 1024)) ; 4MB
+#+end_src
+
+** Convenience settings
+#+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  ;; auto chmod scripts on save
+  (add-hook 'after-save-hook
+  		  #'executable-make-buffer-file-executable-if-script-p)
+
+  ;; use sane syntax in re-builder
+  (setq reb-re-syntax 'string)
+
+  ;; proportional window splitting
+  (setq window-combination-resize t)
+
+  ;; Reversible C-x 1 (delete-other-windows)
+  (winner-mode +1)
+
+  (defun toggle-delete-other-windows ()
+    "Delete other windows in frame if any, or restore previous window config."
+    (interactive)
+    (if (and winner-mode
+  		   (equal (selected-window) (next-window)))
+  	  (winner-undo)
+  	(delete-other-windows)))
+
+  ;; auto-select help windows
+  (setq help-window-select t)
 #+end_src
 
 ** Backups
@@ -1284,8 +1326,7 @@ selected template will pre-fill the newly created note.
                                  "    - jira\n"
                                  "    - confluence"))
           (journal . ,(concat "* Daily habits\n"
-                              "  - [[denote:20250423T155338][Be Still and Wonder]]\n"
-                              "  - [[https://github.com/issues/SSC_kgDOABqApA?q=is%3Apr%20org%3AKipsu%20state%3Aopen%20archived%3Afalse%20sort%3Aupdated-desc%20-is%3Adraft%20review-requested%3A%40me][review pull requests]]\n\n"
+  							"- [ ] Review [[file:~/Library/CloudStorage/Dropbox/org/gtd/inbox.org][Inbox]]"
                               "* Notes\n"))
           (person . ,(concat "* Relationships\n\n"
                              "* Prayer requests\n\n"
@@ -1360,6 +1401,17 @@ do exactly that.
   (defun dired-go-home ()
     (interactive)
     (dired-jump nil "~/"))
+  (defun dired-cycle-dired-windows ()
+    "Switch to the next Dired windon in the selected frame."
+    (interactive)
+    (select-window
+     (cadr (seq-filter
+  		  (lambda (window)
+  			(eq (buffer-local-value
+  				 'major-mode (window-buffer window))
+  				'dired-mode))
+  		  (window-list)))))
+  (keymap-set dired-mode-map "TAB" #'dired-cycle-dired-windows)
   (keymap-set dired-mode-map "~" #'dired-go-home)
 #+end_src
 
@@ -2351,7 +2403,10 @@ like dired assume the posix implementation.
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes
   (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
   (setenv "HOMEBREW_NO_ENV_HINTS" "1")
+  (setenv "GOPATH" "/Users/jharder/go")
   (add-to-list 'exec-path "/usr/local/go/bin")
+  (add-to-list 'exec-path "/Users/jharder/.rd/bin")
+  (add-to-list 'exec-path "/Users/jharder/go/bin")
   (add-to-list 'exec-path "/Users/jharder/bin")
   (add-to-list 'exec-path "/Users/jharder/.local/bin")
   (add-to-list 'exec-path "/opt/homebrew/bin")

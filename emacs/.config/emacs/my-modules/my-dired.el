@@ -43,6 +43,17 @@
 (defun dired-go-home ()
   (interactive)
   (dired-jump nil "~/"))
+(defun dired-cycle-dired-windows ()
+  "Switch to the next Dired windon in the selected frame."
+  (interactive)
+  (select-window
+   (cadr (seq-filter
+		  (lambda (window)
+			(eq (buffer-local-value
+				 'major-mode (window-buffer window))
+				'dired-mode))
+		  (window-list)))))
+(keymap-set dired-mode-map "TAB" #'dired-cycle-dired-windows)
 (keymap-set dired-mode-map "~" #'dired-go-home)
 
 (defun dired-first-file ()

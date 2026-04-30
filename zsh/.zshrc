@@ -128,3 +128,7 @@ export PATH="/Users/jharder/bin:$PATH"
 
 # initialize zoxide
 eval "$(zoxide init zsh)"
+
+# Go variables
+export GOPATH=$HOME/go
+export PATH="$PATH:$GOPATH/bin"
