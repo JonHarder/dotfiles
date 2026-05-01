@@ -3013,12 +3013,13 @@ Magit is amazing
 #+end_src
 
 ** Forge
-Forges are a term representing a centralized version control
-location, like github. Magit bundles support for viewing content
-from forges (like pull requests), when required.
+See the amazing [[https://github.com/blahgeek/emacs-pr-review][pr-review]] package.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-  (straight-use-package 'forge)
+  (straight-use-package 'pr-review)
+  (setq pr-review-forges-alist
+  	  ;; default, reads api-host & username from ghub config
+        '(("github.com" . (github "api.github.com" "JonHarder"))))
 #+end_src
     
 ** Git gutters
