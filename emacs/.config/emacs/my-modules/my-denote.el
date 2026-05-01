@@ -67,7 +67,7 @@ This uses the first element of `denote-directories' to determine where notes are
                                "    - jira\n"
                                "    - confluence"))
         (journal . ,(concat "* Daily habits\n"
-							"- [ ] Review [[file:~/Library/CloudStorage/Dropbox/org/gtd/inbox.org][Inbox]]"
+							"- [ ] Review [[file:~/Library/CloudStorage/Dropbox/org/gtd/inbox.org][Inbox]]\n\n"
                             "* Notes\n"))
         (person . ,(concat "* Relationships\n\n"
                            "* Prayer requests\n\n"
