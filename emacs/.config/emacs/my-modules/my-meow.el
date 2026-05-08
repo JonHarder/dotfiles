@@ -25,9 +25,11 @@
 	  (kill-buffer buffer))))
 
 (meow-leader-define-key
- '("SPC" . execute-extended-command)
+ '("SPC" . ace-window)
  '("RET" . embark-act)
  '(";" . comment-line)
+ '("." . execute-extended-command)
+ ;; '("'" . gro
  ;; file commands
  '("ff" . find-file)
  '("fg" . gtd-find-file)
@@ -70,7 +72,9 @@
  '("nf" . denote-find-link)
  '("ng" . consult-denote-grep)
  '("nr" . denote-rename-file-using-front-matter)
- '("ns" . denote-sequence-find)
+ '("ns" . nil)
+ '("nsf" . denote-sequence-find)
+ '("nss" . denote-sequence)
  ;; tab bindings
  '("tt" . tab-switch)
  '("tr" . tab-rename)
@@ -261,7 +265,7 @@
 	("t" . meow-save)
 	("T" . meow-sync-grab)))
 
-(defvar meow-layout meow-layout-hd-gold
+(defvar meow-layout meow-layout-qwerty
   "List of bindings for meow normal mode.
 
 Each element is a cons cell with the car being a string (keybind)

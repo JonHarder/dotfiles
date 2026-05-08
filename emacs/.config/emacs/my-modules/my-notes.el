@@ -1,3 +1,10 @@
+(use-package grove
+  :bind-keymap ("C-c v" . grove-command-map)
+  :custom
+  (grove-directory "~/Library/CloudStorage/Dropbox/notes")
+  :config
+  (global-grove-mode 1))
+
 (straight-use-package 'denote)
 
 (denote-rename-buffer-mode 1)
@@ -73,4 +80,4 @@ This uses the first element of `denote-directories' to determine where notes are
                            "* Prayer requests\n\n"
                            "* Meetings\n"))))
 
-(provide 'my-denote)
+(provide 'my-notes)

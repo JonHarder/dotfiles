@@ -39,7 +39,7 @@
 (require 'my-tree-sitter)
 (require 'my-gtd)
 (require 'my-nginx)
-(require 'my-denote)
+(require 'my-notes)
 (require 'my-dired)
 (require 'my-docker-mode)
 (require 'my-ediff)

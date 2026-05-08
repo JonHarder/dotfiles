@@ -127,7 +127,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-tree-sitter)
   (require 'my-gtd)
   (require 'my-nginx)
-  (require 'my-denote)
+  (require 'my-notes)
   (require 'my-dired)
   (require 'my-docker-mode)
   (require 'my-ediff)
@@ -412,9 +412,11 @@ Use the delightful ultra-scroll
   	  (kill-buffer buffer))))
 
   (meow-leader-define-key
-   '("SPC" . execute-extended-command)
+   '("SPC" . ace-window)
    '("RET" . embark-act)
    '(";" . comment-line)
+   '("." . execute-extended-command)
+   ;; '("'" . gro
    ;; file commands
    '("ff" . find-file)
    '("fg" . gtd-find-file)
@@ -457,7 +459,9 @@ Use the delightful ultra-scroll
    '("nf" . denote-find-link)
    '("ng" . consult-denote-grep)
    '("nr" . denote-rename-file-using-front-matter)
-   '("ns" . denote-sequence-find)
+   '("ns" . nil)
+   '("nsf" . denote-sequence-find)
+   '("nss" . denote-sequence)
    ;; tab bindings
    '("tt" . tab-switch)
    '("tr" . tab-rename)
@@ -658,7 +662,7 @@ documents easier.  In meow, this is extremely easy.  Compliments to
   	("t" . meow-save)
   	("T" . meow-sync-grab)))
 
-  (defvar meow-layout meow-layout-hd-gold
+  (defvar meow-layout meow-layout-qwerty
     "List of bindings for meow normal mode.
 
   Each element is a cons cell with the car being a string (keybind)
@@ -1202,9 +1206,19 @@ And provide the module
   (provide 'my-server)
 #+end_src
 
-* Denote
-** Basic settings
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+* Notes
+** Grove (obsidian-like note taking)
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
+  (use-package grove
+    :bind-keymap ("C-c v" . grove-command-map)
+    :custom
+    (grove-directory "~/Library/CloudStorage/Dropbox/notes")
+    :config
+    (global-grove-mode 1))
+#+end_src
+** Denote
+*** Basic settings
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote)
 
   (denote-rename-buffer-mode 1)
@@ -1217,9 +1231,9 @@ And provide the module
   (setq denote-prompts '(title subdirectory keywords))
 #+end_src
 
-** Helper functions
+*** Helper functions
 
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   ;;; Code:
   (defun denote-recently-modified (&optional last-days)
     "View a `dired' buffer containing notes modified in the last LAST-DAYS days.
@@ -1236,8 +1250,8 @@ And provide the module
       (dired (cons default-directory files))))
 #+end_src
 
-** Journaling
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+*** Journaling
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote-journal)
   (setq denote-journal-directory (concat denote-directory "/journal"))
   (add-to-list 'denote-dired-directories denote-journal-directory)
@@ -1246,12 +1260,12 @@ And provide the module
   (add-hook 'calendar-mode-hook #'denote-journal-calendar-mode)
 #+end_src
 
-** Silos
+*** Silos
 Silos are a way to fully sepparate notes from each other. In order
 to fully support them, we'll need to tell denote where each silo
 lives.
 
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote-silo)
   ;; (setq denote-silo-directories '())
   ;; (let ((my-silo-dirs (mapcar (lambda (file)
@@ -1262,17 +1276,17 @@ lives.
   ;;     (add-to-list 'denote-dired-directories dir)))
 #+end_src
 
-** Hooks
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+*** Hooks
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 #+end_src
 
-** Org integration
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+*** Org integration
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote-org)
 #+end_src
 
-** Sequences
+*** Sequences
 Denote has optional support for sequences of notes, making
 hierarchical series of notes with parent, child, sibling
 relationships.
@@ -1280,10 +1294,10 @@ relationships.
 This sequence information is encoded in the denote [[denote:20231121T144329][File Naming Scheme]]
 in the [[denote:20231205T093346][signature]] section.
 
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote-sequence)
 #+end_src
-** Denote Explore
+*** Denote Explore
 Denote explore is a great little package that supplies some helper
 function meant to aid in managing your denote notes.
 
@@ -1296,20 +1310,20 @@ It is separated into four categories:
 
 see [[info:denote-explore][here]] for a full manual on the package
 
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'denote-explore)
 #+end_src
 
-** Consult Denote
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+*** Consult Denote
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (straight-use-package 'consult-denote)
   (consult-denote-mode 1)
 #+end_src
-** Templates
+*** Templates
 Denote allows for defining templates when creating a new note. The
 selected template will pre-fill the newly created note.
 
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (setq denote-templates
         `((onboarding . ,(concat "* Onboarding Tasks\n"
                                  "  - [ ] Welcome, office tour\n"
@@ -1333,8 +1347,8 @@ selected template will pre-fill the newly created note.
                              "* Meetings\n"))))
 #+end_src
 ** Provide the module
-#+begin_src emacs-lisp :tangle "my-modules/my-denote.el" :mkdirp yes
-  (provide 'my-denote)
+#+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
+  (provide 'my-notes)
 #+end_src
 
 * Dired
