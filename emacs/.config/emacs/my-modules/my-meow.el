@@ -29,7 +29,6 @@
  '("RET" . embark-act)
  '(";" . comment-line)
  '("." . execute-extended-command)
- ;; '("'" . gro
  ;; file commands
  '("ff" . find-file)
  '("fg" . gtd-find-file)

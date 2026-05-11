@@ -1,4 +1,29 @@
+(use-package org-mem
+  :straight t
+  :config
+  (org-mem-updater-mode))
+
+(use-package org-node
+  :straight t
+  :init
+  (keymap-global-set "M-o" org-node-global-prefix-map)
+  (with-eval-after-load 'keymap-set org-mode-map "M-o" org-node-org-prefix-map)
+  :config
+  (org-node-cache-mode)
+  (org-node-context-follow-mode)
+  (org-node-complete-at-point-mode)
+  ;;; The following changes alter how completion works.  The
+  ;;; `org-mem-reset' at the end of this section is necessary in order
+  ;;; for the node index to re-compute.
+  ;;
+  ;; ensure that path and tags are filterable via completion
+  (setq org-node-alter-candidates t)
+  (setq org-node-affixation-fn
+		'org-node-prepend-olp-append-tags)
+  (org-mem-reset))
+
 (use-package grove
+  :straight t
   :bind-keymap ("C-c v" . grove-command-map)
   :custom
   (grove-directory "~/Library/CloudStorage/Dropbox/notes")
