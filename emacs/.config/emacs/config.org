@@ -1210,27 +1210,33 @@ And provide the module
 #+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (use-package org-mem
     :straight t
+    :demand t
     :config
     (org-mem-updater-mode))
 
   (use-package org-node
     :straight t
-    :init
-    (keymap-global-set "M-o" org-node-global-prefix-map)
-    (with-eval-after-load 'keymap-set org-mode-map "M-o" org-node-org-prefix-map)
+    :after (org-mem transient)
+    :demand t
     :config
+    (define-key global-map (kbd "M-o") org-node-global-prefix-map)
+    (keymap-global-set "M-o" 'org-node-map)
+    (with-eval-after-load 'org
+  	(define-key org-mode-map (kbd "M-o") org-node-org-prefix-map))
     (org-node-cache-mode)
     (org-node-context-follow-mode)
     (org-node-complete-at-point-mode)
-    ;;; The following changes alter how completion works.  The
-    ;;; `org-mem-reset' at the end of this section is necessary in order
-    ;;; for the node index to re-compute.
-    ;;
     ;; ensure that path and tags are filterable via completion
     (setq org-node-alter-candidates t)
     (setq org-node-affixation-fn
   		'org-node-prepend-olp-append-tags)
+    ;; seq support (for daily journals, for instance)
+    (setq org-node-seq-defs
+  		(list
+  		 (org-node-seq-def-on-filepath-sort-by-basename
+  		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/zettelkasten/daily" nil t)))
     (org-mem-reset))
+
 #+end_src
 ** Grove (obsidian-like note taking)
 #+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
@@ -2378,11 +2384,13 @@ in a git based project and even used alongside with other
 contributors who are still using git directly.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
+  (use-package magit
+  :straight t)
+  
   (straight-use-package
    '(jj-mode :type git
              :host github
              :repo "bolivier/jj-mode.el"))
-  (require 'magit)
   (provide 'my-jj)
 #+end_src
 * Search
