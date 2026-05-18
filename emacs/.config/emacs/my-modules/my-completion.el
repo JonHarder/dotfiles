@@ -1,8 +1,5 @@
 (recentf-mode +1)
 
-(straight-use-package 'eldoc-box)
-(require 'eldoc-box)
-
 (setq enable-recursive-minibuffers t)
 
 (straight-use-package 'savehist)

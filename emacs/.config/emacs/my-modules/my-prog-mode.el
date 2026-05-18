@@ -1,5 +1,10 @@
 (setq-default tab-width 4)
 
+(let ((fnm-bin (expand-file-name "~/.local/share/fnm/aliases/default/bin")))
+  (when (file-directory-p fnm-bin)
+	(add-to-list 'exec-path fnm-bin)
+	(setenv "PATH" (concat fnm-bin ":" (getenv "PATH")))))
+
 (straight-use-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
@@ -11,6 +16,15 @@
             (setq eldoc-documentation-functions
                   '(eglot-signature-eldoc-function
                     eglot-hover-eldoc-function))))
+
+(setq-default eglot-workspace-configuration
+			  '(:yaml
+				(:schemas
+				 (:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-standalone-strict/all.json
+				  ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]))))
+
+(use-package eldoc-box
+  :hook (eglot-managed-mode . eldoc-box-hover-mode))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs

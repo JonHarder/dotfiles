@@ -443,6 +443,7 @@ Use the delightful ultra-scroll
    '("ee" . eglot)
    '("ek" . eldoc-box-help-at-point)
    '("ea" . eglot-code-actions)
+   '("er" . eglot-rename)
    
    '("a" . avy-goto-char-timer)
    '("oo" . occur)
@@ -893,13 +894,6 @@ opened files via [[help:consult-buffer]]
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (recentf-mode +1)
 #+end_src
-** Eldoc
-
-#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'eldoc-box)
-  (require 'eldoc-box)
-#+end_src
-
 ** General minibuffer settings
 
    When interacting with the [[elisp:(info "(emacs) Minibuffer")][minibuffer]], you may want to execute a command
@@ -1586,6 +1580,17 @@ Use the fantastic elfeed
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   (setq-default tab-width 4)
 #+end_src
+** Node
+I use fnm to handle different node environments and manage global
+package installations.  To teach emacs about this, we find and add the
+fnm bin path to 'exec-path'
+
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (let ((fnm-bin (expand-file-name "~/.local/share/fnm/aliases/default/bin")))
+    (when (file-directory-p fnm-bin)
+  	(add-to-list 'exec-path fnm-bin)
+  	(setenv "PATH" (concat fnm-bin ":" (getenv "PATH")))))
+#+end_src
 ** Prog mode
 Emacs has a general ~prog~ mode, serving as the base major mode for
 all language specific programming modes. Adding settings and hooks
@@ -1623,6 +1628,15 @@ this actually causes.
               (setq eldoc-documentation-functions
                     '(eglot-signature-eldoc-function
                       eglot-hover-eldoc-function))))
+
+  (setq-default eglot-workspace-configuration
+  			  '(:yaml
+  				(:schemas
+  				 (:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-standalone-strict/all.json
+  				  ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]))))
+
+  (use-package eldoc-box
+    :hook (eglot-managed-mode . eldoc-box-hover-mode))
 #+end_src
 
 And for support for languages that aren't pre-configured out of

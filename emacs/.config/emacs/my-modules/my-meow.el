@@ -56,6 +56,7 @@
  '("ee" . eglot)
  '("ek" . eldoc-box-help-at-point)
  '("ea" . eglot-code-actions)
+ '("er" . eglot-rename)
  
  '("a" . avy-goto-char-timer)
  '("oo" . occur)
