@@ -390,6 +390,9 @@ Use the delightful ultra-scroll
 
 ** Set up motion state bindings
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
+  ;; ;; Move meow's j/k motion bindings to SPC so notmuch (and other modes that use them can have them back
+  ;; (meow-motion-remap-prefix "SPC")
+
   (meow-motion-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
@@ -439,18 +442,19 @@ Use the delightful ultra-scroll
    '("se" . eshell)
    '("ss" . shell)
    ;; code things
-   '("ed" . eldoc)
+   '("eD" . eldoc)
    '("ee" . eglot)
-   '("ek" . eldoc-box-help-at-point)
+   '("ef" . eglot-format-buffer)
+   '("ed" . eldoc-box-help-at-point)
    '("ea" . eglot-code-actions)
    '("er" . eglot-rename)
    
    '("a" . avy-goto-char-timer)
-   '("oo" . occur)
    '("l" . recenter-top-bottom)
    ;; apps (org agenda, etc)
    '("oa" . org-agenda)
    '("oc" . org-capture)
+   '("oo" . occur)
    '("j" . jj-log)
    ;; denote bindings
    '("nb" . denote-backlinks)
@@ -548,6 +552,7 @@ documents easier.  In meow, this is extremely easy.  Compliments to
 #+begin_src emacs-lisp :tangle "my-modules/my-meow.el" :mkdirp yes
   (defvar meow-layout-qwerty
     '(
+  	("=" . ace-window)
   	("," . meow-inner-of-thing)
   	("." . meow-bounds-of-thing)
   	("[" . meow-beginning-of-thing)
@@ -1205,14 +1210,14 @@ And provide the module
 #+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (use-package org-mem
     :straight t
-    :demand t
+    :defer 15
     :config
     (org-mem-updater-mode))
 
   (use-package org-node
     :straight t
     :after (org-mem transient)
-    :demand t
+    ;; :demand t
     :config
     (define-key global-map (kbd "M-o") org-node-global-prefix-map)
     (keymap-global-set "M-o" 'org-node-map)
@@ -1575,7 +1580,7 @@ Use the fantastic elfeed
   		("https://twingate.com/changelog.rss.xml" kipsu)))
   (provide 'my-feed)
 #+end_src
-    
+
 * Programming
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   (setq-default tab-width 4)
@@ -1622,30 +1627,36 @@ this actually causes.
 #+end_src
 
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
-  (add-hook 'eglot-managed-mode-hook
-  		  (lambda ()
-              (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-              (setq eldoc-documentation-functions
-                    '(eglot-signature-eldoc-function
-                      eglot-hover-eldoc-function))))
-
-  (setq-default
-   eglot-workspace-configuration
-   '(:yaml
-     (
-  	:completion t
-  	:validate t
-  	:hover t
-  	:schemas
-  	(:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-local/all.json
-  	 ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]))))
-
+  (use-package eglot
+    :hook (eglot-managed-mope . (lambda ()
+  								(setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+  								(setq eldoc-documentation-functions
+  									  '(eglot-signature-eldoc-function
+  										eglot-hover-eldoc-function))))
+    :config
+    (setq-default
+     eglot-workspace-configuration
+     '(:yaml
+  	 (
+  	  :completion t
+  	  :validate t
+  	  :hover t
+  	  :schemas
+  	  (:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-local/all.json
+  	   ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]
+  	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-workflow.json
+  	   [".github/workflows/*.yml" ".github/workflows/*.yaml"]
+  	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-action.json
+  	   [".github/actions/*.yml" ".github/actions/*.yaml"])))))
 
   (use-package eldoc-box
     :straight t
-    :hook (eglot-managed-mode . eldoc-box-hover-at-point-mode)
+    ;; Uncomment if you want this to pop up automatically
+    ;; :hook (eglot-managed-mode . eldoc-box-hover-mode)
     :config
-    (set-face-attribute 'eldoc-box-body nil :inherit 'default))
+    (set-face-attribute 'eldoc-box-body nil
+  					  :family (face-attribute 'default :family)
+  					  :height (face-attribute 'default :height)))
 #+end_src
 
 And for support for languages that aren't pre-configured out of
@@ -1706,9 +1717,17 @@ This replaces the venerable, but outdated flymake.
 
 *** Install the package
     #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
-      (straight-use-package 'tree-sitter)
-      (straight-use-package 'tree-sitter-indent)
-      (straight-use-package 'tree-sitter-langs)
+      (use-package tree-sitter
+        :straight t
+        :hook ((go-mode . tree-sitter-mode)
+      		 (python-mode . tree-sitter-mode)
+      		 (terraform-mode . tree-sitter-mode)
+      		 (bash-ts-mode . tree-sitter-mode))
+        :config
+        (use-package tree-sitter-langs
+      	:straight t)
+        (use-package tree-sitter-indent
+      	:straight t))
     #+end_src
 
 *** Install languages
@@ -1722,7 +1741,7 @@ This replaces the venerable, but outdated flymake.
 
 *** Enable global tree sitter mode
     #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
-      (global-tree-sitter-mode)
+      ;; (global-tree-sitter-mode)
       (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     #+end_src
 
@@ -2410,11 +2429,9 @@ contributors who are still using git directly.
 #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
   (use-package magit
   :straight t)
-  
-  (straight-use-package
-   '(jj-mode :type git
-             :host github
-             :repo "bolivier/jj-mode.el"))
+
+  (use-package jj-mode
+    :straight (:host github :repo "bolivier/jj-mode.el"))
   (provide 'my-jj)
 #+end_src
 * Search
@@ -2919,7 +2936,7 @@ buffer history when executing a search with =
       (:name "unread" :query "tag:unread" :key "u")
       (:name "flagged" :query "tag:flagged" :key "f")
       (:name "drafts" :query "tag:draft" :key "d")
-      (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
+      (:name "today's mail" :query "date:today tag:inbox" :key ".")
       (:name "Todo" :query "tag:todo" :key "t")
       (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
       (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
@@ -2932,7 +2949,17 @@ buffer history when executing a search with =
      (setq notmuch-search-oldest-first nil)
    #+end_src
 *** Bindings
-Evilified bindings to notmuch
+Ensure notmuch buffers are in motion state
+
+#+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  ;; Put notmuch buffers in motion state
+  (dolist (mode '(notmuch-hello-mode
+                  notmuch-search-mode
+                  notmuch-show-mode
+                  notmuch-tree-mode
+                  notmuch-message-mode))
+    (add-to-list 'meow-mode-state-list `(,mode . motion)))
+#+end_src
 
 **** Search mode
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes

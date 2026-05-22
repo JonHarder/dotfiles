@@ -27,13 +27,21 @@
     (:name "unread" :query "tag:unread" :key "u")
     (:name "flagged" :query "tag:flagged" :key "f")
     (:name "drafts" :query "tag:draft" :key "d")
-    (:name "today's mail" :query "date:today tag:inbox tag:unread" :key ".")
+    (:name "today's mail" :query "date:today tag:inbox" :key ".")
     (:name "Todo" :query "tag:todo" :key "t")
     (:name "This Week" :query "date:mon..today tag:inbox" :key "w")
     (:name "Pull requests" :query "tag:pullrequest not tag:deleted" :key "p")
     (:name "Sent" :query "is:sent" :key "s")))
 
 (setq notmuch-search-oldest-first nil)
+
+;; Put notmuch buffers in motion state
+(dolist (mode '(notmuch-hello-mode
+                notmuch-search-mode
+                notmuch-show-mode
+                notmuch-tree-mode
+                notmuch-message-mode))
+  (add-to-list 'meow-mode-state-list `(,mode . motion)))
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))

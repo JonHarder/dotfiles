@@ -1,0 +1,18 @@
+;;; local-config.el --- Settings that I don't want in version control ;; -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+(defvar my-font '(:name "JetBrainsMono Nerd Font" :size 16))
+(defvar my-theme '(doom-themes . doom-grovbox))
+(defun pre-theme-load-hook ()
+  "Function to run before loading the given theme."
+  (setq doom-monokai-classic-brighter-comments t
+		doom-monokai-classic-comment-bg t
+		
+		doom-gruvbox-dark-variant "hard"
+		doom-gruvbox-brighter-comments t
+		doom-gruvbox-padded-modeline t))
+
+(provide 'local-config)
+;;; local-config.el ends here

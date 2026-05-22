@@ -1,13 +1,13 @@
 (use-package org-mem
   :straight t
-  :demand t
+  :defer 15
   :config
   (org-mem-updater-mode))
 
 (use-package org-node
   :straight t
   :after (org-mem transient)
-  :demand t
+  ;; :demand t
   :config
   (define-key global-map (kbd "M-o") org-node-global-prefix-map)
   (keymap-global-set "M-o" 'org-node-map)

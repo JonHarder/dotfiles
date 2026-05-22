@@ -1,5 +1,8 @@
 ;; Auto-generated file; don't edit -*- mode: lisp-data -*-
-((:url "https://irreal.org/blog/?tag=emacs" :title "Emacs | Irreal"
+((:url
+  "https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes.md#start-of-content"
+  :title "" :time "Fri May 22 15:38:06 2026")
+ (:url "https://irreal.org/blog/?tag=emacs" :title "Emacs | Irreal"
 	   :time "Wed Oct  8 09:10:52 2025")
  (:url "https://phpstan.org/user-guide/rule-levels" :title
 	   "Rule Levels | PHPStan" :time "Wed Oct  8 09:10:31 2025"))

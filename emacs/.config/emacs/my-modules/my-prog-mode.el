@@ -10,29 +10,36 @@
 
 (defvar menu-bar-project-menu '())
 
-(add-hook 'eglot-managed-mode-hook
-		  (lambda ()
-            (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-            (setq eldoc-documentation-functions
-                  '(eglot-signature-eldoc-function
-                    eglot-hover-eldoc-function))))
-
-(setq-default eglot-workspace-configuration
-  			  '(:yaml
-                (
-                 :completion t
-                 :validate t
-                 :hover t
-                 :schemas
-                 (:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-local/all.json
-  				  ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]))))
-
+(use-package eglot
+  :hook (eglot-managed-mope . (lambda ()
+								(setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+								(setq eldoc-documentation-functions
+									  '(eglot-signature-eldoc-function
+										eglot-hover-eldoc-function))))
+  :config
+  (setq-default
+   eglot-workspace-configuration
+   '(:yaml
+	 (
+	  :completion t
+	  :validate t
+	  :hover t
+	  :schemas
+	  (:https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.34.4-local/all.json
+	   ["k8s/**/*.yaml" "manifests/**/*.yaml" "deploy/**/*.yaml"]
+	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-workflow.json
+	   [".github/workflows/*.yml" ".github/workflows/*.yaml"]
+	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-action.json
+	   [".github/actions/*.yml" ".github/actions/*.yaml"])))))
 
 (use-package eldoc-box
   :straight t
-  :hook (eglot-managed-mode . eldoc-box-hover-at-point-mode)
+  ;; Uncomment if you want this to pop up automatically
+  ;; :hook (eglot-managed-mode . eldoc-box-hover-mode)
   :config
-  (set-face-attribute 'eldoc-box-body nil :inherit 'default))
+  (set-face-attribute 'eldoc-box-body nil
+					  :family (face-attribute 'default :family)
+					  :height (face-attribute 'default :height)))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs

@@ -6,6 +6,9 @@
 
 (setq meow-use-clipboard t)
 
+;; ;; Move meow's j/k motion bindings to SPC so notmuch (and other modes that use them can have them back
+;; (meow-motion-remap-prefix "SPC")
+
 (meow-motion-define-key
  '("j" . meow-next)
  '("k" . meow-prev)
@@ -52,18 +55,19 @@
  '("se" . eshell)
  '("ss" . shell)
  ;; code things
- '("ed" . eldoc)
+ '("eD" . eldoc)
  '("ee" . eglot)
- '("ek" . eldoc-box-help-at-point)
+ '("ef" . eglot-format-buffer)
+ '("ed" . eldoc-box-help-at-point)
  '("ea" . eglot-code-actions)
  '("er" . eglot-rename)
  
  '("a" . avy-goto-char-timer)
- '("oo" . occur)
  '("l" . recenter-top-bottom)
  ;; apps (org agenda, etc)
  '("oa" . org-agenda)
  '("oc" . org-capture)
+ '("oo" . occur)
  '("j" . jj-log)
  ;; denote bindings
  '("nb" . denote-backlinks)
@@ -88,7 +92,8 @@
  '("w/" . split-window-horizontally)
  '("w." . split-window-vertically)
  '("wv" . split-window-horizontally)
- '("ws" . split-window-vertically)
+ '("ws" .
+ split-window-vertically)
  '("wo" . toggle-delete-other-windows)
  '("wk" . delete-window)
  '("z" . jinx-correct)
@@ -151,6 +156,7 @@
 
 (defvar meow-layout-qwerty
   '(
+	("=" . ace-window)
 	("," . meow-inner-of-thing)
 	("." . meow-bounds-of-thing)
 	("[" . meow-beginning-of-thing)
