@@ -12,6 +12,7 @@
 (meow-motion-define-key
  '("j" . meow-next)
  '("k" . meow-prev)
+ '("=" . ace-window)
  '("<escape>" . ignore))
 
 (defun gtd-find-file ()
@@ -87,13 +88,12 @@
  '("tj" . tab-next)
  '("tk" . tab-previous)
  '("td" . tab-close)
+ '("ww" . eww)
  ;; window management
- '("ww" . ace-window)
  '("w/" . split-window-horizontally)
  '("w." . split-window-vertically)
  '("wv" . split-window-horizontally)
- '("ws" .
- split-window-vertically)
+ '("ws" . split-window-vertically)
  '("wo" . toggle-delete-other-windows)
  '("wk" . delete-window)
  '("z" . jinx-correct)

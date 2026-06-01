@@ -396,6 +396,7 @@ Use the delightful ultra-scroll
   (meow-motion-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
+   '("=" . ace-window)
    '("<escape>" . ignore))
 #+end_src
 
@@ -474,8 +475,8 @@ Use the delightful ultra-scroll
    '("tj" . tab-next)
    '("tk" . tab-previous)
    '("td" . tab-close)
+   '("ww" . eww)
    ;; window management
-   '("ww" . ace-window)
    '("w/" . split-window-horizontally)
    '("w." . split-window-vertically)
    '("wv" . split-window-horizontally)
@@ -888,6 +889,45 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
   (provide 'my-time)
+#+end_src
+* Folding
+#+begin_src emacs-lisp :tangle "my-modules/my-fold.el" :mkdirp yes
+  (use-package kirigami
+    :straight t
+    :commands (kirigami-open-fold
+  			 kirigami-open-fold-rec
+  			 kirigami-close-fold
+  			 kirigami-toggle-fold
+  			 kirigami-open-folds
+  			 kirigami-close-folds-except-current
+  			 kirigami-close-folds)
+    :config
+    (meow-leader-define-key
+     '("zo" . kirigami-open-fold)
+     '("zO" . kirigami-open-fold-rec)
+     '("zr" . kirigami-open-folds)
+     '("zc" . kirigami-close-fold)
+     '("zm" . kirigami-close-folds)
+     '("za" . kirigami-toggle-fold))
+    ;; configure folding backends
+    (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
+    (add-hook 'lisp-interaction-mode-hook #'hs-minor-mode)
+    (add-hook 'c-mode-hook #'hs-minor-mode)
+    (add-hook 'rust-mode-hook #'hs-minor-mode)
+    (add-hook 'go-mode-hook #'hs-minor-mode)
+    (add-hook 'php-mode-hook #'hs-minor-mode))
+
+  (use-package outline-indent
+    :straight t
+    :custom
+    (outline-indent-ellipsis " ▼")
+    :config
+    (add-hook 'python-mode-hook #'outline-indent-minor-mode)
+    (add-hook 'python-ts-mode-hook #'outline-indent-minor-mode)
+    (add-hook 'yaml-mode-hook #'outline-indent-minor-mode)
+    (add-hook 'yaml-ts-mode-hook #'outline-indent-minor-mode))
+
+  (provide 'my-fold)
 #+end_src
 * Completion
 ** General (built in) completion help
