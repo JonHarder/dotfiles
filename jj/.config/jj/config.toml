@@ -7,6 +7,8 @@ email = "jharder@kipsu.com"
 [ui]
 default-command = "log"
 editor = "emacsclient -a ''"
+# try to use difft by default
+diff-formatter = ["difft", "--color=always", "$left", "$right"]
 
 [ui.movement]
 edit = true
