@@ -12,7 +12,7 @@ editor = "emacsclient -a ''"
 edit = true
 
 [remotes.origin]
-auto-track-bookmarks = "glob:*"
+# auto-track-bookmarks = "glob:*"
 
 [aliases]
 tug = ["bookmark", "move", "--from", "heads(::@ & bookmarks())", "--to", "@"]
