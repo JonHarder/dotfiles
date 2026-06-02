@@ -34,6 +34,7 @@
 (require 'my-meow)
 (require 'my-modeline)
 
+(require 'my-fold)
 (require 'my-time)
 (require 'my-completion)
 (require 'my-tree-sitter)

@@ -8,13 +8,13 @@
 			 kirigami-close-folds-except-current
 			 kirigami-close-folds)
   :config
-  (meow-leader-define-key
-   '("zo" . kirigami-open-fold)
-   '("zO" . kirigami-open-fold-rec)
-   '("zr" . kirigami-open-folds)
-   '("zc" . kirigami-close-fold)
-   '("zm" . kirigami-close-folds)
-   '("za" . kirigami-toggle-fold))
+  (meow-normal-define-key
+   '("Fo" . kirigami-open-fold)
+   '("FO" . kirigami-open-fold-rec)
+   '("Fr" . kirigami-open-folds)
+   '("Fc" . kirigami-close-fold)
+   '("Fm" . kirigami-close-folds)
+   '("Fa" . kirigami-toggle-fold))
   ;; configure folding backends
   (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
   (add-hook 'lisp-interaction-mode-hook #'hs-minor-mode)
