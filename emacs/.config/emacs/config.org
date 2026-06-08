@@ -457,7 +457,7 @@ Use the delightful ultra-scroll
    '("oa" . org-agenda)
    '("oc" . org-capture)
    '("oo" . occur)
-   '("j" . jj-log)
+   '("j" . majutsu)
    ;; denote bindings
    '("nb" . denote-backlinks)
    '("nn" . denote-open-or-create)
@@ -2473,6 +2473,11 @@ contributors who are still using git directly.
 
   (use-package jj-mode
     :straight (:host github :repo "bolivier/jj-mode.el"))
+
+  (use-package majutsu
+    :straight (:host github :repo "0WD0/majutsu")
+    :commands (majutsu))
+
   (provide 'my-jj)
 #+end_src
 * Search
