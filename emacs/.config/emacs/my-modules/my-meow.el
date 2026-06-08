@@ -69,7 +69,7 @@
  '("oa" . org-agenda)
  '("oc" . org-capture)
  '("oo" . occur)
- '("j" . jj-log)
+ '("j" . majutsu)
  ;; denote bindings
  '("nb" . denote-backlinks)
  '("nn" . denote-open-or-create)

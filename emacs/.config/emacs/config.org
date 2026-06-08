@@ -3002,9 +3002,11 @@ Ensure notmuch buffers are in motion state
   (dolist (mode '(notmuch-hello-mode
                   notmuch-search-mode
                   notmuch-show-mode
-                  notmuch-tree-mode
-                  notmuch-message-mode))
+                  notmuch-tree-mode))
     (add-to-list 'meow-mode-state-list `(,mode . motion)))
+
+  (dolist (mode '(notmuch-message-mode))
+    (add-to-list 'meow-mode-state-list `(,mode . insert)))
 #+end_src
 
 **** Search mode
