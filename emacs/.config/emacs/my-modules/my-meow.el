@@ -45,6 +45,7 @@
  '("bb" . consult-buffer)
  '("bi" . ibuffer)
  '("bk" . kill-current-buffer)
+ '("br" . rename-buffer)
  '("i" . consult-imenu)
  ;; (re)compilation (prefir, "p")
  '("pp" . project-compile)

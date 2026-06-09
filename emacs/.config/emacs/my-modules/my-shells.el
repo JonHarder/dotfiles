@@ -170,6 +170,19 @@
 (straight-use-package 'vterm)
 (straight-use-package 'multi-vterm)
 ;; (setq vterm-shell "/opt/homebrew/bin/nu")
+
+(defvar my/vterm-keys-keymap
+  (let ((map (make-sparse-keymap)))
+    (keymap-set map "<escape>" #'my/vterm-escape)
+    (keymap-set map "C-g" #'meow-normal-mode)
+    map))
+
+(define-minor-mode my/vterm-keys-mode
+  "Override escape in vterm buffers."
+  :keymap my/vterm-keys-keymap)
+
+(add-hook 'vterm-mode-hook #'my/vterm-keys-mode)
+
 (setq vterm-shell "/bin/zsh")
 
 (provide 'my-shells)

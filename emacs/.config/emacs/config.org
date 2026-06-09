@@ -433,6 +433,7 @@ Use the delightful ultra-scroll
    '("bb" . consult-buffer)
    '("bi" . ibuffer)
    '("bk" . kill-current-buffer)
+   '("br" . rename-buffer)
    '("i" . consult-imenu)
    ;; (re)compilation (prefir, "p")
    '("pp" . project-compile)
@@ -1258,12 +1259,12 @@ And provide the module
   (use-package org-node
     :straight t
     :after (org-mem transient)
-    ;; :demand t
-    :config
-    (define-key global-map (kbd "M-o") org-node-global-prefix-map)
-    (keymap-global-set "M-o" 'org-node-map)
+    :demand t
+    :init
+    (keymap-global-set "M-o" org-node-global-prefix-map)
     (with-eval-after-load 'org
   	(define-key org-mode-map (kbd "M-o") org-node-org-prefix-map))
+    :config
     (org-node-cache-mode)
     (org-node-context-follow-mode)
     (org-node-complete-at-point-mode)
@@ -2723,6 +2724,19 @@ dependencies nor a compilation step.
   (straight-use-package 'vterm)
   (straight-use-package 'multi-vterm)
   ;; (setq vterm-shell "/opt/homebrew/bin/nu")
+
+  (defvar my/vterm-keys-keymap
+    (let ((map (make-sparse-keymap)))
+      (keymap-set map "<escape>" #'my/vterm-escape)
+      (keymap-set map "C-g" #'meow-normal-mode)
+      map))
+
+  (define-minor-mode my/vterm-keys-mode
+    "Override escape in vterm buffers."
+    :keymap my/vterm-keys-keymap)
+
+  (add-hook 'vterm-mode-hook #'my/vterm-keys-mode)
+
   (setq vterm-shell "/bin/zsh")
 #+end_src
 ** Provide =my-shells=

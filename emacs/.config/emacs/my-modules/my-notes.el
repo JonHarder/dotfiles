@@ -7,12 +7,12 @@
 (use-package org-node
   :straight t
   :after (org-mem transient)
-  ;; :demand t
-  :config
-  (define-key global-map (kbd "M-o") org-node-global-prefix-map)
-  (keymap-global-set "M-o" 'org-node-map)
+  :demand t
+  :init
+  (keymap-global-set "M-o" org-node-global-prefix-map)
   (with-eval-after-load 'org
 	(define-key org-mode-map (kbd "M-o") org-node-org-prefix-map))
+  :config
   (org-node-cache-mode)
   (org-node-context-follow-mode)
   (org-node-complete-at-point-mode)
