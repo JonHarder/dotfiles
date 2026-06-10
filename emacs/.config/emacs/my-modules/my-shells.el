@@ -188,6 +188,30 @@
 
 (add-hook 'vterm-mode-hook #'my/vterm-keys-mode)
 
+;;; Command wrappers The following commands execute shell commands by
+;;; starting a vterm session and executing the specified command
+;;; inside it.
+(defun vterm-run-command (command)
+  "Execute COMMAND in a new vterm buffer."
+  (interactive "sCommand: ")
+  (let ((buffer-name (format "*vterm: %s*" command)))
+	(vterm buffer-name)
+	(switch-to-buffer buffer-name)
+	(vterm-send-string command)
+	(vterm-send-return)))
+
+(defun tuxedo ()
+  "Run the tuxedo task management TUI in vterm."
+  (interactive)
+  (vterm-run-command "tuxedo"))
+
+(defun tilt (&optional subcommand)
+  "Run tilt with the provided SUBCOMMAND (defaults to 'up')."
+  (interactive (list (when current-prefix-arg
+					   (read-string "Tilt command: " "up"))))
+  (vterm-run-command (concat "tilt " (or subcommand "up"))))
+
+
 (setq vterm-shell "/bin/zsh")
 
 (provide 'my-shells)
