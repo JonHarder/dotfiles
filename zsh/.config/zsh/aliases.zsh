@@ -10,6 +10,8 @@ alias k="kubectl"
 
 alias cd=z
 
+alias t=tuxedo
+
 # kipsu aliases
 ## ansible
 alias ap="docker compose run --rm ansible ap"

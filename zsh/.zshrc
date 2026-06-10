@@ -132,3 +132,6 @@ eval "$(zoxide init zsh)"
 # Go variables
 export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
+
+# tuxedo
+export TODO_FILE=$HOME/Library/CloudStorage/Dropbox/todo.txt
