@@ -36,14 +36,15 @@
 (setq notmuch-search-oldest-first nil)
 
 ;; Put notmuch buffers in motion state
-(dolist (mode '(notmuch-hello-mode
-                notmuch-search-mode
-                notmuch-show-mode
-                notmuch-tree-mode))
-  (add-to-list 'meow-mode-state-list `(,mode . motion)))
-
-(dolist (mode '(notmuch-message-mode))
-  (add-to-list 'meow-mode-state-list `(,mode . insert)))
+(with-eval-after-load 'meow
+  (dolist (mode '(notmuch-hello-mode
+                  notmuch-search-mode
+                  notmuch-show-mode
+                  notmuch-tree-mode))
+    (add-to-list 'meow-mode-state-list `(,mode . motion)))
+  
+  (dolist (mode '(notmuch-message-mode))
+    (add-to-list 'meow-mode-state-list `(,mode . insert))))
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))

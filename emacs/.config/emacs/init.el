@@ -31,7 +31,7 @@
 (require 'my-util)
 (require 'my-core)
 (require 'my-mouse)
-(require 'my-meow)
+;; (require 'my-meow)
 (require 'my-modeline)
 
 (require 'my-fold)
