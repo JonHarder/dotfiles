@@ -1,13 +1,14 @@
 (use-package org-mem
   :straight t
-  :defer 15
   :config
+  (setq org-mem-watch-dirs
+        (list "~/Library/CloudStorage/Dropbox/org/zettelkasten/"))
   (org-mem-updater-mode))
 
 (use-package org-node
   :straight t
-  :after (org-mem transient)
-  :demand t
+  :after (org-mem)
+  :commands (org-node-insert org-node-find)
   :init
   (keymap-global-set "M-o" org-node-global-prefix-map)
   (with-eval-after-load 'org
