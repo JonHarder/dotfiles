@@ -134,4 +134,6 @@ export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
 
 # tuxedo
-export TODO_FILE=$HOME/Library/CloudStorage/Dropbox/todo.txt
+export TODO_DIR=$HOME/Library/CloudStorage/Dropbox
+export TODO_FILE=$TODO_DIR/todo.txt
+export DONE_FILE=$TODO_DIR/done.txt
