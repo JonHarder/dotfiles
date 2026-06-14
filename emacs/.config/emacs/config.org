@@ -417,7 +417,10 @@ Use the delightful ultra-scroll
   	  (kill-buffer buffer))))
 
   (meow-leader-define-key
-   '("SPC" . ace-window)
+   '("SPC e" . elfeed)
+   '("SPC n" . notmuch)
+   '("SPC p" . pr-review)
+   '("SPC t" . tuxedo)
    '("RET" . embark-act)
    '(";" . comment-line)
    '("." . execute-extended-command)
