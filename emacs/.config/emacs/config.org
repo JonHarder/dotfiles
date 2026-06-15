@@ -1541,18 +1541,22 @@ a directory. dired-preview allows for exactly this behavior.
   
 * Repeat mode
 #+begin_src emacs-lisp :tangle "my-modules/my-repeat.el" :mkdirp yes
-  (defvar text-navigation-repeat-map
-    (let ((map (make-sparse-keymap)))
-  	(define-key map "n" #'next-line)
-  	(define-key map "p" #'previous-line)
-  	(define-key map "f" #'forward-char)
-  	(define-key map "b" #'backward-char)
-  	map))
+  (defvar-keymap char-line-repeat-map
+    :repeat t
+    "n" #'next-line
+    "p" #'previous-line
+    "f" #'forward-char
+    "b" #'backward-char)
 
-  (put 'next-line 'repeat-map 'text-navigation-repeat-map)
-  (put 'previous-line 'repeat-map 'text-navigation-repeat-map)
-  (put 'forward-char 'repeat-map 'text-navigation-repeat-map)
-  (put 'backward-char 'repeat-map 'text-navigation-repeat-map)
+  (defvar-keymap word-para-repeat-map
+    :repeat t
+    "f" #'forward-word
+    "b" #'backward-word
+    "{" #'backward-paragraph
+    "}" #'forward-paragraph
+    "n" #'forward-sexp
+    "p" #'backward-sexp
+    "k" #'kill-sexp)
 
   (provide 'my-repeat)
 #+end_src
