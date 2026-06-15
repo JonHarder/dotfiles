@@ -72,6 +72,7 @@
 (require 'my-jj)
 (require 'my-avy)
 (require 'my-registers)
+(require 'my-repeat)
 
 (require 'my-rust-mode)
 (require 'my-search)
