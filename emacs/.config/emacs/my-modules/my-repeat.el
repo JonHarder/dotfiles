@@ -15,4 +15,6 @@
   "p" #'backward-sexp
   "k" #'kill-sexp)
 
+(repeat-mode 1)
+
 (provide 'my-repeat)

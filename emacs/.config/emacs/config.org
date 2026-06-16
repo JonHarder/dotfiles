@@ -1558,6 +1558,8 @@ a directory. dired-preview allows for exactly this behavior.
     "p" #'backward-sexp
     "k" #'kill-sexp)
 
+  (repeat-mode 1)
+
   (provide 'my-repeat)
 #+end_src
 * GPG (egp)
