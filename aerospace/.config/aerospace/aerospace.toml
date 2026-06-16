@@ -84,58 +84,49 @@ outer.right =      0
 # end tell'
 # '''
 
-# This binding interferes with emacs org binding to create a new heading/list item
-# alt-enter = 'exec-and-forget open -a Alacritty'
-
-alt-shift-c = 'exec-and-forget emacsclient -c -e "(full-calc)"'
-
 # these shortcuts have endlessly confused me. This removes them (effectively)
 cmd-h = [] # Disable "hide application"
 cmd-alt-h = [] # Disable "hide others"
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt-slash = 'layout tiles horizontal vertical'
-alt-comma = 'layout accordion horizontal vertical'
+ctrl-cmd-space = 'mode wm'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#focus
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
+[mode.wm.binding]
+esc = 'mode main'
 
-alt-f = 'fullscreen'
+# focus - vim keys no modifiers needed
+h = 'focus left'
+l = 'focus right'
+k = 'focus up'
+j = 'focus down'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#move
-alt-shift-h = 'move left'
-alt-shift-j = 'move down'
-alt-shift-k = 'move up'
-alt-shift-l = 'move right'
+# move windows
+shift-h = 'move left'
+shift-l = 'move right'
+shift-k = 'move up'
+shift-j = 'move down'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#resize
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
+# workspaces
+1 = 'workspace 1'
+2 = 'workspace 2'
+3 = 'workspace 3'
+4 = 'workspace 4'
+5 = 'workspace 5'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#workspace
-alt-s = 'workspace Slack'
-alt-t = 'workspace Terminal'
-alt-b = 'workspace Browser'
-alt-m = 'workspace Misc'
+tab = 'move-workspace-to-monitor --wrap-around next'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
-alt-shift-s = 'move-node-to-workspace Slack'
-alt-shift-t = 'move-node-to-workspace Terminal'
-alt-shift-b = 'move-node-to-workspace Browser'
-alt-shift-m = 'move-node-to-workspace Misc'
+shift-1 = 'move-node-to-workspace 1'
+shift-2 = 'move-node-to-workspace 2'
+shift-3 = 'move-node-to-workspace 3'
+shift-4 = 'move-node-to-workspace 4'
+shift-5 = 'move-node-to-workspace 5'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
-alt-tab = 'workspace-back-and-forth'
-# See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+# layout
+f = 'fullscreen'
+t = 'layout tiling'
+s = 'layout floating'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands#mode
-alt-a = 'mode admin'
-
-alt-r = 'mode resize'
+r = 'mode resize'
+a = 'mode admin'
 
 # 'admin' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
