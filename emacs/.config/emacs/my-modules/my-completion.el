@@ -25,9 +25,10 @@
 (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 
 (straight-use-package 'corfu)
-(setq corfu-auto t
+(setq corfu-auto nil
       corfu-separator ?\s
       tab-always-indent 'complete)
+(corfu-popupinfo-mode 1)
 (global-corfu-mode 1)
 
 (straight-use-package 'marginalia)

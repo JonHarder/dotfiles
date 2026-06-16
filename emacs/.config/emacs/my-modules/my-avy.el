@@ -12,4 +12,6 @@
 (with-eval-after-load 'avy
   (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
 
+(global-set-key (kbd "C-c a") #'avy-goto-char-timer)
+
 (provide 'my-avy)

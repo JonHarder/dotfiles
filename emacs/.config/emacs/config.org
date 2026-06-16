@@ -1018,15 +1018,15 @@ and play nicely with ~eshell-smart~
    #+end_src
 
 ** Corfu
-
   Corfu offers completion in buffer, replacing company mode which sidesteps
   Emacs' built in completion mechanisms.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
     (straight-use-package 'corfu)
-    (setq corfu-auto t
+    (setq corfu-auto nil
           corfu-separator ?\s
           tab-always-indent 'complete)
+    (corfu-popupinfo-mode 1)
     (global-corfu-mode 1)
   #+end_src
 
@@ -3296,6 +3296,8 @@ dispatch system.
 
   (with-eval-after-load 'avy
     (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
+
+  (global-set-key (kbd "C-c a") #'avy-goto-char-timer)
 
   (provide 'my-avy)
 #+end_src
