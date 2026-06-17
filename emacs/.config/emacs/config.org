@@ -1059,19 +1059,19 @@ and play nicely with ~eshell-smart~
 ** Consult
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'consult)
-  (setq xref-show-xrefs-function #'consult-xref)
+  (use-package consult
+    :straight t
+    :config
+    (setq xref-show-xrefs-function #'consult-xref)
+    :bind
+    ("C-x b" . consult-buffer))
 #+end_src
 
 *** consult dir
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-    (straight-use-package 'consult-dir)
+  (straight-use-package 'consult-dir)
   (define-key vertico-map
               (kbd "M-c") #'consult-dir)
-  (when nil
-      (evil-define-key 'normal
-  		     global-map
-  		     (kbd "<leader> c d") #'consult-dir))
 #+end_src
 
 
@@ -2838,12 +2838,13 @@ straight to the targeted window, without having to cycle through
 any intermediate windows in the cycle.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-  (straight-use-package 'ace-window)
-  (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
-  ;; This adds the window identifier to the mode line for each window
-  ;; makes it easier to know what the identifier will be for the window
-  ;; I want to jump to even before I've hit the binding to jump
-  (ace-window-display-mode 1)
+  (use-package ace-window
+    :straight t
+    :init
+    (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+    :config
+    (ace-window-display-mode 1)
+    :bind (("C-x o" . #'ace-window)))
 #+end_src
 
 *** Window management
@@ -3285,21 +3286,21 @@ Tying this up to embark is a natural extension of avy's action
 dispatch system.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-avy.el" :mkdirp yes
-  (defun avy-action-embark (pt)
-    (unwind-protect
-  	  (save-excursion
-  		(goto-char pt)
-  		(embark-act))
-  	(select-window
-  	 (cdr (ring-ref avy-ring 0))))
-    t)
-
-  (setq avy-timeout-seconds 0.4)
-
-  (with-eval-after-load 'avy
-    (setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
-
-  (global-set-key (kbd "C-c a") #'avy-goto-char-timer)
+  (use-package avy
+    :straight t
+    :config
+    (with-eval-after-load 'embark
+  	(defun avy-action-embark (pt)
+  	  (unwind-protect
+  		  (save-excursion
+  			(goto-char pt)
+  			(embark-act))
+  		(select-window
+  		 (cdr (ring-ref avy-ring 0))))
+  	  t)
+  	(setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
+    (setq avy-timeout-seconds 0.4)
+    :bind (("C-c a" . #'avy-goto-char-timer)))
 
   (provide 'my-avy)
 #+end_src

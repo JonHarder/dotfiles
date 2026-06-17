@@ -39,16 +39,16 @@
       completion-category-defaults nil
       completion-category-overrides '((file (styles partial-completion))))
 
-(straight-use-package 'consult)
-(setq xref-show-xrefs-function #'consult-xref)
+(use-package consult
+  :straight t
+  :config
+  (setq xref-show-xrefs-function #'consult-xref)
+  :bind
+  ("C-x b" . consult-buffer))
 
 (straight-use-package 'consult-dir)
 (define-key vertico-map
             (kbd "M-c") #'consult-dir)
-(when nil
-    (evil-define-key 'normal
-		     global-map
-		     (kbd "<leader> c d") #'consult-dir))
 
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)
