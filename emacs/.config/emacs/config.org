@@ -1633,6 +1633,8 @@ Use the fantastic elfeed
   	  '(("https://protesilaos.com/codelog.xml" code emacs)
   		("http://rss.desiringgod.org/" christianity)
   		("https://batsov.com/atom.xml" code)
+  		("https://www.wiz.io/feed/rss.xml" security)
+  		("https://rss.beehiiv.com/feeds/xgTKUmMmUm.xml" security)
   		("https://karthinks.com/index.xml" code emacs)
   		("https://www.thegospelcoalition.org/feed/" christianity)
   		("https://www.firstthings.com/rss/web-exclusives" christianity)
@@ -2570,6 +2572,7 @@ like dired assume the posix implementation.
   (add-to-list 'exec-path "/Users/jharder/.rustup/toolchains/stable-aarch64-apple-darwin/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/bin")
   (add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/sbin")
+  (add-to-list 'exec-path "/Users/jharder/.cargo/bin")
 #+end_src
 
 *** hook
