@@ -751,7 +751,16 @@ documents easier.  In meow, this is extremely easy.  Compliments to
 
   (doom-modeline-mode 1)
   #+end_src
-  
+** Miscellaneous mode line components
+*** Which function mode
+This minor mode adds a segment to the mode line to indicate which
+enclosing ~defun~ the point is in.  It is fairly flexible and includes
+indicating the currenti heading in outline compatible modes, including
+org mode.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+  (which-function-mode 1)
+#+end_src
 ** require the mode line
 #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
   (provide 'my-modeline)
@@ -1627,19 +1636,23 @@ files on the filesystem.
 Use the fantastic elfeed
 
 #+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
-  (straight-use-package 'elfeed)
+  (use-package elfeed
+    :straight t
+    :commands (elfeed)
+    :config
+    (setq elfeed-feeds
+  		'(("https://protesilaos.com/codelog.xml" code emacs)
+  		  ("http://rss.desiringgod.org/" christianity)
+  		  ("https://batsov.com/atom.xml" code)
+  		  ("https://www.wiz.io/feed/rss.xml" security)
+  		  ("https://rss.beehiiv.com/feeds/xgtkummmum.xml" security)
+  		  ("https://aws.amazon.com/blogs/security/feed/" security)
+  		  ("https://karthinks.com/index.xml" code emacs)
+  		  ("https://www.thegospelcoalition.org/feed/" christianity)
+  		  ("https://www.firstthings.com/rss/web-exclusives" christianity)
+  		  ("https://irreal.org/blog/?feed=rss2" code emacs)
+  		  ("https://twingate.com/changelog.rss.xml" kipsu))))
 
-  (setq elfeed-feeds
-  	  '(("https://protesilaos.com/codelog.xml" code emacs)
-  		("http://rss.desiringgod.org/" christianity)
-  		("https://batsov.com/atom.xml" code)
-  		("https://www.wiz.io/feed/rss.xml" security)
-  		("https://rss.beehiiv.com/feeds/xgTKUmMmUm.xml" security)
-  		("https://karthinks.com/index.xml" code emacs)
-  		("https://www.thegospelcoalition.org/feed/" christianity)
-  		("https://www.firstthings.com/rss/web-exclusives" christianity)
-  		("https://irreal.org/blog/?feed=rss2" code emacs)
-  		("https://twingate.com/changelog.rss.xml" kipsu)))
   (provide 'my-feed)
 #+end_src
 
@@ -2301,6 +2314,25 @@ capture any any data you want, place it into any file you want. Just customize
 the variable ~org-capture-templates~.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (setq org-tag-alist '((:startgroup)
+  					  ("@Work" . ?w)
+  					  ("@Church" . ?c)
+  					  ("@Home" . ?c)
+  					  ("@Errands" . ?e)
+  					  (:endgroup)
+  					  ("security" . ?s)
+  					  ("pastoral" . ?p)))
+
+  (defun my/org-capture-schedule ()
+    "Prompt for [t]oday or [d]ate pciker; return a SCHEDULED line."
+    (let* ((ch (read-char-choice "Schedule: [t]oday  [d]ate " '(?t ?d)))
+  		 (time (pcase ch
+  				 (?t (current-time))
+  				 (?d (org-time-string-to-time
+  					  (org-read-date nil nil nil "Date: "))))))
+  	(concat "SCHEDULED: " (format-time-string "<%Y-%m-%d %a>" time))))
+
+
   (setq org-capture-templates
   	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Library/CloudStorage/Dropbox/org/gtd/inbox.org")
            "* %?\n/Entered on/ %U")
@@ -2310,7 +2342,12 @@ the variable ~org-capture-templates~.
   		 :immediate-finish t)
   		("p" "Project - new project" entry
   		 (file+headline org-default-notes-file "Projects")
-  		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
+  		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")
+  		("t" "Task" entry
+  		 (file+headline org-default-notes-file "Tasks")
+  		 "* TODO %^{Task} %^g\n%(my/org-capture-schedule)\n%?"
+  		 :empty-lines-before 1
+  		 :kill-buffer t)))
 #+end_src
 
 ** Org structures

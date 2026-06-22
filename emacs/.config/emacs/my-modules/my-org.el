@@ -146,6 +146,25 @@
 ;; 	       :time-grid t
 ;; 	       :todo '("TODO" "WORKING"))))
 
+(setq org-tag-alist '((:startgroup)
+					  ("@Work" . ?w)
+					  ("@Church" . ?c)
+					  ("@Home" . ?c)
+					  ("@Errands" . ?e)
+					  (:endgroup)
+					  ("security" . ?s)
+					  ("pastoral" . ?p)))
+
+(defun my/org-capture-schedule ()
+  "Prompt for [t]oday or [d]ate pciker; return a SCHEDULED line."
+  (let* ((ch (read-char-choice "Schedule: [t]oday  [d]ate " '(?t ?d)))
+		 (time (pcase ch
+				 (?t (current-time))
+				 (?d (org-time-string-to-time
+					  (org-read-date nil nil nil "Date: "))))))
+	(concat "SCHEDULED: " (format-time-string "<%Y-%m-%d %a>" time))))
+
+
 (setq org-capture-templates
 	  `(("i" "Inbox   - things that may need attention later" entry (file "~/Library/CloudStorage/Dropbox/org/gtd/inbox.org")
          "* %?\n/Entered on/ %U")
@@ -155,7 +174,12 @@
 		 :immediate-finish t)
 		("p" "Project - new project" entry
 		 (file+headline org-default-notes-file "Projects")
-		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")))
+		 "* %^{project title} %(org-set-tags \"proj\")\n** Notes\n\n** Tasks\n*** TODO %?")
+		("t" "Task" entry
+		 (file+headline org-default-notes-file "Tasks")
+		 "* TODO %^{Task} %^g\n%(my/org-capture-schedule)\n%?"
+		 :empty-lines-before 1
+		 :kill-buffer t)))
 
 (setq org-structure-template-alist
       '(("s" . "src")

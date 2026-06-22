@@ -11,4 +11,6 @@
 
 (doom-modeline-mode 1)
 
+(which-function-mode 1)
+
 (provide 'my-modeline)
