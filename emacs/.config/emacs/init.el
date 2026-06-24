@@ -30,6 +30,7 @@
 (require 'my-appearance)
 (require 'my-util)
 (require 'my-core)
+(require 'my-editor)
 (require 'my-mouse)
 ;; (require 'my-meow)
 (require 'my-modeline)

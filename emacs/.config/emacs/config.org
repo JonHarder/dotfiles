@@ -118,6 +118,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-appearance)
   (require 'my-util)
   (require 'my-core)
+  (require 'my-editor)
   (require 'my-mouse)
   ;; (require 'my-meow)
   (require 'my-modeline)
@@ -161,7 +162,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-avy)
   (require 'my-registers)
   (require 'my-repeat)
-  
+
   (require 'my-rust-mode)
   (require 'my-search)
   (require 'my-shells)
@@ -735,6 +736,13 @@ documents easier.  In meow, this is extremely easy.  Compliments to
   (provide 'my-meow)
 #+end_src
 
+* Editing
+Basic editor settings, using built-ins
+
+#+begin_src emacs-lisp :tangle "my-modules/my-editor.el" :mkdirp yes
+  (delete-selection-mode 1)
+  (provide 'my-editor)
+#+end_src
 * mode line
 ** Doom modeline
 #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
