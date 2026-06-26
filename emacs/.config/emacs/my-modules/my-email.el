@@ -46,6 +46,28 @@
   (dolist (mode '(notmuch-message-mode))
     (add-to-list 'meow-mode-state-list `(,mode . insert))))
 
+(defvar my/notmuch-delete-tags
+  '("trash")
+  "Tags to set on a thread to mark it for deletion.
+
+This is particularly aimed at mail integrations where a tag like 'trash'
+is honored as a request to delete the thread.  See
+`notmuch-archive-tags' and `notmuch-search-archive-thread' if you simply
+want to remove it from your inbox, which is the more standard notmuch
+method.")
+
+(defun my/notmuch-search-delete-thread ()
+  "Delete thread by adding `my/notmuch-delete-tags' to it."
+  (interactive)
+  (let ((tags-to-add (mapcar (lambda (tag)
+							   (format "+%s" tag))
+							 my/notmuch-delete-tags))
+		(tags-to-remove '("-inbox" "-unread")))
+	(notmuch-search-tag (append tags-to-add tags-to-remove))
+	(notmuch-search-next-thread)))
+
+(keymap-set notmuch-search-mode-map (kbd "d") #'my/notmuch-search-delete-thread)
+
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))
   (notmuch-search-tag '("+deleted" "-inbox") beg end)

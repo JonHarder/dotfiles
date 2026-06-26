@@ -90,6 +90,7 @@
 	  '((org-agenda-files . (:regexp . "One Off"))
 		(org-agenda-files . (:regexp . "Events"))
 		(org-agenda-files . (:regexp . "Someday"))
+		(org-agenda-files . (:regexp . "Tasks"))
 		(org-agenda-files . (:tag . "proj"))))
 
 (setq org-tag-alist
