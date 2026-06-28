@@ -4,6 +4,30 @@
   (interactive)
   (find-file (concat user-emacs-directory "config.org")))
 
+
+(defun my/run-nota (msg)
+  "Run the Mac OS 'nota' shortcut with the given MSG."
+  (process-lines
+   "shortcuts"
+   "run"
+   "nota"
+   "-i"
+   msg))
+
+(defun my/notify-at (&optional start-time msg)
+  "Notify the user at START-TIME with message MSG.
+
+Uses `run-at-time' and `my/run-nota' under the hood."
+  (interactive)
+  (let* ((start-time (if start-time
+						 start-time
+					   (read-string "Time: ")))
+		 (msg (if msg
+				  msg
+				(read-string "Msg: "))))
+	(run-at-time start-time nil #'my/run-nota msg)))
+
+
 (defun gh-get-pr-title (url)
   "Retrieve pull request title from the URL."
   (interactive)
