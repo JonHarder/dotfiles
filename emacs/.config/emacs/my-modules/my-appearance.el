@@ -36,13 +36,20 @@
 		doom-themes-enable-bold t
 		doom-themes-enable-italic t))
 
+(use-package kusanagi-theme
+  :straight (:host github :repo "LionyxML/kusanagi-theme")
+  :config
+  (add-to-list 'custom-theme-load-path
+			   (file-name-directory (locate-library "kusanagi-theme")))
+  (load-theme 'kusanagi t))
 ;; (straight-use-package 'modus-themes)
 ;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
 ;; (load-theme 'catppuccin-mocha t)
 
-(straight-use-package (car my-theme))
-(pre-theme-load-hook)
-(load-theme (cdr my-theme) t)
+;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
+;; (straight-use-package (car my-theme))
+;; (pre-theme-load-hook)
+;; (load-theme (cdr my-theme) t)
 
 (menu-bar-mode 1)
 

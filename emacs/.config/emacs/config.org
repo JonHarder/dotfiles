@@ -266,6 +266,12 @@ This gets loaded first so that any later configuration can utilize it.
 load my custom themes
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (use-package kusanagi-theme
+    :straight (:host github :repo "LionyxML/kusanagi-theme")
+    :config
+    (add-to-list 'custom-theme-load-path
+  			   (file-name-directory (locate-library "kusanagi-theme")))
+    (load-theme 'kusanagi t))
   ;; (straight-use-package 'modus-themes)
   ;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
   ;; (load-theme 'catppuccin-mocha t)
@@ -277,9 +283,10 @@ always have high color contrast between UI elements, making it one of
 the easiest themes on the eyes in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (straight-use-package (car my-theme))
-  (pre-theme-load-hook)
-  (load-theme (cdr my-theme) t)
+  ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
+  ;; (straight-use-package (car my-theme))
+  ;; (pre-theme-load-hook)
+  ;; (load-theme (cdr my-theme) t)
 #+end_src
 
 ** Tweak display of UI elements
