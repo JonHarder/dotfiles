@@ -3334,10 +3334,14 @@ Magit is amazing
 See the amazing [[https://github.com/blahgeek/emacs-pr-review][pr-review]] package.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
-  (straight-use-package 'pr-review)
-  (setq pr-review-forges-alist
-  	  ;; default, reads api-host & username from ghub config
-        '(("github.com" . (github "api.github.com" "JonHarder"))))
+  (use-package pr-review
+    :bind (:map pr-review-mode-map
+  			  ("m" . pr-review-merge)
+  			  ("g" . pr-review-refresh))
+    :config
+    (setq pr-review-forges-alist
+  		'(("github.com" . (github "api.github.com" "JonHarder")))))
+
 #+end_src
     
 ** Git gutters
