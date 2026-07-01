@@ -1,5 +1,7 @@
 (recentf-mode +1)
 
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+
 (setq enable-recursive-minibuffers t)
 
 (straight-use-package 'savehist)

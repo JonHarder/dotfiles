@@ -993,6 +993,15 @@ opened files via [[help:consult-buffer]]
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (recentf-mode +1)
 #+end_src
+
+*** Hippie expand
+It's good. Better than dynamic abbrev.  See mastering emacs [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][article]]
+for more.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (global-set-key [remap dabbrev-expand] 'hippie-expand)
+#+end_src
+
 ** General minibuffer settings
 
    When interacting with the [[elisp:(info "(emacs) Minibuffer")][minibuffer]], you may want to execute a command
