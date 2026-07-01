@@ -106,13 +106,15 @@ shift-k = 'move up'
 shift-j = 'move down'
 
 # workspaces
-1 = 'workspace 1'
-2 = 'workspace 2'
-3 = 'workspace 3'
-4 = 'workspace 4'
-5 = 'workspace 5'
+1 = ['workspace 1', 'mode main']
+2 = ['workspace 2', 'mode main']
+3 = ['workspace 3', 'mode main']
+4 = ['workspace 4', 'mode main']
+5 = ['workspace 5', 'mode main']
 
-tab = 'move-workspace-to-monitor --wrap-around next'
+shift-tab = 'move-workspace-to-monitor --wrap-around next'
+tab = 'focus-monitor --wrap-around next'
+w = 'move-node-to-monitor --wrap-around next'
 
 shift-1 = 'move-node-to-workspace 1'
 shift-2 = 'move-node-to-workspace 2'
@@ -121,9 +123,9 @@ shift-4 = 'move-node-to-workspace 4'
 shift-5 = 'move-node-to-workspace 5'
 
 # layout
-f = 'fullscreen'
-t = 'layout tiling'
-s = 'layout floating'
+f = ['fullscreen', 'mode main']
+t = ['layout tiling', 'mode main']
+s = ['layout floating', 'mode main']
 
 r = 'mode resize'
 a = 'mode admin'
