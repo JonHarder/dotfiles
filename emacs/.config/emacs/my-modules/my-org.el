@@ -147,6 +147,9 @@
 ;; 	       :time-grid t
 ;; 	       :todo '("TODO" "WORKING"))))
 
+(global-set-key (kbd "C-c o c") #'org-capture)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+
 (setq org-tag-alist '((:startgroup)
 					  ("@Work" . ?w)
 					  ("@Church" . ?c)

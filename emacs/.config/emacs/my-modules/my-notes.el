@@ -2,7 +2,7 @@
   :straight t
   :config
   (setq org-mem-watch-dirs
-        (list "~/Library/CloudStorage/Dropbox/org/zettelkasten/"))
+        (list "~/Library/CloudStorage/Dropbox/org/wiki/"))
   (org-mem-updater-mode))
 
 (use-package org-node
@@ -25,7 +25,7 @@
   (setq org-node-seq-defs
 		(list
 		 (org-node-seq-def-on-filepath-sort-by-basename
-		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/zettelkasten/daily" nil t)))
+		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/wiki/daily" nil t)))
   (org-mem-reset))
 
 (straight-use-package 'denote)
@@ -33,7 +33,7 @@
 (denote-rename-buffer-mode 1)
 (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-(setq denote-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/zettelkasten"))
+(setq denote-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/wiki"))
 
 (setq denote-dired-directories-include-subdirectories t
       denote-dired-directories (list denote-directory))

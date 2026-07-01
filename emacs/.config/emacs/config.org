@@ -1315,7 +1315,7 @@ And provide the module
     :straight t
     :config
     (setq org-mem-watch-dirs
-          (list "~/Library/CloudStorage/Dropbox/org/zettelkasten/"))
+          (list "~/Library/CloudStorage/Dropbox/org/wiki/"))
     (org-mem-updater-mode))
 
   (use-package org-node
@@ -1338,7 +1338,7 @@ And provide the module
     (setq org-node-seq-defs
   		(list
   		 (org-node-seq-def-on-filepath-sort-by-basename
-  		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/zettelkasten/daily" nil t)))
+  		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/wiki/daily" nil t)))
     (org-mem-reset))
 
 #+end_src
@@ -1350,7 +1350,7 @@ And provide the module
   (denote-rename-buffer-mode 1)
   (setq denote-known-keywords '("emacs" "work" "article" "notes" "blog"))
 
-  (setq denote-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/zettelkasten"))
+  (setq denote-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/wiki"))
 
   (setq denote-dired-directories-include-subdirectories t
         denote-dired-directories (list denote-directory))
@@ -2309,7 +2309,6 @@ heading.
                '(".*" '(space . (:width (18)))))
 #+end_src
 
-
 *** Org agenda files
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (add-to-list 'org-agenda-files (concat
@@ -2338,7 +2337,11 @@ should work better?
   ;; 	       :time-grid t
   ;; 	       :todo '("TODO" "WORKING"))))
 #+end_src
-
+*** Bindings
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (global-set-key (kbd "C-c o c") #'org-capture)
+  (global-set-key (kbd "C-c o a") #'org-agenda)
+#+end_src
 ** Org capture
 
 Org capture aids you in jotting down a quick note when you think of somethimg
@@ -3186,7 +3189,8 @@ Ensure notmuch buffers are in motion state
   	(notmuch-search-tag (append tags-to-add tags-to-remove))
   	(notmuch-search-next-thread)))
 
-  (keymap-set notmuch-search-mode-map (kbd "d") #'my/notmuch-search-delete-thread)
+  (with-eval-after-load 'notmuch
+    (keymap-set notmuch-search-mode-map (kbd "d") #'my/notmuch-search-delete-thread))
 #+end_src
 
 **** Search mode

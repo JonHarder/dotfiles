@@ -66,7 +66,8 @@ method.")
 	(notmuch-search-tag (append tags-to-add tags-to-remove))
 	(notmuch-search-next-thread)))
 
-(keymap-set notmuch-search-mode-map (kbd "d") #'my/notmuch-search-delete-thread)
+(with-eval-after-load 'notmuch
+  (keymap-set notmuch-search-mode-map (kbd "d") #'my/notmuch-search-delete-thread))
 
 (defun notmuch-search-delete-threads (&optional beg end)
   (interactive (notmuch-interactive-region))
