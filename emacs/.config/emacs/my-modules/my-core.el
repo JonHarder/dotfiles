@@ -35,6 +35,9 @@
 ;; auto-select help windows
 (setq help-window-select t)
 
+;; make sure file deletes go to trash
+(setq delete-by-moving-to-trash t)
+
 (setq backup-directory-alist '(("." . "~/.backups")))
 
 (setq dictionary-server "dict.org")

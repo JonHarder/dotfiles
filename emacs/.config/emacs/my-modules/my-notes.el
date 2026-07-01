@@ -25,7 +25,9 @@
   (setq org-node-seq-defs
 		(list
 		 (org-node-seq-def-on-filepath-sort-by-basename
-		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/wiki/daily" nil t)))
+		  "d" "Dailies" "~/Library/CloudStorage/Dropbox/org/wiki/daily" nil t)
+		 (org-node-seq-def-on-filepath-sort-by-basename
+		  "f" "Family Meetings" "~/Library/CloudStorage/Dropbox/org/wiki/family_meeting" nil t)))
   (org-mem-reset))
 
 (straight-use-package 'denote)

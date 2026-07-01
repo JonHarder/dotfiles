@@ -33,6 +33,7 @@
 (add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/bin")
 (add-to-list 'exec-path "/opt/homebrew/opt/php@8.2/sbin")
 (add-to-list 'exec-path "/Users/jharder/.cargo/bin")
+(add-to-list 'exec-path "/opt/homebrew/opt/mysql-client/bin")
 
 (add-hook 'eshell-mode-hook
           (lambda ()
