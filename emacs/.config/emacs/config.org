@@ -3280,6 +3280,7 @@ Jinx is a spell checker
   (straight-use-package 'jinx)
   (global-jinx-mode +1)
   (keymap-global-set "M-$" #'jinx-correct)
+  (keymap-global-set "C-;" #'jinx-correct)
 #+end_src
 
 ** Functions
