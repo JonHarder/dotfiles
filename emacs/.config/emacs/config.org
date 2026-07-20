@@ -1090,6 +1090,18 @@ and play nicely with ~eshell-smart~
     (global-corfu-mode 1)
   #+end_src
 
+Cape is a small package meant to extend corfu with additional
+completion functions.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (use-package cape
+    :straight t
+    :init
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-keyword))
+#+end_src
+
 ** Marginalia
 
    Marginalia is a small package that adds contextual information "in the margins"

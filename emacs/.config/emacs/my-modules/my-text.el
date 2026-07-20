@@ -13,6 +13,7 @@
 (straight-use-package 'jinx)
 (global-jinx-mode +1)
 (keymap-global-set "M-$" #'jinx-correct)
+(keymap-global-set "C-;" #'jinx-correct)
 
 (defun cycle-capitalization ()
   "Cycle capitalization of previous word.

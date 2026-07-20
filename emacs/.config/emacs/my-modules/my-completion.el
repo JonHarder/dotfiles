@@ -33,6 +33,13 @@
 (corfu-popupinfo-mode 1)
 (global-corfu-mode 1)
 
+(use-package cape
+  :straight t
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-keyword))
+
 (straight-use-package 'marginalia)
 (marginalia-mode 1)
 
