@@ -2587,6 +2587,19 @@ experience with hashing out quick equations.
   (add-hook 'org-mode-hook #'literate-calc-minor-mode)
 #+end_src
    
+** Citar
+bibliographic and citation management
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (use-package citar
+    :straight t
+    :custom
+    (citar-bibliography '("~/Library/CloudStorage/Dropbox/org/wiki/bibliography.bib"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    :bind
+    (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+#+end_src
 ** Provide =my-org=
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (provide 'my-org)

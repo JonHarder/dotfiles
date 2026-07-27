@@ -262,4 +262,14 @@
 (straight-use-package 'literate-calc-mode)
 (add-hook 'org-mode-hook #'literate-calc-minor-mode)
 
+(use-package citar
+  :straight t
+  :custom
+  (citar-bibliography '("~/Library/CloudStorage/Dropbox/org/wiki/bibliography.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  :bind
+  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
 (provide 'my-org)
