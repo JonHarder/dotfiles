@@ -389,6 +389,12 @@ on different tabs to help with different types of work within the same project.
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
    (setq tab-bar-show 1)
 #+end_src
+** Line numbers
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (add-hook 'text-mode-hook
+  		  (lambda ()
+  			(display-line-numbers-mode 1)))
+#+end_src
 ** Spacious Padding
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (straight-use-package 'spacious-padding)
