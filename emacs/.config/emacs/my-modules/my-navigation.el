@@ -1,3 +1,5 @@
+(global-set-key (kbd "s-o") #'other-window)
+
 (winner-mode 1)
 
 (use-package ace-window

@@ -37,6 +37,7 @@
 		doom-themes-enable-italic t))
 
 (use-package kusanagi-theme
+  :disabled t
   :straight (:host github :repo "LionyxML/kusanagi-theme")
   :config
   (add-to-list 'custom-theme-load-path
@@ -47,9 +48,9 @@
 ;; (load-theme 'catppuccin-mocha t)
 
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-;; (straight-use-package (car my-theme))
-;; (pre-theme-load-hook)
-;; (load-theme (cdr my-theme) t)
+(straight-use-package (car my-theme))
+(pre-theme-load-hook)
+(load-theme (cdr my-theme) t)
 
 (menu-bar-mode 1)
 

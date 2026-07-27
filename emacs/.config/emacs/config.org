@@ -291,6 +291,7 @@ load my custom themes
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (use-package kusanagi-theme
+    :disabled t
     :straight (:host github :repo "LionyxML/kusanagi-theme")
     :config
     (add-to-list 'custom-theme-load-path
@@ -308,9 +309,9 @@ the easiest themes on the eyes in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-  ;; (straight-use-package (car my-theme))
-  ;; (pre-theme-load-hook)
-  ;; (load-theme (cdr my-theme) t)
+  (straight-use-package (car my-theme))
+  (pre-theme-load-hook)
+  (load-theme (cdr my-theme) t)
 #+end_src
 
 ** Tweak display of UI elements
@@ -2956,6 +2957,10 @@ Typst is great. It's a modern and easy to use reimagining of LaTeX.
  
 * Navigation
 ** Windows
+I want easier access to `other-window' since I use it all the time
+#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  (global-set-key (kbd "s-o") #'other-window)
+#+end_src
 *** Winner mode
 
 winner mode allows you to move back in time to prior window
