@@ -1,5 +1,6 @@
 (setq dired-kill-when-opening-new-dired-buffer t) 
 (require 'dired)
+(setq insert-directory-program "gls" dired-use-ls-dired t)
 (setq dired-listing-switches "-hAl")
 ;; this pre-fills the destination prompt of copy and rename
 ;; commands with the directory of the other dired buffer

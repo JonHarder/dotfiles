@@ -1522,6 +1522,7 @@ what it can do, so seriously, read the info doc.
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
   (setq dired-kill-when-opening-new-dired-buffer t) 
   (require 'dired)
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
   (setq dired-listing-switches "-hAl")
   ;; this pre-fills the destination prompt of copy and rename
   ;; commands with the directory of the other dired buffer
