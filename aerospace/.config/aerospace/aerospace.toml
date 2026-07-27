@@ -105,6 +105,7 @@ shift-l = 'move right'
 shift-k = 'move up'
 shift-j = 'move down'
 
+
 # workspaces
 1 = ['workspace 1', 'mode main']
 2 = ['workspace 2', 'mode main']
@@ -126,6 +127,7 @@ shift-5 = 'move-node-to-workspace 5'
 f = ['fullscreen', 'mode main']
 t = ['layout tiling', 'mode main']
 s = ['layout floating', 'mode main']
+slash = ['layout horizontal vertical']
 
 r = 'mode resize'
 a = 'mode admin'
