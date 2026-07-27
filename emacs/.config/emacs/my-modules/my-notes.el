@@ -1,5 +1,6 @@
 (use-package org-mem
   :straight t
+  :after (org)
   :config
   (setq org-mem-watch-dirs
         (list "~/Library/CloudStorage/Dropbox/org/wiki/"))

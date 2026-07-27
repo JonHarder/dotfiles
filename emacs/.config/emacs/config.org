@@ -1141,8 +1141,15 @@ completion functions.
     :straight t
     :config
     (setq xref-show-xrefs-function #'consult-xref)
+    (with-eval-after-load 'org
+  	(keymap-set org-mode-map "M-g i" #'consult-imenu))
     :bind
-    ("C-x b" . consult-buffer))
+    (("C-x b" . consult-buffer)
+     ;;; this breaks loading for some reason.
+     ;;; emacs complains that `org-mode-map' does not exist.
+     ;; :map org-mode-map
+     ;; ("M-g i" . consult-imenu)))
+     ))
 #+end_src
 
 *** consult dir
@@ -1334,6 +1341,7 @@ And provide the module
 #+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
   (use-package org-mem
     :straight t
+    :after (org)
     :config
     (setq org-mem-watch-dirs
           (list "~/Library/CloudStorage/Dropbox/org/wiki/"))

@@ -52,8 +52,15 @@
   :straight t
   :config
   (setq xref-show-xrefs-function #'consult-xref)
+  (with-eval-after-load 'org
+	(keymap-set org-mode-map "M-g i" #'consult-imenu))
   :bind
-  ("C-x b" . consult-buffer))
+  (("C-x b" . consult-buffer)
+   ;;; this breaks loading for some reason.
+   ;;; emacs complains that `org-mode-map' does not exist.
+   ;; :map org-mode-map
+   ;; ("M-g i" . consult-imenu)))
+   ))
 
 (straight-use-package 'consult-dir)
 (define-key vertico-map
