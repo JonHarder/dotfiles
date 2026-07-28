@@ -44,7 +44,7 @@
 ;; Removing this for now as there's too many times when I don't want it to stay at the top
 ;; (add-to-list 'eshell-modules-list 'eshell-smart)
 
-(global-set-key (kbd "C-c t s") #'eshell)
+(global-set-key (kbd "C-c s e") #'eshell)
 
 (straight-use-package 'eshell-syntax-highlighting)
 (require 'eshell-syntax-highlighting)
@@ -173,7 +173,7 @@
 
 (use-package vterm
   :straight t
-  :bind ("C-c t t" . vterm))
+  :bind ("C-c s t" . vterm))
 
 (straight-use-package 'multi-vterm)
 ;; (setq vterm-shell "/opt/homebrew/bin/nu")
