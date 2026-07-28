@@ -108,11 +108,13 @@ shift-j = 'move down'
 
 
 # workspaces
+e = ['workspace emacs', 'mode main']
+b = ['workspace browser', 'mode main']
+s = ['workspace slack', 'mode main']
+m = ['workspace misc', 'mode main']
 1 = ['workspace 1', 'mode main']
 2 = ['workspace 2', 'mode main']
 3 = ['workspace 3', 'mode main']
-4 = ['workspace 4', 'mode main']
-5 = ['workspace 5', 'mode main']
 
 shift-tab = 'move-workspace-to-monitor --wrap-around next'
 tab = 'focus-monitor --wrap-around next'
@@ -121,13 +123,15 @@ w = 'move-node-to-monitor --wrap-around next'
 shift-1 = 'move-node-to-workspace 1'
 shift-2 = 'move-node-to-workspace 2'
 shift-3 = 'move-node-to-workspace 3'
-shift-4 = 'move-node-to-workspace 4'
-shift-5 = 'move-node-to-workspace 5'
+shift-e = 'move-node-to-workspace emacs'
+shift-b = 'move-node-to-workspace browser'
+shift-s = 'move-node-to-workspace slack'
+shift-m = 'move-node-to-workspace misc'
 
 # layout
 f = ['fullscreen', 'mode main']
 t = ['layout tiling', 'mode main']
-s = ['layout floating', 'mode main']
+p = ['layout floating', 'mode main']
 slash = ['layout horizontal vertical']
 
 r = 'mode resize'
