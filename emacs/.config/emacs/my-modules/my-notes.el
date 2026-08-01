@@ -11,9 +11,9 @@
   :after (org-mem)
   :commands (org-node-insert org-node-find)
   :init
-  (keymap-global-set "M-o" org-node-global-prefix-map)
+  (keymap-global-set "M-n" org-node-global-prefix-map)
   (with-eval-after-load 'org
-	(define-key org-mode-map (kbd "M-o") org-node-org-prefix-map))
+	(define-key org-mode-map (kbd "M-n") org-node-org-prefix-map))
   :config
   (org-node-cache-mode)
   (org-node-context-follow-mode)
