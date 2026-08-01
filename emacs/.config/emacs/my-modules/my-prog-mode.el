@@ -8,10 +8,17 @@
 (straight-use-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+(use-package lsp-mode
+  :straight t)
+
+(use-package lsp-ui
+  :straight t
+  :after (lsp-mode))
+
 (defvar menu-bar-project-menu '())
 
 (use-package eglot
-  :hook (eglot-managed-mope . (lambda ()
+  :hook (eglot-managed-mode . (lambda ()
 								(setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 								(setq eldoc-documentation-functions
 									  '(eglot-signature-eldoc-function

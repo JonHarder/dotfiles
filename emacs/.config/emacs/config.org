@@ -1785,9 +1785,19 @@ at a glance how deep you are.
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 #+end_src
 
+*** LSP mode
+lsp-mode is just so nice....
+#+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  (use-package lsp-mode
+    :straight t)
+
+  (use-package lsp-ui
+    :straight t
+    :after (lsp-mode))
+#+end_src
 *** Eglot
 
-Language server client implimentation. Comes baked into emacs starting
+Language server client implementation. Comes baked into emacs starting
 at version 2 There seems to be a bug with the latest version of
 `menu-bar' (maybe?  or perhaps in `project' Eglot attempts to insert
 itself info the menu bar, but the project entry in the menu bar is not
@@ -1801,7 +1811,7 @@ this actually causes.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   (use-package eglot
-    :hook (eglot-managed-mope . (lambda ()
+    :hook (eglot-managed-mode . (lambda ()
   								(setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
   								(setq eldoc-documentation-functions
   									  '(eglot-signature-eldoc-function
