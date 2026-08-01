@@ -52,6 +52,7 @@
 (require 'my-go-mode)
 (require 'my-help)
 (require 'my-http)
+(require 'my-hyperbole)
 (require 'my-icons)
 (require 'my-lisp-mode)
 (require 'my-git)

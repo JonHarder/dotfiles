@@ -140,6 +140,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-go-mode)
   (require 'my-help)
   (require 'my-http)
+  (require 'my-hyperbole)
   (require 'my-icons)
   (require 'my-lisp-mode)
   (require 'my-git)
@@ -1701,6 +1702,22 @@ files on the filesystem.
   (provide 'my-http)
 #+end_src
 
+* Hyperbole
+#+begin_src emacs-lisp :tangle "my-modules/my-hyperbole.el" :mkdirp yes
+  ;;; my-hyperbole --- Summary
+  ;;; Commentary:
+
+  ;;; Code:
+  (use-package hyperbole
+    :straight t
+    :config
+    (hyperbole-mode 1)
+    (hywiki-mode :all)
+    (customize-save-variable 'hsys-org-enable-smart-keys t))
+
+  (provide 'my-hyperbole)
+  ;;; my-hyperbole.el ends here
+#+end_src
 * Epub support
 ** Load nov mode and associate it with .epub files
 #+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
