@@ -61,8 +61,10 @@
 
 ;; need to set some flymake variable that aparently needs to be in scope
 (setq flymake-allowed-file-name-masks nil)
-(straight-use-package 'flycheck)
-(global-flycheck-mode 1)
+(use-package flycheck
+  :straight t
+  :config
+  (global-flycheck-mode 1))
 
 ;; (straight-use-package '(flyover
 ;;                         :type git
