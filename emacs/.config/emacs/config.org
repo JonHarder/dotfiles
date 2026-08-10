@@ -1737,6 +1737,9 @@ Use the fantastic elfeed
   (use-package elfeed
     :straight t
     :commands (elfeed)
+    :bind (("C-c e" . elfeed)
+  		 :map elfeed-search-mode-map
+  		 ("g" . elfeed-update))
     :config
     (setq elfeed-feeds
   		'(("https://protesilaos.com/codelog.xml" code emacs)
@@ -1789,11 +1792,15 @@ at a glance how deep you are.
 lsp-mode is just so nice....
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   (use-package lsp-mode
-    :straight t)
+    :straight t
+    :commands lsp)
 
   (use-package lsp-ui
     :straight t
-    :after (lsp-mode))
+    :after (lsp-mode)
+    :config
+    (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+    (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions))
 #+end_src
 *** Eglot
 

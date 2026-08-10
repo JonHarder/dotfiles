@@ -1,6 +1,9 @@
 (use-package elfeed
   :straight t
   :commands (elfeed)
+  :bind (("C-c e" . elfeed)
+		 :map elfeed-search-mode-map
+		 ("g" . elfeed-update))
   :config
   (setq elfeed-feeds
 		'(("https://protesilaos.com/codelog.xml" code emacs)
