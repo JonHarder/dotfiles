@@ -34,6 +34,7 @@
 (require 'my-mouse)
 ;; (require 'my-meow)
 (require 'my-modeline)
+(require 'my-toggles)
 
 (require 'my-fold)
 (require 'my-time)

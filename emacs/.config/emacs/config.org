@@ -122,6 +122,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-mouse)
   ;; (require 'my-meow)
   (require 'my-modeline)
+  (require 'my-toggles)
 
   (require 'my-fold)
   (require 'my-time)
@@ -781,6 +782,17 @@ Basic editor settings, using built-ins
 #+begin_src emacs-lisp :tangle "my-modules/my-editor.el" :mkdirp yes
   (delete-selection-mode 1)
   (provide 'my-editor)
+#+end_src
+* Toggling things (key bindings)
+There are various settings I want quick access to toggling.  Either
+modes to turn on and off, or appearances like themes.  Here we bind
+them all under the "C-c t" prefix.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-toggles.el" :mkdirp yes
+  (with-eval-after-load 'consult
+    (global-set-key (kbd "C-c t t") #'consult-theme))
+  (global-set-key (kbd "C-c t l") #'display-line-numbers-mode)
+  (provide 'my-toggles)
 #+end_src
 * mode line
 ** Doom modeline
@@ -1709,6 +1721,7 @@ files on the filesystem.
 
   ;;; Code:
   (use-package hyperbole
+    :disabled t
     :straight t
     :config
     (hyperbole-mode 1)

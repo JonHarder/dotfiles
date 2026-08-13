@@ -3,6 +3,7 @@
 
 ;;; Code:
 (use-package hyperbole
+  :disabled t
   :straight t
   :config
   (hyperbole-mode 1)
