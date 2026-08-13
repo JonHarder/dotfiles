@@ -12,6 +12,8 @@ alias cd=z
 
 alias t=tuxedo
 
+alias flash="qmk flash"
+
 # kipsu aliases
 ## ansible
 alias ap="docker compose run --rm ansible ap"
