@@ -32,7 +32,6 @@
 (require 'my-core)
 (require 'my-editor)
 (require 'my-mouse)
-;; (require 'my-meow)
 (require 'my-modeline)
 (require 'my-toggles)
 
