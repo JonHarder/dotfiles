@@ -246,7 +246,7 @@
 (setq org-tag-alist '((:startgroup)
 					  ("@Work" . ?w)
 					  ("@Church" . ?c)
-					  ("@Home" . ?c)
+					  ("@Home" . ?h)
 					  ("@Errands" . ?e)
 					  (:endgroup)
 					  ("security" . ?s)

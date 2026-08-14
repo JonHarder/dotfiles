@@ -1,5 +1,3 @@
-(global-set-key (kbd "s-o") #'other-window)
-
 (winner-mode 1)
 
 (use-package ace-window
@@ -7,8 +5,8 @@
   :init
   (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
   :config
-  (ace-window-display-mode 1)
-  :bind (("C-x o" . #'ace-window)))
+  (ace-window-display-mode 1))
+  ;; :bind (("C-x o" . #'ace-window)))
 
 (setq switch-to-buffer-obey-display-actions t)
 

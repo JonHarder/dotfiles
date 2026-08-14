@@ -2190,7 +2190,7 @@ the variable ~org-capture-templates~.
   (setq org-tag-alist '((:startgroup)
   					  ("@Work" . ?w)
   					  ("@Church" . ?c)
-  					  ("@Home" . ?c)
+  					  ("@Home" . ?h)
   					  ("@Errands" . ?e)
   					  (:endgroup)
   					  ("security" . ?s)
@@ -2747,10 +2747,6 @@ Typst is great. It's a modern and easy to use reimagining of LaTeX.
  
 * Navigation
 ** Windows
-I want easier access to `other-window' since I use it all the time
-#+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
-  (global-set-key (kbd "s-o") #'other-window)
-#+end_src
 *** Winner mode
 
 winner mode allows you to move back in time to prior window
@@ -2774,8 +2770,8 @@ any intermediate windows in the cycle.
     :init
     (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     :config
-    (ace-window-display-mode 1)
-    :bind (("C-x o" . #'ace-window)))
+    (ace-window-display-mode 1))
+    ;; :bind (("C-x o" . #'ace-window)))
 #+end_src
 
 *** Window management
