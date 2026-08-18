@@ -148,10 +148,10 @@ backspace = ['close-all-windows-but-current', 'mode main']
 # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 #s = ['layout sticky tiling', 'mode main']
 
-h = ['join-with left', 'mode main']
-j = ['join-with down', 'mode main']
-k = ['join-with up', 'mode main']
-l = ['join-with right', 'mode main']
+h = ['join-with left', 'mode wm']
+j = ['join-with down', 'mode wm']
+k = ['join-with up', 'mode wm']
+l = ['join-with right', 'mode wm']
 
 [mode.resize.binding]
 l =   'resize width -50'
