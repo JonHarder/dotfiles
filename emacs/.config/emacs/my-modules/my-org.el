@@ -99,8 +99,10 @@
 (add-hook 'org-after-todo-state-change-hook
           #'my/org-weighted-progress-update-from-weighted-child)
 
-(with-eval-after-load 'org
-  (require 'org-tempo))
+(use-package org-tempo
+  :after org
+  :config
+  (keymap-set org-mode-map "C-c q" #'tempo-template-org-quote))
 
 (setq org-directory "~/Library/CLoudStorage/Dropbox/org/gtd/")
 (setq org-default-notes-file "~/Library/CloudStorage/Dropbox/org/gtd/gtd.org")

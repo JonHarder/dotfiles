@@ -1917,8 +1917,11 @@ At the very least, I use it for really handy expansion for scr blocks.
 I can type =<s= and hit =TAB= to expand it to =#+begin_src=.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  (with-eval-after-load 'org
-    (require 'org-tempo))
+  (use-package org-tempo
+    :after org
+    :config
+    (keymap-set org-mode-map "C-c q" #'tempo-template-org-quote))
+
 #+end_src
 
 *** default files and directories
