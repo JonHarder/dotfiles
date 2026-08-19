@@ -2,6 +2,7 @@
  '(magit :type git :host github :repo "magit/magit"))
 
 (use-package pr-review
+  :straight t
   :bind (:map pr-review-mode-map
 			  ("m" . pr-review-merge)
 			  ("g" . pr-review-refresh))

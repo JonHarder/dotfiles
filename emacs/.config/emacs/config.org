@@ -3196,6 +3196,7 @@ See the amazing [[https://github.com/blahgeek/emacs-pr-review][pr-review]] packa
 
 #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
   (use-package pr-review
+    :straight t
     :bind (:map pr-review-mode-map
   			  ("m" . pr-review-merge)
   			  ("g" . pr-review-refresh))
