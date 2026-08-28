@@ -50,7 +50,9 @@
   :config
   (set-face-attribute 'eldoc-box-body nil
 					  :family (face-attribute 'default :family)
-					  :height (face-attribute 'default :height)))
+					  :height (face-attribute 'default :height))
+  :bind
+  ("C-c h" . eldoc-box-help-at-point))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs

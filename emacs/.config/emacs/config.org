@@ -1504,7 +1504,9 @@ this actually causes.
     :config
     (set-face-attribute 'eldoc-box-body nil
   					  :family (face-attribute 'default :family)
-  					  :height (face-attribute 'default :height)))
+  					  :height (face-attribute 'default :height))
+    :bind
+    ("C-c h" . eldoc-box-help-at-point))
 #+end_src
 
 And for support for languages that aren't pre-configured out of
