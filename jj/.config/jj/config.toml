@@ -8,7 +8,13 @@ email = "jharder@kipsu.com"
 default-command = "log"
 editor = "emacsclient -a ''"
 # try to use difft by default
-diff-formatter = ["difft", "--color=always", "$left", "$right"]
+# diff-formatter = ["difft", "--color=always", "$left", "$right"]
+# use delta for pretty diff display
+diff-formatter="delta"
+
+[merge-tools.delta]
+diff-args=["--side-by-side", "$left", "$right", "--width=$width"]
+diff-expected-exit-codes = [0, 1]
 
 [ui.movement]
 edit = true
@@ -27,3 +33,4 @@ d = ["describe"]
 # usefull for large, branch heavy codebases with lots of large,
 # long lived feature branches
 lt = ["log", "-r", "trunk()..@ | trunk()"]
+diffnav = ["diff", "--config=ui.diff-formatter=':git'", "--config=ui.pager='diffnav'"]
