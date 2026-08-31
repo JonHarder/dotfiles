@@ -41,7 +41,9 @@
 	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-workflow.json
 	   [".github/workflows/*.yml" ".github/workflows/*.yaml"]
 	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-action.json
-	   [".github/actions/*.yml" ".github/actions/*.yaml"])))))
+	   [".github/actions/*.yml" ".github/actions/*.yaml"]))))
+  (setf (alist-get '(rust-ts-mode rust-mode) eglot-server-programs)
+		'("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 
 (use-package eldoc-box
   :straight t

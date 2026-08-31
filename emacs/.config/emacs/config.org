@@ -1,4 +1,3 @@
-
 #+TITLE: Literate Emacs Config
 #+AUTHOR: Jon Harder
 #+STARTUP: fold
@@ -669,7 +668,10 @@ for more.
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+end_src
-
+*** Imenu
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (setopt imenu-auto-rescan t)
+#+end_src
 ** General minibuffer settings
 
    When interacting with the [[elisp:(info "(emacs) Minibuffer")][minibuffer]], you may want to execute a command
@@ -718,9 +720,13 @@ and play nicely with ~eshell-smart~
    that prompts users to select from one of a provided set of alternatives.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-     (straight-use-package 'vertico)
-     (vertico-mode 1)
-     (define-key vertico-map (kbd "<escape>") #'keyboard-escape-quit)
+     (use-package vertico
+       :straight t
+       :init
+       (vertico-mode 1)
+       :bind
+       (:map vertico-map
+     		("<escape>" . keyboard-escape-quit)))
    #+end_src
 
    Vertico also has a small stable of add-ons which change the default
@@ -728,18 +734,17 @@ and play nicely with ~eshell-smart~
    introduces commands to delete directories fragments of the prompted
    file-path.
 
-   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-     (require 'vertico-directory)
-     (define-key vertico-map (kbd "DEL") #'vertico-directory-delete-char)
-     (define-key vertico-map (kbd "RET") #'vertico-directory-enter)
-   #+end_src
-
    Wipe the shadowed input in minibuffer when the current input superscedes
    it, e.g. =~/some/path/~/base= should erase =~/some/path= since =~/base= shadows
    it.
 
    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-     (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+     (use-package vertico-directory
+       :after vertico
+       :bind (:map vertico-map
+     			  ("DEL" . vertico-directory-delete-char)
+     			  ("RET" . vertico-directory-enter))
+       :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
    #+end_src
 
 ** Corfu
@@ -747,12 +752,16 @@ and play nicely with ~eshell-smart~
   Emacs' built in completion mechanisms.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-    (straight-use-package 'corfu)
-    (setq corfu-auto nil
-          corfu-separator ?\s
-          tab-always-indent 'complete)
-    (corfu-popupinfo-mode 1)
-    (global-corfu-mode 1)
+    (use-package corfu
+      :straight t
+      :init
+      (setq corfu-auto nil
+    		corfu-separator ?\s
+    		tab-always-indent 'complete)
+      :config
+      (corfu-popupinfo-mode 1)
+      (global-corfu-mode 1))
+
   #+end_src
 
 Cape is a small package meant to extend corfu with additional
@@ -777,8 +786,10 @@ completion functions.
    file size. Commands will display their doc string, etc.
 
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-     (straight-use-package 'marginalia)
-     (marginalia-mode 1)
+    (use-package marginalia
+      :straight t
+      :config
+      (marginalia-mode 1))
    #+end_src
 
 ** Orderless
@@ -813,11 +824,13 @@ completion functions.
 
 *** consult dir
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
-  (straight-use-package 'consult-dir)
-  (define-key vertico-map
-              (kbd "M-c") #'consult-dir)
+  (use-package consult-dir
+    :straight t
+    :disabled t
+    :config
+    (eval-after-load 'vertico
+      (define-key vertico-map (kbd "M-c") #'consult-dir)))
 #+end_src
-
 
 ** Embark
 
@@ -967,8 +980,10 @@ To do this, I want to ensure emacs is running in server mode. That can
 be accomplished via =server-start=
 
 #+begin_src emacs-lisp :tangle "my-modules/my-server.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (require 'server)
-  
+
   (server-start)
 #+end_src
 
@@ -1289,6 +1304,8 @@ a directory. dired-preview allows for exactly this behavior.
   
 * Repeat mode
 #+begin_src emacs-lisp :tangle "my-modules/my-repeat.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   ;; (defvar-keymap char-line-repeat-map
   ;;   :repeat t
   ;;   "n" #'next-line
@@ -1495,7 +1512,9 @@ this actually causes.
   	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-workflow.json
   	   [".github/workflows/*.yml" ".github/workflows/*.yaml"]
   	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-action.json
-  	   [".github/actions/*.yml" ".github/actions/*.yaml"])))))
+  	   [".github/actions/*.yml" ".github/actions/*.yaml"]))))
+    (setf (alist-get '(rust-ts-mode rust-mode) eglot-server-programs)
+  		'("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 
   (use-package eldoc-box
     :straight t
@@ -1727,11 +1746,15 @@ images, containers, compose, and more.
 
 ** Rust
 #+begin_src emacs-lisp :tangle "my-modules/my-rust-mode.el" :mkdirp yes
-  (straight-use-package 'rust-mode)
-  (setq rust-format-on-save t)
-  (setq rust-rustfmt-switches '("--edition=2024"))
-  (add-hook 'rust-mode-hook
-  		  (lambda () (prettify-symbols-mode)))
+  ;; -*- lexical-binding: t; -*-
+  (use-package rust-mode
+    :straight t
+    :init
+    (setq rust-mode-treesitter-derive t)
+    (setq rust-format-on-save t)
+    (setq rust-rustfmt-switches '("--edition=2024"))
+    :hook (rust-mode . (lambda () (prettify-symbols-mode))))
+  
   (provide 'my-rust-mode)
 #+end_src
 
@@ -1817,107 +1840,6 @@ in emacs' built in man page viewer, obviously)
     (add-to-list 'org-modules 'org-habit t))
 #+end_src
 
-** Custom weighted progress tracking
-sometimes I want to track progress on a project with weighted values
-for each sub-task.  This custom code populates a =PROGRESS= property on
-the parent heading with the sum of weights of each child heading.
-Child headings without a =WEIGHT= property are assumed to have a weight
-of 1.
-
-#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  ;;; NOTE: this was all generated by GTP-5.4 nano.
-
-  (require 'org)
-  (require 'cl-lib)
-
-  (defun my/org-entry-has-weight-p (&optional pos)
-    "Return non-nil if POS (or point) has a non-empty WEIGHT property."
-    (let ((p (or pos (point))))
-      (let ((w (org-entry-get p "WEIGHT" t)))
-        (and w (not (equal w ""))))))
-
-  (defun my/org-entry-weight (&optional pos)
-    "Return numeric weight for POS (or point). If missing/invalid, return nil."
-    (let ((w (org-entry-get (or pos (point)) "WEIGHT" t)))
-      (when (and w (not (equal w "")))
-        (string-to-number w))))
-
-  (defun my/org-immediate-parent-pos ()
-    "Return point of immediate parent heading, or nil."
-    (when (org-at-heading-p)
-      (save-excursion
-        (let ((target-level (1- (org-outline-level))))
-          (when (= target-level (1- target-level)) ; no-op, keeps structure simple
-            nil)
-          (when (org-up-heading-safe)
-            (when (= (org-outline-level) target-level)
-              (point)))))))
-
-  (defun my/org-progress-percent (done-sum total-sum)
-    "Compute integer percent from DONE-SUM and TOTAL-SUM."
-    (if (<= total-sum 0.0)
-        0
-      (round (* 100.0 (/ done-sum total-sum)))))
-
-  (defun my/org-set-parent-progress (parent-pos pct)
-    "Set PROGRESS property on PARENT-POS to PCT (as 'NN%').
-     PROGRESS is created if missing."
-    (with-current-buffer (marker-buffer parent-pos)
-      (goto-char parent-pos)
-      (org-entry-put nil "PROGRESS" (format "%d%%" pct))))
-
-  (defun my/org-child-todo-and-weight-p ()
-    "If current heading is a TODO heading with numeric WEIGHT, return (todo . weight).
-     If not, return nil."
-    (let ((todo (org-get-todo-state)))
-      (when todo
-        (let ((w (my/org-entry-weight (point))))
-          (when w
-            (cons todo w))))))
-
-  (defun my/org-sum-weights-for-parent-children (parent-pos)
-    "For PARENT-POS, sum (done-weight . total-weight) over its immediate TODO children.
-     Only counts children that are TODO headings and have numeric WEIGHT."
-    (with-current-buffer (marker-buffer parent-pos)
-      (save-excursion
-        (goto-char parent-pos)
-        (let* ((parent-level (org-outline-level))
-               (child-level  (1+ parent-level))
-               (end           (org-end-of-subtree t))
-               (done-sum      0.0)
-               (total-sum     0.0))
-          (save-restriction
-            (narrow-to-region (point) end)
-            (goto-char (point-min))
-            (while (re-search-forward org-outline-regexp-bol nil t)
-              (when (= (org-outline-level) child-level)
-                (let ((tw (my/org-child-todo-and-weight-p)))
-                  (when tw
-                    (let ((todo (car tw))
-                          (w    (cdr tw)))
-                      (setq total-sum (+ total-sum (float w)))
-                      (when (member todo org-done-keywords)
-                        (setq done-sum (+ done-sum (float w))))))))))
-
-          (cons done-sum total-sum)))))
-
-  (defun my/org-weighted-progress-update-from-weighted-child ()
-    "If current heading has WEIGHT, update immediate parent's PROGRESS."
-    (when (and (org-at-heading-p)
-               (my/org-entry-has-weight-p (point)))
-      (let* ((parent-pos (my/org-immediate-parent-pos)))
-        (when parent-pos
-          (let* ((parent-marker (copy-marker parent-pos t))
-                 (sums (my/org-sum-weights-for-parent-children parent-marker))
-                 (done-sum (car sums))
-                 (total-sum (cdr sums))
-                 (pct (my/org-progress-percent done-sum total-sum)))
-            (my/org-set-parent-progress parent-marker pct)
-            (set-marker parent-marker nil))))))
-
-  (add-hook 'org-after-todo-state-change-hook
-            #'my/org-weighted-progress-update-from-weighted-child)
-#+end_src
 ** Settings
 *** org tempo
 Org tempo does a lot, I should really look into more of what it has to offer.
@@ -2323,19 +2245,24 @@ in a beautiful way. It incapsulates ~org-bullets~ and thus that
 package is disabled.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  (straight-use-package 'org-modern)
-  (setq org-modern-fold-stars
-        '(("▶" . "▼")
-          ("▷" . "▽")
-  		;; this symbol is not present in many fonts, including mine
-  		;; the author proposes that the fonts should include the symbol
-  		;; here is my workaround
-  		;; courtesy of https://github.com/minad/org-modern/issues/232
-          ;; ("⯈" . "⯆")
-          ("▷" . "▽")
-          ("▹" . "▿")
-          ("▸" . "▾"))) 
-  (with-eval-after-load 'org (global-org-modern-mode))
+  (use-package org-modern
+    :straight t
+    :after org
+    :init
+    (setq org-modern-fold-stars
+  	'(("▶" . "▼")
+            ("▷" . "▽")
+  	  ;; this symbol is not present in many fonts, including mine
+  	  ;; the author proposes that the fonts should include the symbol
+  	  ;; here is my workaround
+  	  ;; courtesy of https://github.com/minad/org-modern/issues/232
+            ;; ("⯈" . "⯆")
+            ("▷" . "▽")
+            ("▹" . "▿")
+            ("▸" . "▾")))
+    :config
+    (global-org-modern-mode 1))
+
 #+end_src
 
 ** Babel
@@ -3277,6 +3204,8 @@ dispatch system.
 * Registers
 
 #+begin_src emacs-lisp :tangle "my-modules/my-registers.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (setq register-use-preview 'insist)
   (provide 'my-registers)
 #+end_src

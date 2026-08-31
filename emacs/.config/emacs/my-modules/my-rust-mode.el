@@ -1,6 +1,10 @@
-(straight-use-package 'rust-mode)
-(setq rust-format-on-save t)
-(setq rust-rustfmt-switches '("--edition=2024"))
-(add-hook 'rust-mode-hook
-		  (lambda () (prettify-symbols-mode)))
+;; -*- lexical-binding: t; -*-
+(use-package rust-mode
+  :straight t
+  :init
+  (setq rust-mode-treesitter-derive t)
+  (setq rust-format-on-save t)
+  (setq rust-rustfmt-switches '("--edition=2024"))
+  :hook (rust-mode . (lambda () (prettify-symbols-mode))))
+
 (provide 'my-rust-mode)

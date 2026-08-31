@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; (defvar-keymap char-line-repeat-map
 ;;   :repeat t
 ;;   "n" #'next-line

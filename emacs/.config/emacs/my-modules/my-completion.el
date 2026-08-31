@@ -2,6 +2,8 @@
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
+(setopt imenu-auto-rescan t)
+
 (setq enable-recursive-minibuffers t)
 
 (straight-use-package 'savehist)
@@ -16,22 +18,30 @@
 ;; (with-eval-after-load 'capf-autosuggest
 ;;   (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
 
-(straight-use-package 'vertico)
-(vertico-mode 1)
-(define-key vertico-map (kbd "<escape>") #'keyboard-escape-quit)
+(use-package vertico
+  :straight t
+  :init
+  (vertico-mode 1)
+  :bind
+  (:map vertico-map
+		("<escape>" . keyboard-escape-quit)))
 
-(require 'vertico-directory)
-(define-key vertico-map (kbd "DEL") #'vertico-directory-delete-char)
-(define-key vertico-map (kbd "RET") #'vertico-directory-enter)
+(use-package vertico-directory
+  :after vertico
+  :bind (:map vertico-map
+			  ("DEL" . vertico-directory-delete-char)
+			  ("RET" . vertico-directory-enter))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-(add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
-
-(straight-use-package 'corfu)
-(setq corfu-auto nil
-      corfu-separator ?\s
-      tab-always-indent 'complete)
-(corfu-popupinfo-mode 1)
-(global-corfu-mode 1)
+(use-package corfu
+  :straight t
+  :init
+  (setq corfu-auto nil
+		corfu-separator ?\s
+		tab-always-indent 'complete)
+  :config
+  (corfu-popupinfo-mode 1)
+  (global-corfu-mode 1))
 
 (use-package cape
   :straight t
@@ -40,8 +50,10 @@
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-keyword))
 
-(straight-use-package 'marginalia)
-(marginalia-mode 1)
+(use-package marginalia
+  :straight t
+  :config
+  (marginalia-mode 1))
 
 (straight-use-package 'orderless)
 (setq completion-styles '(orderless basic)
@@ -62,9 +74,12 @@
    ;; ("M-g i" . consult-imenu)))
    ))
 
-(straight-use-package 'consult-dir)
-(define-key vertico-map
-            (kbd "M-c") #'consult-dir)
+(use-package consult-dir
+  :straight t
+  :disabled t
+  :config
+  (eval-after-load 'vertico
+    (define-key vertico-map (kbd "M-c") #'consult-dir)))
 
 (straight-use-package 'embark)
 (straight-use-package 'embark-consult)
