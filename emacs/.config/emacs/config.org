@@ -2024,6 +2024,12 @@ to the headings shown in the agenda buffer.
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
 #+end_src
 
+use ~hl-line-mode~ for org agenda
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
+#+end_src
+
 *** Refile targets
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes

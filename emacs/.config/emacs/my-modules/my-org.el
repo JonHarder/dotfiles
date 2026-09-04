@@ -88,6 +88,8 @@
 
 (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
 
+(add-hook 'org-agenda-mode-hook #'hl-line-mode)
+
 (setq org-refile-targets
 	  '((org-agenda-files . (:regexp . "One Off"))
 		(org-agenda-files . (:regexp . "Events"))
