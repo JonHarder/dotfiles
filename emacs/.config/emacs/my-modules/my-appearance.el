@@ -48,8 +48,26 @@
 ;; (load-theme 'catppuccin-mocha t)
 
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-(straight-use-package (car my-theme))
-(pre-theme-load-hook)
+(pcase (car my-theme)
+	('modus-themes
+	 (use-package modus-themes
+	   :straight t
+	   :init
+	   (setq modus-themes-common-palette-overrides
+			 '((fg-heading-1 blue-warmer)
+			   (fg-heading-2 yellow-cooler)
+			   (fg-heading-3 cyan-cooler)))))
+	('doom-themes
+	 (use-package doom-themes
+	   :straight t
+	   :init
+	   (setq doom-monokai-classic-brighter-comments t
+			 doom-monokai-classic-comment-bg t
+			 
+			 doom-gruvbox-dark-variant "hard"
+			 doom-gruvbox-brighter-comments t
+			 doom-gruvbox-padded-modeline t))))
+
 (load-theme (cdr my-theme) t)
 
 (menu-bar-mode 1)
