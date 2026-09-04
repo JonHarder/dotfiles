@@ -396,6 +396,25 @@ on different tabs to help with different types of work within the same project.
   		  (lambda ()
   			(display-line-numbers-mode 1)))
 #+end_src
+** hl line mode
+hl-line-mode darkens the line the point is on to help distinguish it
+and locate the point.
+
+Let's turn it on globally.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (global-hl-line-mode t)
+#+end_src
+
+And let's use the ~lin~ package to make buffers where line selection is
+the primary mode of interaction more visible.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (use-package lin
+    :straight t
+    :config
+    (lin-global-mode t))
+#+end_src
 ** Spacious Padding
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   (straight-use-package 'spacious-padding)
@@ -2022,12 +2041,6 @@ to the headings shown in the agenda buffer.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
-#+end_src
-
-use ~hl-line-mode~ for org agenda
-
-#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 #+end_src
 
 *** Refile targets

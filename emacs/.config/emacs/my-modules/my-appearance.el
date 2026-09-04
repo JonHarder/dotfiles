@@ -88,6 +88,13 @@
 		  (lambda ()
 			(display-line-numbers-mode 1)))
 
+(global-hl-line-mode t)
+
+(use-package lin
+  :straight t
+  :config
+  (lin-global-mode t))
+
 (straight-use-package 'spacious-padding)
 
 (provide 'my-appearance)
