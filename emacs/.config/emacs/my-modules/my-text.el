@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (straight-use-package 'mixed-pitch)
 
 (set-fill-column 80)

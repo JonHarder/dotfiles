@@ -2,6 +2,8 @@
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
+(which-key-mode 1)
+
 (setopt imenu-auto-rescan t)
 
 (setq enable-recursive-minibuffers t)

@@ -1,5 +1,7 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package magit
-:straight t)
+  :straight t)
 
 (use-package jj-mode
   :disabled t

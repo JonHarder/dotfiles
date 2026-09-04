@@ -7,4 +7,9 @@
   :bind
   ("C-c t o" . olivetti-mode))
 
+(use-package imenu-list
+  :straight t
+  :bind
+  ("C-c t i" . imenu-list-smart-toggle))
+
 (provide 'my-toggles)

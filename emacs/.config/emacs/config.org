@@ -436,6 +436,11 @@ them all under the "C-c t" prefix.
     :bind
     ("C-c t o" . olivetti-mode))
 
+  (use-package imenu-list
+    :straight t
+    :bind
+    ("C-c t i" . imenu-list-smart-toggle))
+
   (provide 'my-toggles)
 #+end_src
 * mode line
@@ -667,6 +672,13 @@ for more.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
+#+end_src
+*** Which-key mode
+Which key shows available commands and their bindings when prefix
+commands are incomplete
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (which-key-mode 1)
 #+end_src
 *** Imenu
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
@@ -1624,6 +1636,8 @@ This replaces the venerable, but outdated flymake.
    Run http commands using simple http spec
 
    #+begin_src emacs-lisp :tangle "my-modules/my-rest-mode.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
+   
      (straight-use-package 'restclient)
      (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
      (provide 'my-rest-mode)
@@ -1737,6 +1751,8 @@ images, containers, compose, and more.
 ** Python
 *** Pipfile support
     #+begin_src emacs-lisp :tangle "my-modules/my-python-mode.el" :mkdirp yes
+      ;; -*- lexical-binding: t; -*-
+    
       (add-to-list 'auto-mode-alist '("Pipfile" . conf-toml-mode))
     #+end_src
 *** Provide =my-python-mode=
@@ -1752,7 +1768,6 @@ images, containers, compose, and more.
     :init
     (setq rust-mode-treesitter-derive t)
     (setq rust-format-on-save t)
-    (setq rust-rustfmt-switches '("--edition=2024"))
     :hook (rust-mode . (lambda () (prettify-symbols-mode))))
   
   (provide 'my-rust-mode)
@@ -2351,8 +2366,10 @@ in a git based project and even used alongside with other
 contributors who are still using git directly.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-jj.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (use-package magit
-  :straight t)
+    :straight t)
 
   (use-package jj-mode
     :disabled t
@@ -3019,6 +3036,8 @@ font requirements of such modes and will use both variable and
 fixed pitch fonts in the same buffer according to use.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-text.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package 'mixed-pitch)
 #+end_src
 
@@ -3104,9 +3123,13 @@ The famous Prot has created the tmr package which makes setting timers
 very easy.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-timers.el" :mkdirp yes
-  (straight-use-package 'tmr)
-  (require 'tmr)
-  (tmr-mode-line-mode 1)
+  ;; -*- lexical-binding: t; -*-
+
+  (use-package tmr
+    :straight t
+    :init
+    (tmr-mode-line-mode 1))
+
   (provide 'my-timers)
 #+end_src
 * Git
@@ -3161,7 +3184,11 @@ Just is a command line tool that seeks to simplify [[man:make]]
 ** Use package
 
 #+begin_src emacs-lisp :tangle "my-modules/my-just.el" :mkdirp yes
-  (straight-use-package 'just-mode)
+  ;; -*- lexical-binding: t; -*-
+
+  (use-package just-mode
+    :straight t)
+
 #+end_src
 
 ** Provide package
@@ -3182,6 +3209,8 @@ Tying this up to embark is a natural extension of avy's action
 dispatch system.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-avy.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (use-package avy
     :straight t
     :config

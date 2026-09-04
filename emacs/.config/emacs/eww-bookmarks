@@ -1,5 +1,16 @@
 ;; Auto-generated file; don't edit -*- mode: lisp-data -*-
 ((:url
+  "https://sachachua.com/blog/2026/04/what-s-in-the-emacs-newcomers-presets-theme/"
+  :title "What's in the Emacs newcomers-presets theme? :: Sacha Chua"
+  :time "Wed Sep  2 11:49:26 2026")
+ (:url "https://www.chiply.dev/post-august-emacs-carnival" :title
+	   "The Search for Knowledge: Emacs Carnival August 2026" :time
+	   "Wed Sep  2 11:48:45 2026")
+ (:url
+  "https://ray-on-emacs.blogspot.com/2026/08/how-much-management-does-knowledge-need.html"
+  :title "Ray on Emacs: How Much Management Does Knowledge Need?"
+  :time "Wed Sep  2 11:48:39 2026")
+ (:url
   "https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes.md#start-of-content"
   :title "" :time "Fri May 22 15:38:06 2026")
  (:url "https://irreal.org/blog/?tag=emacs" :title "Emacs | Irreal"
