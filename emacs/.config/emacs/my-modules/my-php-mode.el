@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
 			   '(php-mode . ("intelephense" "--stdio"))))

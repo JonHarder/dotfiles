@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq-default tab-width 4)
 
 (let ((fnm-bin (expand-file-name "~/.local/share/fnm/aliases/default/bin")))

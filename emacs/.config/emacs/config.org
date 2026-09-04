@@ -758,6 +758,40 @@ and play nicely with ~eshell-smart~
   ;; (with-eval-after-load 'capf-autosuggest
   ;;   (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
 #+end_src
+** Completion preview
+this is a built in set of features with emacs version 31
+
+#+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  (use-package completion-preview
+    :demand t
+    :if (eq completion-framework 'completion-preview)
+    :bind
+    (:map completion-preview-active-mode-map
+  		("M-i" . completion-preview-insert-word)
+  		("M-n" . completion-preview-next-candidate)
+  		("M-p" . completion-preview-prev-candidate)
+  		("M-<return>" . completion-preview-insert)
+  		("<tab>" . completion-preview-complete))
+    :config
+    (setq completion-preview-minimum-symbol-length 2)
+    (global-completion-preview-mode t))
+
+  (use-package minibuffer
+    :demand t
+    :bind
+    (:map completion-in-region-mode-map
+  		("M-i" . minibuffer-choose-completion)
+  		("M-n" . minibuffer-next-completion)
+  		("M-p" . minibuffer-previous-completion))
+    :config
+    (setq completions-format 'one-column)
+    (setq completions-max-height 12)
+    (setq completion-auto-help t)
+    (setq completion-auto-select nil)
+    (setq minibuffer-visble-completions t)
+    (setq completion-eager-update t))
+  		
+#+end_src
 ** Vertico
 
    Vertico is a minibuffer completion enhancement library which wraps emacs'
@@ -771,6 +805,7 @@ and play nicely with ~eshell-smart~
    #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
      (use-package vertico
        :straight t
+       :if (eq completion-framework 'vertico)
        :init
        (vertico-mode 1)
        :bind
@@ -803,6 +838,7 @@ and play nicely with ~eshell-smart~
   #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
     (use-package corfu
       :straight t
+      :if (eq completion-framework 'vertico)
       :init
       (setq corfu-auto nil
     		corfu-separator ?\s
@@ -1483,6 +1519,7 @@ Use the fantastic elfeed
 
 * Programming
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
   (setq-default tab-width 4)
 #+end_src
 ** Node
@@ -1778,6 +1815,7 @@ images, containers, compose, and more.
 
    *This doesn't work currently. not sure what's wrong with intelephense*
    #+begin_src emacs-lisp :tangle "my-modules/my-php-mode.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
      (with-eval-after-load 'eglot
        (add-to-list 'eglot-server-programs
      			   '(php-mode . ("intelephense" "--stdio"))))
@@ -1826,6 +1864,7 @@ images, containers, compose, and more.
 This adds support for nushell files
 
 #+begin_src emacs-lisp :tangle "my-modules/my-nushell-mode.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
   (straight-use-package 'nushell-mode)
   (provide 'my-nushell-mode)
 #+end_src
@@ -1874,6 +1913,8 @@ In fact, this emacs configuration is written in org mode, and the embedded emacs
 is extracted and ran to formulate the actual config.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package '(org :type built-in))
   (require 'org)
 #+end_src

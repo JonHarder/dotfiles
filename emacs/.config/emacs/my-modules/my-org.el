@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (straight-use-package '(org :type built-in))
 (require 'org)
 

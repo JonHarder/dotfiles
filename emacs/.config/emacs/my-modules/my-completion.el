@@ -20,8 +20,38 @@
 ;; (with-eval-after-load 'capf-autosuggest
 ;;   (add-to-list 'capf-autosuggest-capf-functions #'capf-autosuggest-orig-capf))
 
+(use-package completion-preview
+  :demand t
+  :if (eq completion-framework 'completion-preview)
+  :bind
+  (:map completion-preview-active-mode-map
+		("M-i" . completion-preview-insert-word)
+		("M-n" . completion-preview-next-candidate)
+		("M-p" . completion-preview-prev-candidate)
+		("M-<return>" . completion-preview-insert)
+		("<tab>" . completion-preview-complete))
+  :config
+  (setq completion-preview-minimum-symbol-length 2)
+  (global-completion-preview-mode t))
+
+(use-package minibuffer
+  :demand t
+  :bind
+  (:map completion-in-region-mode-map
+		("M-i" . minibuffer-choose-completion)
+		("M-n" . minibuffer-next-completion)
+		("M-p" . minibuffer-previous-completion))
+  :config
+  (setq completions-format 'one-column)
+  (setq completions-max-height 12)
+  (setq completion-auto-help t)
+  (setq completion-auto-select nil)
+  (setq minibuffer-visble-completions t)
+  (setq completion-eager-update t))
+
 (use-package vertico
   :straight t
+  :if (eq completion-framework 'vertico)
   :init
   (vertico-mode 1)
   :bind
@@ -37,6 +67,7 @@
 
 (use-package corfu
   :straight t
+  :if (eq completion-framework 'vertico)
   :init
   (setq corfu-auto nil
 		corfu-separator ?\s
