@@ -778,17 +778,27 @@ this is a built in set of features with emacs version 31
 
   (use-package minibuffer
     :demand t
+    :if (eq completion-framework 'completion-preview)
     :bind
     (:map completion-in-region-mode-map
   		("M-i" . minibuffer-choose-completion)
   		("M-n" . minibuffer-next-completion)
   		("M-p" . minibuffer-previous-completion))
+    (:map minibuffer-mode-map
+  		("M-n" . minibuffer-next-completion)
+  		("M-p" . minibuffer-previous-completion)
+  		("M-i" . minibuffer-choose-completion))
     :config
+    (setq completion-show-help nil)
+    (setq completion-show-inline-help nil)
+    (setq completions-detailed t)
     (setq completions-format 'one-column)
-    (setq completions-max-height 12)
+    (setq completions-max-height 20)
     (setq completion-auto-help t)
+    (setq completions-sort 'historical)
     (setq completion-auto-select nil)
     (setq minibuffer-visble-completions t)
+    (setq completion-eager-display t)
     (setq completion-eager-update t))
   		
 #+end_src
@@ -1681,6 +1691,8 @@ This replaces the venerable, but outdated flymake.
       		 (terraform-mode . tree-sitter-mode)
       		 (bash-ts-mode . tree-sitter-mode))
         :config
+        (setq treesit-auto-install-grammar 'always)
+        (setq treesit-enabled-modes t)
         (use-package tree-sitter-langs
       	:straight t)
         (use-package tree-sitter-indent
@@ -1689,9 +1701,10 @@ This replaces the venerable, but outdated flymake.
 
 *** Install languages
     #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
-      (setq treesit-language-source-alist
-	    '((rust "https://github.com/tree-sitter/tree-sitter-rust")
-	      (typst "https://github.com/uben0/tree-sitter-typst")))
+      ;; NOTE: this should no longer be necessary with emacs 31 tree sitter improvements
+      ;; (setq treesit-language-source-alist
+      ;; 	  '((rust "https://github.com/tree-sitter/tree-sitter-rust")
+      ;; 		(typst "https://github.com/uben0/tree-sitter-typst")))
 
       (setq treesit-load-name-override-list '((rust "libtree-sitter-rust" "tree_sitter_rust")))
     #+end_src
@@ -2031,9 +2044,39 @@ then into pdfs
 With the ~ox-typst~ package, org can export to typst documents.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  (with-eval-after-load 'org
-    (straight-use-package 'ox-typst)
-    (require 'ox-typst))
+  (use-package ox-typst
+    :after org
+    :init
+    (require 'ox-typst)
+    :config
+    (defun my/org-typst-superscript-verse-numbers (text)
+  	"Superscript verse-number markers (digits glued to the next word)."
+  	(replace-regexp-in-string
+  	 "[0-9]+[[:alpha:]]"
+  	 (lambda (s)
+  	   (let* ((n (1- (length s)))
+  			  (num (substring s 0 n))
+  			  (letter (substring s n)))
+  		 (format "#super(typographic: false, baseline: -0.4em, size: 0.75em)[#text(weight: \"regular\")[%s]]%s"
+  				 num
+  				 letter
+  				 text)))
+  	 text
+  	 t))
+    
+    (defun my/org-typst-special-block (special-block contents info)
+  	(let* ((type (org-element-property :type special-block))
+             (attrs (org-export-read-attribute :attr_typst special-block))
+             (ref (plist-get attrs :ref)))
+        (pcase type
+  		("scripture"
+  		 (format "#block(inset: (left: 1.5em, top: 0.6em, bottom: 0.6em))[#text(weight: \"bold\")[%s]%s]"
+  				 (my/org-typst-superscript-verse-numbers (org-trim contents))
+  				 (if ref (format " (%s)" ref) "")))
+  		(_ contents))))
+    (advice-add 'org-typst-special-block :override #'my/org-typst-special-block))
+
+
 #+end_src
 
 ** Org agenda

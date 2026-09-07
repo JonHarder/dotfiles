@@ -36,17 +36,27 @@
 
 (use-package minibuffer
   :demand t
+  :if (eq completion-framework 'completion-preview)
   :bind
   (:map completion-in-region-mode-map
 		("M-i" . minibuffer-choose-completion)
 		("M-n" . minibuffer-next-completion)
 		("M-p" . minibuffer-previous-completion))
+  (:map minibuffer-mode-map
+		("M-n" . minibuffer-next-completion)
+		("M-p" . minibuffer-previous-completion)
+		("M-i" . minibuffer-choose-completion))
   :config
+  (setq completion-show-help nil)
+  (setq completion-show-inline-help nil)
+  (setq completions-detailed t)
   (setq completions-format 'one-column)
-  (setq completions-max-height 12)
+  (setq completions-max-height 20)
   (setq completion-auto-help t)
+  (setq completions-sort 'historical)
   (setq completion-auto-select nil)
   (setq minibuffer-visble-completions t)
+  (setq completion-eager-display t)
   (setq completion-eager-update t))
 
 (use-package vertico

@@ -51,9 +51,37 @@
 ;; use latexmk for generating pdfs from tex files
 (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
-(with-eval-after-load 'org
-  (straight-use-package 'ox-typst)
-  (require 'ox-typst))
+(use-package ox-typst
+  :after org
+  :init
+  (require 'ox-typst)
+  :config
+  (defun my/org-typst-superscript-verse-numbers (text)
+	"Superscript verse-number markers (digits glued to the next word)."
+	(replace-regexp-in-string
+	 "[0-9]+[[:alpha:]]"
+	 (lambda (s)
+	   (let* ((n (1- (length s)))
+			  (num (substring s 0 n))
+			  (letter (substring s n)))
+		 (format "#super(typographic: false, baseline: -0.4em, size: 0.75em)[#text(weight: \"regular\")[%s]]%s"
+				 num
+				 letter
+				 text)))
+	 text
+	 t))
+  
+  (defun my/org-typst-special-block (special-block contents info)
+	(let* ((type (org-element-property :type special-block))
+           (attrs (org-export-read-attribute :attr_typst special-block))
+           (ref (plist-get attrs :ref)))
+      (pcase type
+		("scripture"
+		 (format "#block(inset: (left: 1.5em, top: 0.6em, bottom: 0.6em))[#text(weight: \"bold\")[%s]%s]"
+				 (my/org-typst-superscript-verse-numbers (org-trim contents))
+				 (if ref (format " (%s)" ref) "")))
+		(_ contents))))
+  (advice-add 'org-typst-special-block :override #'my/org-typst-special-block))
 
 (setq org-agenda-custom-commands
 	  '(("g" "GTD Review"
