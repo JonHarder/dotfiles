@@ -797,7 +797,7 @@ this is a built in set of features with emacs version 31
     (setq completion-auto-help t)
     (setq completions-sort 'historical)
     (setq completion-auto-select nil)
-    (setq minibuffer-visble-completions t)
+    (setq minibuffer-visible-completions t)
     (setq completion-eager-display t)
     (setq completion-eager-update t))
   		
@@ -2046,9 +2046,8 @@ With the ~ox-typst~ package, org can export to typst documents.
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (use-package ox-typst
     :after org
-    :init
-    (require 'ox-typst)
     :config
+    (require 'ox-typst)
     (defun my/org-typst-superscript-verse-numbers (text)
   	"Superscript verse-number markers (digits glued to the next word)."
   	(replace-regexp-in-string

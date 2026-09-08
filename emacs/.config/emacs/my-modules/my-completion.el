@@ -55,7 +55,7 @@
   (setq completion-auto-help t)
   (setq completions-sort 'historical)
   (setq completion-auto-select nil)
-  (setq minibuffer-visble-completions t)
+  (setq minibuffer-visible-completions t)
   (setq completion-eager-display t)
   (setq completion-eager-update t))
 

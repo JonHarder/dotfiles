@@ -53,9 +53,8 @@
 
 (use-package ox-typst
   :after org
-  :init
-  (require 'ox-typst)
   :config
+  (require 'ox-typst)
   (defun my/org-typst-superscript-verse-numbers (text)
 	"Superscript verse-number markers (digits glued to the next word)."
 	(replace-regexp-in-string
