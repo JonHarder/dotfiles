@@ -44,7 +44,11 @@
 	   :https://raw.githubusercontent.com/SchemaStore/schemastore/refs/heads/master/src/schemas/json/github-action.json
 	   [".github/actions/*.yml" ".github/actions/*.yaml"]))))
   (setf (alist-get '(rust-ts-mode rust-mode) eglot-server-programs)
-		'("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+		'("rust-analyzer" :initializationOptions (:check (:command "clippy"))))
+  :bind
+  (("C-c c r" . eglot-rename)
+   ("C-c c a" . eglot-code-actions)
+   ("C-c c q" . eglot-code-action-quickfix)))
 
 (use-package eldoc-box
   :straight t

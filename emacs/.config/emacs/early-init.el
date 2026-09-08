@@ -11,6 +11,8 @@
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.5)
 
+(setq use-package-enable-imenu-support t)
+
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold (* 1024 1024 20)
