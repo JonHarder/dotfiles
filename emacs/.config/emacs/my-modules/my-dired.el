@@ -1,15 +1,15 @@
-(setq dired-kill-when-opening-new-dired-buffer t) 
-(require 'dired)
-(setq insert-directory-program "gls" dired-use-ls-dired t)
-(setq dired-listing-switches "-hAl")
-;; this pre-fills the destination prompt of copy and rename
-;; commands with the directory of the other dired buffer
-;; if one is open. Very handy
-(setq dired-dwim-target t)
+;; -*- lexical-binding: t; -*-
 
-;; don't show all the file details by default
-;; They're still accessible with '('
-(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(use-package dired
+  :init
+  (setq dired-kill-when-opening-new-dired-buffer t) 
+  (setq insert-directory-program "gls" dired-use-ls-dired t)
+  (setq dired-listing-switches "-hAl")
+  ;; this pre-fills the destination prompt of copy and rename
+  ;; commands with the directory of the other dired buffer
+  ;; if one is open. Very handy
+  (setq dired-dwim-target t)
+  :hook (dired-mode . dired-hide-details-mode))
 
 (defun dired-dotfiles-toggle ()
   (interactive)

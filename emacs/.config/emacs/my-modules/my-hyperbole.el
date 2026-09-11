@@ -1,4 +1,4 @@
-;;; my-hyperbole --- Summary
+;;; my-hyperbole --- Summary  -*- lexical-binding: t; -*-
 ;;; Commentary:
 
 ;;; Code:

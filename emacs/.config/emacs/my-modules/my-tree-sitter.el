@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package tree-sitter
   :straight t
   :hook ((go-mode . tree-sitter-mode)

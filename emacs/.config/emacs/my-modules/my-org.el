@@ -52,6 +52,7 @@
 (setq org-latex-pdf-process '("LC_ALL=en_US.UTF-8 latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
 (use-package ox-typst
+  :straight t
   :after org
   :config
   (require 'ox-typst)

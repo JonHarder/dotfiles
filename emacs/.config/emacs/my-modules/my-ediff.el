@@ -1,5 +1,8 @@
-(require 'ediff)
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setq ediff-split-window-function 'split-window-horizontally)
+;; -*- lexical-binding: t; -*-
+
+(use-package ediff
+  :init
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally))
 
 (provide 'my-ediff)

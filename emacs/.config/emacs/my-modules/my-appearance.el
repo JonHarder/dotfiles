@@ -1,4 +1,7 @@
+;; -*- lexical-binding: t; -*-
 (require 'local-config)
+
+;; -*- lexical-binding: t; -*-
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
@@ -48,7 +51,9 @@
 ;; (load-theme 'catppuccin-mocha t)
 
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-(pcase (car my-theme)
+(let ((package (car my-theme))
+	  (theme (cdr my-theme)))
+  (pcase package
 	('modus-themes
 	 (use-package modus-themes
 	   :straight t
@@ -56,7 +61,16 @@
 	   (setq modus-themes-common-palette-overrides
 			 '((fg-heading-1 blue-warmer)
 			   (fg-heading-2 yellow-cooler)
-			   (fg-heading-3 cyan-cooler)))))
+			   (fg-heading-3 cyan-cooler)))
+	   :config
+	   (load-theme theme t)))
+	('catppuccin-theme
+	 (use-package catppuccin-theme
+	   :straight t
+	   :init
+	   (setq catppuccin-flavor 'mocha)
+	   :config
+	   (load-theme theme t)))
 	('doom-themes
 	 (use-package doom-themes
 	   :straight t
@@ -66,9 +80,9 @@
 			 
 			 doom-gruvbox-dark-variant "hard"
 			 doom-gruvbox-brighter-comments t
-			 doom-gruvbox-padded-modeline t))))
-
-(load-theme (cdr my-theme) t)
+			 doom-gruvbox-padded-modeline t)
+	   :config
+	   (load-theme theme t)))))
 
 (menu-bar-mode 1)
 

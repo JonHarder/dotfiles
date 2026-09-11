@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (straight-use-package 'doom-modeline) 
 (setq doom-modeline-height 35)
 (setq doom-modeline-bar-width 4)

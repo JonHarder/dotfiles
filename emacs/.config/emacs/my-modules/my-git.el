@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (straight-use-package
  '(magit :type git :host github :repo "magit/magit"))
 

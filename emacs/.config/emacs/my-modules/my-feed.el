@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (use-package elfeed
   :straight t
   :commands (elfeed)

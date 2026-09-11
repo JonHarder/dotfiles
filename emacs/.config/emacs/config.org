@@ -18,7 +18,8 @@ themes, setting font configuration, etc. is handled later in the
 configuration.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-   (require 'local-config)
+  ;; -*- lexical-binding: t; -*-
+  (require 'local-config)
 #+end_src
 * Early init optimizations
 ** Disable built-in package.el
@@ -247,6 +248,8 @@ This gets loaded first so that any later configuration can utilize it.
 ** Settings
 *** Basic theme configuration
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (set-face-attribute 'bold nil :weight 'ultra-bold)
   (when t
     (custom-set-faces
@@ -313,7 +316,9 @@ the easiest themes on the eyes in any lighting situation.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
   ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-  (pcase (car my-theme)
+  (let ((package (car my-theme))
+  	  (theme (cdr my-theme)))
+    (pcase package
   	('modus-themes
   	 (use-package modus-themes
   	   :straight t
@@ -321,7 +326,16 @@ the easiest themes on the eyes in any lighting situation.
   	   (setq modus-themes-common-palette-overrides
   			 '((fg-heading-1 blue-warmer)
   			   (fg-heading-2 yellow-cooler)
-  			   (fg-heading-3 cyan-cooler)))))
+  			   (fg-heading-3 cyan-cooler)))
+  	   :config
+  	   (load-theme theme t)))
+  	('catppuccin-theme
+  	 (use-package catppuccin-theme
+  	   :straight t
+  	   :init
+  	   (setq catppuccin-flavor 'mocha)
+  	   :config
+  	   (load-theme theme t)))
   	('doom-themes
   	 (use-package doom-themes
   	   :straight t
@@ -331,9 +345,9 @@ the easiest themes on the eyes in any lighting situation.
   			 
   			 doom-gruvbox-dark-variant "hard"
   			 doom-gruvbox-brighter-comments t
-  			 doom-gruvbox-padded-modeline t))))
-
-  (load-theme (cdr my-theme) t)
+  			 doom-gruvbox-padded-modeline t)
+  	   :config
+  	   (load-theme theme t)))))
 #+end_src
 
 ** Tweak display of UI elements
@@ -459,6 +473,8 @@ Use the delightful ultra-scroll
 Basic editor settings, using built-ins
 
 #+begin_src emacs-lisp :tangle "my-modules/my-editor.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (delete-selection-mode 1)
   (provide 'my-editor)
 #+end_src
@@ -468,6 +484,8 @@ modes to turn on and off, or appearances like themes.  Here we bind
 them all under the "C-c t" prefix.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-toggles.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (with-eval-after-load 'consult
     (global-set-key (kbd "C-c t t") #'consult-theme))
   (global-set-key (kbd "C-c t l") #'display-line-numbers-mode)
@@ -487,6 +505,8 @@ them all under the "C-c t" prefix.
 * mode line
 ** Doom modeline
 #+begin_src emacs-lisp :tangle "my-modules/my-modeline.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package 'doom-modeline) 
   (setq doom-modeline-height 35)
   (setq doom-modeline-bar-width 4)
@@ -527,6 +547,8 @@ produces visible, editable, version controllable config, but
 I don't like it in my init file. Let's move it somewhere else.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-core.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (setq custom-file (concat user-emacs-directory "custom.el"))
 #+end_src
 
@@ -612,6 +634,8 @@ so let's just set it as default.
 
 * Mouse settings
 #+begin_src emacs-lisp :tangle "my-modules/my-mouse.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (setq mouse-autoselect-window nil)
   (provide 'my-mouse)
 #+end_src
@@ -623,6 +647,8 @@ I really want hjkl for day navigation in calendar. [[Meow mode]] already
 supplies j and k, so we just need to set l and h
 
 #+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (with-eval-after-load 'calendar
     (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
     (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day)
@@ -659,6 +685,8 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
 #+end_src
 * Folding
 #+begin_src emacs-lisp :tangle "my-modules/my-fold.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (use-package kirigami
     :straight t
     :commands (kirigami-open-fold
@@ -704,6 +732,8 @@ with consult-buffer's file section and we can switch to recently
 opened files via [[help:consult-buffer]]
 
 #+begin_src emacs-lisp :tangle "my-modules/my-completion.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (recentf-mode +1)
 #+end_src
 
@@ -981,8 +1011,9 @@ of actions to perform on the target under point.
 * Icons
 ** Set up all the icons
 #+begin_src emacs-lisp :tangle "my-modules/my-icons.el" :mkdirp yes
-  ;; Icons
-  (straight-use-package 'all-the-icons)
+  ;; Icons  -*- lexical-binding: t; -*-
+  (use-package all-the-icons
+    :straight t)
   ;;; If icons aren't showing up, you may need to install the font.
   ;;; If so, uncomment and execute the following line.
   ;; (all-the-icons-install-fonts t)
@@ -1010,9 +1041,12 @@ quite unhappy. Let's configure it to use the /plain/ setup which just makes a sm
 window at the bottom of the current frame.
    
 #+begin_src emacs-lisp :tangle "my-modules/my-ediff.el" :mkdirp yes
-  (require 'ediff)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (setq ediff-split-window-function 'split-window-horizontally)
+  ;; -*- lexical-binding: t; -*-
+
+  (use-package ediff
+    :init
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    (setq ediff-split-window-function 'split-window-horizontally))
 #+end_src
 
 ** Provide =my-ediff=
@@ -1022,6 +1056,8 @@ window at the bottom of the current frame.
   
 * Getting Things Done (GTD)
 #+begin_src emacs-lisp :tangle "my-modules/my-gtd.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (defvar gtd-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/gtd")
     "The directory my 'Getting Things Done' system is stored in")
 
@@ -1064,6 +1100,8 @@ window at the bottom of the current frame.
 #+end_src
 * Nginx mode
 #+begin_src emacs-lisp :tangle "my-modules/my-nginx.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package 'nginx-mode)
   (provide 'my-nginx)
 #+end_src
@@ -1110,6 +1148,8 @@ And provide the module
 * Notes
 ** Org-node
 #+begin_src emacs-lisp :tangle "my-modules/my-notes.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (use-package org-mem
     :straight t
     :after (org)
@@ -1290,18 +1330,18 @@ what it can do, so seriously, read the info doc.
 ** Settings
 
 #+begin_src emacs-lisp :tangle "my-modules/my-dired.el" :mkdirp yes
-  (setq dired-kill-when-opening-new-dired-buffer t) 
-  (require 'dired)
-  (setq insert-directory-program "gls" dired-use-ls-dired t)
-  (setq dired-listing-switches "-hAl")
-  ;; this pre-fills the destination prompt of copy and rename
-  ;; commands with the directory of the other dired buffer
-  ;; if one is open. Very handy
-  (setq dired-dwim-target t)
+  ;; -*- lexical-binding: t; -*-
 
-  ;; don't show all the file details by default
-  ;; They're still accessible with '('
-  (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+  (use-package dired
+    :init
+    (setq dired-kill-when-opening-new-dired-buffer t) 
+    (setq insert-directory-program "gls" dired-use-ls-dired t)
+    (setq dired-listing-switches "-hAl")
+    ;; this pre-fills the destination prompt of copy and rename
+    ;; commands with the directory of the other dired buffer
+    ;; if one is open. Very handy
+    (setq dired-dwim-target t)
+    :hook (dired-mode . dired-hide-details-mode))
 #+end_src
 
 I want to be able to toggle the display of dotfiles in dired. This function allows me to
@@ -1439,6 +1479,8 @@ There is an outstanding bug in epg where waiting for the enryption status
 will hang, which blocks the whole editor. We can disable this for now.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-gpg.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (fset 'epg-wait-for-status 'ignore)
 #+end_src
 
@@ -1464,7 +1506,9 @@ files on the filesystem.
 
 ** Add the package
 #+begin_src emacs-lisp :tangle "my-modules/my-http.el" :mkdirp yes
-  (straight-use-package 'simple-httpd)
+  ;; -*- lexical-binding: t; -*-
+  (use-package simple-httpd
+    :straight t)
 #+end_src
 
 ** Provide the module
@@ -1475,7 +1519,7 @@ files on the filesystem.
 
 * Hyperbole
 #+begin_src emacs-lisp :tangle "my-modules/my-hyperbole.el" :mkdirp yes
-  ;;; my-hyperbole --- Summary
+  ;;; my-hyperbole --- Summary  -*- lexical-binding: t; -*-
   ;;; Commentary:
 
   ;;; Code:
@@ -1493,8 +1537,12 @@ files on the filesystem.
 * Epub support
 ** Load nov mode and associate it with .epub files
 #+begin_src emacs-lisp :tangle "my-modules/my-epub.el" :mkdirp yes
-  (straight-use-package 'nov)
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  ;; -*- lexical-binding: t; -*-
+
+  (use-package nov
+    :straight t
+    :mode ("\\.epub$" . nov-mode))
+
 #+end_src
 
 ** Provide the module
@@ -1506,6 +1554,7 @@ files on the filesystem.
 Use the fantastic elfeed
 
 #+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
   (use-package elfeed
     :straight t
     :commands (elfeed)
@@ -1690,6 +1739,8 @@ This replaces the venerable, but outdated flymake.
 
 *** Install the package
     #+begin_src emacs-lisp :tangle "my-modules/my-tree-sitter.el" :mkdirp yes
+      ;; -*- lexical-binding: t; -*-
+
       (use-package tree-sitter
         :straight t
         :hook ((go-mode . tree-sitter-mode)
@@ -1739,14 +1790,18 @@ This replaces the venerable, but outdated flymake.
 Note, this package is archived and unmaintained.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-starlark-mode.el" :mkdirp yes
-  (straight-use-package 'bazel)
-  (add-to-list 'auto-mode-alist '("Tiltfile" . bazel-starlark-mode))
+  ;; -*- lexical-binding: t; -*-
+  (use-package bazel
+    :straight t
+    :mode ("Tiltfile" . bazel-starlark-mode))
   (provide 'my-starlark-mode)
 #+end_src
 ** Docker support
 *** Dockerfile mode
 
 #+begin_src emacs-lisp :tangle "my-modules/my-docker-mode.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package 'dockerfile-mode)
 #+end_src
 *** docker integration
@@ -1767,6 +1822,7 @@ images, containers, compose, and more.
 ** Lisp modes
 *** Indentation
    #+begin_src emacs-lisp :tangle "my-modules/my-lisp-mode.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
      (straight-use-package 'aggressive-indent)
      (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
      (provide 'my-lisp-mode)
@@ -1774,6 +1830,7 @@ images, containers, compose, and more.
 ** Markup languages
 *** Markdown
    #+begin_src emacs-lisp :tangle "my-modules/my-markup.el" :mkdirp yes
+     ;; -*- lexical-binding: t; -*-
      (straight-use-package 'markdown-mode)
      (setq markdown-header-scaling t)
    #+end_src
@@ -1890,32 +1947,42 @@ This adds support for nushell files
 ** Kubernetes
 
 #+begin_src emacs-lisp :tangle "my-modules/my-k8s.el"
-  (straight-use-package 'kubed)
-  (keymap-global-set "C-c k" 'kubed-prefix-map)
+  ;; -*- lexical-binding: t; -*-
+  (use-package kubed
+    :straight t
+    :bind
+    (("C-c k" . kubed-prefix-map)))
 
   (provide 'my-k8s)
 #+end_src
 ** Golang
 #+begin_src emacs-lisp :tangle "my-modules/my-go-mode.el" :mkdirp yes
-  (straight-use-package 'go-mode)
-  (setq gofmt-command "/usr/local/go/bin/gofmt")
-  (setenv "PATH"
-          (concat
-           "/usr/local/go/bin:"
-           "/Library/TeX/texbin:"
-           "/opt/homebrew/bin:"
-           (getenv "PATH")))
-  (defun my-go-mode-hook ()
-    (when (eq major-mode 'go-mode)
-      (gofmt-before-save)))
-  (add-hook 'before-save-hook #'my-go-mode-hook)
+  ;; -*- lexical-binding: t; -*-
+  (use-package go-mode
+    :straight t
+    :init
+    (setq gofmt-command "/usr/local/go/bin/gofmt")
+    :config
+    (defun my-go-mode-hook ()
+  	(when (eq major-mode 'go-mode)
+        (gofmt-before-save)))
+    (setenv "PATH"
+            (concat
+             "/usr/local/go/bin:"
+             "/Library/TeX/texbin:"
+             "/opt/homebrew/bin:"
+             (getenv "PATH")))
+    :hook (before-save . my-go-mode-hook))
+
   (provide 'my-go-mode)
 #+end_src
 ** Neon mode
 Neon mode is mostly just yaml.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-neon-mode.el" :mkdirp yes
-  (straight-use-package 'neon-mode)
+  ;; -*- lexical-binding: t; -*-
+  (use-package neon-mode
+    :straight t)
   (provide 'my-neon-mode)
 #+end_src
 * Org
@@ -2051,6 +2118,7 @@ With the ~ox-typst~ package, org can export to typst documents.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (use-package ox-typst
+    :straight t
     :after org
     :config
     (require 'ox-typst)
@@ -2836,6 +2904,8 @@ configurations, though it is a mode that must be enabled in order to
 record window configurations.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-navigation.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (winner-mode 1)
 #+end_src
 
@@ -2943,6 +3013,7 @@ moving your hands off the keyboard.
 ** Convenience functions
 
 #+begin_src emacs-lisp :tangle "my-modules/my-web.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
   (defun google-this (start end)
     "google-this googles either the selected region or the symbol at point.
 
@@ -2954,6 +3025,9 @@ moving your hands off the keyboard.
                      (buffer-substring start end)
                    (thing-at-point 'symbol t))))
       (browse-url (format "https://google.com/search?q=%s" query))))
+
+  (global-set-key (kbd "C-c a g") #'google-this)
+  (global-set-key (kbd "C-c a e") #'eww)
 #+end_src
    
 ** Provide my-web
@@ -2965,6 +3039,7 @@ moving your hands off the keyboard.
 * Email
 ** Mail server/client setup
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
   (setq send-mail-function 'smtpmail-send-it)
   (setq smtpmail-default-smtp-server "smtp.gmail.com"
         smtpmail-smtp-server "smtp.gmail.com"
@@ -3265,6 +3340,8 @@ Magit is amazing
 *** Install the package
 
 #+begin_src emacs-lisp :tangle "my-modules/my-git.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+
   (straight-use-package
    '(magit :type git :host github :repo "magit/magit"))
 #+end_src
@@ -3298,7 +3375,9 @@ See the amazing [[https://github.com/blahgeek/emacs-pr-review][pr-review]] packa
   This encompasses man pages, info pages, describe-* windows, etc.
 ** Helpful package
 #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
-  (straight-use-package 'helpful)
+  ;; -*- lexical-binding: t; -*-
+  (use-package helpful
+    :straight t)
 #+end_src
 ** Provide =my-help=
 #+begin_src emacs-lisp :tangle "my-modules/my-help.el" :mkdirp yes
@@ -3351,7 +3430,7 @@ dispatch system.
   	  t)
   	(setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
     (setq avy-timeout-seconds 0.4)
-    :bind (("C-c a" . #'avy-goto-char-timer)))
+    :bind (("C-c a a" . #'avy-goto-char-timer)))
 
   (provide 'my-avy)
 #+end_src

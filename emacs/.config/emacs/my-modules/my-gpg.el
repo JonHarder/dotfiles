@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (fset 'epg-wait-for-status 'ignore)
 
 (setq epg-pinentry-mode 'loopback)

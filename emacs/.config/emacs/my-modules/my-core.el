@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (setq custom-file (concat user-emacs-directory "custom.el"))
 
 ;; Assume left to right text direction all the time

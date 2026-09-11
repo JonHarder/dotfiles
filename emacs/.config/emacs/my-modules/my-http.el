@@ -1,3 +1,5 @@
-(straight-use-package 'simple-httpd)
+;; -*- lexical-binding: t; -*-
+(use-package simple-httpd
+  :straight t)
 
 (provide 'my-http)

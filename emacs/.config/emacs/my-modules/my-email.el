@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq send-mail-function 'smtpmail-send-it)
 (setq smtpmail-default-smtp-server "smtp.gmail.com"
       smtpmail-smtp-server "smtp.gmail.com"

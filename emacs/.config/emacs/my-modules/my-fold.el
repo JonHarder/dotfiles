@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package kirigami
   :straight t
   :commands (kirigami-open-fold

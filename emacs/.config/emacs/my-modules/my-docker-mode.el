@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (straight-use-package 'dockerfile-mode)
 
 (straight-use-package 'docker)

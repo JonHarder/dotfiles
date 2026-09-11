@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (defun google-this (start end)
   "google-this googles either the selected region or the symbol at point.
 
@@ -9,5 +10,8 @@ using an external browser configured via the operating system."
                    (buffer-substring start end)
                  (thing-at-point 'symbol t))))
     (browse-url (format "https://google.com/search?q=%s" query))))
+
+(global-set-key (kbd "C-c a g") #'google-this)
+(global-set-key (kbd "C-c a e") #'eww)
 
 (provide 'my-web)

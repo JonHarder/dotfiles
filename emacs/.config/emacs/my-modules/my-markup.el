@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (straight-use-package 'markdown-mode)
 (setq markdown-header-scaling t)
 

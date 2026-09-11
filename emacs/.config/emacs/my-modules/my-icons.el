@@ -1,5 +1,6 @@
-;; Icons
-(straight-use-package 'all-the-icons)
+;; Icons  -*- lexical-binding: t; -*-
+(use-package all-the-icons
+  :straight t)
 ;;; If icons aren't showing up, you may need to install the font.
 ;;; If so, uncomment and execute the following line.
 ;; (all-the-icons-install-fonts t)

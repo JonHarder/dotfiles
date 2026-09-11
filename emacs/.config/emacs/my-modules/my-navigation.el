@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (winner-mode 1)
 
 (use-package ace-window

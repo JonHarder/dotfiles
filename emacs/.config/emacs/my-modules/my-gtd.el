@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (defvar gtd-directory (expand-file-name "~/Library/CloudStorage/Dropbox/org/gtd")
   "The directory my 'Getting Things Done' system is stored in")
 

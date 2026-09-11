@@ -1,4 +1,7 @@
-(straight-use-package 'nov)
-(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+;; -*- lexical-binding: t; -*-
+
+(use-package nov
+  :straight t
+  :mode ("\\.epub$" . nov-mode))
 
 (provide 'my-epub)

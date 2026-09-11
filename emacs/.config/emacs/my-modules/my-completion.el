@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (recentf-mode +1)
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
