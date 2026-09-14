@@ -19,7 +19,7 @@
 /emacs/.config/emacs/network-security.data
 /emacs/.config/emacs/tramp
 /emacs/.config/emacs/bookmarks
-/emacs/.config/emacs/local-config.el
+/emacs/.config/emacs/local-config.el*
 /emacs/.config/emacs/request/
 /emacs/.config/emacs/smudge/
 /emacs/.config/emacs/tree-sitter/

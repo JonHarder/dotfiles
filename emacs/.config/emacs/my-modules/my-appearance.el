@@ -80,7 +80,11 @@
 			 
 			 doom-gruvbox-dark-variant "hard"
 			 doom-gruvbox-brighter-comments t
-			 doom-gruvbox-padded-modeline t)
+			 doom-gruvbox-padded-modeline t
+
+			 doom-ayu-dark-comment-bg t
+			 doom-ayu-dark-brighter-comments t
+			 doom-ayu-dark-brighter-modeline nil)
 	   :config
 	   (load-theme theme t)))))
 
