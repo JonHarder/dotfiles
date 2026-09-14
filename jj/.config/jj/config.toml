@@ -26,11 +26,13 @@ edit = true
 tug = ["bookmark", "move", "--from", "heads(::@ & bookmarks())", "--to", "@"]
 p = ["git", "push", "-r", "@"]
 f = ["git", "fetch"]
-d = ["describe"]
+d = ["diff"]
+dd = ["diff", "--config=ui.diff-formatter=':git'", "--config=ui.pager='diffnav'"]
+
 ###################################################################
 # alias: "log trunk"
 # show changes from trunk() to the current working change.
 # usefull for large, branch heavy codebases with lots of large,
 # long lived feature branches
 lt = ["log", "-r", "trunk()..@ | trunk()"]
-diffnav = ["diff", "--config=ui.diff-formatter=':git'", "--config=ui.pager='diffnav'"]
+
