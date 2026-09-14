@@ -90,6 +90,9 @@ cmd-h = [] # Disable "hide application"
 cmd-alt-h = [] # Disable "hide others"
 
 ctrl-cmd-space = 'mode wm'
+cmd-slash = 'exec-and-forget emacsclient -c -e "(let ((default-directory \"~/\")) (vterm t))"'
+# cmd-shift-slash
+cmd-backslash = 'exec-and-forget emacsclient -c'
 
 [mode.wm.binding]
 esc = 'mode main'
