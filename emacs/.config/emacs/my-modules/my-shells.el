@@ -19,6 +19,54 @@
 ;;   2. if it doesn't, run shell-command "tic dumb-emacs-ansi.ti"
 (setq comint-terminfo-terminal "dumb-emacs-ansi")
 
+(setq vterm-timer-delay 0.01)
+(setq vterm-max-scrollback 500)
+
+(defun my-speed-up-terminal-buffer ()
+  (setq-local fond-lock-defaults '(nil t))
+
+  (setq-local scroll-conservatively most-positive-fixnum)
+  (setq-local hscroll-margin 0)
+  (setq-local scroll-margin 0)
+  (setq-local auto-hscroll-mode nil)
+  (setq-local truncate-lines t)
+  (setq-local nobreak-char-display nil)
+  (setq-local bidi-paragraph-direction 'left-to-right)
+  (setq-local bidi-inhibit-bpa t)
+
+  (setq-local line-spacing 0)
+  (setq-local mode-line-format nil)
+
+  (setq-local process-adaptive-read-buffering nil)
+  (let ((output-max (* 1024 1024)))
+	(when (< read-process-output-max output-max)
+	  (setq-local read-process-output-max output-max)))
+
+  (buffer-disable-undo)
+
+  (let ((inhibit-redisplay t)
+		(inhibit-message t)
+		(modes '(electric-pair-local-mode
+				 electric-indent-local-mode
+				 display-line-numbers-mode
+				 display-fill-column-indicator-mode
+				 hl-line-mode
+				 show-paren-local-mode
+				 flymake-mode
+				 flycheck-mode)))
+	(push 'eldoc-modes modes)
+	(push 'auto-composition-mode modes)
+
+	(dolist (mode modes)
+	  (when (and (boundp mode)
+				 (symbol-value mode)
+				 (fboundp mode))
+		(ignore-errors
+		  (funcall mode -1))))))
+
+(add-hook 'term-mode-hook 'my-speed-up-terminal-buffer t)
+(add-hook 'vterm-mode-hook 'my-speed-up-terminal-buffer t)
+
 (setenv "GITHUB_KEY" "/Users/jharder/.ssh/docker_github")
 (setenv "HOMEBREW_NO_ENV_HINTS" "1")
 (setenv "GOPATH" "/Users/jharder/go")
@@ -172,8 +220,7 @@
 (straight-use-package 'eat)
 
 (use-package vterm
-  :straight t
-  :bind ("C-c s t" . vterm))
+  :straight t)
 
 (straight-use-package 'multi-vterm)
 ;; (setq vterm-shell "/opt/homebrew/bin/nu")
@@ -195,30 +242,37 @@
 
 (add-hook 'vterm-mode-hook #'my/vterm-keys-mode)
 
-;;; Command wrappers The following commands execute shell commands by
-;;; starting a vterm session and executing the specified command
-;;; inside it.
+  ;;; Command wrappers The following commands execute shell commands by
+  ;;; starting a vterm session and executing the specified command
+  ;;; inside it.
 (defun vterm-run-command (command)
   "Execute COMMAND in a new vterm buffer."
   (interactive "sCommand: ")
   (let ((buffer-name (format "*vterm: %s*" command)))
-	(vterm buffer-name)
-	(switch-to-buffer buffer-name)
-	(vterm-send-string command)
-	(vterm-send-return)))
-
-(defun tuxedo ()
-  "Run the tuxedo task management TUI in vterm."
-  (interactive)
-  (vterm-run-command "tuxedo"))
-
-(defun tilt (&optional subcommand)
-  "Run tilt with the provided SUBCOMMAND (defaults to 'up')."
-  (interactive (list (when current-prefix-arg
-					   (read-string "Tilt command: " "up"))))
-  (vterm-run-command (concat "tilt " (or subcommand "up"))))
-
+  	(vterm buffer-name)
+  	(switch-to-buffer buffer-name)
+  	(vterm-send-string command)
+  	(vterm-send-return)))
 
 (setq vterm-shell "/bin/zsh")
+
+(use-package shell-pop
+  :straight t
+  :after vterm
+  :bind (("C-c s t" . shell-pop))
+  :custom
+  (shell-pop-universal-key "C-c s t")
+  (shell-pop-window-position "bottom")
+  (shell-pop-full-span t)
+  (shell-pop-term-shell "/usr/bin/env zsh")
+  (shell-pop-window-size 30)
+  (shell-pop-autocd-to-working-dir nil)
+  :config
+  (setopt shell-pop-shell-type
+		  '("vterm" "*vterm*"
+			(lambda ()
+			  (when (fboundp 'vterm)
+				(let ((vterm-shell shell-pop-term-shell))
+				  (vterm)))))))
 
 (provide 'my-shells)
