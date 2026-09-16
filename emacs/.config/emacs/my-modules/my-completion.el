@@ -107,6 +107,10 @@
 
 (use-package consult
   :straight t
+  :init
+  (setq consult-async-input-debounce 0.05
+		consult-async-input-throttle 0.1
+		consult-async-refresh-delay 0.05)
   :config
   (setq xref-show-xrefs-function #'consult-xref)
   (with-eval-after-load 'org
