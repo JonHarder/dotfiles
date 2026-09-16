@@ -5,6 +5,8 @@
   (setq dired-kill-when-opening-new-dired-buffer t) 
   (setq insert-directory-program "gls" dired-use-ls-dired t)
   (setq dired-listing-switches "-hAl")
+  (setq dired-movement-style 'bounded-files)
+  (setq dired-mouse-drag-files t)
   ;; this pre-fills the destination prompt of copy and rename
   ;; commands with the directory of the other dired buffer
   ;; if one is open. Very handy
