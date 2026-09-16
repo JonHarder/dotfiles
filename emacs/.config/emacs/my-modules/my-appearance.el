@@ -120,6 +120,7 @@
 
 (setq tab-bar-show 1)
 
+(setq display-line-numbers-type 'relative)
 (add-hook 'text-mode-hook
 		  (lambda ()
 			(display-line-numbers-mode 1)))

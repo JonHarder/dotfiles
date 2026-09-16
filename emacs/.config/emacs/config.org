@@ -432,6 +432,7 @@ on different tabs to help with different types of work within the same project.
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
+  (setq display-line-numbers-type 'relative)
   (add-hook 'text-mode-hook
   		  (lambda ()
   			(display-line-numbers-mode 1)))
@@ -1569,6 +1570,7 @@ Use the fantastic elfeed
     (setq elfeed-feeds
   		'(("https://protesilaos.com/codelog.xml" code emacs)
   		  ("http://rss.desiringgod.org/" christianity)
+  		  ("https://www.jamescherti.com/category/emacs/feed" code emacs)
   		  ("https://batsov.com/atom.xml" code)
   		  ("https://www.wiz.io/feed/rss.xml" security)
   		  ("https://rss.beehiiv.com/feeds/xgtkummmum.xml" security)
@@ -2928,10 +2930,8 @@ dependencies nor a compilation step.
   			(lambda ()
   			  (when (fboundp 'vterm)
   				(let ((vterm-shell shell-pop-term-shell))
-  				  (vterm)))))))
+  				  (vterm))))))
 
-
-    
 #+end_src
 ** Provide =my-shells=
 #+begin_src emacs-lisp :tangle "my-modules/my-shells.el" :mkdirp yes

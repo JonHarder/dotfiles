@@ -9,6 +9,7 @@
   (setq elfeed-feeds
 		'(("https://protesilaos.com/codelog.xml" code emacs)
 		  ("http://rss.desiringgod.org/" christianity)
+		  ("https://www.jamescherti.com/category/emacs/feed" code emacs)
 		  ("https://batsov.com/atom.xml" code)
 		  ("https://www.wiz.io/feed/rss.xml" security)
 		  ("https://rss.beehiiv.com/feeds/xgtkummmum.xml" security)
