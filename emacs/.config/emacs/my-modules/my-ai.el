@@ -35,7 +35,8 @@
    '(async-shell-command
      shell-command
      shell-command-to-string
-     getenv))
+     getenv
+     with-current-buffer))
   :config
   (add-hook 'emacs-startup-hook #'mcp-server-start-unix))
 
