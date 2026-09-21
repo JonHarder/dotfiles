@@ -19,7 +19,25 @@
 	(let ((process-environment
 		   (opencode-connection--process-environment opencode-server-environment)))
 	  (async-shell-command
-	   (format "%s mcp list" (executable-find opencode-server-command))))))
+	   (format "%s mcp list" (executable-find opencode-server-command)))))
+
+  ;; Restart the OpenCode server so a fresh one re-reads opencode config
+  ;; (agents, permissions, OPENCODE_CONFIG).  `opencode-shutdown' errors
+  ;; when no server runs for DIRECTORY, so swallow that and open anyway.
+  (defun opencode-restart (&optional directory)
+    "Restart the OpenCode server for DIRECTORY and reopen a session.
+  Stops any running server so a fresh one re-reads the opencode
+  configuration (agents, permissions, OPENCODE_CONFIG), then opens a
+  session.  Defaults to `default-directory'; with a prefix argument,
+  prompt for the directory."
+    (interactive
+     (list (if current-prefix-arg
+               (read-directory-name "OpenCode directory: ")
+             default-directory)))
+    (let ((dir (or directory default-directory)))
+      (unless (ignore-errors (opencode-shutdown dir) t)
+        (message "No OpenCode server was running for %s" dir))
+      (opencode-open-session dir))))
 
 (use-package mcp-server
   :straight (:type git :host github :repo "rhblind/emacs-mcp-server"
