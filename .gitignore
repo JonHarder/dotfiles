@@ -30,3 +30,7 @@ jj/.config/jj/repos/
 org-roam.db
 .lsp-session-v1
 .org-id-locations
+
+# Emacs autosave (#name#) and lock (.#name) files
+\#*\#
+.\#*
