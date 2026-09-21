@@ -83,7 +83,7 @@
 (require 'my-terraform-mode)
 (require 'my-vim-mode)
 (require 'my-server)
+(require 'my-ai)
 
 (provide 'init)
 ;;; init.el ends here
-(put 'narrow-to-region 'disabled nil)

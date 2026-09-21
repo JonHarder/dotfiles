@@ -273,6 +273,6 @@
 			(lambda ()
 			  (when (fboundp 'vterm)
 				(let ((vterm-shell shell-pop-term-shell))
-				  (vterm)))))))
+				  (vterm))))))
 
 (provide 'my-shells)

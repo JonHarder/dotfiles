@@ -11,7 +11,7 @@ using an external browser configured via the operating system."
                  (thing-at-point 'symbol t))))
     (browse-url (format "https://google.com/search?q=%s" query))))
 
-(global-set-key (kbd "C-c a g") #'google-this)
-(global-set-key (kbd "C-c a e") #'eww)
+(global-set-key (kbd "C-c w g") #'google-this)
+(global-set-key (kbd "C-c w e") #'eww)
 
 (provide 'my-web)

@@ -9,5 +9,5 @@ execute stow for each application you're interested in.
 #+begin_src sh
   git clone https://github.com/JonHarder/dotfiles.git
   cd dotfiles
-  stow emacs alacritty git # and any other app you want...
+  stow emacs alacritty git opencode # and any other app you want...
 #+end_src

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "emacs": {
+      "type": "local",
+      "command": [
+        "python3",
+        "/Users/jharder/.config/emacs/straight/repos/emacs-mcp-server/mcp-wrapper.py",
+        "/Users/jharder/.config/emacs/emacs-mcp-server.sock"
+      ],
+      "enabled": true
+    }
+  },
+  "instructions": [
+    "~/.config/opencode/instructions/emacs.md"
+  ]
+}

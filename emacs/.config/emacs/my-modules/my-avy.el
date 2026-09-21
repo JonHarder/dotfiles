@@ -14,6 +14,6 @@
 	  t)
 	(setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
   (setq avy-timeout-seconds 0.4)
-  :bind (("C-c a a" . #'avy-goto-char-timer)))
+  :bind (("C-c v" . #'avy-goto-char-timer)))
 
 (provide 'my-avy)

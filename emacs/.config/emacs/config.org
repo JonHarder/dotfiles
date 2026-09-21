@@ -175,6 +175,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-terraform-mode)
   (require 'my-vim-mode)
   (require 'my-server)
+  (require 'my-ai)
 
   (provide 'init)
   ;;; init.el ends here
@@ -2936,7 +2937,7 @@ dependencies nor a compilation step.
   			(lambda ()
   			  (when (fboundp 'vterm)
   				(let ((vterm-shell shell-pop-term-shell))
-  				  (vterm))))))
+  				  (vterm)))))))
 
 #+end_src
 ** Provide =my-shells=
@@ -3095,8 +3096,8 @@ moving your hands off the keyboard.
                    (thing-at-point 'symbol t))))
       (browse-url (format "https://google.com/search?q=%s" query))))
 
-  (global-set-key (kbd "C-c a g") #'google-this)
-  (global-set-key (kbd "C-c a e") #'eww)
+  (global-set-key (kbd "C-c w g") #'google-this)
+  (global-set-key (kbd "C-c w e") #'eww)
 #+end_src
    
 ** Provide my-web
@@ -3499,7 +3500,7 @@ dispatch system.
   	  t)
   	(setf (alist-get ?. avy-dispatch-alist) #'avy-action-embark))
     (setq avy-timeout-seconds 0.4)
-    :bind (("C-c a a" . #'avy-goto-char-timer)))
+    :bind (("C-c v" . #'avy-goto-char-timer)))
 
   (provide 'my-avy)
 #+end_src
@@ -3511,4 +3512,103 @@ dispatch system.
 
   (setq register-use-preview 'insist)
   (provide 'my-registers)
+#+end_src
+
+* AI workflows
+
+Agentic coding through the =opencode= CLI, driven from Emacs with
+=emacs-opencode= and deep Emacs access via =emacs-mcp-server=.
+
+The opencode configuration lives in =~/.config/opencode/= which is managed by
+stow from =dotfiles/opencode/= where the global config (agents, permissions,
+models) and the Emacs-specific config (=opencode.emacs.jsonc=, used only for
+Emacs-launched servers via =OPENCODE_CONFIG=) are defined.
+
+** request (emacs-opencode dependency)
+
+#+begin_src emacs-lisp :tangle "my-modules/my-ai.el" :mkdirp yes
+  ;; -*- lexical-binding: t; -*-
+  (use-package request
+    :straight t)
+#+end_src
+
+** emacs-opencode client
+
+=emacs-opencode= is a native Emacs client for the =opencode= server. Servers
+launched from Emacs get the Emacs-specific opencode config (which registers
+the Emacs MCP server and instructs the agent that it runs inside Emacs).
+
+#+begin_src emacs-lisp :tangle "my-modules/my-ai.el" :mkdirp yes
+  (use-package emacs-opencode
+    :straight (:type git :host github :repo "jdormit/emacs-opencode")
+    :demand t
+    :custom
+    (opencode-server-environment
+     '(("OPENCODE_CONFIG" . "/Users/jharder/.config/opencode/opencode.emacs.jsonc")))
+    (opencode-session-default-agent "build")
+    :config
+    ;; `opencode-mcp-status' shells out without `opencode-server-environment',
+    ;; so it misses the custom OPENCODE_CONFIG and reports no MCP servers.
+    ;; Redefine it to apply the same environment used for `opencode serve'.
+    (defun opencode-mcp-status ()
+  	"Display OpenCode's current MCP connections."
+  	(interactive)
+  	(let ((process-environment
+  		   (opencode-connection--process-environment opencode-server-environment)))
+  	  (async-shell-command
+  	   (format "%s mcp list" (executable-find opencode-server-command))))))
+#+end_src
+
+** emacs-mcp-server
+
+A pure-Elisp MCP server that exposes this Emacs instance (buffers, elisp
+evaluation, diagnostics, org tools) to the opencode agent as tools prefixed
+with =emacs_=. The server listens on a unix socket and is bridged to the
+agent's stdio by =mcp-wrapper.py=. It starts on the startup hook so the
+daemon serves the socket from boot.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-ai.el" :mkdirp yes
+  (use-package mcp-server
+    :straight (:type git :host github :repo "rhblind/emacs-mcp-server"
+               :files ("*.el" "tools/*.el" "mcp-wrapper.py" "mcp-wrapper.sh"))
+    :demand t
+    :custom
+    ;; Allow the agent to run shell commands / read the environment through
+    ;; `emacs_eval-elisp' without being blocked by the MCP security layer.
+    ;; Anything NOT listed below either prompts (see the commented toggle) or
+    ;; is blocked outright.
+    ;; (mcp-server-security-prompt-for-permissions t) ; prompt in minibuffer for everything else
+    (mcp-server-security-allowed-dangerous-functions
+     '(async-shell-command
+       shell-command
+       shell-command-to-string
+       getenv))
+    :config
+    (add-hook 'emacs-startup-hook #'mcp-server-start-unix))
+#+end_src
+
+=eval-elisp= is effectively remote code execution for the agent. The server's
+security layer (dangerous-function blocklist, credential-file protection,
+permission prompts) applies, but treat it as trusted. Tighten with
+=mcp-server-emacs-tools-enabled= if desired.
+
+** Keybindings
+
+=C-c a= is the AI prefix: new sessions, one-shots, resume, status.
+
+#+begin_src emacs-lisp :tangle "my-modules/my-ai.el" :mkdirp yes
+  (defvar my-c-c-a-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "a") #'opencode)
+      (define-key map (kbd "o") #'opencode-open-session)
+      (define-key map (kbd "k") #'opencode-ask-contextual)
+      (define-key map (kbd "s") #'opencode-ask)
+      (define-key map (kbd "m") #'opencode-mcp-status)
+  	(define-key map (kbd "r") #'opencode-restart)
+      (define-key map (kbd "q") #'opencode-shutdown-all)
+      map)
+    "Prefix keymap bound to \\[my-c-c-a-map], C-c a, for AI workflows.")
+  (define-key global-map (kbd "C-c a") my-c-c-a-map)
+
+  (provide 'my-ai)
 #+end_src

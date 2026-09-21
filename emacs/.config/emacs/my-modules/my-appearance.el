@@ -45,7 +45,7 @@
   :config
   (add-to-list 'custom-theme-load-path
 			   (file-name-directory (locate-library "kusanagi-theme")))
-  (load-theme 'kusanagi t))
+  )
 ;; (straight-use-package 'modus-themes)
 ;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
 ;; (load-theme 'catppuccin-mocha t)
