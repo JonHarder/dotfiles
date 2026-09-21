@@ -1,7 +1,7 @@
 ---
 description: Designs solutions and analyzes impact without making changes
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/mimo-v2.5-free
 temperature: 0.2
 permission:
   edit: deny

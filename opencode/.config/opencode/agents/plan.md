@@ -1,7 +1,7 @@
 ---
 description: Analysis and planning without making any code changes
 mode: primary
-model: opencode/deepseek-v4-flash-free
+model: opencode/mimo-v2.5-free
 temperature: 0.1
 permission:
   edit: deny

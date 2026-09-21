@@ -1,7 +1,7 @@
 ---
 description: Read-only investigation of codebases and the web
 mode: primary
-model: opencode/deepseek-v4-flash-free
+model: opencode/mimo-v2.5-free
 temperature: 0.2
 permission:
   edit: deny

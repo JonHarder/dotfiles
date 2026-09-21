@@ -1,7 +1,7 @@
 ---
 description: Reviews code for best practices, security, and potential issues
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/mimo-v2.5-free
 temperature: 0.1
 permission:
   edit: deny
