@@ -126,6 +126,9 @@ export "OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES"
 # add my local bin scripts folder to path
 export PATH="/Users/jharder/bin:$PATH"
 
+# rustowl
+export PATH="$HOME/.rustowl:$PATH"
+
 # initialize zoxide
 eval "$(zoxide init zsh)"
 
