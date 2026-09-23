@@ -82,7 +82,7 @@ text = "#FFFFFF"
 enabled = true
 strategy = "axtree"                         # Element detection: "axtree" (AX API), "vision" (screen recognition) or "contour" (edge detection)
 capture_scope = "window"                    # Region the vision and contour strategies scan: "window" (focused window) or "screen"
-hint_characters = "asdfghjkl"               # Characters used for hint labels
+hint_characters = "csntk,aeih"              # Characters used for hint labels
 label_direction = "normal"                  # Hint label algorithm: "normal" (default) or "reverse"
 max_depth = 50                              # Max accessibility tree depth (0 = unlimited)
 include_menubar_hints = false
@@ -232,8 +232,8 @@ border_width = 1
 [recursive_grid]
 enabled = true
 grid_cols = 3                               # Number of columns (>= 1)
-grid_rows = 3                               # Number of rows (>= 1)
-keys = "rtyfghvbn"                          # Cell selection keys (must be grid_cols * grid_rows chars)
+grid_rows = 2                               # Number of rows (>= 1)
+keys = "aeiuoy"                             # Cell selection keys (must be grid_cols * grid_rows chars)
 min_size_width = 1                          # Stop subdividing below this width (px)
 min_size_height = 1                         # Stop subdividing below this height (px)
 max_depth = 10                              # Maximum recursion levels (1–20)
