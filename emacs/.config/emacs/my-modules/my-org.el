@@ -162,15 +162,13 @@
 (add-to-list 'org-agenda-category-icon-alist
              '(".*" '(space . (:width (18)))))
 
-(add-to-list 'org-agenda-files (concat
-								org-directory
-								"gtd.org"))
-(add-to-list 'org-agenda-files (concat
-								org-directory
-								"events.org"))
-(add-to-list 'org-agenda-files (concat
-								org-directory
-								"pull_requests.org"))
+(mapc (lambda (file)
+		(add-to-list 'org-agenda-files
+					 (expand-file-name file org-directory)))
+	  '("gtd.org"
+		"events.org"
+		"calendar.org"
+		"pull_requests.org"))
 
 ;; (straight-use-package 'org-super-agenda)
 ;; (setq org-super-agenda-groups
@@ -181,6 +179,31 @@
 
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c o a") #'org-agenda)
+
+(use-package org-timegrid
+  :straight (:type git :host github :repo "Gleek/org-timegrid")
+  :commands (org-timegrid-week)
+  :bind ("C-c o g" . org-timegrid-week)
+  :init
+  (setq org-timegrid-org-files 'agenda
+		org-timegrid-org-capture-file
+		(expand-file-name "calendar.org" org-directory)
+		org-timegrid-org-auto-save t
+		org-timegrid-org-show-repeaters t
+
+		org-timegrid-org-tag-color-alist
+		'(("@Work" . blue)
+          ("@Home" . green)
+		  ("@Church" . yellow)))
+
+(use-package org-timegrid-agenda
+  :after org-timegrid
+  :init
+  (setq org-timegrid-agenda-separator t
+		org-timegrid-agenda-minutes-before 180
+		org-timegrid-agenda-minutes-after 180)
+  :config
+  (org-timegrid-agenda-mode 1))
 
 (setq org-tag-alist '((:startgroup)
 					  ("@Work" . ?w)

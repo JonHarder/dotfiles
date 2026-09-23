@@ -2289,15 +2289,13 @@ heading.
 
 *** Org agenda files
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
-  (add-to-list 'org-agenda-files (concat
-  								org-directory
-  								"gtd.org"))
-  (add-to-list 'org-agenda-files (concat
-  								org-directory
-  								"events.org"))
-  (add-to-list 'org-agenda-files (concat
-  								org-directory
-  								"pull_requests.org"))
+  (mapc (lambda (file)
+  		(add-to-list 'org-agenda-files
+  					 (expand-file-name file org-directory)))
+  	  '("gtd.org"
+  		"events.org"
+  		"calendar.org"
+  		"pull_requests.org"))
 #+end_src
 
 *** super agenda
@@ -2319,6 +2317,35 @@ should work better?
 #+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
   (global-set-key (kbd "C-c o c") #'org-capture)
   (global-set-key (kbd "C-c o a") #'org-agenda)
+#+end_src
+** Org timegrid
+incredible svg backed visual calendar for org events/tasks
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (use-package org-timegrid
+    :straight (:type git :host github :repo "Gleek/org-timegrid")
+    :commands (org-timegrid-week)
+    :bind ("C-c o g" . org-timegrid-week)
+    :init
+    (setq org-timegrid-org-files 'agenda
+  		org-timegrid-org-capture-file
+  		(expand-file-name "calendar.org" org-directory)
+  		org-timegrid-org-auto-save t
+  		org-timegrid-org-show-repeaters t
+
+  		org-timegrid-org-tag-color-alist
+  		'(("@Work" . blue)
+            ("@Home" . green)
+  		  ("@Church" . yellow)))
+
+  (use-package org-timegrid-agenda
+    :after org-timegrid
+    :init
+    (setq org-timegrid-agenda-separator t
+  		org-timegrid-agenda-minutes-before 180
+  		org-timegrid-agenda-minutes-after 180)
+    :config
+    (org-timegrid-agenda-mode 1))
 #+end_src
 ** Org capture
 
