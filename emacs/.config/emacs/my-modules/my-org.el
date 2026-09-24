@@ -98,8 +98,10 @@
 
 		("d" "GTD Daily View"
 		 ((agenda ""
-				  ((org-agenda-overriding-header "Today")
-				   (org-agenda-span 1)))
+				  ((org-agenda-overriding-header "Scheduled and overdue")
+				   (org-agenda-span 1)
+				   (org-agenda-skip-function
+					'(org-agenda-skip-entry-if 'todo '("STRT" "WAIT" "BLOCKED" "REVIEW")))))
 		  (todo "STRT"
 				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
