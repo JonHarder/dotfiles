@@ -192,6 +192,7 @@
 		(expand-file-name "calendar.org" org-directory)
 		org-timegrid-org-auto-save t
 		org-timegrid-org-show-repeaters t
+		org-timegrid-default-zoom 1.0
 
 		org-timegrid-org-tag-color-alist
 		'(("@Work" . blue)
