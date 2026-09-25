@@ -162,7 +162,7 @@ border_radius = -1                          # -1 = auto pill
 padding_x = -1                              # -1 = auto based on font size
 padding_y = -1                              # -1 = auto based on font size
 border_width = 1
-position = "bottom_center"                     # top_left, top_center, top_right, center, bottom_left, bottom_center, bottom_right
+position = "center"                         # top_left, top_center, top_right, center, bottom_left, bottom_center, bottom_right
 x_offset = 0                                # Offset from the selected position on the active screen
 y_offset = 24                               # Offset from the selected position on the active screen
 width = 320                                 # Search input width in pixels
@@ -347,10 +347,10 @@ invert_scroll = false                       # Invert scroll direction (for tools
 
 [scroll.hotkeys]
 "Escape" = "idle"
-"k" = "action scroll_up"
-"j" = "action scroll_down"
-"h" = "action scroll_left"
-"l" = "action scroll_right"
+"p" = "action scroll_up"
+"n" = "action scroll_down"
+"b" = "action scroll_left"
+"f" = "action scroll_right"
 "gg" = "action go_top"
 "Shift+G" = "action go_bottom"
 "u" = "action page_up"
