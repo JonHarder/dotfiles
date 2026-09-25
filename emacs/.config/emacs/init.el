@@ -75,6 +75,7 @@
 (require 'my-avy)
 (require 'my-registers)
 (require 'my-repeat)
+(require 'my-diagrams)
 
 (require 'my-rust-mode)
 (require 'my-search)

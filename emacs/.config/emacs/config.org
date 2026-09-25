@@ -167,6 +167,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-avy)
   (require 'my-registers)
   (require 'my-repeat)
+  (require 'my-diagrams)
 
   (require 'my-rust-mode)
   (require 'my-search)
@@ -1591,6 +1592,17 @@ Use the fantastic elfeed
   (provide 'my-feed)
 #+end_src
 
+* Diagrams
+#+begin_src emacs-lisp :tangle "my-modules/my-diagrams.el" :mkdirp yes
+  (use-package d2-mode
+    :straight t
+    :init
+    (setq d2-flags (list "--layout" "elk" "--theme" "200"))
+    (define-advice d2-compile
+  	  (:before (&rest _) setup) (save-buffer)))
+  		
+  (provide 'my-diagrams)
+#+end_src
 * Programming
 #+begin_src emacs-lisp :tangle "my-modules/my-prog-mode.el" :mkdirp yes
   ;; -*- lexical-binding: t; -*-
