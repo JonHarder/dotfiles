@@ -225,17 +225,6 @@
 (straight-use-package 'multi-vterm)
 ;; (setq vterm-shell "/opt/homebrew/bin/nu")
 
-(defun my/vterm-escape ()
-  "Send escape to vterm without triggering meow normal mode."
-  (interactive)
-  (vterm-send-key "<escape>"))
-
-(defvar my/vterm-keys-keymap
-  (let ((map (make-sparse-keymap)))
-    (keymap-set map "<escape>" #'my/vterm-escape)
-    (keymap-set map "C-g" #'meow-normal-mode)
-    map))
-
 (define-minor-mode my/vterm-keys-mode
   "Override escape in vterm buffers."
   :keymap my/vterm-keys-keymap)

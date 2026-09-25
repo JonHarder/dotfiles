@@ -648,35 +648,17 @@ so let's just set it as default.
 #+end_src
 * Time related functionality
 ** Calendar
-*** Bindings
-
-I really want hjkl for day navigation in calendar. [[Meow mode]] already
-supplies j and k, so we just need to set l and h
-
-#+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
-  ;; -*- lexical-binding: t; -*-
-
-  (with-eval-after-load 'calendar
-    (keymap-set calendar-mode-map (kbd "h") #'calendar-backward-day)
-    (keymap-set calendar-mode-map (kbd "l") #'calendar-forward-day)
-    (keymap-set calendar-mode-map (kbd "J") #'calendar-forward-month)
-    (keymap-set calendar-mode-map (kbd "K") #'calendar-backward-month)
-    (keymap-set calendar-mode-map (kbd "H") #'calendar-scroll-left)
-    (keymap-set calendar-mode-map (kbd "L") #'calendar-scroll-right))
-#+end_src
 *** Base settings
-
 Set the date style to iso (day month year).
 
 #+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
-  (setq calendar-date-style 'iso)
+ (setq calendar-date-style 'iso)
 #+end_src
 *** Diary
-
 The diary is (for me) mostly a way to jot down an appointment or reminder.
 
 #+begin_src emacs-lisp :tangle "my-modules/my-time.el" :mkdirp yes
-    (appt-activate 1)
+ (appt-activate 1)
 #+end_src
 
 ** Time zones
@@ -704,20 +686,14 @@ The diary is (for me) mostly a way to jot down an appointment or reminder.
   			 kirigami-close-folds-except-current
   			 kirigami-close-folds)
     :config
-    (meow-normal-define-key
-     '("Fo" . kirigami-open-fold)
-     '("FO" . kirigami-open-fold-rec)
-     '("Fr" . kirigami-open-folds)
-     '("Fc" . kirigami-close-fold)
-     '("Fm" . kirigami-close-folds)
-     '("Fa" . kirigami-toggle-fold))
     ;; configure folding backends
     (add-hook 'emacs-lisp-mode-hook #'outline-minor-mode)
     (add-hook 'lisp-interaction-mode-hook #'hs-minor-mode)
     (add-hook 'c-mode-hook #'hs-minor-mode)
     (add-hook 'rust-mode-hook #'hs-minor-mode)
     (add-hook 'go-mode-hook #'hs-minor-mode)
-    (add-hook 'php-mode-hook #'hs-minor-mode))
+    (add-hook 'php-mode-hook #'hs-minor-mode)
+    (add-hook 'rust-mode-hook #'hs-minor-mode))
 
   (use-package outline-indent
     :straight t
@@ -2931,17 +2907,6 @@ dependencies nor a compilation step.
   (straight-use-package 'multi-vterm)
   ;; (setq vterm-shell "/opt/homebrew/bin/nu")
 
-  (defun my/vterm-escape ()
-    "Send escape to vterm without triggering meow normal mode."
-    (interactive)
-    (vterm-send-key "<escape>"))
-
-  (defvar my/vterm-keys-keymap
-    (let ((map (make-sparse-keymap)))
-      (keymap-set map "<escape>" #'my/vterm-escape)
-      (keymap-set map "C-g" #'meow-normal-mode)
-      map))
-
   (define-minor-mode my/vterm-keys-mode
     "Override escape in vterm buffers."
     :keymap my/vterm-keys-keymap)
@@ -3263,17 +3228,6 @@ buffer history when executing a search with =
 Ensure notmuch buffers are in motion state
 
 #+begin_src emacs-lisp :tangle "my-modules/my-email.el" :mkdirp yes
-  ;; Put notmuch buffers in motion state
-  (with-eval-after-load 'meow
-    (dolist (mode '(notmuch-hello-mode
-                    notmuch-search-mode
-                    notmuch-show-mode
-                    notmuch-tree-mode))
-      (add-to-list 'meow-mode-state-list `(,mode . motion)))
-    
-    (dolist (mode '(notmuch-message-mode))
-      (add-to-list 'meow-mode-state-list `(,mode . insert))))
-
   (defvar my/notmuch-delete-tags
     '("trash")
     "Tags to set on a thread to mark it for deletion.
