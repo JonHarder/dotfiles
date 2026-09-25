@@ -97,13 +97,13 @@
 				((org-agenda-overriding-header "Inactive tasks")))))
 
 		("d" "GTD Daily View"
-		 ((agenda ""
+		 ((todo "STRT"
+				((org-agenda-overriding-header "In Progress")))
+		  (agenda ""
 				  ((org-agenda-overriding-header "Scheduled and overdue")
 				   (org-agenda-span 1)
 				   (org-agenda-skip-function
 					'(org-agenda-skip-entry-if 'todo '("STRT" "WAIT" "BLOCKED" "REVIEW")))))
-		  (todo "STRT"
-				((org-agenda-overriding-header "In Progress")))
 		  (todo "WAIT|REVIEW|BLOCKED"
 				((org-agenda-overriding-header "Waiting...")))
 		  (todo "NEXT"
@@ -168,7 +168,6 @@
 		(add-to-list 'org-agenda-files
 					 (expand-file-name file org-directory)))
 	  '("gtd.org"
-		"events.org"
 		"calendar.org"
 		"pull_requests.org"))
 
@@ -192,7 +191,7 @@
 		(expand-file-name "calendar.org" org-directory)
 		org-timegrid-org-auto-save t
 		org-timegrid-org-show-repeaters t
-		org-timegrid-default-zoom 1.0
+		org-timegrid-default-zoom 0.7
 
 		org-timegrid-org-tag-color-alist
 		'(("@Work" . blue)
@@ -203,6 +202,7 @@
   :after org-timegrid
   :init
   (setq org-timegrid-agenda-separator t
+		org-timegrid-agenda-insert-after "Scheduled and overdue"
 		org-timegrid-agenda-minutes-before 180
 		org-timegrid-agenda-minutes-after 180)
   :config
