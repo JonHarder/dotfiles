@@ -1,7 +1,7 @@
 ---
 description: Read-only investigation of codebases and the web
 mode: primary
-model: opencode/mimo-v2.5-free
+model: opencode/space-bunny-free
 temperature: 0.2
 permission:
   edit: deny

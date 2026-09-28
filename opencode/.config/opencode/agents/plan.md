@@ -1,7 +1,7 @@
 ---
 description: Analysis and planning without making any code changes
 mode: primary
-model: opencode/mimo-v2.5-free
+model: opencode/space-bunny-free
 temperature: 0.1
 permission:
   edit: deny

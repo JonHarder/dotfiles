@@ -1,7 +1,7 @@
 ---
 description: Designs solutions and analyzes impact without making changes
 mode: subagent
-model: opencode/mimo-v2.5-free
+model: opencode/space-bunny-free
 temperature: 0.2
 permission:
   edit: deny

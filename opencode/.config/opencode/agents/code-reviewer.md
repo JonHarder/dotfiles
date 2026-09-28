@@ -1,7 +1,7 @@
 ---
 description: Reviews code for best practices, security, and potential issues
 mode: subagent
-model: opencode/mimo-v2.5-free
+model: opencode/space-bunny-free
 temperature: 0.1
 permission:
   edit: deny
