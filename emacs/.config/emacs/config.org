@@ -126,6 +126,7 @@ This gets loaded first so that any later configuration can utilize it.
   (require 'my-mouse)
   (require 'my-modeline)
   (require 'my-toggles)
+  (require 'my-buffers)
 
   (require 'my-fold)
   (require 'my-time)
@@ -1317,6 +1318,15 @@ selected template will pre-fill the newly created note.
   (provide 'my-notes)
 #+end_src
 
+* Buffer management
+** ibuffer
+#+begin_src emacs-lisp :tangle "my-modules/my-buffers.el"
+  (keymap-set ibuffer-mode-map "SPC" #'ibuffer-visit-buffer-other-window-noselect)
+
+  (global-set-key (kbd "C-c i") #'ibuffer)
+
+   (provide 'my-buffers)
+#+end_src
 * Dired
 
 The Dir(ectory) Ed(itor). [[elisp:(info "(emacs) Dired")][Dired]] is a text based file manager, baked into
@@ -1381,6 +1391,7 @@ do exactly that.
   (keymap-set dired-mode-map "K" #'dired-do-kill-lines)
   (keymap-set dired-mode-map "h" #'dired-up-directory)
   (keymap-set dired-mode-map "l" #'dired-find-file)
+  (keymap-set dired-mode-map "SPC" #'dired-display-file)
   (defun dired-go-home ()
     (interactive)
     (dired-jump nil "~/"))
@@ -1550,7 +1561,7 @@ files on the filesystem.
   (provide 'my-epub)
 #+end_src
 
-* Feed reader
+* Feed reader (rss)
 Use the fantastic elfeed
 
 #+begin_src emacs-lisp :tangle "my-modules/my-feed.el" :mkdirp yes
@@ -1567,12 +1578,11 @@ Use the fantastic elfeed
   		  ("http://rss.desiringgod.org/" christianity)
   		  ("https://www.jamescherti.com/category/emacs/feed" code emacs)
   		  ("https://batsov.com/atom.xml" code)
-  		  ("https://www.wiz.io/feed/rss.xml" security)
-  		  ("https://rss.beehiiv.com/feeds/xgtkummmum.xml" security)
+  		  ("https://blog.rust-lang.org/feed.xml" code rust)
   		  ("https://aws.amazon.com/blogs/security/feed/" security)
   		  ("https://karthinks.com/index.xml" code emacs)
+  		  ("https://steveklabnik.com/topics/rust/feed.xml" code rust)
   		  ("https://www.thegospelcoalition.org/feed/" christianity)
-  		  ("https://www.firstthings.com/rss/web-exclusives" christianity)
   		  ("https://irreal.org/blog/?feed=rss2" code emacs)
   		  ("https://twingate.com/changelog.rss.xml" kipsu))))
 
@@ -1932,7 +1942,16 @@ images, containers, compose, and more.
     (setq rust-mode-treesitter-derive t)
     (setq rust-format-on-save t)
     :hook (rust-mode . (lambda () (prettify-symbols-mode))))
-  
+
+  (use-package flycheck-rust
+    ;; disabled for now because it seems like the hook setup doesn't
+    ;; work, and breaks syntax highlighting for every buffer that uses
+    ;; flycheck, or.....all of theme
+    :disabled t
+    :straight t
+    :after rust-mode
+    :hook (flycheck-mode . #'flycheck-rust-setup))
+
   (provide 'my-rust-mode)
 #+end_src
 

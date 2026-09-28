@@ -12,6 +12,6 @@
     }
   },
   "instructions": [
-    "~/.config/opencode/instructions/emacs.md"
+      "~/.config/opencode/instructions/emacs.md"
   ]
 }

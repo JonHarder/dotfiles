@@ -43,6 +43,7 @@
 (keymap-set dired-mode-map "K" #'dired-do-kill-lines)
 (keymap-set dired-mode-map "h" #'dired-up-directory)
 (keymap-set dired-mode-map "l" #'dired-find-file)
+(keymap-set dired-mode-map "SPC" #'dired-display-file)
 (defun dired-go-home ()
   (interactive)
   (dired-jump nil "~/"))
