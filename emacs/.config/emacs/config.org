@@ -472,7 +472,11 @@ the primary mode of interaction more visible.
 #+end_src
 ** Spacious Padding
 #+begin_src emacs-lisp :tangle "my-modules/my-appearance.el" :mkdirp yes
-  (straight-use-package 'spacious-padding)
+  (use-package spacious-padding
+    :bind
+    (("C-c t s" . #'spacious-padding-mode))
+    :hook (after-init . #'spacious-padding-mode))
+
 #+end_src
 
 ** provide the module

@@ -143,7 +143,10 @@
   :config
   (lin-global-mode t))
 
-(straight-use-package 'spacious-padding)
+(use-package spacious-padding
+  :bind
+  (("C-c t s" . #'spacious-padding-mode))
+  :hook (after-init . #'spacious-padding-mode))
 
 (provide 'my-appearance)
 
