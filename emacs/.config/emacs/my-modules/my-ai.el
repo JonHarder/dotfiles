@@ -61,6 +61,8 @@
      shell-command-to-string
      getenv
      load
+	 find-file
+	 insert-file-contents
      with-current-buffer))
   :config
   (add-hook 'emacs-startup-hook #'mcp-server-start-unix))
