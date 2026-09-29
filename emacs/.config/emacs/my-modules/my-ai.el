@@ -49,11 +49,18 @@
   ;; Anything NOT listed below either prompts (see the commented toggle) or
   ;; is blocked outright.
   ;; (mcp-server-security-prompt-for-permissions t) ; prompt in minibuffer for everything else
+  ;;
+  ;; `load' lets the agent evaluate a .el file so Elisp changes can be
+  ;; tested without a restart.  Note this is broader than the file-access
+  ;; specs in `mcp-server-security--check-form-safety' (which guard
+  ;; find-file/write-file &c but not `load'), so the agent can load any
+  ;; path.  Acceptable only because `emacs_eval-elisp' is already full RCE.
   (mcp-server-security-allowed-dangerous-functions
    '(async-shell-command
      shell-command
      shell-command-to-string
      getenv
+     load
      with-current-buffer))
   :config
   (add-hook 'emacs-startup-hook #'mcp-server-start-unix))
