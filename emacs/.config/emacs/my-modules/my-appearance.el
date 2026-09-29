@@ -144,6 +144,7 @@
   (lin-global-mode t))
 
 (use-package spacious-padding
+  :straight t
   :bind
   (("C-c t s" . #'spacious-padding-mode))
   :hook (after-init . #'spacious-padding-mode))

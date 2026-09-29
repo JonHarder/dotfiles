@@ -187,16 +187,16 @@
   :bind ("C-c o g" . org-timegrid-week)
   :init
   (setq org-timegrid-org-files 'agenda
-		org-timegrid-org-capture-file
-		(expand-file-name "calendar.org" org-directory)
-		org-timegrid-org-auto-save t
-		org-timegrid-org-show-repeaters t
-		org-timegrid-default-zoom 0.7
+	org-timegrid-org-capture-file
+	(expand-file-name "calendar.org" org-directory)
+	org-timegrid-org-auto-save t
+	org-timegrid-org-show-repeaters t
+	org-timegrid-default-zoom 0.7
 
-		org-timegrid-org-tag-color-alist
-		'(("@Work" . blue)
-          ("@Home" . green)
-		  ("@Church" . yellow)))
+	org-timegrid-org-tag-color-alist
+	'(("@Work" . blue)
+	  ("@Home" . green)
+	  ("@Church" . yellow))))
 
 (use-package org-timegrid-agenda
   :after org-timegrid

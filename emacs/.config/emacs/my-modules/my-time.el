@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq calendar-date-style 'iso)
 
 (appt-activate 1)

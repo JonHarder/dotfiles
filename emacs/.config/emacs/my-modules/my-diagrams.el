@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (use-package d2-mode
   :straight t
   :init

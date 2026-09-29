@@ -225,15 +225,9 @@
 (straight-use-package 'multi-vterm)
 ;; (setq vterm-shell "/opt/homebrew/bin/nu")
 
-(define-minor-mode my/vterm-keys-mode
-  "Override escape in vterm buffers."
-  :keymap my/vterm-keys-keymap)
-
-(add-hook 'vterm-mode-hook #'my/vterm-keys-mode)
-
-  ;;; Command wrappers The following commands execute shell commands by
-  ;;; starting a vterm session and executing the specified command
-  ;;; inside it.
+;;; Command wrappers The following commands execute shell commands by
+;;; starting a vterm session and executing the specified command
+;;; inside it.
 (defun vterm-run-command (command)
   "Execute COMMAND in a new vterm buffer."
   (interactive "sCommand: ")
