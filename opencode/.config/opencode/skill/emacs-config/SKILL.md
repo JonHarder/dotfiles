@@ -101,21 +101,21 @@ rather than guessing.
 
 ### A full re-tangle is NOT cosmetic
 
-As of 2026-09-29, 8 of the 62 generated files are out of sync with
-`config.org`, so a full tangle always produces a burst of unrelated diffs —
-mostly indentation and `;; -*- lexical-binding: t; -*-` cookies, but also
-**real** changes:
+As of 2026-09-29 a full tangle brings 6 of the 62 generated files back in sync
+with `config.org` (a scoped tangle left those stale). Most of the diff is
+indentation and `;; -*- lexical-binding: t; -*-` cookies, but some is real:
 
-- `my-org.el` — currently has **unmatched brackets** and will not load; the
-  re-tangle normalises the indentation and fixes it.
+- `my-org.el` — had **unmatched brackets** and would not load; the re-tangle
+  normalises the indentation and fixes it.
 - `my-buffers.el` — gains a `with-eval-after-load 'ibuffer` wrapper, which
   changes load-time semantics.
-- `my-appearance.el` — gains `:straight t` on `spacious-padding`, i.e. the
+- `my-appearance.el` — gains `:straight t` on `spacious-padding`, so the
   package actually gets installed.
 - `my-shells.el` — **loses** `(define-minor-mode my/vterm-keys-mode ...)` and
   its `vterm-mode-hook` entry, because that code exists only in the generated
-  file and has no block in `config.org`; its `my/vterm-keys-keymap` is defined
-  nowhere. It cannot be regenerated, only deleted.
+  file with no block in `config.org`, and its `my/vterm-keys-keymap` is defined
+  nowhere. It could never be regenerated, only deleted. The user chose to let
+  it go rather than resurrect it.
 
 Prefer the scoped `'(16)` tangle. If a full tangle already happened, drop the
 noise with `jj restore <every file you didn't mean to touch>`, run from
@@ -126,18 +126,26 @@ noise with `jj restore <every file you didn't mean to touch>`, run from
 `jj diff --stat` is the primary check: it should list `config.org` and exactly
 one `.el`.
 
-`check-parens` is a useful second opinion on generated `.el` files:
+**Trust `featurep` over `check-parens`.** `check-parens` reports false
+positives on this config — it does not skip every commented-out form, and this
+config has disabled blocks left in place with stray parens:
 
-```bash
-emacs -Q --batch --eval '(with-temp-buffer
-  (insert-file-contents "emacs/.config/emacs/my-modules/my-NAME.el")
-  (check-parens) (message "parens OK"))'
-```
+- `my-completion.el` — `;; ("M-g i" . consult-imenu)))`, from a `:map
+  org-mode-map` block commented out because it broke loading
+- `my-navigation.el` — `;; :bind (("C-x o" . #'ace-window)))`
+- `my-shells.el` — reported inside the eshell prompt's `" $ "` string
 
-`config.org` is not valid elisp (`=verbatim=`, `~subscript~`, tables) and will
-*always* report "Unmatched bracket or quote" — that is not a bug. And a stale
-generated file can legitimately fail while `config.org` is fine; fix it by
-re-tangling, never by hand-patching the `.el`.
+All three are `featurep` in the running Emacs, i.e. they load fine. A
+`check-parens` failure here is a *question*, not a verdict. Never "fix" a
+generated file's parens by hand — if a file genuinely will not load, fix the
+`config.org` block and re-tangle.
+
+`config.org` itself is not valid elisp (`=verbatim=`, `~subscript~`, tables) and
+will *always* report "Unmatched bracket or quote". Never point `check-parens` at
+it.
+
+A file that is stale can fail while `config.org` is fine; fix it by re-tangling,
+never by hand-patching the `.el`.
 
 `emacs_get-diagnostics` is **not** empty and Elisp LSP **is** configured
 (`lsp-mode` and `eglot` both tangle into `my-prog-mode.el`). The ~19
