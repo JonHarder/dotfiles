@@ -10,6 +10,9 @@
 (use-package majutsu
   :straight (:host github :repo "0WD0/majutsu")
   :commands (majutsu)
-  :bind ("C-c j" . majutsu))
+  :bind ("C-c j" . majutsu)
+  :init
+  (setq majutsu-diff-fontify-hunk 'all)
+  (setq majutsu-diff-refine-hunk 'all))
 
 (provide 'my-jj)

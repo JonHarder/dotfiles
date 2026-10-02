@@ -353,7 +353,11 @@ the easiest themes on the eyes in any lighting situation.
 
   			 doom-ayu-dark-comment-bg t
   			 doom-ayu-dark-brighter-comments t
-  			 doom-ayu-dark-brighter-modeline nil)
+  			 doom-ayu-dark-brighter-modeline nil
+
+  			 doom-horizon-comment-bg t
+  			 doom-horizon-brighter-comments t
+  			 doom-horizon-brighter-modeline nil)
   	   :config
   	   ;; Since Emacs 31 (bug#79672) defining a face so that it inherits
   	   ;; from itself is an error instead of a latent display bug.
@@ -365,7 +369,7 @@ the easiest themes on the eyes in any lighting situation.
   	   ;; gnus-group-news-low".  Inherit from the dim mail face instead,
   	   ;; which is what the cycle was working around anyway.
   	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
-  	    (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
+  	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
   	   (load-theme theme t)))))
 #+end_src
 
@@ -2641,7 +2645,10 @@ contributors who are still using git directly.
   (use-package majutsu
     :straight (:host github :repo "0WD0/majutsu")
     :commands (majutsu)
-    :bind ("C-c j" . majutsu))
+    :bind ("C-c j" . majutsu)
+    :init
+    (setq majutsu-diff-fontify-hunk 'all)
+    (setq majutsu-diff-refine-hunk 'all))
 
   (provide 'my-jj)
 #+end_src

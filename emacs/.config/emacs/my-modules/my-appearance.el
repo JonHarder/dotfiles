@@ -84,7 +84,11 @@
 
 			 doom-ayu-dark-comment-bg t
 			 doom-ayu-dark-brighter-comments t
-			 doom-ayu-dark-brighter-modeline nil)
+			 doom-ayu-dark-brighter-modeline nil
+
+			 doom-horizon-comment-bg t
+			 doom-horizon-brighter-comments t
+			 doom-horizon-brighter-modeline nil)
 	   :config
 	   ;; Since Emacs 31 (bug#79672) defining a face so that it inherits
 	   ;; from itself is an error instead of a latent display bug.
@@ -96,7 +100,7 @@
 	   ;; gnus-group-news-low".  Inherit from the dim mail face instead,
 	   ;; which is what the cycle was working around anyway.
 	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
-	    (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
+	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
 	   (load-theme theme t)))))
 
 (menu-bar-mode 1)
