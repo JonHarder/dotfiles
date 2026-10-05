@@ -1,5 +1,9 @@
 ;; Auto-generated file; don't edit -*- mode: lisp-data -*-
 ((:url
+  "https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/"
+  :title "AsciiDoc Syntax Quick Reference | Asciidoctor Docs" :time
+  "Mon Oct  5 10:00:17 2026")
+ (:url
   "https://sachachua.com/blog/2026/04/what-s-in-the-emacs-newcomers-presets-theme/"
   :title "What's in the Emacs newcomers-presets theme? :: Sacha Chua"
   :time "Wed Sep  2 11:49:26 2026")
