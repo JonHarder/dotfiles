@@ -506,6 +506,9 @@ Basic editor settings, using built-ins
 
   (delete-selection-mode 1)
   (provide 'my-editor)
+
+  ;; bind `kill-paragraph' to something
+  (global-set-key (kbd "C-s-k") #'kill-paragraph)
 #+end_src
 * Toggling things (key bindings)
 There are various settings I want quick access to toggling.  Either
