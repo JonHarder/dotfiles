@@ -6,9 +6,9 @@
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
   (custom-set-faces
-   '(org-level-1 ((t (:height 1.3 :inherit outline-1))))
-   '(org-level-2 ((t (:height 1.2 :inherit outline-2))))
-   '(org-level-3 ((t (:height 1.2 :inherit outline-3))))
+   '(org-level-1 ((t (:height 1.5 :inherit outline-1))))
+   '(org-level-2 ((t (:height 1.4 :inherit outline-2))))
+   '(org-level-3 ((t (:height 1.3 :inherit outline-3))))
    '(org-level-4 ((t (:height 1.2 :inherit outline-4))))
    '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
    '(org-document-title ((t (:height 2.5 :underline t))))))
@@ -38,17 +38,6 @@
   (setq doom-rouge-brighter-comments t
 		doom-themes-enable-bold t
 		doom-themes-enable-italic t))
-
-(use-package kusanagi-theme
-  :disabled t
-  :straight (:host github :repo "LionyxML/kusanagi-theme")
-  :config
-  (add-to-list 'custom-theme-load-path
-			   (file-name-directory (locate-library "kusanagi-theme")))
-  )
-;; (straight-use-package 'modus-themes)
-;; (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/"))
-;; (load-theme 'catppuccin-mocha t)
 
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
 (let ((package (car my-theme))
@@ -101,6 +90,11 @@
 	   ;; which is what the cycle was working around anyway.
 	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
 	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
+	   ;; overrides for poor contrast doom-horizon faces
+	   (when (eq theme 'doom-horizon)
+		 (custom-set-faces
+		  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
+	   
 	   (load-theme theme t)))))
 
 (menu-bar-mode 1)
