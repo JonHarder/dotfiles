@@ -206,7 +206,7 @@
 		org-timegrid-agenda-minutes-before 180
 		org-timegrid-agenda-minutes-after 180)
   :config
-  (org-timegrid-agenda-mode 1))
+  (org-timegrid-agenda-mode 0))
 
 (setq org-tag-alist '((:startgroup)
 					  ("@Work" . ?w)
