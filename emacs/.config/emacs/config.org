@@ -45,6 +45,8 @@ restore these settings to sensible values for runtime.
  #+begin_src emacs-lisp :tangle early-init.el
    (setq gc-cons-threshold most-positive-fixnum
          gc-cons-percentage 0.5)
+   ;; try to allow some valid (if poorly performing) code to run
+   (setq max-lisp-eval-depth 16000)
  #+end_src
 ** use-package enhancements
 #+begin_src emacs-lisp :tangle early-init.el
@@ -310,16 +312,12 @@ This gets loaded first so that any later configuration can utilize it.
   	   (setq modus-themes-common-palette-overrides
   			 '((fg-heading-1 blue-warmer)
   			   (fg-heading-2 yellow-cooler)
-  			   (fg-heading-3 cyan-cooler)))
-  	   :config
-  	   (load-theme theme t)))
+  			   (fg-heading-3 cyan-cooler)))))
   	('catppuccin-theme
   	 (use-package catppuccin-theme
   	   :straight t
   	   :init
-  	   (setq catppuccin-flavor 'mocha)
-  	   :config
-  	   (load-theme theme t)))
+  	   (setq catppuccin-flavor 'mocha)))
   	('doom-themes
   	 (use-package doom-themes
   	   :straight t
@@ -354,8 +352,8 @@ This gets loaded first so that any later configuration can utilize it.
   	   (when (eq theme 'doom-horizon)
   		 (custom-set-faces
   		  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
-  	   
-  	   (load-theme theme t)))))
+  	   (doom-themes-org-config))))
+    (load-theme theme t))
 #+end_src
 
 ** Tweak display of UI elements

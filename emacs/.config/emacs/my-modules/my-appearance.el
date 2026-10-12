@@ -50,16 +50,12 @@
 	   (setq modus-themes-common-palette-overrides
 			 '((fg-heading-1 blue-warmer)
 			   (fg-heading-2 yellow-cooler)
-			   (fg-heading-3 cyan-cooler)))
-	   :config
-	   (load-theme theme t)))
+			   (fg-heading-3 cyan-cooler)))))
 	('catppuccin-theme
 	 (use-package catppuccin-theme
 	   :straight t
 	   :init
-	   (setq catppuccin-flavor 'mocha)
-	   :config
-	   (load-theme theme t)))
+	   (setq catppuccin-flavor 'mocha)))
 	('doom-themes
 	 (use-package doom-themes
 	   :straight t
@@ -94,8 +90,8 @@
 	   (when (eq theme 'doom-horizon)
 		 (custom-set-faces
 		  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
-	   
-	   (load-theme theme t)))))
+	   (doom-themes-org-config))))
+  (load-theme theme t))
 
 (menu-bar-mode 1)
 

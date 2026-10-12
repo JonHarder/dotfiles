@@ -10,6 +10,8 @@
 
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.5)
+;; try to allow some valid (if poorly performing) code to run
+(setq max-lisp-eval-depth 16000)
 
 (setq use-package-enable-imenu-support t)
 
