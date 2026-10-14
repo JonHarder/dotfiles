@@ -2495,6 +2495,18 @@ Org allows you to export any org file to a variety of formats:
                :publishing-function #'org-publish-attachment)))
   #+end_src
 
+** Tidy property drawers
+
+#+begin_src emacs-lisp :tangle "my-modules/my-org.el" :mkdirp yes
+  (use-package org-tidy
+    :straight t
+    :hook
+    (org-mode . org-tidy-mode)
+    :bind
+    (:map org-mode-map
+  		("C-c o t" . #'org-tidy-untidy-buffer)))
+#+end_src
+
 ** Visual enhancements
 
 *** Emphasis markers

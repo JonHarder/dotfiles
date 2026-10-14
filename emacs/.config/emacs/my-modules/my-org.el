@@ -289,6 +289,14 @@
           :recursive t
           :publishing-function #'org-publish-attachment)))
 
+(use-package org-tidy
+  :straight t
+  :hook
+  (org-mode . org-tidy-mode)
+  :bind
+  (:map org-mode-map
+		("C-c o t" . #'org-tidy-untidy-buffer)))
+
 (setq org-hide-emphasis-markers t)
 
 (use-package org-modern
