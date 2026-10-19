@@ -23,7 +23,8 @@
 (setq vterm-max-scrollback 500)
 
 (defun my-speed-up-terminal-buffer ()
-  (setq-local fond-lock-defaults '(nil t))
+  "Disable a variety of settings and modes that don't make sense for a shell."
+  (setq-local font-lock-defaults '(nil t))
 
   (setq-local scroll-conservatively most-positive-fixnum)
   (setq-local hscroll-margin 0)
@@ -35,7 +36,7 @@
   (setq-local bidi-inhibit-bpa t)
 
   (setq-local line-spacing 0)
-  (setq-local mode-line-format nil)
+  ;; (setq-local mode-line-format nil)
 
   (setq-local process-adaptive-read-buffering nil)
   (let ((output-max (* 1024 1024)))

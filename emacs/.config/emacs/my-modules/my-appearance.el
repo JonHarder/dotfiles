@@ -87,9 +87,9 @@
 	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
 	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
 	   ;; overrides for poor contrast doom-horizon faces
-	   (when (eq theme 'doom-horizon)
-		 (custom-set-faces
-		  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
+	   ;; (when (eq theme 'doom-horizon)
+	   ;; 	 (custom-set-faces
+	   ;; 	  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
 	   (doom-themes-org-config))))
   (load-theme theme t))
 
