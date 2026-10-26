@@ -1,5 +1,9 @@
 ;; Auto-generated file; don't edit -*- mode: lisp-data -*-
-((:url
+((:url "https://dev.mysql.com/doc/refman/8.4/en/create-role.html"
+	   :title
+	   "MySQL :: MySQL 8.4 Reference Manual :: 15.7.1.2 CREATE ROLE Statement"
+	   :time "Mon Oct 26 12:10:36 2026")
+ (:url
   "https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/"
   :title "AsciiDoc Syntax Quick Reference | Asciidoctor Docs" :time
   "Mon Oct  5 10:00:17 2026")
