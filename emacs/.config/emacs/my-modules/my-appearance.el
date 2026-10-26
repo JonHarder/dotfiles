@@ -3,7 +3,7 @@
 
 ;;; Code:
 
-(set-face-attribute 'bold nil :weight 'ultra-bold)
+;; (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
   (custom-set-faces
    '(org-level-1 ((t (:height 1.5 :inherit outline-1))))
@@ -13,11 +13,6 @@
    '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
    '(org-document-title ((t (:height 2.5 :underline t))))))
 
-
-(when (eq 'doom-themes (car my-theme))
-  (setq doom-rouge-brighter-comments t
-		doom-themes-enable-bold t
-		doom-themes-enable-italic t))
 
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
 (let ((package (car my-theme))
@@ -58,12 +53,19 @@
 	 (use-package doom-themes
 	   :straight t
 	   :init
+	   (setq doom-rouge-brighter-comments t
+			 doom-themes-enable-bold t
+			 doom-themes-enable-italic t)
 	   (setq doom-monokai-classic-brighter-comments t
 			 doom-monokai-classic-comment-bg t
 			 
 			 doom-gruvbox-dark-variant "hard"
 			 doom-gruvbox-brighter-comments t
 			 doom-gruvbox-padded-modeline t
+
+			 doom-dracula-comment-bg t
+			 doom-dracula-colorful-headers t
+			 doom-dracula-brighter-comments t
 
 			 doom-ayu-dark-comment-bg t
 			 doom-ayu-dark-brighter-comments t
