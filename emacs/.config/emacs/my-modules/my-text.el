@@ -17,6 +17,11 @@
 (keymap-global-set "M-$" #'jinx-correct)
 (keymap-global-set "C-;" #'jinx-correct)
 
+(global-set-key (kbd "M-'") #'insert-pair)
+(global-set-key (kbd "M-\"") #'insert-pair)
+(global-set-key (kbd "M-{") #'insert-pair)
+(global-set-key (kbd "M-[") #'insert-pair)
+
 (defun cycle-capitalization ()
   "Cycle capitalization of previous word.
 
