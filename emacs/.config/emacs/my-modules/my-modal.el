@@ -7,6 +7,7 @@
 
 (require 'my-meow)
 (meow-setup)
+
 (meow-global-mode 1)
 
 (provide 'my-modal)

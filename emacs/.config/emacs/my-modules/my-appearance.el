@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 (require 'local-config)
 
-;; -*- lexical-binding: t; -*-
+;;; Code:
 
 (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
@@ -13,26 +13,6 @@
    '(org-level-5 ((t (:height 1.1 :inherit outline-5))))
    '(org-document-title ((t (:height 2.5 :underline t))))))
 
-(straight-use-package 'modus-themes)
-(require 'modus-themes)
-(setq modus-themes-completions
-	  '((matches . (extrabold underline))
-        (selection . (semibold italic)))
-	  modus-themes-prompts '(bold)
-	  modus-themes-bold-constructs t
-	  ;; modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
-	  modus-themes-common-palette-overrides modus-themes-preset-overrides-warmer
-	  modus-themes-variable-pitch-ui nil
-	  modus-themes-italic-constructs t
-	  modus-themes-org-blocks 'gray-background
-	  modus-themes-headings
-	  '((1 . (1.3))
-		(2 . (1.2))
-		(3 . (1.1))
-		(4 . (1.1))
-		(agenda-date . (1.3))
-		(agenda-structure . (variable-pitch light 1.8))
-		(t . (1.1))))
 
 (when (eq 'doom-themes (car my-theme))
   (setq doom-rouge-brighter-comments t
@@ -47,10 +27,28 @@
 	 (use-package modus-themes
 	   :straight t
 	   :init
-	   (setq modus-themes-common-palette-overrides
-			 '((fg-heading-1 blue-warmer)
-			   (fg-heading-2 yellow-cooler)
-			   (fg-heading-3 cyan-cooler)))))
+	   ;; (setq modus-themes-common-palette-overrides
+	   ;; 		 '((fg-heading-1 blue-warmer)
+	   ;; 		   (fg-heading-2 yellow-cooler)
+	   ;; 		   (fg-heading-3 cyan-cooler)))
+	   (setq modus-themes-completions
+			 '((matches . (extrabold underline))
+			   (selection . (semibold italic)))
+			 modus-themes-prompts '(bold)
+			 modus-themes-bold-constructs t
+			 ;; modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
+			 modus-themes-common-palette-overrides modus-themes-preset-overrides-warmer
+			 modus-themes-variable-pitch-ui nil
+			 modus-themes-italic-constructs t
+			 modus-themes-org-blocks 'gray-background
+			 modus-themes-headings
+			 '((1 . (1.3))
+			   (2 . (1.2))
+			   (3 . (1.1))
+			   (4 . (1.1))
+			   (agenda-date . (1.3))
+			   (agenda-structure . (variable-pitch light 1.8))
+			   (t . (1.1))))))
 	('catppuccin-theme
 	 (use-package catppuccin-theme
 	   :straight t
@@ -86,7 +84,7 @@
 	   ;; which is what the cycle was working around anyway.
 	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
 	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
-	   ;; overrides for poor contrast doom-horizon faces
+	   ;; overrides for contrast doom-horizon faces
 	   ;; (when (eq theme 'doom-horizon)
 	   ;; 	 (custom-set-faces
 	   ;; 	  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
