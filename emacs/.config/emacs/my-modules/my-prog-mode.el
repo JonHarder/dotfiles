@@ -8,6 +8,7 @@
 
 (straight-use-package 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
 
 (use-package lsp-mode
   :straight t

@@ -128,8 +128,6 @@
 		  (lambda ()
 			(display-line-numbers-mode 1)))
 
-(global-hl-line-mode t)
-
 (use-package lin
   :straight t
   :config
