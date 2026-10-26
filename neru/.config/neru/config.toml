@@ -82,7 +82,7 @@ text = "#FFFFFF"
 enabled = true
 strategy = "axtree"                         # Element detection: "axtree" (AX API), "vision" (screen recognition) or "contour" (edge detection)
 capture_scope = "window"                    # Region the vision and contour strategies scan: "window" (focused window) or "screen"
-hint_characters = "csntk,aeih"              # Characters used for hint labels
+hint_characters = "csntaeih"              # Characters used for hint labels
 label_direction = "normal"                  # Hint label algorithm: "normal" (default) or "reverse"
 max_depth = 50                              # Max accessibility tree depth (0 = unlimited)
 include_menubar_hints = false
@@ -147,7 +147,7 @@ visible_check_enabled = false
 "Right" = "action move_mouse_relative --dx=10 --dy=0"
 
 [hints.ui]
-font_size = 10
+font_size = 14
 font_family = ""                            # Empty = the platform's sans, per the aliases above
 border_radius = -1                          # -1 = auto pill
 padding_x = -1                              # -1 = auto based on font size
@@ -156,7 +156,7 @@ border_width = 1
 placement = "bottom"                        # top, center, bottom
 
 [hints.search_input_ui]
-font_size = 10
+font_size = 14
 font_family = ""                            # Empty = the platform's sans, per the aliases above
 border_radius = -1                          # -1 = auto pill
 padding_x = -1                              # -1 = auto based on font size
@@ -223,7 +223,7 @@ enable_gc = false                           # Periodic memory cleanup (adds CPU 
 "Right" = "action move_mouse_relative --dx=10 --dy=0"
 
 [grid.ui]
-font_size = 10
+font_size = 14
 font_family = ""
 border_width = 1
 
