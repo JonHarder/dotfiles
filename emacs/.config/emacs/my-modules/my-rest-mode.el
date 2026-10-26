@@ -1,5 +1,11 @@
 ;; -*- lexical-binding: t; -*-
 
-(straight-use-package 'restclient)
-(add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+;;; Code:
+
+(use-package restclient
+  :straight (:type git :host github :repo "emacsorphanage/restclient")
+  :init
+  (setq restclient-enable-eval t)
+  :mode ("\\.http$" . restclient-mode))
+
 (provide 'my-rest-mode)
