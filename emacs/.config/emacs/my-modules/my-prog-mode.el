@@ -10,17 +10,6 @@
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 
-(use-package lsp-mode
-  :straight t
-  :commands lsp)
-
-(use-package lsp-ui
-  :straight t
-  :after (lsp-mode)
-  :config
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions))
-
 (defvar menu-bar-project-menu '())
 
 (use-package eglot
