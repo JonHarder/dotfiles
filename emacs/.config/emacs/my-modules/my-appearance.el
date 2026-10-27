@@ -2,6 +2,8 @@
 (require 'local-config)
 
 ;;; Code:
+;; turn off blinking cursor mode
+(blink-cursor-mode -1)
 
 ;; (set-face-attribute 'bold nil :weight 'ultra-bold)
 (when t
