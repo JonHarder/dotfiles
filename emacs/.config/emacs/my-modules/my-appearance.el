@@ -23,18 +23,17 @@
 	('modus-themes
 	 (use-package modus-themes
 	   :straight t
-	   :init
-	   ;; (setq modus-themes-common-palette-overrides
-	   ;; 		 '((fg-heading-1 blue-warmer)
-	   ;; 		   (fg-heading-2 yellow-cooler)
-	   ;; 		   (fg-heading-3 cyan-cooler)))
+	   :config
 	   (setq modus-themes-completions
 			 '((matches . (extrabold underline))
 			   (selection . (semibold italic)))
 			 modus-themes-prompts '(bold)
 			 modus-themes-bold-constructs t
 			 ;; modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
-			 modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
+			 modus-themes-common-palette-overrides `((bg-tab-bar bg-main)
+													 (bg-tab-current bg-cyan-intense)
+													 (bg-tab-other bg-inactive)
+													 ,@modus-themes-preset-overrides-intense)
 			 modus-themes-variable-pitch-ui nil
 			 modus-themes-italic-constructs t
 			 modus-themes-org-blocks 'gray-background
@@ -112,18 +111,19 @@
 
 (display-time)
 
-(let ((family (plist-get my-font :name))
-	  (height (plist-get my-font :size))
-	  (theme (cdr my-theme)))
-  (set-frame-font
-   (format "%s-%d" family height)
-   t t t)
-  (add-hook 'after-make-frame-functions
-			(lambda (frame)
-			  (with-selected-frame frame
-				(set-frame-font
-				 (format "%s-%d" family height))
-				(load-theme theme t)))))
+(set-frame-font
+ (format "%s-%d" (plist-get my-font :name) (plist-get my-font :size))
+ t t t)
+
+(add-hook 'after-make-frame-functions
+		  (lambda (frame)
+			(let ((family (plist-get my-font :name))
+				  (height (plist-get my-font :size))
+				  (theme (cdr my-theme))))
+			(with-selected-frame frame
+			  (set-frame-font
+			   (format "%s-%d" family height))
+			  (load-theme theme t))))
 
 (setq tab-bar-show 1)
 
