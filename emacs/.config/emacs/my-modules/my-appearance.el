@@ -34,7 +34,7 @@
 			 modus-themes-prompts '(bold)
 			 modus-themes-bold-constructs t
 			 ;; modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
-			 modus-themes-common-palette-overrides modus-themes-preset-overrides-warmer
+			 modus-themes-common-palette-overrides modus-themes-preset-overrides-intense
 			 modus-themes-variable-pitch-ui nil
 			 modus-themes-italic-constructs t
 			 modus-themes-org-blocks 'gray-background
