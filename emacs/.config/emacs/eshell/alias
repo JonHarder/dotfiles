@@ -8,3 +8,5 @@ alias c clear nil
 alias j jj --config 'ui.paginate="never"' $@*
 alias flash qmk flash
 alias v view-file $@*
+alias bat view-file $@*
+alias f find-file $@*
