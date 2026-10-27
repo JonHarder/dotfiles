@@ -17,7 +17,13 @@
   (add-hook 'rust-mode-hook #'hs-minor-mode)
   (add-hook 'go-mode-hook #'hs-minor-mode)
   (add-hook 'php-mode-hook #'hs-minor-mode)
-  (add-hook 'rust-mode-hook #'hs-minor-mode))
+  (add-hook 'rust-mode-hook #'hs-minor-mode)
+  :bind
+  ("C-c f f" . #'kirigami-toggle-fold)
+  ("C-c f c" . #'kirigami-close-fold)
+  ("C-c f o" . #'kirigami-open-fold)
+  ("C-c f C" . #'kirigami-close-folds)
+  ("C-c f O" . #'kirigami-open-folds))
 
 (use-package outline-indent
   :straight t
