@@ -126,9 +126,9 @@
 (setq tab-bar-show 1)
 
 (setq display-line-numbers-type 'relative)
-(add-hook 'prog-mode-hook
-		  (lambda ()
-			(display-line-numbers-mode 1)))
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'yaml-ts-mode-hook #'display-line-numbers-mode)
+(add-hook 'yaml-mode-hook #'display-line-numbers-mode)
 
 (use-package lin
   :straight t
