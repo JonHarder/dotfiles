@@ -31,6 +31,9 @@
                (display-buffer-below-selected)
                (window-height . .20)))
 
+(global-set-key (kbd "M-<down>") #'scroll-down-line)
+(global-set-key (kbd "M-<up>") #'scroll-up-line)
+
 (defun window-management-mode ()
   "Manipulate windows (size, location, number, etc)."
   (interactive)
