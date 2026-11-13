@@ -34,6 +34,9 @@
 (global-set-key (kbd "M-<down>") #'scroll-down-line)
 (global-set-key (kbd "M-<up>") #'scroll-up-line)
 
+(global-set-key (kbd "C-'") #'other-window)
+(global-set-key (kbd "s-'") #'next-window-any-frame)
+
 (defun window-management-mode ()
   "Manipulate windows (size, location, number, etc)."
   (interactive)
