@@ -37,6 +37,12 @@
 (global-set-key (kbd "C-'") #'other-window)
 (global-set-key (kbd "s-'") #'next-window-any-frame)
 
+;; org already has a binding for "C-'", cycling to the next agenda
+;; file. Since I have no need of this, remap it to the global binding
+;; for `other-window'
+(with-eval-after-load 'org-mode
+  (define-key org-mode-map (kbd "C-'") #'other-window))
+
 (defun window-management-mode ()
   "Manipulate windows (size, location, number, etc)."
   (interactive)
