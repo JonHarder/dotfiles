@@ -119,11 +119,11 @@
 		  (lambda (frame)
 			(let ((family (plist-get my-font :name))
 				  (height (plist-get my-font :size))
-				  (theme (cdr my-theme))))
-			(with-selected-frame frame
-			  (set-frame-font
-			   (format "%s-%d" family height))
-			  (load-theme theme t))))
+				  (theme (cdr my-theme)))
+			  (with-selected-frame frame
+				(set-frame-font
+				 (format "%s-%d" family height))
+				(load-theme theme t)))))
 
 (setq tab-bar-show 1)
 
