@@ -31,7 +31,6 @@
 (require 'my-util)
 (require 'my-core)
 (require 'my-editor)
-(require 'my-modal)
 (require 'my-mouse)
 (require 'my-modeline)
 (require 'my-toggles)
