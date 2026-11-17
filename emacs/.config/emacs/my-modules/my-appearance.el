@@ -16,11 +16,20 @@
    '(org-document-title ((t (:height 2.5 :underline t))))))
 
 
+(defvar my/theme-packages
+  '(modus
+	doom
+	ef)
+  "Theme packages which contain the themes I often switch between.")
+
 ;;; Commenting this out in favor of the custom "kusanagi-theme" configured above.
-(let ((package (car my-theme))
-	  (theme (cdr my-theme)))
-  (pcase package
-	('modus-themes
+(defun my/configure-theme (package theme)
+  "Configure the PACKAGE containing the desired theme THEME and then load it."
+  (interactive (let* ((package (completing-read "Package: " my/theme-packages nil t))
+					  (theme (completing-read "Theme: " custom-known-themes nil t (format "%s-" package))))
+				 (list package theme)))
+  (pcase (intern package)
+	('modus
 	 (use-package modus-themes
 	   :straight t
 	   :config
@@ -45,12 +54,12 @@
 			   (agenda-date . (1.3))
 			   (agenda-structure . (variable-pitch light 1.8))
 			   (t . (1.1))))))
-	('catppuccin-theme
+	('catppuccin
 	 (use-package catppuccin-theme
 	   :straight t
 	   :init
 	   (setq catppuccin-flavor 'mocha)))
-	('doom-themes
+	('doom
 	 (use-package doom-themes
 	   :straight t
 	   :init
@@ -86,13 +95,13 @@
 	   ;; gnus-group-news-low".  Inherit from the dim mail face instead,
 	   ;; which is what the cycle was working around anyway.
 	   (when-let ((face (assq 'gnus-group-news-low-empty doom-themes-base-faces)))
-	     (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
-	   ;; overrides for contrast doom-horizon faces
-	   ;; (when (eq theme 'doom-horizon)
-	   ;; 	 (custom-set-faces
-	   ;; 	  '(org-level-2 ((t (:foreground "#f9cbbe" :height 1.2))))))
+		 (setcdr face '(:inherit 'gnus-group-mail-1-empty :weight 'normal)))
 	   (doom-themes-org-config))))
-  (load-theme theme t))
+  (dolist (theme custom-enabled-themes)
+	(disable-theme theme))
+  (load-theme (intern theme) t))
+
+(global-set-key (kbd "C-c t t") #'my/configure-theme)
 
 (menu-bar-mode 1)
 
@@ -101,9 +110,9 @@
 (tool-bar-mode -1)
 
 (setq frame-resize-pixelwise t
-      frame-inhibit-implied-resize t
-      inhibit-splash-screen t
-      inhibit-startup-screen t)
+	  frame-inhibit-implied-resize t
+	  inhibit-splash-screen t
+	  inhibit-startup-screen t)
 
 (setq ring-bell-function 'ignore)
 
